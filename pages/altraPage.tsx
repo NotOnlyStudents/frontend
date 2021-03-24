@@ -10,16 +10,7 @@ import { useAuthContext } from "context/authContext"
 import Layout from 'components/Layout';
 
 
-export default function Home({ _authState, _username }){
-  return (
-    <Layout _authState = {_authState} _username = {_username}>
-      <div>
-        prova prova
-        <a href="altraPage">Cliccami tutto!</a>
-      </div>
-    </Layout>
-  )
-}
+
 
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
@@ -41,4 +32,15 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       }
     }
   }
+}
+
+
+export default function Pag({ _authState, _username }){
+  return (
+    <Layout _authState = {_authState} _username = {_username}>
+      <div>
+        prova prova
+      </div>
+    </Layout>
+  )
 }

@@ -30,6 +30,8 @@ function Authenticator() {
                 slot="sign-up"
                 usernameAlias="email"
                 formFields={[
+                    { type: "name", placeholder: "Enter your first name", label: "First Name *" },
+                    { type: "lastName", placeholder: "Enter your last name", label: "Last Name *" },
                     { type: "email" },
                     { type: "password" }
                 ]}

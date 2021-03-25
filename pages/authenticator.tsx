@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { AmplifyAuthenticator, AmplifySignUp, AmplifySignIn } from '@aws-amplify/ui-react'
+import { AmplifyAuthenticator, AmplifySignUp, AmplifySignIn, AmplifyForgotPassword } from '@aws-amplify/ui-react'
 import { AuthState, onAuthUIStateChange } from '@aws-amplify/ui-components'
 import { CognitoUser } from "@aws-amplify/auth"
 
@@ -36,7 +36,8 @@ function Authenticator() {
                     { type: "password" }
                 ]}
             />
-            <AmplifySignIn slot="sign-in" usernameAlias="email" />
+            <AmplifySignIn slot="sign-in" usernameAlias="email"  />
+            <AmplifyForgotPassword></AmplifyForgotPassword>
         </AmplifyAuthenticator>
     );
 }

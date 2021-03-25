@@ -13,7 +13,6 @@ const name = 'EmporioLambda'
 export const siteTitle = 'EmporioLambda'
 
 
-
 export default function Layout({
   children,
   _authState,

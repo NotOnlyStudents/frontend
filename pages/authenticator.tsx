@@ -1,6 +1,6 @@
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { AmplifyAuthenticator, AmplifySignUp, AmplifySignIn, AmplifyForgotPassword } from '@aws-amplify/ui-react'
+import { AmplifyAuthenticator, AmplifySignUp, AmplifySignIn, AmplifyForgotPassword, AmplifyTotpSetup, AmplifyAuthFields, AmplifyAuth0Button, AmplifyInput } from '@aws-amplify/ui-react'
 import { AuthState, onAuthUIStateChange } from '@aws-amplify/ui-components'
 import { CognitoUser } from "@aws-amplify/auth"
 
@@ -22,10 +22,7 @@ function Authenticator() {
     }, []);
     
     return(
-        <AmplifyAuthenticator 
-            usernameAlias={"email"}            
-        >
-            <div slot="federated-buttons"></div>
+        <AmplifyAuthenticator usernameAlias={"email"}>
             <AmplifySignUp
                 slot="sign-up"
                 usernameAlias="email"
@@ -36,8 +33,8 @@ function Authenticator() {
                     { type: "password" }
                 ]}
             />
-            <AmplifySignIn slot="sign-in" usernameAlias="email"  />
-            <AmplifyForgotPassword></AmplifyForgotPassword>
+            <AmplifySignIn slot="sign-in" usernameAlias="email"/>
+            <AmplifyForgotPassword />
         </AmplifyAuthenticator>
     );
 }

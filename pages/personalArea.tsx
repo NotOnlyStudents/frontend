@@ -6,31 +6,45 @@ import { CognitoUser } from "@aws-amplify/auth"
 import { withSSRContext } from 'aws-amplify'
 import { AmplifySignOut } from '@aws-amplify/ui-react'
 import { AuthState, onAuthUIStateChange } from '@aws-amplify/ui-components'
-import { AuthContext, useAuthContext } from "context/authContext"
+import { useAuthContext } from "context/authContext"
 import Layout from 'components/Layout';
+import { Auth } from 'aws-amplify';
 
-
-function Home({ _authState, _username }){
+function Pag({ _authState, _username}){
+  changePass();
   return (
     <Layout _authState = {_authState} _username = {_username}>
       <div>
-        prova prova
       </div>
     </Layout>
   )
 }
 
+//YESSS!
+async function changePass()
+{
+  let user = await Auth.currentAuthenticatedUser();
+
+let result = await Auth.updateUserAttributes(user, {
+    'name': 'paolo'
+});
+console.log(result);
+
+
+  const { attributes } = await Auth.currentAuthenticatedUser();
+  console.log(attributes);
+}
+
+
 export async function getServerSideProps(context)
 {  
   const { Auth } = withSSRContext(context);
-
+  const user: CognitoUser = await Auth.currentAuthenticatedUser();
   try {
-    const user: CognitoUser = await Auth.currentAuthenticatedUser();
-
     return {
       props: {
         _authState: AuthState.SignedIn,
-        _username: user.getUsername()
+        _username: user.getUsername(),
       }
     }
   } catch (err) {
@@ -42,10 +56,4 @@ export async function getServerSideProps(context)
   }
 }
 
-export default Home
-
-
-
-
-
-
+export default Pag

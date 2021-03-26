@@ -6,7 +6,7 @@ import { withSSRContext } from 'aws-amplify'
 import Auth, { CognitoUser } from '@aws-amplify/auth'
 import { AuthState, onAuthUIStateChange } from '@aws-amplify/ui-components'
 import { useAuthContext } from 'context/authContext'
-import { AmplifySignOut } from '@aws-amplify/ui-react'
+import { AmplifySignOut, AmplifySignUp } from '@aws-amplify/ui-react'
 
 
 const name = 'EmporioLambda'
@@ -19,8 +19,8 @@ export default function Layout({
   _username
 }: {
   children: React.ReactNode,
-  _authState:AuthState;
-  _username:string | undefined;
+  _authState:AuthState,
+  _username:string | undefined
 }) 
 {
 
@@ -38,7 +38,7 @@ useEffect(() => {
   });
 }, []);
 
-
+  
   return (
     <>
       <Head>
@@ -60,12 +60,13 @@ useEffect(() => {
       {authState === AuthState.SignedIn && username ? (
         <>
           <AmplifySignOut />
+          <Link href="/personalArea">
+          <button name="personalArea">Your personal Area!</button>
+          </Link>
         </>
         ) : (
           <Link href="/authenticator">
-          <button className="bg-indigo-500 font-semibold hover:bg-opacity-80 active:bg-indigo-600 py-3 text-sm text-white uppercase w-full">
-            Login!
-          </button>
+          <button name="loginButton">Login!</button>        
           </Link>
         )}
       </header>

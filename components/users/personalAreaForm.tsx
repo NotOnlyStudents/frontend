@@ -58,7 +58,17 @@ export default class FormPersonalArea extends React.Component<User,any>{
     } catch (error) {
         console.log('error signing out: ', error);
     }
-}
+  }
+      //TO DO: CHECK CORRECTLY IF SIGNOUT WORKS FINE
+      async deleteUser() {
+        const user = await Auth.currentAuthenticatedUser();
+        user.deleteUser((error) => {
+          if (error) {
+            throw error;
+          }
+          document.location.href = "/";
+        });
+      };
 
 
 
@@ -92,6 +102,7 @@ export default class FormPersonalArea extends React.Component<User,any>{
       <Link href="/">
           <button name="loginButton" onClick={this.signOut}>Sign out</button>        
       </Link>
+      <button name="deleteAccountButton" onClick={this.deleteUser}>Delete Account</button>   
    </> 
     );
   }

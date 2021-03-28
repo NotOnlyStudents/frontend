@@ -1,3 +1,4 @@
+import { CognitoUser } from '@aws-amplify/auth';
 import { AmplifyRequireNewPassword } from '@aws-amplify/ui-react';
 import { Auth } from 'aws-amplify';
 import Link from 'next/link';
@@ -35,32 +36,22 @@ export default class FormPassword extends React.Component<password,any> {
         .then(user => {return Auth.changePassword(user, this.state.oldPassword, this.state.newPassword);});
     }
 
-    /*
-    async handleSubmit(event) {
-        event.preventDefault();
-        console.log(this.state.oldPassword);
-        console.log(this.state.newPassword);
-        Auth.currentAuthenticatedUser()
-        .then(user => {
-        return Auth.changePassword(user, this.state.oldPassword, this.state.newPassword);
-    })
-    .then(data => console.log(data))
-    .catch(err => console.log(err));
-    } */   
+
         
 
     render() {
       return (
-
+        <>
         <form onSubmit={this.handleSubmit}>
           <label>Old password:</label>
-            <input name="oldPassword" type="text" onChange={this.handleChange}/>
+            <input name="oldPassword" type="password" onChange={this.handleChange}/>
           <br />
           <label>New password:</label>
-            <input name="newPassword" type="text" onChange={this.handleChange}/>
+            <input name="newPassword" type="password" onChange={this.handleChange}/>
           <br />
             <input type="submit" value="Save changes!" />
         </form>
+        </>
       );
     }
   }

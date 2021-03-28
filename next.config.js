@@ -10,8 +10,8 @@ module.exports = (phase) => {
           STRIPE_PUBLIC_KEY: "pk_test_51IHqhuEKthtArr3S4MYSAYFEPiFlioccyA4SjUNArmmdSmK7B05UnMdsNKIu0TCRXADZLVmjEUlqKRIR4D2SWtJ700PVmechEl",
           USER_POOL_ID: "eu-west-1_GNvsrGORS",
           USER_POOL_CLIENT_ID: "51v3gjhdbtq2mt0m1fb1asniae",
-          REDIRECT_SIGN_IN: "http://localhost:3004/about.tsx",
-          REDIRECT_SIGN_OUT: "http://localhost:3000/",
+          REDIRECT_SIGN_IN: "http://localhost:3000/changePassword",
+          REDIRECT_SIGN_OUT: "http://localhost:3000/changePassword",
           API_BASE_URL: "http://localhost:3000",
           AUTH_COOKIE_DOMAIN: "localhost"
         },

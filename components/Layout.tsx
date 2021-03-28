@@ -59,7 +59,6 @@ useEffect(() => {
       <header>
       {authState === AuthState.SignedIn && username ? (
         <>
-          <AmplifySignOut />
           <Link href="/personalArea">
           <button name="personalArea">Your personal Area!</button>
           </Link>

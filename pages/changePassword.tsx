@@ -10,24 +10,18 @@ import { useAuthContext } from "context/authContext"
 import Layout from 'components/Layout';
 import { Auth } from 'aws-amplify';
 import 'components/users/personalAreaForm'
-import FormPersonalArea from 'components/users/personalAreaForm';
+import FormNome from 'components/users/personalAreaForm';
 import ReactDOM from 'react-dom';
+import FormPassword from 'components/users/changePasswordForm'
 
 
 
-
-export default function PersonalArea({ _authState, _username}){
-
-
-
+export default function changePassowrd({ _authState, _username}){
   return (
     <Layout _authState = {_authState} _username = {_username}>
       <div id="root">
-        <FormPersonalArea />   
+        <FormPassword />   
       </div>
-      <Link href="/changePassword">
-        <button>change your password!</button>
-      </Link>
     </Layout>
   )
 }

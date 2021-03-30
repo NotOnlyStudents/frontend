@@ -30,14 +30,13 @@ export default class FormPassword extends React.Component<password,any> {
     }
     async handleSubmit(event) {
       event.preventDefault();
-      console.log(this.state.oldPassword);
-        console.log(this.state.newPassword);
-        Auth.currentAuthenticatedUser()
-        .then(user => {return Auth.changePassword(user, this.state.oldPassword, this.state.newPassword);});
-    }
-
-
-        
+      Auth.currentAuthenticatedUser()
+      .then(user => {
+          return Auth.changePassword(user, this.state.oldPassword, this.state.newPassword);
+      })
+      .then(data => {alert("You change your password with success!"); document.location.href = "/";})
+      .catch(err => alert("There was a problem!"));
+      }     
 
     render() {
       return (

@@ -24,9 +24,14 @@ export default class FormPersonalArea extends React.Component<User,any>{
     this.handleSubmit = this.handleSubmit.bind(this);
   }
   async componentDidMount(){
-    const { attributes } = await Auth.currentAuthenticatedUser();
-    console.log(attributes);
-    this.setState({name:attributes["name"],surname:attributes["custom:surname"],email:attributes["email"]});
+    try{
+      const { attributes } = await Auth.currentAuthenticatedUser();
+      this.setState({name:attributes["name"],surname:attributes["custom:surname"],email:attributes["email"]});
+    }
+    catch{
+      document.location.href="/";
+    }
+
   }
   handleChange = (event) => {
     let nam = event.target.name;
@@ -65,6 +70,7 @@ export default class FormPersonalArea extends React.Component<User,any>{
   async signOut() {
     try {
         await Auth.signOut();
+        document.location.href="/";
     } catch (error) {
         console.log('error signing out: ', error);
     }
@@ -73,9 +79,12 @@ export default class FormPersonalArea extends React.Component<User,any>{
     const user = await Auth.currentAuthenticatedUser();
     user.deleteUser((error) => {
     if (error) {
-      throw error;
+      alert("There was a problem!");
     }
-    document.location.href = "/";
+    else{
+      alert("You delete your account with success");
+      document.location.href = "/";
+    }
     });
   };
 

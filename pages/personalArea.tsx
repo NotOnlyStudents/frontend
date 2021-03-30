@@ -23,7 +23,7 @@ export default function PersonalArea({ _authState, _username}){
         <FormPersonalArea />   
       </div>
       <Link href="/changePassword">
-        <button>change your password!</button>
+        <button>Change your password!</button>
       </Link>
     </>
   )

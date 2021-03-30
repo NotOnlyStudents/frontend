@@ -16,10 +16,17 @@ export default class FormPersonalArea extends React.Component<User,any>{
     this.state = {
       name: '',
       surname: '',
-      email: ''
+      email: '',
+      newName: '',
+      newSurname: ''
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+  }
+  async componentDidMount(){
+    const { attributes } = await Auth.currentAuthenticatedUser();
+    console.log(attributes);
+    this.setState({name:attributes["name"],surname:attributes["custom:surname"],email:attributes["email"]});
   }
   handleChange = (event) => {
     let nam = event.target.name;
@@ -28,29 +35,32 @@ export default class FormPersonalArea extends React.Component<User,any>{
   }
   async handleSubmit(event) {
     event.preventDefault();
-    let user = await Auth.currentAuthenticatedUser();
-    let result = await Auth.updateUserAttributes(user, {
-        'name': this.state.name,
-  });
-  
-
-  
-
-    console.log(result);
-    const { attributes } = await Auth.currentAuthenticatedUser();
-    console.log(attributes);
-
-
-    /*
-    if(attributes.email != this.state.email)
-    try {
-      await Auth.resendSignUp(user);
-      console.log('code resent successfully');
-    } catch (err) {
-      console.log('error resending code: ', err);
-    }*/
-
-    //Cambio mail. Casino
+    try{
+      if(this.state.newName == '' && this.state.newSurname == '')
+      {
+        alert("Please insert some data");
+        
+      }
+      else
+      {
+        let user = await Auth.currentAuthenticatedUser();
+        if(this.state.newName!= '')
+        {
+          await Auth.updateUserAttributes(user, {
+            'name': this.state.newName});
+        }
+        if(this.state.newSurname!='')
+        {        
+          await Auth.updateUserAttributes(user, {
+          'custom:surname': this.state.newSurname});
+        }
+        alert("Data updated successfully");
+        document.location.href="/";
+      }
+    }
+    catch{
+      alert("There was a problem with the server"); 
+    }
   }
   async signOut() {
     try {
@@ -59,51 +69,50 @@ export default class FormPersonalArea extends React.Component<User,any>{
         console.log('error signing out: ', error);
     }
   }
-      //TO DO: CHECK CORRECTLY IF SIGNOUT WORKS FINE
-      async deleteUser() {
-        const user = await Auth.currentAuthenticatedUser();
-        user.deleteUser((error) => {
-          if (error) {
-            throw error;
-          }
-          document.location.href = "/";
-        });
-      };
+  async deleteUser() {
+    const user = await Auth.currentAuthenticatedUser();
+    user.deleteUser((error) => {
+    if (error) {
+      throw error;
+    }
+    document.location.href = "/";
+    });
+  };
+
 
 
 
   render() {
     return (
-    <>  
+    <>
+    <h1>Personal Area:</h1>
+      <p>Your name: {this.state.name}</p>
+      <p>Your surname: {this.state.surname}</p>
+      <p>Your email: {this.state.email}</p> 
       <form onSubmit={this.handleSubmit}>
-      <h1>Hello {this.state.name} {this.state.surname}</h1>
-      <p>Enter your name:</p>
+      <p>Change your name:</p>
       <input
         type='text'
-        name='name'
+        name='newName'
         onChange={this.handleChange}
       />
-      <p>Enter your Surname:</p>
+      <p>Change your Surname:</p>
       <input
         type='text'
-        name='surname'
+        name='newSurname'
         onChange={this.handleChange}
       />
-      <p>Enter your email:</p>
-      <input
-        type='text'
-        name='email'
-        onChange={this.handleChange}
-      />
-      <br />
+      <br/>
+      <br/>
       <input type="submit" value="Save changes!" />
       </form>
       <br />
       <Link href="/">
           <button name="loginButton" onClick={this.signOut}>Sign out</button>        
       </Link>
+      <br />
       <button name="deleteAccountButton" onClick={this.deleteUser}>Delete Account</button>   
-   </> 
+    </> 
     );
   }
 }

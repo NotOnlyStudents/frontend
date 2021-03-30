@@ -17,38 +17,16 @@ import ReactDOM from 'react-dom';
 
 
 export default function PersonalArea({ _authState, _username}){
-
-
-
   return (
-    <Layout _authState = {_authState} _username = {_username}>
+    <>
       <div id="root">
         <FormPersonalArea />   
       </div>
       <Link href="/changePassword">
         <button>change your password!</button>
       </Link>
-    </Layout>
+    </>
   )
 }
 
 
-export async function getServerSideProps(context)
-{  
-  const { Auth } = withSSRContext(context);
-  const user: CognitoUser = await Auth.currentAuthenticatedUser();
-  try {
-    return {
-      props: {
-        _authState: AuthState.SignedIn,
-        _username: user.getUsername(),
-      }
-    }
-  } catch (err) {
-    return {
-      props: {
-        _authState: AuthState.SignedOut
-      }
-    }
-  }
-}

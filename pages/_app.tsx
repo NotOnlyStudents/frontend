@@ -1,6 +1,7 @@
 import { AppProps } from 'next/app'
 import { AuthContextProvider } from 'context/authContext'
 import { Amplify, Auth } from 'aws-amplify'
+import React from 'react';
 
 //import 'styles/global.css'
 

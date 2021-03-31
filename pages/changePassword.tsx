@@ -1,34 +1,22 @@
-import Head from 'next/head'
-import Link from 'next/link'
-import React, { useEffect } from 'react';
-import { GetServerSideProps, InferGetStaticPropsType } from "next"
-import { CognitoUser } from "@aws-amplify/auth"
-import { withSSRContext } from 'aws-amplify'
-import { AmplifySignOut } from '@aws-amplify/ui-react'
-import { AuthState, onAuthUIStateChange } from '@aws-amplify/ui-components'
-import { useAuthContext } from "context/authContext"
+import React from 'react';
+import { CognitoUser } from '@aws-amplify/auth';
+import { withSSRContext } from 'aws-amplify';
+import { AuthState } from '@aws-amplify/ui-components';
 import Layout from 'components/Layout';
-import { Auth } from 'aws-amplify';
-import 'components/users/personalAreaForm'
-import FormNome from 'components/users/personalAreaForm';
-import ReactDOM from 'react-dom';
-import FormPassword from 'components/users/changePasswordForm'
+import 'components/users/personalAreaForm';
+import FormPassword from 'components/users/changePasswordForm';
 
-
-
-export default function changePassowrd({ _authState, _username}){
+export default function changePassowrd(props) {
   return (
-    <Layout _authState = {_authState} _username = {_username}>
+    <Layout _authState={props._authState} _username={props._username}>
       <div id="root">
-        <FormPassword />   
+        <FormPassword />
       </div>
     </Layout>
-  )
+  );
 }
 
-
-export async function getServerSideProps(context)
-{  
+export async function getServerSideProps(context) {
   const { Auth } = withSSRContext(context);
   const user: CognitoUser = await Auth.currentAuthenticatedUser();
   try {
@@ -36,13 +24,13 @@ export async function getServerSideProps(context)
       props: {
         _authState: AuthState.SignedIn,
         _username: user.getUsername(),
-      }
-    }
+      },
+    };
   } catch (err) {
     return {
       props: {
-        _authState: AuthState.SignedOut
-      }
-    }
+        _authState: AuthState.SignedOut,
+      },
+    };
   }
 }

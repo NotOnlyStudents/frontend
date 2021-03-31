@@ -1,27 +1,22 @@
-import Head from 'next/head'
-import Link from 'next/link'
-import React, { useEffect } from 'react';
-import { GetServerSideProps, InferGetStaticPropsType } from "next"
-import { CognitoUser } from "@aws-amplify/auth"
-import { withSSRContext } from 'aws-amplify'
-import { AmplifySignOut } from '@aws-amplify/ui-react'
-import { AuthState, onAuthUIStateChange } from '@aws-amplify/ui-components'
-import { AuthContext, useAuthContext } from "context/authContext"
+import React from 'react';
+import { CognitoUser } from '@aws-amplify/auth';
+import { withSSRContext } from 'aws-amplify';
+import { AuthState } from '@aws-amplify/ui-components';
 import Layout from 'components/Layout';
 
+/* eslint no-underscore-dangle: 0 */
 
-function Home({ _authState, _username }){
+function Home({ _authState,_username }) {
   return (
-    <Layout _authState = {_authState} _username = {_username}>
+    <Layout _authState={_authState} _username={_username}>
       <div>
         prova prova
       </div>
     </Layout>
-  )
+  );
 }
 
-export async function getServerSideProps(context)
-{  
+export async function getServerSideProps(context) {
   const { Auth } = withSSRContext(context);
 
   try {
@@ -30,22 +25,16 @@ export async function getServerSideProps(context)
     return {
       props: {
         _authState: AuthState.SignedIn,
-        _username: user.getUsername()
-      }
-    }
+        _username: user.getUsername(),
+      },
+    };
   } catch (err) {
     return {
       props: {
-        _authState: AuthState.SignedOut
-      }
-    }
+        _authState: AuthState.SignedOut,
+      },
+    };
   }
 }
 
-export default Home
-
-
-
-
-
-
+export default Home;

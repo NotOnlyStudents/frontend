@@ -34,8 +34,8 @@ export default class FormPersonalArea extends React.Component<User,any>{
 
   }
   handleChange = (event) => {
-    let nam = event.target.name;
-    let val = event.target.value;
+    const nam = event.target.name;
+    const val = event.target.value;
     this.setState({[nam]: val});
   }
   async handleSubmit(event) {
@@ -48,7 +48,7 @@ export default class FormPersonalArea extends React.Component<User,any>{
       }
       else
       {
-        let user = await Auth.currentAuthenticatedUser();
+        const user = await Auth.currentAuthenticatedUser();
         if(this.state.newName!= '')
         {
           await Auth.updateUserAttributes(user, {
@@ -86,7 +86,7 @@ export default class FormPersonalArea extends React.Component<User,any>{
       document.location.href = "/";
     }
     });
-  };
+  }
 
 
 

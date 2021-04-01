@@ -1,28 +1,27 @@
-import React, { ReactNode, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import Link from 'next/link'
 import Head from 'next/head'
-import { GetServerSideProps } from 'next'
-import { withSSRContext } from 'aws-amplify'
-import Auth, { CognitoUser } from '@aws-amplify/auth'
 import { AuthState, onAuthUIStateChange } from '@aws-amplify/ui-components'
 import { useAuthContext } from 'context/authContext'
 import { AmplifySignOut } from '@aws-amplify/ui-react'
 
 
 const name = 'EmporioLambda'
-export const siteTitle = 'EmporioLambda'
 
-
+interface LayoutProps
+{
+  children: React.ReactNode,
+  title: string,
+  _authState:AuthState;
+  _username:string | undefined;
+}
 
 export default function Layout({
   children,
+  title,
   _authState,
   _username
-}: {
-  children: React.ReactNode,
-  _authState:AuthState;
-  _username:string | undefined;
-}) 
+}: LayoutProps) 
 {
 
 const { authState, username, setAuthState, setUsername} = useAuthContext();
@@ -48,13 +47,14 @@ useEffect(() => {
           name="description"
           content="Emporio Lambda"
         />
+        <title></title>
         <meta
           property="og:image"
           content={`https://og-image.now.sh/${encodeURI(
-            siteTitle
+            title
           )}.png?theme=light&md=0&fontSize=75px&images=https%3A%2F%2Fassets.vercel.com%2Fimage%2Fupload%2Ffront%2Fassets%2Fdesign%2Fnextjs-black-logo.svg`}
         />
-        <meta name="og:title" content={siteTitle} />
+        <meta name="og:title" content={title} />
         <meta name="twitter:card" content="summary_large_image" />
       </Head>
       <header>
@@ -75,5 +75,3 @@ useEffect(() => {
   )
 
 }
-
-

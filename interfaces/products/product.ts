@@ -11,6 +11,10 @@ export interface Product {
   category: string[];
 }
 
+export interface ProductsGETRequest {
+  products: Product[]
+}
+
 /*export class Products implements Product {
   constructor(
     public id: number,

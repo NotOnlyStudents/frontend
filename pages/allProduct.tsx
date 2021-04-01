@@ -1,19 +1,18 @@
 import React from "react";
-import Layout from "../components/Layout";
-import { Product } from "../interfaces/products/product";
-import ProductCategoryList from "../components/products/ProductCategoryList";
+import Layout from "components/Layout";
+import { getAllProduct } from "services/productService"
+import ProductCategoryList from "components/ProductCategoryList";
 
 export default function ProductListPage(items) {
   return (
-    <div>
-      {items.stargazers_count}
-    </div>
+    <Layout _authState = {_authState} _username = {_username} title = "Prodotti | EmporioLambda">
+      <div>
+        <ProductCategoryList products={items} />
+      </div>
+    </Layout>
   );
 }
 
 ProductListPage.getInitialProps = async () => {
-  const response = await fetch(`https://api.github.com/repos/vercel/next.js`);
-  const result = await response.json();
-  //console.log(result);
-  return { items: result };
+  return { items: await getAllProduct() };
 };

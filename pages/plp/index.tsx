@@ -1,14 +1,13 @@
 import React from 'react'
-import { NextRouter, useRouter } from 'next/router'
-import Box from '@material-ui/core/Box';
 
 import { PLPProductItem, ProductFilter} from 'interfaces/products/product';
 import PLPProduct from 'components/PLP/PLPProduct';
-import PLPFilter from 'components/PLP/PLPFilter';
-import { GetServerSideProps } from 'next';
 import { getAllProduct } from 'services/productService';
 
-interface Props {}
+interface Props {
+    filter: ProductFilter,
+    products: PLPProductItem[]
+}
 
 interface State {
     filter: ProductFilter,
@@ -20,25 +19,21 @@ class PLPCustomer extends React.Component<Props, State>
     constructor(props: Props)
     {
         super(props);
+
+        this.state = {
+            filter: {},
+            products: []
+        }
     }
 
     componentDidMount()
     {
-        this.initFilter();
-    }
+        console.log(this.props);
 
-    initFilter = () => {
-        const router: NextRouter = useRouter();
-
-        const filter: ProductFilter = {
-            name: router.query.name as string || "",
-            categories: router.query.categories as string[],
-            available: JSON.parse(router.query.available as string) as boolean,
-            priceMax: parseFloat(router.query.priceMax as string),
-            priceMin: parseFloat(router.query.priceMin as string)
-        };
-
-        this.setState({ filter });
+        this.setState({ 
+            filter: this.props.filter, 
+            products: this.props.products
+        });
     }
 
     handleChangeFilters = (filter: ProductFilter) => {
@@ -60,22 +55,26 @@ class PLPCustomer extends React.Component<Props, State>
     {
         return (
             <div>
-                <PLPFilter 
+                {/* <PLPFilter 
                     filter={this.state.filter} 
                     handleChangeFilter={this.handleChangeFilters} 
                 />
                 <Box flexWrap="wrap">
                     {this.renderAllItems()}
-                </Box>
+                </Box> */}
             </div>
         );
     }
 }
 
-export async function getServerSideProps({ params }) {
-    console.log(params);
+export async function getServerSideProps({query}) {
+    const filter: ProductFilter = query;
+
     return {
-        products: await getAllProduct()
+        props: {
+            filter: filter,
+            products: await getAllProduct(filter)
+        }
     }
 }
 

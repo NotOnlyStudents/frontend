@@ -7,7 +7,7 @@ import Typography from '@material-ui/core/Typography';
 
 import { PLPProductItem } from 'interfaces/products/product';
 
-import './PLPProduct.scss'
+// import './PLPProduct.scss'
 
 interface Props {
     product: PLPProductItem

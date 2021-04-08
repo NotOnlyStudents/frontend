@@ -21,14 +21,14 @@ export interface PLPProductItem {
 }
 
 export interface ProductsGETRequest {
-  products: Product[]
+  products: PLPProductItem[]
 }
 
 export interface ProductFilter
 {
-    name: string,
-    categories: string[],
-    priceMax: number,
-    priceMin: number,
-    available: boolean
+    text?: string,
+    categories?: string[],
+    priceMax?: number,
+    priceMin?: number,
+    available?: boolean
 }

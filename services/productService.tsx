@@ -1,10 +1,13 @@
 import HTTPRequest from 'lib/HTTPRequest';
-import { Product, ProductFilter, ProductsGETRequest } from 'interfaces/products/product';
+import { PLPProductItem, Product, ProductFilter, ProductsGETRequest } from 'interfaces/products/product';
 import queryString from "query-string"
 
-const getAllProduct = async (params?: ProductFilter): Promise<Product[]> => {
+const getAllProduct = async (params?: ProductFilter): Promise<PLPProductItem[]> => {
   const req: HTTPRequest = new HTTPRequest(`products`);
-  const query: string = queryString.stringify(params);
+  let query: string = queryString.stringify(params);
+
+  if(query) { query = `?${query}` }
+  
   const res: ProductsGETRequest = await req.get<ProductsGETRequest>(query);
 
   return res.products

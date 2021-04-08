@@ -2,7 +2,7 @@ import { AppProps } from 'next/app'
 import { AuthContextProvider } from 'context/authContext'
 import { Amplify, Auth } from 'aws-amplify'
 
-import 'styles/global.css'
+//import 'styles/global.css'
 
 Amplify.configure({
   Auth: {

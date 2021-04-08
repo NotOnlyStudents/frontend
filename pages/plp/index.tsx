@@ -5,6 +5,8 @@ import Box from '@material-ui/core/Box';
 import { PLPProductItem, ProductFilter} from 'interfaces/products/product';
 import PLPProduct from 'components/PLP/PLPProduct';
 import PLPFilter from 'components/PLP/PLPFilter';
+import { GetServerSideProps } from 'next';
+import { getAllProduct } from 'services/productService';
 
 interface Props {}
 
@@ -67,6 +69,13 @@ class PLPCustomer extends React.Component<Props, State>
                 </Box>
             </div>
         );
+    }
+}
+
+export async function getServerSideProps({ params }) {
+    console.log(params);
+    return {
+        products: await getAllProduct()
     }
 }
 

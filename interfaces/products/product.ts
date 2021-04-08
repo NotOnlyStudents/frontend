@@ -1,31 +1,34 @@
 export interface Product {
-  id: number;
+  id: string;
   name: string;
   description: string;
   images: string[];
   quantity: number;
   price: number;
-  available: boolean;
   evidence: boolean;
   discount: number;
   categories: string[];
+}
+
+export interface PLPProductItem {
+  id: string,
+  name: string,
+  price: number,
+  image: string,
+  evidence: string,
+  discount: number,
+  quantity: number
 }
 
 export interface ProductsGETRequest {
   products: Product[]
 }
 
-/*export class Products implements Product {
-  constructor(
-    public id: number,
-    public name: string,
-    public description: string,
-    public category: string[],
-    public price: number,
-    public image: string[],
-    public quantity: number,
-    public available: boolean,
-    public evidence: boolean,
-    public discount: number
-  ) {}
-}*/
+export interface ProductFilter
+{
+    name: string,
+    categories: string[],
+    priceMax: number,
+    priceMin: number,
+    available: boolean
+}

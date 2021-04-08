@@ -3,14 +3,14 @@ import { CognitoUser } from '@aws-amplify/auth';
 import { withSSRContext } from 'aws-amplify';
 import { AuthState } from '@aws-amplify/ui-components';
 import Layout from 'components/Layout';
+import 'components/users/personalAreaForm';
+import FormPassword from 'components/users/changePasswordForm';
 
-/* eslint no-underscore-dangle: 0 */
-
-function Home({ _authState,_username }) {
+export default function changePassowrd(props) {
   return (
-    <Layout _authState={_authState} _username={_username}>
-      <div>
-        prova prova
+    <Layout _authState={props._authState} _username={props._username}>
+      <div id="root">
+        <FormPassword />
       </div>
     </Layout>
   );
@@ -18,10 +18,8 @@ function Home({ _authState,_username }) {
 
 export async function getServerSideProps(context) {
   const { Auth } = withSSRContext(context);
-
+  const user: CognitoUser = await Auth.currentAuthenticatedUser();
   try {
-    const user: CognitoUser = await Auth.currentAuthenticatedUser();
-
     return {
       props: {
         _authState: AuthState.SignedIn,
@@ -36,5 +34,3 @@ export async function getServerSideProps(context) {
     };
   }
 }
-
-export default Home;

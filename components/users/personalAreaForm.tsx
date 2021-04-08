@@ -1,7 +1,6 @@
 import { Auth } from 'aws-amplify';
 import Link from 'next/link';
 import React from 'react';
-import ReactDOM from 'react-dom';
 
 export interface User {
     name?: string;
@@ -38,7 +37,7 @@ export default class FormPersonalArea extends React.Component<User,any>{
     const val = event.target.value;
     this.setState({[nam]: val});
   }
-  async handleSubmit(event) {
+  async handleSubmit(event: Event): Promise<void> {
     event.preventDefault();
     try{
       if(this.state.newName == '' && this.state.newSurname == '')
@@ -91,7 +90,7 @@ export default class FormPersonalArea extends React.Component<User,any>{
 
 
 
-  render() {
+  render(): React.ReactElement {
     return (
     <>
     <h1>Personal Area:</h1>

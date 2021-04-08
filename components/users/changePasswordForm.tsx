@@ -1,17 +1,22 @@
 import { Auth } from 'aws-amplify';
 import React from 'react';
 
-interface password{
+interface Props{
   oldPassword?:string;
   newPassword?:string;
 }
 
-export default class FormPassword extends React.Component<password, any> {
-  constructor(props) {
+interface State {
+  oldPassword: string,
+  newPassword: string
+}
+
+export default class FormPassword extends React.Component<Props, State> {
+  constructor(props: Props) {
     super(props);
     this.state = {
       oldPassword: '',
-      newPassword: '',
+      newPassword: ''
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -24,7 +29,7 @@ export default class FormPassword extends React.Component<password, any> {
       this.setState({ [nam]: val });
     }
 
-    async handleSubmit(event) {
+    handleSubmit = (event: Event) => {
       event.preventDefault();
       Auth.currentAuthenticatedUser()
         .then((user) => Auth.changePassword(user, this.state.oldPassword, this.state.newPassword))

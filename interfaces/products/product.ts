@@ -2,13 +2,13 @@ export interface Product {
   id: number;
   name: string;
   description: string;
-  image: string[];
+  images: string[];
   quantity: number;
   price: number;
   available: boolean;
   evidence: boolean;
   discount: number;
-  category: string[];
+  categories: string[];
 }
 
 export interface ProductsGETRequest {

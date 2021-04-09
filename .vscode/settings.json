@@ -5,5 +5,5 @@
     "eslint.validate": [
         "typescript"
     ],
-    "cSpell.enabled": true
+    "cSpell.enabled": false
 }

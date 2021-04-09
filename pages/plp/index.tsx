@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { PLPProductItem, ProductFilter} from 'interfaces/products/product';
-import PLPProduct from 'components/PLP/PLPProduct';
+import PLPProduct from 'components/plp/PLPProduct';
 import { getAllProduct } from 'services/productService';
 
 interface Props {

@@ -1,6 +1,8 @@
 import React from 'react'
 import Link from 'next/link';
 
+import Button from '@material-ui/core/Button';
+
 interface Props { }
 
 interface State { }
@@ -17,7 +19,7 @@ class HeaderNotAuthenticated extends React.Component<Props, State>
         return (
             <>
                 <Link href="/authenticator">
-                    <button type="button" name="loginButton">Login!</button>
+                    <Button variant="contained" color='secondary'>Login!</Button>
                 </Link>
             </>
         );

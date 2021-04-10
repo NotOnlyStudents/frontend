@@ -1,5 +1,5 @@
 import { AuthState } from "@aws-amplify/ui-components";
-import { AppBar, Typography } from "@material-ui/core";
+import { AppBar, Typography, InputBase } from "@material-ui/core";
 import {
   fade,
   makeStyles,
@@ -8,17 +8,16 @@ import {
 } from "@material-ui/core/styles";
 import React from "react";
 import HeaderNotAuthenticated from "./HeaderNotAuthenticated";
+import Toolbar from '@material-ui/core/Toolbar';
 import HeaderSeller from "./HeaderSeller";
 import SearchIcon from "@material-ui/icons/Search";
-import InputBase from "@material-ui/core/InputBase";
 import HeaderCustomer from "./HeaderCustomer";
+import Box from "@material-ui/core/Box";
 
 interface Props {
   authState: AuthState;
   username: string | undefined;
 }
-
-interface State {}
 
 function Header({ authState, username }: Props): React.ReactElement {
   const sellerUsername = "seller";
@@ -40,93 +39,81 @@ function Header({ authState, username }: Props): React.ReactElement {
   };
 
   return (
-    <AppBar position='fixed'>
-      <Typography className={classes.title} variant="h1" noWrap>
-        EmporioLambda
-      </Typography>
-
-      <div className={classes.search}>
-        <div className={classes.searchIcon}>
-          <SearchIcon />
-        </div>
-        <InputBase
-          placeholder="Search…"
-          classes={{
-            root: classes.inputRoot,
-            input: classes.inputInput,
-          }}
-          inputProps={{ "aria-label": "search" }}
-        />
-      </div>
-      {renderHeader()}
-    </AppBar>
+    <div className={classes.root}>
+      <AppBar position="fixed">
+        <Toolbar className={classes.container}>
+          <Typography >
+            EmporioLambda
+          </Typography>
+          <Box className={classes.search}>
+            <Box className={classes.searchIcon}>
+              <SearchIcon />
+            </Box>
+            <InputBase
+              placeholder="Search…"
+              classes={{
+                root: classes.inputRoot,
+                input: classes.inputInput,
+              }}
+              inputProps={{ 'aria-label': 'search' }}
+            />
+          </Box>
+        </Toolbar>
+      </AppBar>
+    </div>
   );
 }
 
 const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    grow: {
+  ({
+    root: {
       flexGrow: 1,
     },
-    menuButton: {
-      marginRight: theme.spacing(2),
+    container: {
+      display: 'flex',
+      justifyContent: 'space-between'
     },
     title: {
-      display: "none",
-      [theme.breakpoints.up("sm")]: {
-        display: "block",
+      title: 26,
+      display: 'none',
+      [theme.breakpoints.up('sm')]: {
+        display: 'block',
       },
     },
     search: {
-      position: "relative",
+      position: 'relative',
       borderRadius: theme.shape.borderRadius,
       backgroundColor: fade(theme.palette.common.white, 0.15),
-      "&:hover": {
+      '&:hover': {
         backgroundColor: fade(theme.palette.common.white, 0.25),
       },
-      marginRight: theme.spacing(2),
       marginLeft: 0,
-      width: "100%",
-      [theme.breakpoints.up("sm")]: {
-        marginLeft: theme.spacing(3),
-        width: "auto",
-      },
     },
     searchIcon: {
       padding: theme.spacing(0, 2),
-      height: "100%",
-      position: "absolute",
-      pointerEvents: "none",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
+      height: '100%',
+      position: 'absolute',
+      pointerEvents: 'none',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center'
     },
     inputRoot: {
-      color: "inherit",
+      color: 'inherit',
     },
     inputInput: {
       padding: theme.spacing(1, 1, 1, 0),
-      // vertical padding + font size from searchIcon
       paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
-      transition: theme.transitions.create("width"),
-      width: "100%",
-      [theme.breakpoints.up("md")]: {
-        width: "20ch",
+      transition: theme.transitions.create('width'),
+      width: '100%',
+      [theme.breakpoints.up('sm')]: {
+        width: '12ch',
+        '&:focus': {
+          width: '20ch',
+        },
       },
     },
-    sectionDesktop: {
-      display: "none",
-      [theme.breakpoints.up("md")]: {
-        display: "flex",
-      },
-    },
-    sectionMobile: {
-      display: "flex",
-      [theme.breakpoints.up("md")]: {
-        display: "none",
-      },
-    },
-  })
+  }),
 );
 
 export default Header;

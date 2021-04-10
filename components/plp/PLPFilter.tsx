@@ -20,7 +20,7 @@ class PLPFilter extends React.Component<Props, State>
     {
         return (
             <div>
-                
+                <Autocomplete>
             </div>
         );
     }

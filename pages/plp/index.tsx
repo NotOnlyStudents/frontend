@@ -37,6 +37,7 @@ class PLPCustomer extends React.Component<Props, State>
     }
 
     handleChangeFilters = (filter: ProductFilter) => {
+        
         this.setState({ filter })
     }
 

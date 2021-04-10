@@ -9,8 +9,8 @@ import Header from 'components/header/Header'
 interface Props
 {
   children: React.ReactNode,
-  _authState: AuthState,
-  _username: string | undefined
+  _authState?: AuthState,
+  _username?: string | undefined
 }
 
 function Layout({ children, _authState, _username}: Props) 

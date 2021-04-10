@@ -1,6 +1,8 @@
 import React from 'react'
 import Link from 'next/link';
 
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+
 interface Props { }
 
 interface State { }
@@ -17,7 +19,7 @@ class HeaderSeller extends React.Component<Props, State>
         return (
             <>
                 <Link href="/personalArea">
-                    <button type="button" name="personalArea">Your personal Area!</button>
+                    <ExitToAppIcon aria-label="logout" />
                 </Link>
             </>
         );

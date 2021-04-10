@@ -20,6 +20,9 @@ const getProductById = async (id: string): Promise<Product> => {
   return res;
 }
 
+const getCategories = async (): Promise<Category[]> => {
+  const req: HTTPRequest = new HTTPReq
+}
 export {
     getAllProduct,
     getProductById,

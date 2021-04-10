@@ -2,7 +2,7 @@ import { Product } from "../interfaces/products/product";
 
 export const myJson: Product[] = [
   {
-    id: 1,
+    id: "1",
     name: "chiodi",
     description: "dei chiodi",
     image: [`test`],

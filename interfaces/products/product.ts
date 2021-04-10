@@ -32,5 +32,7 @@ export interface ProductFilter
     categories?: Category[],
     priceMax?: number,
     priceMin?: number,
-    available?: boolean
+    available?: boolean,
+    page?: number,
+    offset?: 25
 }

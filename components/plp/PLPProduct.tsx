@@ -7,6 +7,7 @@ import Typography from '@material-ui/core/Typography';
 
 import { PLPProductItem } from 'interfaces/products/product';
 import { makeStyles } from '@material-ui/core/styles';
+import GridListTile from '@material-ui/core/GridListTile';
 
 interface Props {
     product: PLPProductItem
@@ -24,7 +25,7 @@ function PLPProduct({product}: Props)
                     image={product.image}
                 />
                 <CardContent>
-                <Typography gutterBottom variant="h5" component="h2">
+                <Typography gutterBottom variant="h5" component="h2" noWrap>
                     { product.name }
                 </Typography>
                 </CardContent>
@@ -35,10 +36,10 @@ function PLPProduct({product}: Props)
 
 const useStyles = makeStyles({
     root: {
-        maxWidth: 345,
+        width: '100%',
     },
     image: {
-        height: 50
+        height: 150
     }
 });
 

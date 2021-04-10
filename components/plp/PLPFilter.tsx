@@ -14,11 +14,24 @@ interface Props {
   handleChangeFilter: (filter: ProductFilter) => void;
 }
 
-interface State {}
+interface State
+{
+  categoriesOptions: Category[] 
+}
 
 class PLPFilter extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
+
+    this.state = {
+      categoriesOptions: []
+    }
+  }
+
+  getAllCategories = async () => {
+    const categories : Category[] = await getCategories();
+
+    this.setState({ categoriesOptions: categories })
   }
 
   async Categories() {
@@ -61,15 +74,10 @@ class PLPFilter extends React.Component<Props, State> {
         id="Categories"
         style={{ width: 300 }}
         open={open}
-        onOpen={() => {
-          setOpen(true);
-        }}
-        onClose={() => {
-          setOpen(false);
-        }}
+        onOpen={this.getAllCategories}
         getOptionSelected={(option, value) => option.name === value.name}
         getOptionLabel={(option) => option.name}
-        options={options}
+        options={this.state.categoriesOptions}
         loading={loading}
         renderInput={(params) => (
           <TextField
@@ -77,14 +85,6 @@ class PLPFilter extends React.Component<Props, State> {
             label="Categories"
             InputProps={{
               ...params.InputProps,
-              endAdornment: (
-                <React.Fragment>
-                  {loading ? (
-                    <CircularProgress color="inherit" size={20} />
-                  ) : null}
-                  {params.InputProps.endAdornment}
-                </React.Fragment>
-              ),
             }}
           />
         )}
@@ -92,8 +92,8 @@ class PLPFilter extends React.Component<Props, State> {
     );
   }
 
-  Evidence() {
-    const [checked, setChecked] = React.useState(true);
+  /*Evidence() {
+    const [checked, setChecked] = React.useState(false);
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       setChecked(event.target.checked);
@@ -111,7 +111,7 @@ class PLPFilter extends React.Component<Props, State> {
         label="evidence"
       />
     );
-  }
+  }*/
 
   render(): React.ReactElement {
     return (

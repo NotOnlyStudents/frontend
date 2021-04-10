@@ -3,18 +3,18 @@ import React from 'react'
 import { PLPProductItem, ProductFilter} from 'interfaces/products/product';
 import PLPProduct from 'components/plp/PLPProduct';
 import { getAllProduct } from 'services/productService';
-import { Box, GridList } from '@material-ui/core';
-import { createStyles, makeStyles, Theme, withStyles } from '@material-ui/core/styles';
-import {  } from '@material-ui/core/styles';
+import { Box, Grid, GridList, GridListTile, ListSubheader } from '@material-ui/core';
+import { createStyles, makeStyles, withStyles } from '@material-ui/styles';
+import { Pagination } from '@material-ui/lab';
+import PLPFilter from 'components/plp/PLPFilter';
 
 interface Props {
-    classes,
-    filter: ProductFilter,
+    filters: ProductFilter,
     products: PLPProductItem[]
 }
 
 interface State {
-    filter: ProductFilter,
+    filters: ProductFilter,
     products: PLPProductItem[]
 }
 
@@ -25,7 +25,7 @@ class PLPCustomer extends React.Component<Props, State>
         super(props);
 
         this.state = {
-            filter: {},
+            filters: {},
             products: []
         }
     }
@@ -33,22 +33,29 @@ class PLPCustomer extends React.Component<Props, State>
     componentDidMount()
     {
         this.setState({ 
-            filter: this.props.filter, 
+            filters: this.props.filters, 
             products: this.props.products
         });
     }
 
-    handleChangeFilters = (filter: ProductFilter) => {
+    handleChangeFilters = (filters: ProductFilter) => {
         
-        this.setState({ filter })
+        this.setState({ filters })
     }
+
+    handleChangePagination = (value: number) => {
+        this.setState({filters: { page: value }})
+    };
+    
 
     renderAllItems(): React.ReactElement[]
     {
         return this.state.products.map(
             (product: PLPProductItem, index: number): React.ReactElement => {
                 return (
-                    <PLPProduct key={index} product={product} />
+                    <Grid key={index} item xs={12} sm={6} md={4}>
+                        <PLPProduct product={product} />
+                    </Grid>
                 );
             }
         );
@@ -56,50 +63,34 @@ class PLPCustomer extends React.Component<Props, State>
 
     render(): React.ReactElement
     {
-        console.log(this.state.products)
+        const { filters } = this.state;
 
         return (
             <>
-                {/* <PLPFilter 
-                    filter={this.state.filter} 
+                <PLPFilter 
+                    filter={filters} 
                     handleChangeFilter={this.handleChangeFilters} 
-                /> */}
-                <GridList cellHeight={180} className={classes.gridList}>
+                />
+                <Grid container spacing={3} justify='center' alignItems='center'>
                     {this.renderAllItems()}
-                </GridList>
+                </Grid>
+                <div>
+                    <Pagination count={10} page={filters.page} onChange={this.handleChangePagination} />
+                </div>
             </>
         );
     }
 }
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      display: 'flex',
-      flexWrap: 'wrap',
-      justifyContent: 'space-around',
-      overflow: 'hidden',
-      backgroundColor: theme.palette.background.paper,
-    },
-    gridList: {
-      width: 500,
-      height: 450,
-    },
-    icon: {
-      color: 'rgba(255, 255, 255, 0.54)',
-    },
-  }),
-);
-
 export async function getServerSideProps({query}) {
-    const filter: ProductFilter = query;
+    const filters: ProductFilter = query;
 
     return {
         props: {
-            filter: filter,
-            products: await getAllProduct(filter)
+            filters,
+            products: await getAllProduct(filters)
         }
     }
 }
 
-export default withStyles(useStyles)(PLPCustomer);
+export default PLPCustomer;

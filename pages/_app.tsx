@@ -37,8 +37,7 @@ function App({ Component, pageProps }: AppProps) {
 
   return(
     <AuthContextProvider>
-       <Head>
-        <link rel="icon" href="/favicon.ico" />
+      <Head>
         <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
       </Head>
       <ThemeProvider theme={theme}>

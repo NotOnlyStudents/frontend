@@ -6,41 +6,40 @@ import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
 
 import { PLPProductItem } from 'interfaces/products/product';
-
-// import './PLPProduct.scss'
+import { makeStyles } from '@material-ui/core/styles';
 
 interface Props {
     product: PLPProductItem
 }
-interface State {}
 
-class PLPProduct extends React.Component<Props, State>
+function PLPProduct({product}: Props) 
 {
-    constructor(props: Props)
-    {
-        super(props);
-    }
+    const classes = useStyles();
 
-    render(): React.ReactElement
-    {
-        const {product} = this.props;
-
-        return (
-            <Card className="plp_product">
-                <CardActionArea>
-                    <CardMedia
-                        className="plp_product-image"
-                        image={product.image}
-                    />
-                    <CardContent>
-                    <Typography gutterBottom variant="h5" component="h2">
-                        { product.name }
-                    </Typography>
-                    </CardContent>
-                </CardActionArea>
-            </Card>
-        );
-    }
+    return (
+        <Card className={classes.root}>
+            <CardActionArea>
+                <CardMedia
+                    className={classes.image}
+                    image={product.image}
+                />
+                <CardContent>
+                <Typography gutterBottom variant="h5" component="h2">
+                    { product.name }
+                </Typography>
+                </CardContent>
+            </CardActionArea>
+        </Card>
+    );
 }
+
+const useStyles = makeStyles({
+    root: {
+        maxWidth: 345,
+    },
+    image: {
+        height: 50
+    }
+});
 
 export default PLPProduct

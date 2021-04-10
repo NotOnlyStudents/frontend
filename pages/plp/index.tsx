@@ -3,6 +3,8 @@ import React from 'react'
 import { PLPProductItem, ProductFilter} from 'interfaces/products/product';
 import PLPProduct from 'components/plp/PLPProduct';
 import { getAllProduct } from 'services/productService';
+import PLPFilter from 'components/plp/PLPFilter';
+import { Box } from '@material-ui/core';
 
 interface Props {
     filter: ProductFilter,
@@ -56,13 +58,13 @@ class PLPCustomer extends React.Component<Props, State>
     {
         return (
             <div>
-                {/* <PLPFilter 
+                <PLPFilter 
                     filter={this.state.filter} 
                     handleChangeFilter={this.handleChangeFilters} 
                 />
                 <Box flexWrap="wrap">
                     {this.renderAllItems()}
-                </Box> */}
+                </Box>
             </div>
         );
     }

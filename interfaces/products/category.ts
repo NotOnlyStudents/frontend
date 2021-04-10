@@ -1,1 +1,7 @@
-export type Category = string;
+export interface Category {
+    name: string;
+}
+
+export interface CategoriesGETRequest {
+    categories: Category[]
+  }

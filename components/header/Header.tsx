@@ -1,10 +1,9 @@
 import { AuthState } from "@aws-amplify/ui-components";
-import { AppBar, Typography, InputBase } from "@material-ui/core";
+import { AppBar, Typography, InputBase, Link } from "@material-ui/core";
 import {
   fade,
   makeStyles,
   Theme,
-  createStyles,
 } from "@material-ui/core/styles";
 import React from "react";
 import HeaderNotAuthenticated from "./HeaderNotAuthenticated";
@@ -12,7 +11,6 @@ import Toolbar from '@material-ui/core/Toolbar';
 import HeaderSeller from "./HeaderSeller";
 import SearchIcon from "@material-ui/icons/Search";
 import HeaderCustomer from "./HeaderCustomer";
-import Box from "@material-ui/core/Box";
 
 interface Props {
   authState: AuthState;
@@ -39,46 +37,55 @@ function Header({ authState, username }: Props): React.ReactElement {
   };
 
   return (
-    <div className={classes.root}>
-      <AppBar position="fixed">
-        <Toolbar className={classes.container}>
-          <Typography >
+    <AppBar position="sticky">
+      <Toolbar className={classes.container}>
+        <Typography className={classes.title} variant="h1" noWrap>
+          <Link className={classes.link} href='/'>
             EmporioLambda
-          </Typography>
-          <Box className={classes.search}>
-            <Box className={classes.searchIcon}>
-              <SearchIcon />
-            </Box>
-            <InputBase
-              placeholder="Search…"
-              classes={{
-                root: classes.inputRoot,
-                input: classes.inputInput,
-              }}
-              inputProps={{ 'aria-label': 'search' }}
-            />
-          </Box>
-        </Toolbar>
-      </AppBar>
-    </div>
+          </Link>
+        </Typography>
+        <div className={classes.search}>
+          <div className={classes.searchIcon}>
+            <SearchIcon />
+          </div>
+          <InputBase
+            placeholder="Search…"
+            classes={{
+              root: classes.inputRoot,
+              input: classes.inputInput,
+            }}
+            inputProps={{ 'aria-label': 'search' }}
+          />
+        </div>
+        <div>
+          {renderHeader()}
+        </div>
+      </Toolbar>
+    </AppBar>
   );
 }
 
 const useStyles = makeStyles((theme: Theme) =>
   ({
-    root: {
-      flexGrow: 1,
-    },
     container: {
       display: 'flex',
       justifyContent: 'space-between'
     },
     title: {
-      title: 26,
-      display: 'none',
+      color: 'white',
+      fontSize: 26,
       [theme.breakpoints.up('sm')]: {
         display: 'block',
       },
+    },
+    link: {
+      color: 'white',
+      '&:hover': {
+        textDecoration: 'none'
+      },
+      '&:focus': {
+        textDecoration: 'none'
+      }
     },
     search: {
       position: 'relative',

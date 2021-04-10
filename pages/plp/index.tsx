@@ -3,10 +3,12 @@ import React from 'react'
 import { PLPProductItem, ProductFilter} from 'interfaces/products/product';
 import PLPProduct from 'components/plp/PLPProduct';
 import { getAllProduct } from 'services/productService';
-import PLPFilter from 'components/plp/PLPFilter';
-import { Box } from '@material-ui/core';
+import { Box, GridList } from '@material-ui/core';
+import { createStyles, makeStyles, Theme, withStyles } from '@material-ui/core/styles';
+import {  } from '@material-ui/core/styles';
 
 interface Props {
+    classes,
     filter: ProductFilter,
     products: PLPProductItem[]
 }
@@ -30,8 +32,6 @@ class PLPCustomer extends React.Component<Props, State>
 
     componentDidMount()
     {
-        console.log(this.props);
-
         this.setState({ 
             filter: this.props.filter, 
             products: this.props.products
@@ -56,19 +56,40 @@ class PLPCustomer extends React.Component<Props, State>
 
     render(): React.ReactElement
     {
+        console.log(this.state.products)
+
         return (
-            <div>
-                <PLPFilter 
+            <>
+                {/* <PLPFilter 
                     filter={this.state.filter} 
                     handleChangeFilter={this.handleChangeFilters} 
-                />
-                <Box flexWrap="wrap">
+                /> */}
+                <GridList cellHeight={180} className={classes.gridList}>
                     {this.renderAllItems()}
-                </Box>
-            </div>
+                </GridList>
+            </>
         );
     }
 }
+
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      display: 'flex',
+      flexWrap: 'wrap',
+      justifyContent: 'space-around',
+      overflow: 'hidden',
+      backgroundColor: theme.palette.background.paper,
+    },
+    gridList: {
+      width: 500,
+      height: 450,
+    },
+    icon: {
+      color: 'rgba(255, 255, 255, 0.54)',
+    },
+  }),
+);
 
 export async function getServerSideProps({query}) {
     const filter: ProductFilter = query;
@@ -81,4 +102,4 @@ export async function getServerSideProps({query}) {
     }
 }
 
-export default PLPCustomer
+export default withStyles(useStyles)(PLPCustomer);

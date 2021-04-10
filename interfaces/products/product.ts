@@ -33,6 +33,5 @@ export interface ProductFilter
     priceMax?: number,
     priceMin?: number,
     available?: boolean,
-    page?: number,
-    offset?: 25
+    offset?: number 
 }

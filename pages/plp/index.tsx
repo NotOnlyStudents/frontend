@@ -1,41 +1,42 @@
-import React from 'react'
+import React, { ChangeEvent } from 'react'
 
 import { PLPProductItem, ProductFilter} from 'interfaces/products/product';
 import PLPProduct from 'components/plp/PLPProduct';
 import { getAllProduct } from 'services/productService';
-import { Box, Grid, GridList, GridListTile, ListSubheader } from '@material-ui/core';
-import { createStyles, makeStyles, withStyles } from '@material-ui/styles';
-import { Pagination } from '@material-ui/lab';
+import { Grid } from '@material-ui/core';
 import PLPFilter from 'components/plp/PLPFilter';
+import EMLPagination from 'components/pagination/EMLPagination';
 
 interface Props {
     filters: ProductFilter,
-    products: PLPProductItem[]
+    products: PLPProductItem[],
+    totalProducts: number
 }
 
 interface State {
     filters: ProductFilter,
-    products: PLPProductItem[]
+    products: PLPProductItem[],
+    totalProducts: number
 }
 
 class PLPCustomer extends React.Component<Props, State>
 {
+    private static limit = 25; 
+
     constructor(props: Props)
     {
         super(props);
 
         this.state = {
             filters: {},
-            products: []
+            products: [],
+            totalProducts: 0
         }
     }
 
     componentDidMount()
     {
-        this.setState({ 
-            filters: this.props.filters, 
-            products: this.props.products
-        });
+        this.setState({ ...this.props });
     }
 
     handleChangeFilters = (filters: ProductFilter) => {
@@ -43,10 +44,9 @@ class PLPCustomer extends React.Component<Props, State>
         this.setState({ filters })
     }
 
-    handleChangePagination = (value: number) => {
-        this.setState({filters: { page: value }})
+    handleChangePagination = (event: ChangeEvent<unknown>, value: number) => {
+        this.setState({filters: { offset: value }})
     };
-    
 
     renderAllItems(): React.ReactElement[]
     {
@@ -63,20 +63,23 @@ class PLPCustomer extends React.Component<Props, State>
 
     render(): React.ReactElement
     {
-        const { filters } = this.state;
+        const { filters, totalProducts } = this.state;
 
         return (
             <>
-                <PLPFilter 
+                {/* <PLPFilter 
                     filter={filters} 
                     handleChangeFilter={this.handleChangeFilters} 
-                />
+                /> */}
                 <Grid container spacing={3} justify='center' alignItems='center'>
                     {this.renderAllItems()}
                 </Grid>
-                <div>
-                    <Pagination count={10} page={filters.page} onChange={this.handleChangePagination} />
-                </div>
+                <EMLPagination 
+                    totalElements={totalProducts}
+                    limit={PLPCustomer.limit}
+                    page={filters.offset}
+                    handleChangePagination={this.handleChangePagination}
+                    />
             </>
         );
     }
@@ -85,10 +88,13 @@ class PLPCustomer extends React.Component<Props, State>
 export async function getServerSideProps({query}) {
     const filters: ProductFilter = query;
 
+    const products = await getAllProduct(filters);
+
     return {
         props: {
             filters,
-            products: await getAllProduct(filters)
+            products,
+            totalProducts: 250
         }
     }
 }

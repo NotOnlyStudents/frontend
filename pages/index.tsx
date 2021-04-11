@@ -1,14 +1,23 @@
-import React from 'react';
-import Layout from 'components/Layout';
+import React from "react";
+import { CardMedia } from "@material-ui/core";
 
-/* eslint no-underscore-dangle: 0 */
+import { makeStyles } from "@material-ui/styles";
 
 function Home() {
+  const classes = useStyles();
+
   return (
-    <div>
-      prova prova
-    </div>
+    <>
+      <div></div>
+      <CardMedia className={classes.root} component="img" image="/home.jpg" />
+    </>
   );
 }
+
+const useStyles = makeStyles({
+  root: {
+    opacity: 10
+  },
+});
 
 export default Home;

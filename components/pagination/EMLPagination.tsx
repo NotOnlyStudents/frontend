@@ -17,7 +17,7 @@ function EMLPagination({totalElements, limit, page, handleChangePagination} : Pr
     console.log(page)
 
     return (
-        <Box display='flex' justifyContent='center' alignItems='center'>
+        <Box display='flex' justifyContent='center' alignItems='center' p={2}>
             <Pagination count={totalPage} page={page} onChange={handleChangePagination} />
         </Box>
     )

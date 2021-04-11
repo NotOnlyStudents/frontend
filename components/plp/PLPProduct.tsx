@@ -7,7 +7,6 @@ import Typography from '@material-ui/core/Typography';
 
 import { PLPProductItem } from 'interfaces/products/product';
 import { makeStyles } from '@material-ui/core/styles';
-import GridListTile from '@material-ui/core/GridListTile';
 
 interface Props {
     product: PLPProductItem

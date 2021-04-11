@@ -69,7 +69,7 @@ const useStyles = makeStyles((theme: Theme) =>
   ({
     container: {
       display: 'flex',
-      justifyContent: 'space-between'
+      justifyContent: 'space-between',
     },
     title: {
       color: 'white',

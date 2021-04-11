@@ -39,7 +39,6 @@ function Layout({ children, _authState, _username}: Props)
         authState={authState}
         username={username} />
       <main>
-
         {children}
       </main>
     </>

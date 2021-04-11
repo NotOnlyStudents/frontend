@@ -4,17 +4,15 @@ import { withSSRContext } from 'aws-amplify';
 import { AuthState, onAuthUIStateChange } from '@aws-amplify/ui-components';
 import { useAuthContext } from 'context/authContext';
 
-import Header from 'components/header/Header'
+import Header from 'components/header/Header';
 
-interface Props
-{
+interface Props {
   children: React.ReactNode,
   _authState?: AuthState,
   _username?: string | undefined
 }
 
-function Layout({ children, _authState, _username}: Props) 
-{
+function Layout({ children, _authState, _username }: Props) {
   const {
     authState, username, setAuthState, setUsername,
   } = useAuthContext();
@@ -30,14 +28,16 @@ function Layout({ children, _authState, _username}: Props)
           setUsername(undefined);
         }
       });
-    }, 
-  []);
+    },
+    [],
+  );
 
   return (
     <>
-      <Header 
+      <Header
         authState={authState}
-        username={username} />
+        username={username}
+      />
       <main>
         {children}
       </main>

@@ -1,22 +1,21 @@
-import React from "react";
-import Autocomplete from "@material-ui/lab/Autocomplete";
-import TextField from "@material-ui/core/TextField";
-import CircularProgress from "@material-ui/core/CircularProgress";
-import Checkbox from "@material-ui/core/Checkbox";
+import React from 'react';
+import Autocomplete from '@material-ui/lab/Autocomplete';
+import TextField from '@material-ui/core/TextField';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Checkbox from '@material-ui/core/Checkbox';
 
-import { ProductFilter } from "interfaces/products/product";
-import { getCategories } from "services/productService";
-import { Category } from "interfaces/products/category";
-import { FormControlLabel } from "@material-ui/core";
+import { ProductFilter } from 'interfaces/products/product';
+import { getCategories } from 'services/productService';
+import { Category } from 'interfaces/products/category';
+import { FormControlLabel } from '@material-ui/core';
 
 interface Props {
   filter: ProductFilter;
   handleChangeFilter: (filter: ProductFilter) => void;
 }
 
-interface State
-{
-  categoriesOptions: Category[] 
+interface State {
+  categoriesOptions: Category[]
 }
 
 class PLPFilter extends React.Component<Props, State> {
@@ -24,15 +23,15 @@ class PLPFilter extends React.Component<Props, State> {
     super(props);
 
     this.state = {
-      categoriesOptions: []
-    }
+      categoriesOptions: [],
+    };
   }
 
   getAllCategories = async () => {
     const categories : Category[] = await getCategories();
 
-    this.setState({ categoriesOptions: categories })
-  }
+    this.setState({ categoriesOptions: categories });
+  };
 
   async Categories() {
     const [open, setOpen] = React.useState(false);
@@ -51,8 +50,8 @@ class PLPFilter extends React.Component<Props, State> {
         if (active) {
           setOptions(
             Object.keys(categories).map(
-              (key) => categories[key].item[0]
-            ) as Category[]
+              (key) => categories[key].item[0],
+            ) as Category[],
           );
         }
       })();
@@ -92,7 +91,7 @@ class PLPFilter extends React.Component<Props, State> {
     );
   }
 
-  /*Evidence() {
+  /* Evidence() {
     const [checked, setChecked] = React.useState(false);
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -111,7 +110,7 @@ class PLPFilter extends React.Component<Props, State> {
         label="evidence"
       />
     );
-  }*/
+  } */
 
   render(): React.ReactElement {
     return (

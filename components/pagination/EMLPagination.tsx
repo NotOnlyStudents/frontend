@@ -1,27 +1,26 @@
-import { ChangeEvent } from "react"
-import { Box } from '@material-ui/core'
-import { Pagination } from '@material-ui/lab'
+import { ChangeEvent } from 'react';
+import { Box } from '@material-ui/core';
+import { Pagination } from '@material-ui/lab';
 
-interface Props
-{
-    totalElements: number,
-    limit: number,
-    page: number,
-    handleChangePagination: (event: ChangeEvent<unknown>, value: number) => void
+interface Props {
+  totalElements: number,
+  limit: number,
+  page: number,
+  handleChangePagination: (event: ChangeEvent<unknown>, value: number) => void
 }
 
-function EMLPagination({totalElements, limit, page, handleChangePagination} : Props) : React.ReactElement
-{
-    const totalPage = totalElements / limit;
+function EMLPagination({
+  totalElements, limit, page, handleChangePagination,
+} : Props) : React.ReactElement {
+  const totalPage = totalElements / limit;
 
-    console.log(page)
+  console.log(page);
 
-    return (
-        <Box display='flex' justifyContent='center' alignItems='center' p={2}>
-            <Pagination count={totalPage} page={page} onChange={handleChangePagination} />
-        </Box>
-    )
+  return (
+    <Box display="flex" justifyContent="center" alignItems="center" p={2}>
+      <Pagination count={totalPage} page={page} onChange={handleChangePagination} />
+    </Box>
+  );
 }
 
-
-export default EMLPagination
+export default EMLPagination;

@@ -1,4 +1,4 @@
-import { Category } from "./category";
+import { Category } from './category';
 
 export interface Product {
   id: string;
@@ -26,13 +26,12 @@ export interface ProductsGETRequest {
   products: PLPProductItem[]
 }
 
-export interface ProductFilter
-{
-    text?: string,
-    categories?: Category[],
-    priceMax?: number,
-    priceMin?: number,
-    available?: boolean,
-    evidance?: boolean,
-    offset?: number
+export interface ProductFilter {
+  text?: string,
+  categories?: Category[],
+  priceMax?: number,
+  priceMin?: number,
+  available?: boolean,
+  evidance?: boolean,
+  offset?: number
 }

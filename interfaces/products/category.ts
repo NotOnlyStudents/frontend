@@ -1,7 +1,7 @@
 export interface Category {
-    name: string;
+  name: string;
 }
 
 export interface CategoriesGETRequest {
-    categories: Category[]
-  }
+  categories: Category[]
+}

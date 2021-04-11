@@ -16,40 +16,40 @@ export default class FormPassword extends React.Component<Props, State> {
     super(props);
     this.state = {
       oldPassword: '',
-      newPassword: ''
+      newPassword: '',
     };
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-    handleChange = (event) => {
-      const nam = event.target.name;
-      const val = event.target.value;
-      this.setState({ [nam]: val });
-    }
+  handleChange = (event) => {
+    const nam = event.target.name;
+    const val = event.target.value;
+    this.setState({ [nam]: val });
+  };
 
-    handleSubmit = (event: Event) => {
-      event.preventDefault();
-      Auth.currentAuthenticatedUser()
-        .then((user) => Auth.changePassword(user, this.state.oldPassword, this.state.newPassword))
-        .then((data) => { alert('You change your password with success!'); document.location.href = '/'; })
-        .catch((err) => alert('There was a problem!'));
-    }
+  handleSubmit = (event: Event) => {
+    event.preventDefault();
+    Auth.currentAuthenticatedUser()
+      .then((user) => Auth.changePassword(user, this.state.oldPassword, this.state.newPassword))
+      .then((data) => { alert('You change your password with success!'); document.location.href = '/'; })
+      .catch((err) => alert('There was a problem!'));
+  };
 
-    render() {
-      return (
-        <>
-          <form onSubmit={this.handleSubmit}>
-            <label>Old password:</label>
-            <input name="oldPassword" type="password" onChange={this.handleChange} />
-            <br />
-            <label>New password:</label>
-            <input name="newPassword" type="password" onChange={this.handleChange} />
-            <br />
-            <input type="submit" value="Save changes!" />
-          </form>
-        </>
-      );
-    }
+  render() {
+    return (
+      <>
+        <form onSubmit={this.handleSubmit}>
+          <label>Old password:</label>
+          <input name="oldPassword" type="password" onChange={this.handleChange} />
+          <br />
+          <label>New password:</label>
+          <input name="newPassword" type="password" onChange={this.handleChange} />
+          <br />
+          <input type="submit" value="Save changes!" />
+        </form>
+      </>
+    );
+  }
 }

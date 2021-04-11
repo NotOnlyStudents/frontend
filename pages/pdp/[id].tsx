@@ -1,14 +1,12 @@
-import React from 'react'
+import React from 'react';
 
 interface Props {}
 interface State {}
 
-class PDP extends React.Component<Props, State>
-{
-    constructor(props: Props)
-    {
-        super(props);
-    }
+class PDP extends React.Component<Props, State> {
+  constructor(props: Props) {
+    super(props);
+  }
 }
 
-export default PDP
+export default PDP;

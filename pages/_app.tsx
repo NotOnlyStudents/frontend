@@ -1,12 +1,12 @@
-import { AppProps } from 'next/app'
-import { AuthContextProvider } from 'context/authContext'
-import { Amplify, Auth } from 'aws-amplify'
+import { AppProps } from 'next/app';
+import { AuthContextProvider } from 'context/authContext';
+import { Amplify, Auth } from 'aws-amplify';
 import React from 'react';
 import Head from 'next/head';
 import Layout from 'components/Layout';
 import theme from 'styles/theme';
 
-import 'styles/global.scss'
+import 'styles/global.scss';
 import { ThemeProvider } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 
@@ -26,7 +26,6 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 // });
 
 function App({ Component, pageProps }: AppProps) {
-
   React.useEffect(() => {
     // Remove the server-side injected CSS.
     const jssStyles = document.querySelector('#jss-server-side');
@@ -35,7 +34,7 @@ function App({ Component, pageProps }: AppProps) {
     }
   }, []);
 
-  return(
+  return (
     <AuthContextProvider>
       <Head>
         <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
@@ -46,7 +45,7 @@ function App({ Component, pageProps }: AppProps) {
           <Component {...pageProps} />
         </Layout>
       </ThemeProvider>
-    </AuthContextProvider>    
+    </AuthContextProvider>
   );
 }
 

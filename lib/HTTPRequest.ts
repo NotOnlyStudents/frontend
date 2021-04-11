@@ -14,7 +14,7 @@ class HTTPRequest {
       headers: {
         ...this.baseHeaders,
         'Access-Control-Allow-Origin': '*',
-      }
+      },
     });
 
     const res: T = await req.json();
@@ -27,7 +27,7 @@ class HTTPRequest {
       headers: {
         ...this.baseHeaders,
       },
-      method: "POST",
+      method: 'POST',
       body: data,
     });
 
@@ -41,7 +41,7 @@ class HTTPRequest {
       headers: {
         ...this.baseHeaders,
       },
-      method: "PATCH",
+      method: 'PATCH',
       body: data,
     });
 
@@ -55,7 +55,7 @@ class HTTPRequest {
       headers: {
         ...this.baseHeaders,
       },
-      method: "DELETE",
+      method: 'DELETE',
       body: data,
     });
 
@@ -69,7 +69,7 @@ class HTTPRequest {
       headers: {
         ...this.baseHeaders,
       },
-      method: "PUT",
+      method: 'PUT',
       body: data,
     });
 
@@ -77,7 +77,6 @@ class HTTPRequest {
 
     return res;
   }
-
 }
 
 export default HTTPRequest;

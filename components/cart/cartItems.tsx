@@ -1,47 +1,29 @@
 import React from 'react';
 import cartService from '../../services/cartService';
 import { Cart } from '../../interfaces/cart';
+import {Product} from '../../interfaces/product';
+import { Grid } from '@material-ui/core';
+import { CartItem } from "./cartItem";
 
-export default class CartItems extends React.Component{
-    /*constructor() {
-        super();
-    //this.handleSubmit = this.handleSubmit.bind(this);
-  }*/
-/*
-  async handleSubmit(event) {
-    event.preventDefault();
-    try{
-      if(this.state.newName == '' && this.state.newSurname == '')
-      {
-        alert("Please insert some data");
-        
-      }
-      else
-      {
-        const user = await Auth.currentAuthenticatedUser();
-        if(this.state.newName!= '')
-        {
-          await Auth.updateUserAttributes(user, {
-            'name': this.state.newName});
-        }
-        if(this.state.newSurname!='')
-        {        
-          await Auth.updateUserAttributes(user, {
-          'custom:surname': this.state.newSurname});
-        }
-        alert("Data updated successfully");
-        document.location.href="/";
-      }
-    }
-    catch{
-      alert("There was a problem with the server"); 
-    }
-  }*/
-  render() {
-    const c:Cart = cartService.getCartItems();
-    console.log(c["products"]);
-    return (
-    <></>
-    );
-  }
+interface Props {
+  items: Product[];
 }
+
+function CartItems({ items }: Props) : React.ReactElement {
+  const renderAllItems = (): React.ReactElement[] => items.map(
+    (item: Product, index: number): React.ReactElement => (
+      <Grid key={index} item xs={12} sm={6} md={4} lg={3}>
+        <CartItem product={item} />
+      </Grid>
+    ),
+  );
+
+  return (
+    <Grid container spacing={3} justify="center" alignItems="center">
+      {renderAllItems()}
+    </Grid>
+  );
+}
+
+export default CartItems;
+

@@ -1,29 +1,72 @@
-import React, { ReactNode } from 'react'
-import Head from 'next/head'
+import React, { useEffect } from 'react';
+import { CognitoUser } from '@aws-amplify/auth';
+import { withSSRContext } from 'aws-amplify';
+import { AuthState, onAuthUIStateChange } from '@aws-amplify/ui-components';
+import { useAuthContext } from 'context/authContext';
 
-type Props = {
-  children?: ReactNode
-  title?: string
+
+
+import Header from 'components/header/Header';
+
+interface Props {
+  children: React.ReactNode,
+  _authState?: AuthState,
+  _username?: string | undefined
 }
 
-const Layout = ({ children, title = 'This is the default title' }: Props) => (
-  <div>
-    <Head>
-      <title>{title}</title>
-      <meta charSet="utf-8" />
-      <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-    </Head>
-    <header>
-      <nav>
-        
-      </nav>
-    </header>
-    {children}
-    <footer>
-      <hr />
-      <span>I'm here to stay (Footer)</span>
-    </footer>
-  </div>
-)
+function Layout({ children, _authState, _username }: Props) {
+  const {
+    authState, username, setAuthState, setUsername,
+  } = useAuthContext();
 
-export default Layout
+  useEffect(
+    () => {
+      setAuthState(_authState);
+      setUsername(_username);
+
+      return onAuthUIStateChange((nextAuthState: AuthState) => {
+        if (nextAuthState === AuthState.SignedOut) {
+          setAuthState(nextAuthState);
+          setUsername(undefined);
+        }
+      });
+    },
+    [],
+  );
+
+  return (
+    <>
+      <Header
+        authState={authState}
+        username={username}
+      />
+      <main>
+        {children}
+      </main>
+    </>
+  );
+}
+
+export async function getServerSideProps(context) {
+  const { Auth } = withSSRContext(context);
+
+  try {
+    const user: CognitoUser = await Auth.currentAuthenticatedUser();
+
+    return {
+      props: {
+        _authState: AuthState.SignedIn,
+        _username: user.getUsername(),
+      },
+    };
+  } catch (err) {
+    return {
+      props: {
+        _authState: AuthState.SignedOut,
+      },
+    };
+  }
+}
+
+export default Layout;
+

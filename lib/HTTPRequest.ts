@@ -1,3 +1,6 @@
+
+import { ErrorMessage } from 'interfaces/errors';
+
 class HTTPRequest {
   readonly baseHeaders: HeadersInit = {
     'Content-Type': 'application/json',
@@ -14,10 +17,18 @@ class HTTPRequest {
       headers: {
         ...this.baseHeaders,
         'Access-Control-Allow-Origin': '*',
-      }
+      },
     });
 
-    const res: T = await req.json();
+    let res: T;
+
+    if (req.status === 200) {
+      res = await req.json();
+    } else {
+      const errorRes: ErrorMessage = await req.json();
+      throw new Error(errorRes.message);
+    }
+
 
     return res;
   }
@@ -27,11 +38,21 @@ class HTTPRequest {
       headers: {
         ...this.baseHeaders,
       },
-      method: "POST",
+
+
+      method: 'POST',
       body: data,
     });
 
-    const res: T = await req.json();
+    let res: T;
+
+    if (req.status === 200) {
+      res = await req.json();
+    } else {
+      const errorRes: ErrorMessage = await req.json();
+      throw new Error(errorRes.message);
+    }
+
 
     return res;
   }
@@ -41,12 +62,19 @@ class HTTPRequest {
       headers: {
         ...this.baseHeaders,
       },
-      method: "PATCH",
+
+      method: 'PATCH',
       body: data,
     });
 
-    const res: T = await req.json();
+    let res: T;
 
+    if (req.status === 200) {
+      res = await req.json();
+    } else {
+      const errorRes: ErrorMessage = await req.json();
+      throw new Error(errorRes.message);
+    }
     return res;
   }
 
@@ -55,12 +83,18 @@ class HTTPRequest {
       headers: {
         ...this.baseHeaders,
       },
-      method: "DELETE",
+      method: 'DELETE',
       body: data,
     });
 
-    const res: T = await req.json();
+    let res: T;
 
+    if (req.status === 200) {
+      res = await req.json();
+    } else {
+      const errorRes: ErrorMessage = await req.json();
+      throw new Error(errorRes.message);
+    }
     return res;
   }
 
@@ -69,15 +103,22 @@ class HTTPRequest {
       headers: {
         ...this.baseHeaders,
       },
-      method: "PUT",
+      method: 'PUT',
       body: data,
     });
 
-    const res: T = await req.json();
+    let res: T;
+
+    if (req.status === 200) {
+      res = await req.json();
+    } else {
+      const errorRes: ErrorMessage = await req.json();
+      throw new Error(errorRes.message);
+    }
 
     return res;
   }
-
 }
 
 export default HTTPRequest;
+

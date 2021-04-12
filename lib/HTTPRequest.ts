@@ -1,3 +1,5 @@
+import { ErrorMessage } from 'interfaces/errors';
+
 class HTTPRequest {
   readonly baseHeaders: HeadersInit = {
     'Content-Type': 'application/json',
@@ -17,7 +19,14 @@ class HTTPRequest {
       },
     });
 
-    const res: T = await req.json();
+    let res: T;
+
+    if (req.status === 200) {
+      res = await req.json();
+    } else {
+      const errorRes: ErrorMessage = await req.json();
+      throw new Error(errorRes.message);
+    }
 
     return res;
   }
@@ -31,7 +40,14 @@ class HTTPRequest {
       body: data,
     });
 
-    const res: T = await req.json();
+    let res: T;
+
+    if (req.status === 200) {
+      res = await req.json();
+    } else {
+      const errorRes: ErrorMessage = await req.json();
+      throw new Error(errorRes.message);
+    }
 
     return res;
   }
@@ -45,7 +61,14 @@ class HTTPRequest {
       body: data,
     });
 
-    const res: T = await req.json();
+    let res: T;
+
+    if (req.status === 200) {
+      res = await req.json();
+    } else {
+      const errorRes: ErrorMessage = await req.json();
+      throw new Error(errorRes.message);
+    }
 
     return res;
   }
@@ -59,7 +82,14 @@ class HTTPRequest {
       body: data,
     });
 
-    const res: T = await req.json();
+    let res: T;
+
+    if (req.status === 200) {
+      res = await req.json();
+    } else {
+      const errorRes: ErrorMessage = await req.json();
+      throw new Error(errorRes.message);
+    }
 
     return res;
   }
@@ -73,7 +103,14 @@ class HTTPRequest {
       body: data,
     });
 
-    const res: T = await req.json();
+    let res: T;
+
+    if (req.status === 200) {
+      res = await req.json();
+    } else {
+      const errorRes: ErrorMessage = await req.json();
+      throw new Error(errorRes.message);
+    }
 
     return res;
   }

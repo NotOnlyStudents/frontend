@@ -11,6 +11,29 @@ interface Props {
   products: PLPProductItem[];
 }
 
+const useStyles = makeStyles({
+  root: {
+    position: 'relative',
+    display: 'flex',
+    height: '30em',
+    '& > *': {
+      position: 'absolute',
+      height: '100%',
+    },
+  },
+  description: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    backgroundColor: fade('#000', 0.5),
+    color: 'white',
+    width: '100%',
+  },
+  evidanceTitle: {
+    padding: '1.5rem 0 1rem 0',
+  },
+});
+
 function Home({ products }: Props) : React.ReactElement {
   const classes = useStyles();
 
@@ -37,33 +60,16 @@ function Home({ products }: Props) : React.ReactElement {
   );
 }
 
-const useStyles = makeStyles({
-  root: {
-    position: 'relative',
-    display: 'flex',
-    height: '30em',
-    '& > *': {
-      position: 'absolute',
-      height: '100%',
-    },
-  },
-  description: {
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    backgroundColor: fade('#000', 0.5),
-    color: 'white',
-    width: '100%',
-  },
-  evidanceTitle: {
-    padding: '1.5rem 0 1rem 0',
-  },
-});
-
-export async function getServerSideProps({ query }) {
+export async function getServerSideProps() {
   const filters: ProductFilter = { evidance: true };
 
-  const products = await getAllProduct(filters);
+  let products = [];
+
+  try {
+    products = await getAllProduct(filters);
+  } catch (error) {
+    console.log(error);
+  }
 
   return {
     props: {

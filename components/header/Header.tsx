@@ -10,7 +10,7 @@ import {
 import React, { useState } from 'react';
 import Toolbar from '@material-ui/core/Toolbar';
 import SearchIcon from '@material-ui/icons/Search';
-import Router, { useRouter } from 'next/router';
+import Router, { NextRouter, useRouter } from 'next/router';
 import HeaderNotAuthenticated from './HeaderNotAuthenticated';
 import HeaderSeller from './HeaderSeller';
 import HeaderCustomer from './HeaderCustomer';
@@ -72,12 +72,15 @@ const useStyles = makeStyles((theme: Theme) => ({
 function Header({ authState, username }: Props): React.ReactElement {
   const sellerUsername = 'seller';
   const classes = useStyles();
+  const router: NextRouter = useRouter();
 
-  const [searchText, setSearchText] = useState('');
+  console.log(authState);
+
+  const [searchText, setSearchText] = useState(router.query.text || '');
 
   const renderHeader = (): React.ReactElement => {
     const isSigned: boolean = authState === AuthState.SignedIn;
-    let header;
+    let header: React.ReactElement;
 
     if (isSigned) {
       header = username === sellerUsername ? (<HeaderSeller />) : (<HeaderCustomer />);
@@ -90,10 +93,18 @@ function Header({ authState, username }: Props): React.ReactElement {
 
   const handleSearchEnter = (event: React.KeyboardEvent<typeof InputBase>) => {
     if (event.key === 'Enter') {
-      Router.push({
+      const newPage = {
         pathname: '/plp',
-        query: { text: searchText },
-      });
+        query: router.query,
+      };
+
+      if (searchText) {
+        newPage.query.text = searchText;
+      } else {
+        delete newPage.query.text;
+      }
+
+      Router.push(newPage);
     }
   };
 
@@ -117,8 +128,8 @@ function Header({ authState, username }: Props): React.ReactElement {
               input: classes.inputInput,
             }}
             inputProps={{ 'aria-label': 'search' }}
-            onChange={(event) => setSearchText(event.currentTarget)}
-            onKeyPress={handleSearchEnter}
+            onChange={(event) => setSearchText(event.target.value)}
+            onKeyUp={handleSearchEnter}
           />
         </div>
         <div>

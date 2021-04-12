@@ -1,9 +1,9 @@
 import React from 'react';
-import cartService from '../../services/cartService';
+//import cartService from '../../services/cartService';
 import { Cart } from '../../interfaces/cart';
 import {Product} from '../../interfaces/product';
 import { Grid } from '@material-ui/core';
-import { CartItem } from "./cartItem";
+import  CartItem  from "./cartItem";
 
 interface Props {
   items: Product[];

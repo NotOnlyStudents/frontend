@@ -2,11 +2,7 @@
 import {Cart} from "../interfaces/cart";
 import {Product} from "../interfaces/product";
 
-export default class cartService {
-    constructor() {
-    }
-
-    static getCartItems(): Cart
+    const getCartItems = async(): Promise<Cart> =>
     {
       const p:Product = {
         id: 12345,
@@ -25,7 +21,7 @@ export default class cartService {
       return c;
     }
 
-  
+export default getCartItems;
   
   /*
     render() {
@@ -61,4 +57,4 @@ export default class cartService {
       </> 
       );
     }*/
-  }
+  

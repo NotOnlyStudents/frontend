@@ -28,6 +28,8 @@ const useStyles = makeStyles({
 });
 
 function PLPProduct({ product }: Props) {
+  const [counter, setCounter] = React.useState(1);
+
   const classes = useStyles();
 
   const showNotAvailableBanner = () : React.ReactElement | void => {
@@ -65,7 +67,7 @@ function PLPProduct({ product }: Props) {
           { product.name }
         </Typography>
         <Box display="flex" justifyContent="space-between" alignItems="center">
-          <QuantityManager counter={1} />
+          <QuantityManager counter={counter} handleCounterChange={setCounter} />
           <Typography variant="button">
             { product.price }
           </Typography>
@@ -73,7 +75,7 @@ function PLPProduct({ product }: Props) {
       </CardContent>
       <CardActions>
         <Box display="flex" justifyContent="flex-end" width="100%">
-          <Button component={Link} size="small" color="primary">
+          <Button component={Link} size="small" color="primary" href={`/pdp/${product.id}`}>
             See more details
           </Button>
           <IconButton color="primary">

@@ -2,7 +2,7 @@ import React, { ChangeEvent } from 'react';
 
 import { PLPProductItem, ProductFilter } from 'interfaces/products/product';
 import { getAllProduct } from 'services/productService';
-import PLPFilter from 'components/plp/PLPFilter';
+// import PLPFilter from 'components/plp/PLPFilter';
 import EMLPagination from 'components/pagination/EMLPagination';
 import PLPList from 'components/plp/PLPList';
 

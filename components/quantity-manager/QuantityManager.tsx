@@ -6,18 +6,25 @@ import { Add, Remove } from '@material-ui/icons';
 
 interface Props {
   counter: number;
+  handleCounterChange: (number) => void;
 }
 
-function QuantityManager({ counter }: Props) {
+function QuantityManager({ counter, handleCounterChange }: Props) {
+  const handleCounterMinus = () => {
+    if (counter > 1) handleCounterChange(counter - 1);
+  };
+
+  const handleCounterPlus = () => handleCounterChange(counter + 1);
+
   return (
     <Box display="flex" alignItems="center">
-      <IconButton color="secondary">
+      <IconButton color="secondary" onClick={handleCounterMinus}>
         <Remove />
       </IconButton>
       <Typography variant="button" display="block">
         {counter}
       </Typography>
-      <IconButton color="primary">
+      <IconButton color="primary" onClick={handleCounterPlus}>
         <Add />
       </IconButton>
     </Box>

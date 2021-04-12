@@ -1,12 +1,11 @@
 import React from 'react';
 
 interface Props {}
-interface State {}
 
-class PDP extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-  }
+function PDP({}: Props) {
+  return (
+    <div />
+  );
 }
 
 export default PDP;

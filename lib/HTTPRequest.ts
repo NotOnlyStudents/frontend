@@ -1,3 +1,4 @@
+
 import { ErrorMessage } from 'interfaces/errors';
 
 class HTTPRequest {
@@ -28,6 +29,7 @@ class HTTPRequest {
       throw new Error(errorRes.message);
     }
 
+
     return res;
   }
 
@@ -36,6 +38,8 @@ class HTTPRequest {
       headers: {
         ...this.baseHeaders,
       },
+
+
       method: 'POST',
       body: data,
     });
@@ -49,6 +53,7 @@ class HTTPRequest {
       throw new Error(errorRes.message);
     }
 
+
     return res;
   }
 
@@ -57,6 +62,7 @@ class HTTPRequest {
       headers: {
         ...this.baseHeaders,
       },
+
       method: 'PATCH',
       body: data,
     });
@@ -69,7 +75,6 @@ class HTTPRequest {
       const errorRes: ErrorMessage = await req.json();
       throw new Error(errorRes.message);
     }
-
     return res;
   }
 
@@ -90,7 +95,6 @@ class HTTPRequest {
       const errorRes: ErrorMessage = await req.json();
       throw new Error(errorRes.message);
     }
-
     return res;
   }
 
@@ -117,3 +121,4 @@ class HTTPRequest {
 }
 
 export default HTTPRequest;
+

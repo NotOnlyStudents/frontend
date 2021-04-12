@@ -4,6 +4,8 @@ import { withSSRContext } from 'aws-amplify';
 import { AuthState, onAuthUIStateChange } from '@aws-amplify/ui-components';
 import { useAuthContext } from 'context/authContext';
 
+
+
 import Header from 'components/header/Header';
 
 interface Props {
@@ -67,3 +69,4 @@ export async function getServerSideProps(context) {
 }
 
 export default Layout;
+

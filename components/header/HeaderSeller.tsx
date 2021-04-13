@@ -7,20 +7,14 @@ interface Props { }
 
 interface State { }
 
-class HeaderSeller extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-  }
-
-  render(): React.ReactElement {
-    return (
-      <>
-        <Link href="/personalArea">
-          <ExitToAppIcon aria-label="logout" />
-        </Link>
-      </>
-    );
-  }
+function HeaderSeller() : React.ReactElement {
+  return (
+    <>
+      <Link href="/personalArea">
+        <ExitToAppIcon aria-label="logout" />
+      </Link>
+    </>
+  );
 }
 
 export default HeaderSeller;

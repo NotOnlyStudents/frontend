@@ -6,7 +6,7 @@ export interface Product {
   description: string;
   images: string[];
   quantity: number;
-  price: number;
+  price: string;
   evidence: boolean;
   discount: number;
   categories: Category[];
@@ -15,7 +15,7 @@ export interface Product {
 export interface PLPProductItem {
   id: string,
   name: string,
-  price: number,
+  price: string,
   image: string,
   evidence: string,
   discount: number,
@@ -26,6 +26,10 @@ export interface ProductsGETRequest {
   products: PLPProductItem[]
 }
 
+export enum SortType {
+  'alphaasc', 'pricedesc', 'priceasc',
+}
+
 export interface ProductFilter {
   text?: string,
   categories?: Category[],
@@ -33,5 +37,6 @@ export interface ProductFilter {
   priceMin?: number,
   available?: boolean,
   evidance?: boolean,
-  offset?: number
+  offset?: number,
+  sort?: SortType
 }

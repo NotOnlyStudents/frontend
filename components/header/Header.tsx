@@ -74,8 +74,6 @@ function Header({ authState, username }: Props): React.ReactElement {
   const classes = useStyles();
   const router: NextRouter = useRouter();
 
-  console.log(authState);
-
   const [searchText, setSearchText] = useState(router.query.text || '');
 
   const renderHeader = (): React.ReactElement => {

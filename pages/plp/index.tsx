@@ -6,7 +6,10 @@ import { getAllProduct } from 'services/productService';
 import EMLPagination from 'components/pagination/EMLPagination';
 import PLPList from 'components/plp/PLPList';
 import Head from 'next/head';
-import { NextRouter, useRouter, withRouter } from 'next/router';
+import { NextRouter, withRouter } from 'next/router';
+import EMLBreadcrumb from 'components/breadcrumb/EMLBreadcrumb';
+import HomeIcon from '@material-ui/icons/Home';
+import { BreadcrumbPath } from 'interfaces/breadcrumb';
 
 interface Props {
   router: NextRouter,
@@ -24,11 +27,16 @@ interface State {
 class PLPCustomer extends React.Component<Props, State> {
   private static limit = 25;
 
+  breadcrumbPaths: BreadcrumbPath[] = [
+    { name: 'Home', href: '/', icon: HomeIcon },
+    { name: 'Product List Page' },
+  ];
+
   constructor(props: Props) {
     super(props);
 
     this.state = {
-      filters: { offset: 0 },
+      filters: { offset: 1 },
       products: [],
       totalProducts: 0,
     };
@@ -39,7 +47,7 @@ class PLPCustomer extends React.Component<Props, State> {
       const newState: State = this.props;
 
       if (!newState.filters.offset) {
-        newState.filters.offset = 0;
+        newState.filters.offset = 1;
       }
 
       return newState;
@@ -50,14 +58,14 @@ class PLPCustomer extends React.Component<Props, State> {
     this.setState({ filters });
   };
 
-  handleChangePagination = (value: number) => {
-    const router : NextRouter = useRouter();
+  handleChangePagination = (offset: number) => {
+    const { router } = this.props;
 
     router.push({
-      pathname: '.',
-      query: { ...router.query, offset: value },
+      pathname: '',
+      query: { ...router.query, offset },
     });
-    this.setState({ filters: { offset: value } });
+    this.setState({ filters: { offset } });
   };
 
   render(): React.ReactElement {
@@ -68,6 +76,7 @@ class PLPCustomer extends React.Component<Props, State> {
         <Head>
           <title>Products List Page | EmporioLambda</title>
         </Head>
+        <EMLBreadcrumb paths={this.breadcrumbPaths} />
         {/* <PLPFilter
                     filter={filters}
                     handleChangeFilter={this.handleChangeFilters}

@@ -77,7 +77,7 @@ class PLPCustomer extends React.Component<Props, State> {
     router.push({
       pathname: '',
       query: { ...router.query, offset },
-    });
+    }, undefined, { shallow: true });
     this.setState({ filters: { offset } });
   };
 

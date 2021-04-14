@@ -10,9 +10,12 @@ import { NextRouter, withRouter } from 'next/router';
 import EMLBreadcrumb from 'components/breadcrumb/EMLBreadcrumb';
 import HomeIcon from '@material-ui/icons/Home';
 import { BreadcrumbPath } from 'interfaces/breadcrumb';
+import { getCategories } from 'services/categoriesService';
+import { Category } from 'interfaces/products/category';
 
 interface Props {
   router: NextRouter,
+  categoriesOptions: Category[],
   filters: ProductFilter,
   products: PLPProductItem[],
   totalProducts: number
@@ -36,7 +39,7 @@ class PLPCustomer extends React.Component<Props, State> {
     super(props);
 
     this.state = {
-      filters: { offset: 1 },
+      filters: { offset: 1, categories: [] },
       products: [],
       totalProducts: 0,
     };
@@ -55,6 +58,16 @@ class PLPCustomer extends React.Component<Props, State> {
   }
 
   handleChangeFilters = (filters: ProductFilter) => {
+    const { router } = this.props;
+
+    router.push({
+      pathname: '',
+      query: {
+        ...router.query,
+        categories: filters.categories,
+      },
+    });
+
     this.setState({ filters });
   };
 
@@ -69,7 +82,10 @@ class PLPCustomer extends React.Component<Props, State> {
   };
 
   render(): React.ReactElement {
+    const { categoriesOptions } = this.props;
     const { filters, products, totalProducts } = this.state;
+
+    console.log(filters);
 
     return (
       <>
@@ -79,6 +95,7 @@ class PLPCustomer extends React.Component<Props, State> {
         <EMLBreadcrumb paths={this.breadcrumbPaths} />
         <PLPFilter
           filter={filters}
+          categoriesOptions={categoriesOptions}
           handleChangeFilter={this.handleChangeFilters}
         />
         <PLPList products={products} />
@@ -98,9 +115,12 @@ export async function getServerSideProps({ query }) {
 
   const products = await getAllProduct(filters);
 
+  const categoriesOptions = await getCategories();
+
   return {
     props: {
       filters,
+      categoriesOptions,
       products,
       totalProducts: 250,
     },

@@ -1,6 +1,4 @@
-export interface Category {
-  name: string;
-}
+export type Category = string;
 
 export interface CategoriesGETRequest {
   data: Category[]

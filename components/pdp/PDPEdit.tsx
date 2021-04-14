@@ -60,19 +60,19 @@ class PDPEdit extends React.Component<Props, State> {
       value: 'required|max:100',
     };
 
-    this.setState((state: State) => {
-      const newState = state;
+    // this.setState((state: State) => {
+    //   const newState = state;
 
-      const validation = new Validator(event.target, rules);
+    //   const validation = new Validator(event.target, rules);
 
-      if (validation.passes()) {
-        newState.product.name = event.target.value;
-      } else {
-        newState.validation.
-      }
+    //   if (validation.passes()) {
+    //     newState.product.name = event.target.value;
+    //   } else {
+    //     // newState.validation.
+    //   }
 
-      return { product };
-    });
+    //   return { product };
+    // });
   };
 
   handleAddImage = (event: Event) => {

@@ -2,11 +2,12 @@ import React from 'react';
 import TextField from '@material-ui/core/TextField';
 
 import { ProductFilter } from 'interfaces/products/product';
-import AsynchronousAutocomplete from 'components/autocomplete/autocomplete'
+import AsynchronousAutocomplete from 'components/autocomplete/autocomplete';
 import { Category } from 'interfaces/products/category';
 
 interface Props {
   filter: ProductFilter;
+  categoriesOptions: Category[];
   handleChangeFilter: (filter: ProductFilter) => void;
 }
 
@@ -15,20 +16,20 @@ class PLPFilter extends React.Component<Props> {
     super(props);
   }
 
-  handleChangeCategories(categories: Category[]) {
+  handleChangeCategories = (categories: Category[]) => {
     console.log(categories);
-    const filter: ProductFilter = {...this.props.filter}
-    filter.categories = categories
-    this.props.handleChangeFilter(filter)
-  }
+    const filter: ProductFilter = { ...this.props.filter };
+    filter.categories = categories;
+    this.props.handleChangeFilter(filter);
+  };
 
-  //handleEvidence
+  // handleEvidence
 
-  //handleMin
+  // handleMin
 
-  //handelMax
+  // handelMax
 
-  //handleDisponibile
+  // handleDisponibile
   /* Evidence() {
     const [checked, setChecked] = React.useState(false);
 
@@ -51,10 +52,14 @@ class PLPFilter extends React.Component<Props> {
   } */
 
   render(): React.ReactElement {
-    const {filter} = this.props
+    const { filter, categoriesOptions } = this.props;
     return (
       <>
-      <AsynchronousAutocomplete selectedCategories={filter.categories} handleChangeCategories={this.handleChangeCategories}/>
+        <AsynchronousAutocomplete
+          selectedCategories={filter.categories}
+          options={categoriesOptions}
+          handleChangeCategories={this.handleChangeCategories}
+        />
         <TextField
           id="minNumber"
           label="Min"

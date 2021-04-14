@@ -9,6 +9,7 @@ class HTTPRequest {
 
   constructor(serviceName: string) {
     this.url = `${process.env.baseURL}/${serviceName}`;
+    console.log(this.url);
   }
 
   async get<T>(params: string = ''): Promise<T> { // Request data

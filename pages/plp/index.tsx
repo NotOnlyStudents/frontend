@@ -2,7 +2,7 @@ import React from 'react';
 
 import { PLPProductItem, ProductFilter } from 'interfaces/products/product';
 import { getAllProduct } from 'services/productService';
-// import PLPFilter from 'components/plp/PLPFilter';
+import PLPFilter from 'components/plp/PLPFilter';
 import EMLPagination from 'components/pagination/EMLPagination';
 import PLPList from 'components/plp/PLPList';
 import Head from 'next/head';
@@ -77,10 +77,10 @@ class PLPCustomer extends React.Component<Props, State> {
           <title>Products List Page | EmporioLambda</title>
         </Head>
         <EMLBreadcrumb paths={this.breadcrumbPaths} />
-        {/* <PLPFilter
-                    filter={filters}
-                    handleChangeFilter={this.handleChangeFilters}
-                /> */}
+        <PLPFilter
+          filter={filters}
+          handleChangeFilter={this.handleChangeFilters}
+        />
         <PLPList products={products} />
         <EMLPagination
           totalElements={totalProducts}

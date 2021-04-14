@@ -12,18 +12,29 @@ interface Props {
 function AsynchronousAutocomplete(
   { selectedCategories, options, handleChangeCategories }: Props,
 ) {
-  console.log(selectedCategories);
+  
+  const [value, setValue] = React.useState([]);
+
+  React.useEffect(()=>{
+    if(selectedCategories !== undefined)
+    {
+      setValue(selectedCategories);
+    }
+  })
+  
   return (
     <Autocomplete
       multiple
       id="categories"
       options={options}
-      onChange={(event, value) => {
-        handleChangeCategories(value as Category[]);
+      onChange={(event, value: Category[]) => {
+        handleChangeCategories(value);
+        setValue(value);
+        console.log(value);
       }}
       getOptionLabel={(option) => option}
       style={{ width: 300 }}
-      defaultValue={selectedCategories}
+      value={value}
       renderInput={(params) => <TextField {...params} label="Categories" variant="standard" />}
     />
   );

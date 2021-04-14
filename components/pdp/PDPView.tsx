@@ -1,5 +1,5 @@
 import {
-  Box, Button, CardMedia, Chip, Theme, Typography,
+  Box, Button, CardMedia, Chip, IconButton, Theme, Typography,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import QuantityManager from 'components/quantity-manager/QuantityManager';
@@ -8,6 +8,9 @@ import { Product } from 'interfaces/products/product';
 import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart';
 
 import React from 'react';
+import { Edit } from '@material-ui/icons';
+import { NextRouter, useRouter } from 'next/router';
+import PDPRemove from './PDPRemove';
 
 interface Props {
   product: Product,
@@ -49,10 +52,24 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 function PDPView({ product, edit }: Props) : React.ReactElement {
   const classes = useStyles();
+  const router: NextRouter = useRouter();
 
   const [counter, setCounter] = React.useState(1);
 
   const [actualImg, setActualImg] = React.useState(product.images[0]);
+
+  const handleClickEditButton = () => {
+    router.push(`/pdp/edit/${product.id}`);
+  };
+
+  const renderEditOptions = () => (edit ? (
+    <Box>
+      <IconButton color="primary" onClick={handleClickEditButton}>
+        <Edit />
+      </IconButton>
+      <PDPRemove id={product.id} />
+    </Box>
+  ) : <></>);
 
   const renderImages = () : React.ReactElement[] => product.images
     .filter((image: string) => image !== actualImg)
@@ -77,9 +94,12 @@ function PDPView({ product, edit }: Props) : React.ReactElement {
 
   return (
     <Box>
-      <Typography variant="h4" component="h2">
-        { product.name }
-      </Typography>
+      <Box display="flex" justifyContent="space-between" alignItems="center">
+        <Typography variant="h4" component="h2" noWrap>
+          { product.name }
+        </Typography>
+        { renderEditOptions() }
+      </Box>
       <Box className={classes.container} display="flex">
         <Box className={classes.containerImages} display="flex" height="35em">
           <Box

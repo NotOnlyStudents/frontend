@@ -1,4 +1,4 @@
-import PDPView from 'components/pdp-view/PDPView';
+import PDPView from 'components/pdp/PDPView';
 import { Product } from 'interfaces/products/product';
 import Head from 'next/head';
 import React from 'react';
@@ -22,13 +22,11 @@ function PDPPage({ product }: Props) {
     <>
       <Head>
         <title>
-          { product.name }
-          {' '}
-          | EmporioLambda
+          { `${product.name} | EmporioLambda` }
         </title>
       </Head>
       <EMLBreadcrumb paths={breadcrumbPaths} />
-      <PDPView product={product} />
+      <PDPView product={product} edit />
     </>
   );
 }

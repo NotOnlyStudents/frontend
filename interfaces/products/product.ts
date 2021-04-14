@@ -1,21 +1,21 @@
 import { Category } from './category';
 
 export interface Product {
-  id: string;
+  id?: string;
   name: string;
   description: string;
   images: string[];
   quantity: number;
-  price: string;
-  evidence: boolean;
-  discount: number;
+  price: number;
+  evidence?: boolean;
+  discount?: number;
   categories: Category[];
 }
 
 export interface PLPProductItem {
   id: string,
   name: string,
-  price: string,
+  price: number,
   image: string,
   evidence: string,
   discount: number,

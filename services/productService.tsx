@@ -3,7 +3,6 @@ import {
   PLPProductItem, Product, ProductFilter, ProductsGETRequest,
 } from 'interfaces/products/product';
 import queryString from 'query-string';
-import { CategoriesGETRequest, Category } from 'interfaces/products/category';
 
 const getAllProduct = async (params?: ProductFilter): Promise<PLPProductItem[]> => {
   const req: HTTPRequest = new HTTPRequest('products');

@@ -14,7 +14,7 @@ import {
 import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart';
 
 interface Props {
-  product: Product
+  item: Product
 }
 
 const useStyles = makeStyles({
@@ -22,64 +22,45 @@ const useStyles = makeStyles({
     width: '100%',
   },
   image: {
-    height: 300,
+    height: 50,
+    width: 50
   },
 });
 
-function CartItem({ product }: Props) {
+//<Link to={this.props.item} onClick={item.quantity++}>Here</Link>
+
+function CartItem({ item }: Props) {
 
   const classes = useStyles();
 
-  const showNotAvailableBanner = () : React.ReactElement | void => {
-    if (product.quantity <= 0) {
-      return (
-        <Typography variant="caption" color="error">
-          Not available
-        </Typography>
-      );
-    }
-  };
-
-  const showInEvidenceBanner = () : React.ReactElement | void => {
-    if (product.evidence) {
-      return (
-        <StarIcon color="secondary" />
-      );
-    }
-  };
-
   return (
     <Card className={classes.root}>
-      <Box position="relative" display="block">
-        <CardMedia
-          className={classes.image}
-        />
-        <Box position="absolute" display="flex" flexDirection="column" alignItems="flex-end" top={5} right={5}>
-          { showInEvidenceBanner() }
-          { showNotAvailableBanner() }
-        </Box>
-      </Box>
       <CardContent>
-        <Typography gutterBottom variant="h5" component="h2" noWrap>
-          { product.name }
-        </Typography>
         <Box display="flex" justifyContent="space-between" alignItems="center">
+        <CardMedia className={classes.image}/>
+          <Box flexDirection="column" display="flex" justifyContent="space-between" alignItems="center">
           <Typography variant="button">
-            { product.price }
+            { item.name }
+          </Typography>
+          <Typography variant="button">
+            { item.quantity }
+          </Typography>
+          </Box>
+          <Typography variant="button">
+            { item.price }€
           </Typography>
         </Box>
       </CardContent>
       <CardActions>
         <Box display="flex" justifyContent="flex-end" width="100%">
-          <Button component={Link} size="small" color="primary" href={`/pdp/${product.id}`}>
+          <Button component={Link} size="small" color="primary" href={`/pdp/${item.id}`}>
             See more details
           </Button>
-          <IconButton color="primary">
-            <AddShoppingCartIcon />
-          </IconButton>
         </Box>
       </CardActions>
+  
     </Card>
+    
   );
 }
 

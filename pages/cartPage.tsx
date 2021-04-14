@@ -1,5 +1,5 @@
 import Layout from '../components/Layout';
-import CartItems from '../components/cart/cartItems';
+import CartList from '../components/cart/cartList';
 import getCartItems from '../services/cartService';
 import {Cart} from '../interfaces/cart';
 
@@ -14,7 +14,7 @@ console.log(cart["products"][0]);
 
  return (<>
       <h1>Your Cart</h1>
-      <CartItems items={cart["products"]}/>
+      <CartList items={cart["products"]}/>
     </>
   )
 }

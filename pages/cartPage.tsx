@@ -10,7 +10,7 @@ interface Props {
 
 function cartPage({ cart }: Props){
 
-console.log(cart["products"][0]);
+//console.log(cart["products"][0]);
 
  return (<>
       <h1>Your Cart</h1>

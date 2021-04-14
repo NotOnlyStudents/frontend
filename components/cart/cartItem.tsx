@@ -8,13 +8,17 @@ import StarIcon from '@material-ui/icons/Star';
 import {Product} from '../../interfaces/product';
 import { createStyles, makeStyles } from '@material-ui/core/styles';
 import {
-  Box, Button, CardActions, IconButton, Link, TextField,
+  Box, Button, CardActions, IconButton, InputLabel, Link, MenuItem, Select, TextField,
 } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart';
 
 interface Props {
   item: Product
+}
+
+interface State{
+  quantity: Number
 }
 /*
 const useStyles = makeStyles(()=> createStyles({
@@ -29,12 +33,20 @@ const useStyles = makeStyles(()=> createStyles({
 
 //<Link to={this.props.item} onClick={item.quantity++}>Here</Link>
 
-class CartItem extends React.Component<Props,any>{
+class CartItem extends React.Component<Props,State>{
   constructor(props){
-    super(props);
+    super(props);  
+    this.handleChange = this.handleChange.bind(this);
+    this.state ={quantity: this.props.item.quantity};
   }
 
-
+  handleChange = (event) => {
+    event.preventDefault();
+    const val = event.target.value;
+    this.setState({quantity: val});
+    this.props.item.quantity = val;
+    console.log(this.props.item.quantity);
+  }
 
 //Card Media da mettere dentro box per dimensione!
 render(){
@@ -62,15 +74,27 @@ render(){
             <Typography variant="button">
               { item.name }
             </Typography>
-            <Autocomplete
-              id="combo-box-demo"
-              options={numbers}
-              getOptionLabel={(option) => option.value}
-              style={{ width: 300 }}
-              renderInput={(params) => <TextField {...params} label="Combo box" variant="outlined" />}
-            />
+            <InputLabel>Quantity</InputLabel>
+              <Select
+                value={this.state.quantity}
+                onChange={this.handleChange}
+              >
+                <MenuItem value="">
+                  <em>None</em>
+                </MenuItem>
+                <MenuItem value={1}>1</MenuItem>
+                <MenuItem value={2}>2</MenuItem>
+                <MenuItem value={3}>3</MenuItem>
+                <MenuItem value={4}>4</MenuItem>
+                <MenuItem value={5}>5</MenuItem>
+                <MenuItem value={6}>6</MenuItem>
+                <MenuItem value={7}>7</MenuItem>
+                <MenuItem value={8}>8</MenuItem>
+                <MenuItem value={9}>9</MenuItem>
+                <MenuItem value={10}>10</MenuItem>
+              </Select>
             <Button>
-              Remove
+              Remove Item
             </Button>
           </Box>
           <Typography variant="button">

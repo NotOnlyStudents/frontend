@@ -39,7 +39,7 @@ function EMLBreadcrumb({ paths } : Props) {
       }
 
       return (
-        <Link className={classes.link} href={path.href}>
+        <Link key={path.href} className={classes.link} href={path.href}>
           <Icon />
           { path.name }
         </Link>

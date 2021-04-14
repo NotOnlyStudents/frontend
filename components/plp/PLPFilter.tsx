@@ -10,20 +10,25 @@ interface Props {
   handleChangeFilter: (filter: ProductFilter) => void;
 }
 
-interface State {
-  categoriesOptions?: Category[]
-  evidence?: string
-}
-
-class PLPFilter extends React.Component<Props, State> {
+class PLPFilter extends React.Component<Props> {
   constructor(props: Props) {
     super(props);
   }
 
   handleChangeCategories(categories: Category[]) {
-    //this.setState({categories})
     console.log(categories);
+    const filter: ProductFilter = {...this.props.filter}
+    filter.categories = categories
+    this.props.handleChangeFilter(filter)
   }
+
+  //handleEvidence
+
+  //handleMin
+
+  //handelMax
+
+  //handleDisponibile
   /* Evidence() {
     const [checked, setChecked] = React.useState(false);
 
@@ -46,9 +51,10 @@ class PLPFilter extends React.Component<Props, State> {
   } */
 
   render(): React.ReactElement {
+    const {filter} = this.props
     return (
       <>
-      <AsynchronousAutocomplete handleChangeCategories={this.handleChangeCategories}/>
+      <AsynchronousAutocomplete selectedCategories={filter.categories} handleChangeCategories={this.handleChangeCategories}/>
         <TextField
           id="minNumber"
           label="Min"

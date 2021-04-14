@@ -2,20 +2,27 @@ import React, { useDebugValue } from 'react';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { Category } from 'interfaces/products/category';
-import { getCategories } from 'services/productService';
+import { getCategories } from 'services/categoriesService';
 
 interface Props {
-  options?: Category[]
+  selectedCategories: Category[]
   handleChangeCategories: (categories: Category[]) => void;
 }
 
-const options: Category[] = [{name: 'home'}, {name: 'bricolage'}];
-
-export default function AsynchronousAutocomplete({ options, handleChangeCategories }: Props) {
-
-  const [categoriesOptions, setCategoriesOptions] = React.useState([]);
-
+export default function AsynchronousAutocomplete({selectedCategories, handleChangeCategories }: Props) {
   
+  const [options, setOptions] = React.useState([]);
+
+  const getAllCategories = async () => {
+    const options = await getCategories();
+    setOptions(options)
+  }
+
+  React.useEffect(() => {
+    getAllCategories();
+  }, []);
+
+
   return (
     <Autocomplete
       multiple
@@ -24,12 +31,8 @@ export default function AsynchronousAutocomplete({ options, handleChangeCategori
       onChange={(event, value) => { handleChangeCategories(value as Category[]); console.log(value)} }
       getOptionLabel={(option) => option.name}
       style={{ width: 300 }}
+      defaultValue={selectedCategories}
       renderInput={(params) => <TextField {...params} label="Categories" variant="standard" />}
     />
   );
-}
-
-AsynchronousAutocomplete.getServerSideProps = async () => {
-  const options: Category[] = await getCategories();
-  return options;
 }

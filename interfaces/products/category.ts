@@ -3,5 +3,5 @@ export interface Category {
 }
 
 export interface CategoriesGETRequest {
-  categories: Category[]
+  data: Category[]
 }

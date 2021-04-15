@@ -74,7 +74,7 @@ render(){
           <CardMedia >Immagine</CardMedia>
           <Box flexDirection="column" display="flex" justifyContent="space-between" alignItems="center">
             <Typography variant="button">
-              { name }
+              { item.name }
             </Typography>
             <InputLabel>Quantity</InputLabel>
               <Select

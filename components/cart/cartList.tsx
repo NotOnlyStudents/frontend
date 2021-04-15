@@ -4,39 +4,63 @@ import { Cart } from '../../interfaces/cart';
 import {Product} from '../../interfaces/product';
 import { Box, Grid, Typography } from '@material-ui/core';
 import  CartItem  from "./cartItem";
+import { SupervisedUserCircleTwoTone } from '@material-ui/icons';
 
 
 interface Props {
   items: Product[];
 }
 
-
-
-
-function CartList({ items }: Props) : React.ReactElement {
-
-    var tot=0;
-    for(var i = 0; i<items.length;i++)
-    {
-      tot += items[i].price * items[i].quantity;
-    }
-    var totalPrice:string = "Total cart price: " +tot+ "€";
-    const renderAllItems = items.length? (): React.ReactElement[] => items.map(
-      (item: Product, index: number): React.ReactElement => (
-          <Box key={items[index].id}>
-          <CartItem item={items[index]} />
-          </Box>
-      ),
-    ) : //Page for empty cart?
-    (): React.ReactElement =>{totalPrice=""; return(<div> The cart is empty</div>);}
-
-  return (
-    <div>
-      {renderAllItems()}
-      <div>{totalPrice}</div>
-    </div>
-  );
+interface State{
+  totalPrice: string;
 }
 
+
+
+class CartList extends React.Component<Props,State> {
+    constructor(props){
+      super(props);
+      this.state={totalPrice:""};
+      const items = props.items;
+
+    }
+
+    
+//Se Lista vuota allora ritorna carrello vuoto, sennò renderizza items
+    renderAllItems = this.props.items.length? 
+    (): React.ReactElement[] => {
+      const items = this.props.items;
+      var tot=0;
+      for(var i = 0; i<items.length;i++)
+      {
+        tot = tot + items[i].price * items[i].quantity;
+      }
+      this.state={totalPrice:"Total price of the cart: " + tot + "€"};
+      return(
+        items.map(
+      (item: Product, index: number): React.ReactElement => (
+        <Box key={item.id}>
+        <CartItem item={item} />
+        </Box>
+      ),));}
+    : 
+    (): React.ReactElement =>{return(<div> The cart is empty</div>);}  //Page for empty cart?
+
+
+
+
+  render() {
+   return(
+   <div>
+      {this.renderAllItems()}
+      <div>{this.state.totalPrice}</div>
+    </div>
+   );
+  }
+}
+
+
+
 export default CartList;
+
 

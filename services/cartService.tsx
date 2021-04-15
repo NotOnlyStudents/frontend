@@ -20,7 +20,7 @@ import {Product} from "../interfaces/product";
         {
           "id": 12346,
           "name": "Filippo",
-          "price": 0.5,
+          "price": 2,
           "description": "Filippo Fantinato bel ragazzo",
           "image": null,
           "quantity": 1,

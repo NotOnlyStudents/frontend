@@ -65,14 +65,16 @@ render(){
   ];
 
   const item= this.props.item;
-
+  var name = item.name;
+  name += item.available? "" :  " (Not available at the moment)";
+//CardMedia contiene Immagine
   return (
     <Box width='60%'>
       <Box display="flex" justifyContent="space-between" alignItems="center">
-          <CardMedia image=""/>
+          <CardMedia >Immagine</CardMedia>
           <Box flexDirection="column" display="flex" justifyContent="space-between" alignItems="center">
             <Typography variant="button">
-              { item.name }
+              { name }
             </Typography>
             <InputLabel>Quantity</InputLabel>
               <Select

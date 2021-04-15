@@ -10,12 +10,10 @@ import { NextRouter, withRouter } from 'next/router';
 import EMLBreadcrumb from 'components/breadcrumb/EMLBreadcrumb';
 import HomeIcon from '@material-ui/icons/Home';
 import { BreadcrumbPath } from 'interfaces/breadcrumb';
-import { getCategories } from 'services/categoriesService';
-import { Category } from 'interfaces/products/category';
+import { CircularProgress } from '@material-ui/core';
 
 interface Props {
   router: NextRouter,
-  categoriesOptions: Category[],
   filters: ProductFilter,
   products: PLPProductItem[],
   totalProducts: number
@@ -47,7 +45,7 @@ class PLPCustomer extends React.Component<Props, State> {
 
   componentDidMount() {
     this.setState(() => {
-      const newState: State = this.props;
+      const newState: State = { ...this.props };
 
       if (!newState.filters.offset) {
         newState.filters.offset = 1;
@@ -57,7 +55,7 @@ class PLPCustomer extends React.Component<Props, State> {
     });
   }
 
-  handleChangeFilters = (filters: ProductFilter) => {
+  handleChangeFilters = async (filters: ProductFilter) => {
     const { router } = this.props;
 
     router.push({
@@ -66,9 +64,10 @@ class PLPCustomer extends React.Component<Props, State> {
         ...router.query,
         categories: filters.categories,
       },
-    });
+    }, undefined, { shallow: true });
 
     this.setState({ filters });
+    this.fetchAllFilteredProducts();
   };
 
   handleChangePagination = (offset: number) => {
@@ -79,13 +78,21 @@ class PLPCustomer extends React.Component<Props, State> {
       query: { ...router.query, offset },
     }, undefined, { shallow: true });
     this.setState({ filters: { offset } });
+    this.fetchAllFilteredProducts();
+  };
+
+  fetchAllFilteredProducts = () => {
+    // this.setState({ loading: true });
+
+    // const products = await getAllProduct(this.state.filters);
+
+    // this.setState(() => ({ products, loading: false }));
   };
 
   render(): React.ReactElement {
-    const { categoriesOptions } = this.props;
-    const { filters, products, totalProducts } = this.state;
-
-    console.log(filters);
+    const {
+      filters, products, totalProducts,
+    } = this.state;
 
     return (
       <>
@@ -95,7 +102,6 @@ class PLPCustomer extends React.Component<Props, State> {
         <EMLBreadcrumb paths={this.breadcrumbPaths} />
         <PLPFilter
           filter={filters}
-          categoriesOptions={categoriesOptions}
           handleChangeFilter={this.handleChangeFilters}
         />
         <PLPList products={products} />
@@ -113,14 +119,24 @@ class PLPCustomer extends React.Component<Props, State> {
 export async function getServerSideProps({ query }) {
   const filters: ProductFilter = query;
 
-  const products = await getAllProduct(filters);
+  console.log(query);
 
-  const categoriesOptions = await getCategories();
+  if (query.categories) {
+    if (!Array.isArray(query.categories)) {
+      filters.categories = [query.categories];
+    }
+  }
+
+  let products = [];
+  try {
+    products = await getAllProduct(filters);
+  } catch (error) {
+    console.log();
+  }
 
   return {
     props: {
       filters,
-      categoriesOptions,
       products,
       totalProducts: 250,
     },

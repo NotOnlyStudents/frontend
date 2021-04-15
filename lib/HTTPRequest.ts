@@ -1,6 +1,6 @@
 import { ErrorMessage } from 'interfaces/errors';
 
-class HTTPRequest {
+class HTTPRequest implements HTTPRequest {
   readonly baseHeaders: HeadersInit = {
     'Content-Type': 'application/json',
   };
@@ -11,11 +11,12 @@ class HTTPRequest {
     this.url = `${process.env.NEXT_PUBLIC_BASE_URL}/${serviceName}`;
   }
 
-  async get<T>(params: string = ''): Promise<T> { // Request data
+  async get<T>(params: string = '', headers: HeadersInit = {}): Promise<T> { // Request data
     const req: Response = await fetch(this.url + params, {
       headers: {
         ...this.baseHeaders,
         'Access-Control-Allow-Origin': '*',
+        ...headers,
       },
     });
 
@@ -31,10 +32,11 @@ class HTTPRequest {
     return res;
   }
 
-  async post<T>(data: string = ''): Promise<T> { // Send data to create a resource
+  async post<T>(data: string = '', headers: HeadersInit = {}): Promise<T> { // Send data to create a resource
     const req: Response = await fetch(this.url, {
       headers: {
         ...this.baseHeaders,
+        ...headers,
       },
       method: 'POST',
       body: data,
@@ -52,10 +54,11 @@ class HTTPRequest {
     return res;
   }
 
-  async patch<T>(data: string = ''): Promise<T> { // Send data to partial update a resource
+  async patch<T>(data: string = '', headers: HeadersInit = {}): Promise<T> { // Send data to partial update a resource
     const req: Response = await fetch(this.url, {
       headers: {
         ...this.baseHeaders,
+        ...headers,
       },
       method: 'PATCH',
       body: data,
@@ -73,10 +76,11 @@ class HTTPRequest {
     return res;
   }
 
-  async delete<T>(data: string = ''): Promise<T> { // Delete a specified resource
+  async delete<T>(data: string = '', headers: HeadersInit = {}): Promise<T> { // Delete a specified resource
     const req: Response = await fetch(this.url, {
       headers: {
         ...this.baseHeaders,
+        ...headers,
       },
       method: 'DELETE',
       body: data,
@@ -94,10 +98,11 @@ class HTTPRequest {
     return res;
   }
 
-  async put<T>(data: string = ''): Promise<T> { // Send data to update the entire resource
+  async put<T>(data: string = '', headers: HeadersInit = {}): Promise<T> { // Send data to update the entire resource
     const req: Response = await fetch(this.url, {
       headers: {
         ...this.baseHeaders,
+        ...headers,
       },
       method: 'PUT',
       body: data,

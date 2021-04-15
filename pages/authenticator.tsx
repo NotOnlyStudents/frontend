@@ -6,7 +6,7 @@ import {
 import { AuthState, onAuthUIStateChange } from '@aws-amplify/ui-components';
 import { CognitoUser } from '@aws-amplify/auth';
 
-import { useAuthContext } from 'context/authContext';
+import { useAuthContext } from 'lib/authContext';
 
 function Authenticator() {
   const { setAuthState, setUsername } = useAuthContext();

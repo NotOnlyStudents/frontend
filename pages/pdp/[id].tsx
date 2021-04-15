@@ -2,7 +2,7 @@ import PDPView from 'components/pdp/PDPView';
 import { Product } from 'interfaces/products/product';
 import Head from 'next/head';
 import React from 'react';
-import { getProductById } from 'services/productService';
+import ProductService from 'services/product-service';
 import HomeIcon from '@material-ui/icons/Home';
 import EMLBreadcrumb from 'components/breadcrumb/EMLBreadcrumb';
 import { BreadcrumbPath } from 'interfaces/breadcrumb';
@@ -35,7 +35,7 @@ export async function getServerSideProps({ query }) {
   let product;
 
   try {
-    product = await getProductById(query.id);
+    product = await (new ProductService()).getProductById(query.id);
   } catch (error) {
     console.log(error);
   }

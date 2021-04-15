@@ -17,13 +17,13 @@ export interface PLPProductItem {
   name: string,
   price: number,
   image: string,
-  evidence: string,
+  evidence: boolean,
   discount: number,
   quantity: number
 }
 
 export interface ProductsGETRequest {
-  products: PLPProductItem[]
+  data: PLPProductItem[]
 }
 
 export enum SortType {

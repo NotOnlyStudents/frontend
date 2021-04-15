@@ -3,7 +3,7 @@ import { CardMedia, fade, Typography } from '@material-ui/core';
 
 import { makeStyles } from '@material-ui/styles';
 import { PLPProductItem, ProductFilter } from 'interfaces/products/product';
-import { getAllProduct } from 'services/productService';
+import ProductService from 'services/product-service';
 import Head from 'next/head';
 import PLPList from 'components/plp/PLPList';
 
@@ -45,7 +45,9 @@ function Home({ products }: Props) : React.ReactElement {
       <div className={classes.root}>
         <CardMedia component="img" image="/home.jpg" />
         <Typography className={classes.description} component="span" align="center">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Reprehenderit ipsa impedit explicabo officiis necessitatibus at cum, rerum ea perferendis consequuntur provident praesentium eligendi tenetur nisi ipsum et officia ullam. A.
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Reprehenderit ipsa
+          impedit explicabo officiis necessitatibus at cum, rerum ea perferendis
+          consequuntur provident praesentium eligendi tenetur nisi ipsum et officia ullam. A.
         </Typography>
       </div>
       <Typography
@@ -66,7 +68,7 @@ export async function getServerSideProps() {
   let products = [];
 
   try {
-    products = await getAllProduct(filters);
+    products = await (new ProductService()).getAllProduct(filters);
   } catch (error) {
     console.log(error);
   }

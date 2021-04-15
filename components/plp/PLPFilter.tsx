@@ -7,7 +7,6 @@ import { Category } from 'interfaces/products/category';
 
 interface Props {
   filter: ProductFilter;
-  categoriesOptions: Category[];
   handleChangeFilter: (filter: ProductFilter) => void;
 }
 
@@ -52,12 +51,11 @@ class PLPFilter extends React.Component<Props> {
   } */
 
   render(): React.ReactElement {
-    const { filter, categoriesOptions } = this.props;
+    const { filter } = this.props;
     return (
       <>
         <AsynchronousAutocomplete
           selectedCategories={filter.categories}
-          options={categoriesOptions}
           handleChangeCategories={this.handleChangeCategories}
         />
         <TextField

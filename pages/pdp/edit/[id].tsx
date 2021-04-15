@@ -1,7 +1,7 @@
 import PDPEdit from 'components/pdp/PDPEdit';
 import { Product } from 'interfaces/products/product';
 import React from 'react';
-import { getProductById } from 'services/productService';
+import ProductService from 'services/product-service';
 
 interface Props {
   product: Product
@@ -17,7 +17,7 @@ export async function getServerSideProps({ query }) {
   let product;
 
   try {
-    product = await getProductById(query.id);
+    product = await (new ProductService()).getProductById(query.id);
   } catch (error) {
     console.log(error);
   }

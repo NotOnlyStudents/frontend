@@ -102,7 +102,7 @@ function Header({ authState, username }: Props): React.ReactElement {
         delete newPage.query.text;
       }
 
-      Router.push(newPage);
+      Router.push(newPage, undefined, { shallow: true });
     }
   };
 

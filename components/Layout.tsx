@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { CognitoUser } from '@aws-amplify/auth';
 import { withSSRContext } from 'aws-amplify';
 import { AuthState, onAuthUIStateChange } from '@aws-amplify/ui-components';
-import { useAuthContext } from 'context/authContext';
+import { useAuthContext } from 'lib/authContext';
 
 import Header from 'components/header/Header';
 

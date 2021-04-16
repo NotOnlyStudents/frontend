@@ -26,7 +26,7 @@ class CartList extends React.Component<Props,State> {
       this.updateCartPrice;
     }
 
-    handleChange = (event) =>  {
+    handleChange = (event): void =>  {
       event.preventDefault();
       var p = this.props.items;
       var i:number= event.target.name;
@@ -35,7 +35,7 @@ class CartList extends React.Component<Props,State> {
       //Chiamata a put/patch API TODO:
     }
 
-    handleRemove = (event) => {
+    handleRemove = (event): void => {
       event.preventDefault();
       var i:number=event.target.id;
       var p = this.state.items;
@@ -44,13 +44,13 @@ class CartList extends React.Component<Props,State> {
       //Chiamata a put/patch API TODO:
     }
 
-    handleSubmit = () =>
+    handleSubmit = (): void =>
     {
       console.log(this.state); 
       //Si prosegue con checkout API TODO:
     }
     
-    updateCartPrice = () =>
+    updateCartPrice = (): void =>
     {
       var tot=0;
       const items = this.state.items? this.state.items:this.props.items;

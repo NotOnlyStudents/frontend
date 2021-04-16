@@ -1,17 +1,10 @@
 import React from 'react';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
-
-import StarIcon from '@material-ui/icons/Star';
 import {Product} from '../../interfaces/product';
-import { createStyles, makeStyles } from '@material-ui/core/styles';
 import {
-  Box, Button, CardActions, IconButton, InputLabel, Link, MenuItem, Select, TextField,
+  Box, InputLabel, Link, MenuItem, Select,
 } from '@material-ui/core';
-import Autocomplete from '@material-ui/lab/Autocomplete';
-import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart';
 
 interface Props {
   item: Product

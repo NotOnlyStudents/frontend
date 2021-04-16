@@ -1,11 +1,7 @@
 import React from 'react';
-//import cartService from '../../services/cartService';
-import { Cart } from '../../interfaces/cart';
 import {Product} from '../../interfaces/product';
-import { Box, Button, Grid, Typography } from '@material-ui/core';
+import { Box, Button } from '@material-ui/core';
 import  CartItem  from "./cartItem";
-import { SupervisedUserCircleTwoTone } from '@material-ui/icons';
-import ReactDOM from 'react-dom';
 
 
 interface Props {

@@ -15,58 +15,20 @@ import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart';
 
 interface Props {
   item: Product
+  index: number
+  handleChange: any
 }
 
-interface State{
-  quantity: Number
-}
-/*
-const useStyles = makeStyles(()=> createStyles({
-  root: {
-    width: '100%',
-  },
-  image: {
-    height: 50,
-    width: 50
-  },
-}));*/
 
-//<Link to={this.props.item} onClick={item.quantity++}>Here</Link>
+//Dovrebbe diventare una funzione
 
-class CartItem extends React.Component<Props,State>{
-  constructor(props){
-    super(props);  
-    this.handleChange = this.handleChange.bind(this);
-    this.state ={quantity: this.props.item.quantity};
-  }
+export default function CartItem({item, index, handleChange}:Props) {
 
-  handleChange = (event) => {
-    event.preventDefault();
-    const val = event.target.value;
-    this.setState({quantity: val});
-    this.props.item.quantity = val;
-    console.log(this.props.item.quantity);
-  }
-
-//Card Media da mettere dentro box per dimensione!
-render(){
-  //const classes = useStyles();
-  const numbers =[
-    {value:"1"},
-    {value:"2"},
-    {value:"3"},
-    {value:"4"},
-    {value:"5"},
-    {value:"6"},
-    {value:"7"},
-    {value:"8"},
-    {value:"9"},
-    {value:"10"}
-  ];
-
-  const item= this.props.item;
   var name = item.name;
   name += item.available? "" :  " (Not available at the moment)";
+
+  //const classes = useStyles();
+
 //CardMedia contiene Immagine
   return (
     <Box width='60%'>
@@ -78,8 +40,9 @@ render(){
             </Typography>
             <InputLabel>Quantity</InputLabel>
               <Select
-                value={this.state.quantity}
-                onChange={this.handleChange}
+                name = {index.toString()}
+                value={item.quantity}
+                onChange={handleChange}
               >
                 <MenuItem value="">
                   <em>None</em>
@@ -108,6 +71,5 @@ render(){
         </Box>
     </Box>
 
-);}}
-
-export default CartItem;
+);
+}

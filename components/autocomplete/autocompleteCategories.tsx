@@ -2,14 +2,14 @@ import React from 'react';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { Category } from 'interfaces/categories/category';
-import { getCategories } from 'services/categoriesService';
+import CategoryService from 'services/category-service/CategoryService';
 
 interface Props {
   selectedCategories: Category[]
   handleChangeCategories: (categories: Category[]) => void;
 }
 
-function AsynchronousAutocomplete(
+function AutocompleteCategories(
   { selectedCategories, handleChangeCategories }: Props,
 ) {
   const [value, setValue] = React.useState([]);
@@ -36,7 +36,6 @@ function AsynchronousAutocomplete(
       setValue(selectedCategories);
     }
   });
-
   return (
     <Autocomplete
       multiple
@@ -49,9 +48,9 @@ function AsynchronousAutocomplete(
       getOptionLabel={(option) => option}
       style={{ width: 300 }}
       value={value}
-      renderInput={(params) => <TextField {...params} label="Categories" variant="standard" />}
+      renderInput={(params) => <TextField {...params} label="Categories" variant="standard" type="text" inputProps={{ 'aria-label': 'categories input' }} />}
     />
   );
 }
 
-export default AsynchronousAutocomplete;
+export default AutocompleteCategories;

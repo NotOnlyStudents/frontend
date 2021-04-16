@@ -65,9 +65,6 @@ export default function CartItem({item, index, handleChange, handleRemove}:Props
             { item.price }€
           </Typography>
       </Box>
-        <Box display="flex" justifyContent="flex-end" width="100%">
-          
-        </Box>
     </Box>
 
 );

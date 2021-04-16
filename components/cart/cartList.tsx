@@ -2,7 +2,7 @@ import React from 'react';
 //import cartService from '../../services/cartService';
 import { Cart } from '../../interfaces/cart';
 import {Product} from '../../interfaces/product';
-import { Box, Grid, Typography } from '@material-ui/core';
+import { Box, Button, Grid, Typography } from '@material-ui/core';
 import  CartItem  from "./cartItem";
 import { SupervisedUserCircleTwoTone } from '@material-ui/icons';
 import ReactDOM from 'react-dom';
@@ -13,7 +13,7 @@ interface Props {
 }
 
 interface State{
-  totalPrice: string;
+  totalPrice: number;
   items: Product[];
 }
 
@@ -22,16 +22,21 @@ interface State{
 class CartList extends React.Component<Props,State> {
     constructor(props){
       super(props);
-      this.state={totalPrice:"", items:this.props.items};
+      this.state={totalPrice:0, items:this.props.items};
     }
 
-    handleChange = (event) => {
+    componentDidMount()
+    {
+      this.updateCartPrice;
+    }
+
+    handleChange = (event) =>  {
       event.preventDefault();
       var p = this.props.items;
       var i:number= event.target.name;
       p[i].quantity= event.target.value;
       this.setState({items:p});
-      console.log(event.target)
+      //Chiamata a put/patch API TODO:
     }
 
     handleRemove = (event) => {
@@ -40,40 +45,53 @@ class CartList extends React.Component<Props,State> {
       var p = this.state.items;
       p.splice(i,1);
       this.setState({items:p});
+      //Chiamata a put/patch API TODO:
+    }
+
+    handleSubmit = () =>
+    {
+      console.log(this.state); 
+      //Si prosegue con checkout API TODO:
     }
     
-
-//Se Lista vuota allora ritorna carrello vuoto, sennò renderizza items
-    renderAllItems = this.props.items.length? 
-    (): React.ReactElement[] => {
-      const items = this.state.items? this.state.items:this.props.items;
+    updateCartPrice = () =>
+    {
       var tot=0;
+      const items = this.state.items? this.state.items:this.props.items;
       for(var i = 0; i<items.length;i++)
       {
         tot = tot + items[i].price * items[i].quantity;
       }
-      this.state={totalPrice:"Total price of the cart: " + tot + "€", items:items};
+      this.state={totalPrice:tot, items:items};
+    }
+
+    renderAllItems = (): React.ReactElement[] =>{
+      this.updateCartPrice();
+      const items = this.state.items? this.state.items:this.props.items;
       return(
         items.map(
       (item: Product, index: number): React.ReactElement => (
         <Box key={item.id}>
         <CartItem item={item} index={index} handleChange={this.handleChange} handleRemove={this.handleRemove} />
         </Box>
-      ),));}
-    : 
-    (): React.ReactElement =>{
-      this.state={totalPrice:"", items:this.state.items};
-      return(<div> The cart is empty</div>);
-    }  //Page for empty cart?
+      ),));
+  }
 
+    renderButton = (): React.ReactElement => {
+      if(this.state.items.length!=0)
+      { return (<Button id="submit" onClick={this.handleSubmit}> Proceed to order </Button>) }
+      else { return null; }
+
+    }
 
 
 
   render() {
    return(
-   <div id ="root">
+    <div id ="root">
       {this.renderAllItems()}
-      <div>{this.state.totalPrice}</div>
+      <div>{this.state.totalPrice!=0 ? "Total price of the cart: " + this.state.totalPrice + "€" : "The Cart is empty"}</div>
+      {this.renderButton()}
     </div>
    );
   }

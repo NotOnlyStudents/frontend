@@ -1,7 +1,7 @@
 import Head from 'next/head';
 import React from 'react';
 import {
-  Box, Button, InputAdornment, Snackbar, TextField, Typography,
+  Box, Button, FormGroup, FormLabel, InputAdornment, Snackbar, TextField, Typography,
 } from '@material-ui/core';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import CheckIcon from '@material-ui/icons/Check';
@@ -273,7 +273,7 @@ class PDPEdit extends React.Component<Props, State> {
           position="absolute"
           display="flex"
           justifyContent="space-between"
-          width="97%"
+          width="95%"
           bottom={15}
         >
           <Button

@@ -44,6 +44,14 @@ class ProductServiceMock implements ProductService {
   deleteProduct = async (id: string): Promise<void> => {
 
   };
+
+  addToEvidence = async (id: string): Promise<void> => {
+
+  };
+
+  removeFromEvidence = async (id: string): Promise<void> => {
+
+  };
 }
 
 export default ProductServiceMock;

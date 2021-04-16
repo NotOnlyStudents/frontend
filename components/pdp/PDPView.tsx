@@ -11,6 +11,7 @@ import React from 'react';
 import { Edit } from '@material-ui/icons';
 import { NextRouter, useRouter } from 'next/router';
 import PDPRemove from './PDPRemove';
+import PDPStar from './PDPStar';
 
 interface Props {
   product: Product,
@@ -34,11 +35,29 @@ const useStyles = makeStyles((theme: Theme) => ({
   selectedImg: {
     width: '95%',
     height: '100%',
+    [theme.breakpoints.down('sm')]: {
+      width: '100%',
+      height: '95%',
+    },
   },
   containerImages: {
     marginBottom: theme.spacing(4),
     width: '70%',
     [theme.breakpoints.down('md')]: {
+      width: '100%',
+    },
+    [theme.breakpoints.down('sm')]: {
+      flexDirection: 'column',
+    },
+  },
+  otherImages: {
+    height: '35em',
+    width: '10em',
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    [theme.breakpoints.down('sm')]: {
+      flexDirection: 'row',
+      height: '10em',
       width: '100%',
     },
   },
@@ -63,11 +82,17 @@ function PDPView({ product, edit }: Props) : React.ReactElement {
   };
 
   const renderEditOptions = () => (edit ? (
-    <Box>
+    <Box display="flex">
       <IconButton color="primary" onClick={handleClickEditButton}>
         <Edit />
       </IconButton>
-      <PDPRemove id={product.id} />
+      <PDPStar
+        id={product.id}
+        evidance={product.evidence}
+      />
+      <PDPRemove
+        id={product.id}
+      />
     </Box>
   ) : <></>);
 
@@ -101,17 +126,14 @@ function PDPView({ product, edit }: Props) : React.ReactElement {
         { renderEditOptions() }
       </Box>
       <Box className={classes.container} display="flex">
-        <Box className={classes.containerImages} display="flex" height="35em">
+        <Box className={classes.containerImages} display="flex" minHeight="35em">
           <Box
             display="flex"
-            height="100%"
-            width="10em"
-            flexDirection="column"
-            justifyContent="space-between"
+            className={classes.otherImages}
           >
             {renderImages()}
           </Box>
-          <Box display="flex" width="100%" justifyContent="center" alignItems="center">
+          <Box display="flex" width="100%" height="35em" justifyContent="center" alignItems="center">
             <CardMedia className={classes.selectedImg} image={actualImg} />
           </Box>
         </Box>

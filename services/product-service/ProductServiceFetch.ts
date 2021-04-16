@@ -52,6 +52,22 @@ class ProductServiceFetch implements ProductService {
 
     await req.delete<ProductsDELETERequest>();
   };
+
+  addToEvidence = async (id: string): Promise<void> => {
+    const req: HTTPRequest = new HTTPRequest(`products/${id}`);
+
+    const body: string = JSON.stringify({ evidence: true });
+
+    await req.patch<ProductsPATCHRequest>(body);
+  };
+
+  removeFromEvidence = async (id: string): Promise<void> => {
+    const req: HTTPRequest = new HTTPRequest(`products/${id}`);
+
+    const body: string = JSON.stringify({ evidence: false });
+
+    await req.patch<ProductsPATCHRequest>(body);
+  };
 }
 
 export default ProductServiceFetch;

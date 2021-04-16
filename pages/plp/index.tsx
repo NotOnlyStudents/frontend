@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { PLPProductItem, ProductFilter } from 'interfaces/products/product';
-import { getAllProduct } from 'services/productService';
+import ProductService from 'services/product-service';
 import PLPFilter from 'components/plp/PLPFilter';
 import EMLPagination from 'components/pagination/EMLPagination';
 import PLPList from 'components/plp/PLPList';

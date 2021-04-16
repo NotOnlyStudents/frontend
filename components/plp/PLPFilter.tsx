@@ -1,9 +1,11 @@
 import React from 'react';
-import TextField from '@material-ui/core/TextField';
-
 import { ProductFilter } from 'interfaces/products/product';
-import AsynchronousAutocomplete from 'components/autocomplete/autocomplete';
 import { Category } from 'interfaces/categories/category';
+import CheckboxEvidence from 'components/checkboxes/checkboxEvidence';
+import CheckboxAvailable from 'components/checkboxes/checkboxAvailable';
+import AutocompleteCategories from 'components/autocomplete/autocompleteCategories';
+import TextfieldMaxPrice from 'components/textfield/textfieldMaxPrice';
+import TextfieldMinPrice from 'components/textfield/textfieldMinPrice';
 
 interface Props {
   filter: ProductFilter;
@@ -16,57 +18,60 @@ class PLPFilter extends React.Component<Props> {
   }
 
   handleChangeCategories = (categories: Category[]) => {
-    console.log(categories);
-    const filter: ProductFilter = { ...this.props.filter };
-    filter.categories = categories;
-    this.props.handleChangeFilter(filter);
+    const filterCategories: ProductFilter = { ...this.props.filter };
+    filterCategories.categories = categories;
+    this.props.handleChangeFilter(filterCategories);
   };
 
-  // handleEvidence
+  handleChangeEvidence = (evidence: boolean) => {
+    const filterEvidence: ProductFilter = { ...this.props.filter };
+    filterEvidence.evidence = evidence;
+    this.props.handleChangeFilter(filterEvidence);
+  };
 
-  // handleMin
+  handleChangeMinPrice = (minPrice: number) => {
+    const filterMinPrice: ProductFilter = { ...this.props.filter };
+    filterMinPrice.priceMin = minPrice;
+    this.props.handleChangeFilter(filterMinPrice);
+  };
 
-  // handelMax
+  handleChangeMaxPrice = (maxPrice: number) => {
+    const filterMaxPrice: ProductFilter = { ...this.props.filter };
+    filterMaxPrice.priceMax = maxPrice;
+    this.props.handleChangeFilter(filterMaxPrice);
+  };
 
-  // handleDisponibile
-  /* Evidence() {
-    const [checked, setChecked] = React.useState(false);
+  handleChangeAvailable = (available: boolean) => {
+    const filterAvailable: ProductFilter = { ...this.props.filter };
+    filterAvailable.available = available;
+    this.props.handleChangeFilter(filterAvailable);
+  };
 
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-      setChecked(event.target.checked);
-    };
-
-    return (
-      <FormControlLabel
-        control={
-          <Checkbox
-            checked={checked}
-            onChange={handleChange}
-            inputProps={{ "aria-label": "product in evidence" }}
-          />
-        }
-        label="evidence"
-      />
-    );
-  } */
+  /* <AutocompleteCategories
+    selectedCategories={filter.categories}
+    handleChangeCategories={this.handleChangeCategories}
+  /> */
 
   render(): React.ReactElement {
     const { filter } = this.props;
+    console.log(filter.available);
     return (
       <>
-        <AsynchronousAutocomplete
-          selectedCategories={filter.categories}
-          handleChangeCategories={this.handleChangeCategories}
+        <CheckboxEvidence
+          selectedEvidence={filter.evidence}
+          handleChangeEvidence={this.handleChangeEvidence}
         />
-        <TextField
-          id="minNumber"
-          label="Min"
-          type="number"
+        <CheckboxAvailable
+          selectedAvailable={filter.available}
+          handleChangeAvailable={this.handleChangeAvailable}
         />
-        <TextField
-          id="maxNumber"
-          label="Max"
-          type="number"
+        <TextfieldMinPrice
+          selectedMinPrice={filter.priceMin}
+          handleChangeMinPrice={this.handleChangeMinPrice}
+        />
+        <TextfieldMaxPrice
+          selectedMaxPrice={filter.priceMax}
+          handleChangeMaxPrice={this.handleChangeMaxPrice}
         />
       </>
     );

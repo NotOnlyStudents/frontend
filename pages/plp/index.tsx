@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { PLPProductItem, ProductFilter } from 'interfaces/products/product';
-import { getAllProduct } from 'services/productService';
+import ProductService from 'services/product-service';
 import PLPFilter from 'components/plp/PLPFilter';
 import EMLPagination from 'components/pagination/EMLPagination';
 import PLPList from 'components/plp/PLPList';
@@ -10,7 +10,6 @@ import { NextRouter, withRouter } from 'next/router';
 import EMLBreadcrumb from 'components/breadcrumb/EMLBreadcrumb';
 import HomeIcon from '@material-ui/icons/Home';
 import { BreadcrumbPath } from 'interfaces/breadcrumb';
-import { CircularProgress } from '@material-ui/core';
 
 interface Props {
   router: NextRouter,
@@ -37,7 +36,7 @@ class PLPCustomer extends React.Component<Props, State> {
     super(props);
 
     this.state = {
-      filters: { offset: 1, categories: [] },
+      filters: { offset: 1, categories: [], available: this.props.filters.available },
       products: [],
       totalProducts: 0,
     };
@@ -63,6 +62,7 @@ class PLPCustomer extends React.Component<Props, State> {
       query: {
         ...router.query,
         categories: filters.categories,
+        available: filters.available,
       },
     }, undefined, { shallow: true });
 
@@ -93,7 +93,7 @@ class PLPCustomer extends React.Component<Props, State> {
     const {
       filters, products, totalProducts,
     } = this.state;
-
+    console.log(filters.available);
     return (
       <>
         <Head>
@@ -121,6 +121,10 @@ export async function getServerSideProps({ query }) {
 
   console.log(query);
 
+  if (query.available) {
+    filters.available = query.available;
+  }
+
   if (query.categories) {
     if (!Array.isArray(query.categories)) {
       filters.categories = [query.categories];
@@ -129,7 +133,7 @@ export async function getServerSideProps({ query }) {
 
   let products = [];
   try {
-    products = await getAllProduct(filters);
+    products = await (new ProductService()).getAllProduct(filters);
   } catch (error) {
     console.log();
   }

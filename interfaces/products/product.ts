@@ -32,7 +32,7 @@ export interface ProductFilter {
   priceMax?: number,
   priceMin?: number,
   available?: boolean,
-  evidance?: boolean,
+  evidence?: boolean,
   offset?: number,
   sort?: SortType
 }

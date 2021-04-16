@@ -31,6 +31,15 @@ class CartList extends React.Component<Props,State> {
       var i:number= event.target.name;
       p[i].quantity= event.target.value;
       this.setState({items:p});
+      console.log(event.target)
+    }
+
+    handleRemove = (event) => {
+      event.preventDefault();
+      var i:number=event.target.id;
+      var p = this.state.items;
+      p.splice(i,1);
+      this.setState({items:p});
     }
     
 
@@ -48,7 +57,7 @@ class CartList extends React.Component<Props,State> {
         items.map(
       (item: Product, index: number): React.ReactElement => (
         <Box key={item.id}>
-        <CartItem item={item} index={index} handleChange={this.handleChange} />
+        <CartItem item={item} index={index} handleChange={this.handleChange} handleRemove={this.handleRemove} />
         </Box>
       ),));}
     : 

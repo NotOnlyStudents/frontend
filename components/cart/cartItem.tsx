@@ -16,13 +16,14 @@ import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart';
 interface Props {
   item: Product
   index: number
-  handleChange: any
+  handleChange: (event) => void
+  handleRemove: (event) => void
 }
 
 
 //Dovrebbe diventare una funzione
 
-export default function CartItem({item, index, handleChange}:Props) {
+export default function CartItem({item, index, handleChange, handleRemove}:Props) {
 
   var name = item.name;
   name += item.available? "" :  " (Not available at the moment)";
@@ -58,9 +59,7 @@ export default function CartItem({item, index, handleChange}:Props) {
                 <MenuItem value={9}>9</MenuItem>
                 <MenuItem value={10}>10</MenuItem>
               </Select>
-            <Button>
-              Remove Item
-            </Button>
+            <Link id={index.toString()} onClick={handleRemove}> Remove Item </Link>
           </Box>
           <Typography variant="button">
             { item.price }€

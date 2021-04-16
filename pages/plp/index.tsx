@@ -36,7 +36,7 @@ class PLPCustomer extends React.Component<Props, State> {
     super(props);
 
     this.state = {
-      filters: { offset: 1, categories: [], available: this.props.filters.available },
+      filters: { offset: 1, categories: [], available: false },
       products: [],
       totalProducts: 0,
     };
@@ -50,6 +50,12 @@ class PLPCustomer extends React.Component<Props, State> {
         newState.filters.offset = 1;
       }
 
+      if (!newState.filters.available) {
+        newState.filters.available = false;
+      }
+
+      console.log(newState);
+
       return newState;
     });
   }
@@ -57,13 +63,23 @@ class PLPCustomer extends React.Component<Props, State> {
   handleChangeFilters = async (filters: ProductFilter) => {
     const { router } = this.props;
 
+    const query = {
+      ...router.query,
+    };
+
+    if (filters.categories) {
+      query.categories = filters.categories;
+    }
+
+    if (filters.available) {
+      query.available = filters.available.toString();
+    } else {
+      delete query.available;
+    }
+
     router.push({
       pathname: '',
-      query: {
-        ...router.query,
-        categories: filters.categories,
-        available: filters.available,
-      },
+      query,
     }, undefined, { shallow: true });
 
     this.setState({ filters });
@@ -93,7 +109,7 @@ class PLPCustomer extends React.Component<Props, State> {
     const {
       filters, products, totalProducts,
     } = this.state;
-    console.log(filters.available);
+
     return (
       <>
         <Head>
@@ -119,23 +135,24 @@ class PLPCustomer extends React.Component<Props, State> {
 export async function getServerSideProps({ query }) {
   const filters: ProductFilter = query;
 
-  console.log(query);
-
-  if (query.available) {
-    filters.available = query.available;
-  }
-
   if (query.categories) {
     if (!Array.isArray(query.categories)) {
       filters.categories = [query.categories];
     }
   }
 
+  if (query.available) {
+    filters.available = query.available === 'true';
+  }
+
+  console.log(filters);
+
   let products = [];
+
   try {
     products = await (new ProductService()).getAllProduct(filters);
   } catch (error) {
-    console.log();
+    console.error(error);
   }
 
   return {

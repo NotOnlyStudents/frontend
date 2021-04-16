@@ -6,23 +6,20 @@ interface Props {
   handleChangeAvailable: (available: boolean) => void;
 }
 
-function CheckboxAvailable(
-  {
-    selectedAvailable, handleChangeAvailable,
-  }: Props,
-) {
+function CheckboxAvailable({
+  selectedAvailable, handleChangeAvailable,
+}: Props) {
   const [checked, setChecked] = React.useState(false);
 
+  console.log('Checked: ', selectedAvailable);
+
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setChecked(event.target.checked);
-    handleChangeAvailable(checked);
+    handleChangeAvailable(event.target.checked);
   };
-  console.log(selectedAvailable);
+
   React.useEffect(() => {
-    if (selectedAvailable === true) {
-      setChecked(true);
-    }
-  }, []);
+    setChecked(selectedAvailable);
+  }, [selectedAvailable]);
 
   return (
     <FormControlLabel

@@ -12,39 +12,35 @@ interface Props {
   handleChangeFilter: (filter: ProductFilter) => void;
 }
 
-class PLPFilter extends React.Component<Props> {
-  constructor(props: Props) {
-    super(props);
-  }
-
-  handleChangeCategories = (categories: Category[]) => {
-    const filterCategories: ProductFilter = { ...this.props.filter };
+function PLPFilter({ filter, handleChangeFilter }: Props) {
+  const handleChangeCategories = (categories: Category[]) => {
+    const filterCategories: ProductFilter = { ...filter };
     filterCategories.categories = categories;
-    this.props.handleChangeFilter(filterCategories);
+    handleChangeFilter(filterCategories);
   };
 
-  handleChangeEvidence = (evidence: boolean) => {
-    const filterEvidence: ProductFilter = { ...this.props.filter };
+  const handleChangeEvidence = (evidence: boolean) => {
+    const filterEvidence: ProductFilter = { ...filter };
     filterEvidence.evidence = evidence;
-    this.props.handleChangeFilter(filterEvidence);
+    handleChangeFilter(filterEvidence);
   };
 
-  handleChangeMinPrice = (minPrice: number) => {
-    const filterMinPrice: ProductFilter = { ...this.props.filter };
+  const handleChangeMinPrice = (minPrice: number) => {
+    const filterMinPrice: ProductFilter = { ...filter };
     filterMinPrice.priceMin = minPrice;
-    this.props.handleChangeFilter(filterMinPrice);
+    handleChangeFilter(filterMinPrice);
   };
 
-  handleChangeMaxPrice = (maxPrice: number) => {
-    const filterMaxPrice: ProductFilter = { ...this.props.filter };
+  const handleChangeMaxPrice = (maxPrice: number) => {
+    const filterMaxPrice: ProductFilter = { ...filter };
     filterMaxPrice.priceMax = maxPrice;
-    this.props.handleChangeFilter(filterMaxPrice);
+    handleChangeFilter(filterMaxPrice);
   };
 
-  handleChangeAvailable = (available: boolean) => {
-    const filterAvailable: ProductFilter = { ...this.props.filter };
+  const handleChangeAvailable = (available: boolean) => {
+    const filterAvailable: ProductFilter = { ...filter };
     filterAvailable.available = available;
-    this.props.handleChangeFilter(filterAvailable);
+    handleChangeFilter(filterAvailable);
   };
 
   /* <AutocompleteCategories
@@ -52,30 +48,26 @@ class PLPFilter extends React.Component<Props> {
     handleChangeCategories={this.handleChangeCategories}
   /> */
 
-  render(): React.ReactElement {
-    const { filter } = this.props;
-    console.log(filter.available);
-    return (
-      <>
-        <CheckboxEvidence
-          selectedEvidence={filter.evidence}
-          handleChangeEvidence={this.handleChangeEvidence}
-        />
-        <CheckboxAvailable
-          selectedAvailable={filter.available}
-          handleChangeAvailable={this.handleChangeAvailable}
-        />
-        <TextfieldMinPrice
-          selectedMinPrice={filter.priceMin}
-          handleChangeMinPrice={this.handleChangeMinPrice}
-        />
-        <TextfieldMaxPrice
-          selectedMaxPrice={filter.priceMax}
-          handleChangeMaxPrice={this.handleChangeMaxPrice}
-        />
-      </>
-    );
-  }
+  return (
+    <>
+      <CheckboxEvidence
+        selectedEvidence={filter.evidence}
+        handleChangeEvidence={handleChangeEvidence}
+      />
+      <CheckboxAvailable
+        selectedAvailable={filter.available}
+        handleChangeAvailable={handleChangeAvailable}
+      />
+      <TextfieldMinPrice
+        selectedMinPrice={filter.priceMin}
+        handleChangeMinPrice={handleChangeMinPrice}
+      />
+      <TextfieldMaxPrice
+        selectedMaxPrice={filter.priceMax}
+        handleChangeMaxPrice={handleChangeMaxPrice}
+      />
+    </>
+  );
 }
 
 export default PLPFilter;

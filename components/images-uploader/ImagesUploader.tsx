@@ -1,5 +1,8 @@
-import { Box, Fab } from '@material-ui/core';
 import React from 'react';
+import {
+  Box, Fab, makeStyles, Theme, Typography,
+} from '@material-ui/core';
+import grey from '@material-ui/core/colors/grey';
 
 import AddPhotoAlternateIcon from '@material-ui/icons/AddPhotoAlternate';
 import ImageUploaded from './ImageUploaded';
@@ -7,13 +10,23 @@ import ImageUploaded from './ImageUploaded';
 interface Props {
   images: string[];
   disabled: boolean;
+  error: boolean;
   handleRemoveImage: (image: string) => void;
   handleAddImage: (event: Event) => void;
 }
 
+const useStyles = makeStyles({
+  imagesContainer: {
+    minHeight: '10em',
+    backgroundColor: grey[100],
+  },
+});
+
 function ImagesUploader({
-  images, disabled, handleRemoveImage, handleAddImage,
+  images, disabled, handleRemoveImage, error, handleAddImage,
 } : Props): React.ReactElement {
+  const classes = useStyles();
+
   const renderUploadedImages = (): React.ReactElement[] => images.map(
     (image: string): React.ReactElement => (
       <ImageUploaded
@@ -22,15 +35,31 @@ function ImagesUploader({
         handleRemoveImage={handleRemoveImage}
       />
     ),
+  );
 
+  const renderErrorMessage = () : React.ReactElement => (
+    <Typography color="primary">
+      Must insert at least one pic
+    </Typography>
   );
 
   return (
     <Box>
-      <Box display="flex" flexWrap="wrap">
-        {renderUploadedImages()}
+      <Box
+        className={classes.imagesContainer}
+        display="flex"
+        alignItems="center"
+        flexWrap="wrap"
+        p={2}
+      >
+        {
+          error
+            ? renderErrorMessage()
+            : renderUploadedImages()
+        }
+        {}
       </Box>
-      <Box>
+      <Box display="flex" justifyContent="flex-end">
         <label htmlFor="images-picker">
           <Fab component="span" color="primary" disabled={disabled}>
             <AddPhotoAlternateIcon />

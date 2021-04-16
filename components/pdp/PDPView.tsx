@@ -3,7 +3,7 @@ import {
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import QuantityManager from 'components/quantity-manager/QuantityManager';
-import { Category } from 'interfaces/products/category';
+import { Category } from 'interfaces/categories/category';
 import { Product } from 'interfaces/products/product';
 import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart';
 
@@ -85,9 +85,9 @@ function PDPView({ product, edit }: Props) : React.ReactElement {
   const renderCategories = () : React.ReactElement[] => product.categories.map(
     (category: Category) : React.ReactElement => (
       <Chip
-        key={category.name}
+        key={category}
         className={classes.chip}
-        label={category.name}
+        label={category}
       />
     ),
   );

@@ -3,7 +3,7 @@ import TextField from '@material-ui/core/TextField';
 
 import { ProductFilter } from 'interfaces/products/product';
 import AsynchronousAutocomplete from 'components/autocomplete/autocomplete';
-import { Category } from 'interfaces/products/category';
+import { Category } from 'interfaces/categories/category';
 
 interface Props {
   filter: ProductFilter;

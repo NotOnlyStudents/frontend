@@ -1,4 +1,4 @@
-import { Category } from './category';
+import { Category } from '../categories/category';
 
 export interface Product {
   id?: string;
@@ -22,10 +22,6 @@ export interface PLPProductItem {
   quantity: number
 }
 
-export interface ProductsGETRequest {
-  data: PLPProductItem[]
-}
-
 export enum SortType {
   'alphaasc', 'pricedesc', 'priceasc',
 }
@@ -39,4 +35,14 @@ export interface ProductFilter {
   evidance?: boolean,
   offset?: number,
   sort?: SortType
+}
+
+export interface ProductValidation {
+  name: boolean;
+  images: boolean;
+  quantity: boolean;
+  price: boolean;
+  evidence: boolean;
+  discount: boolean;
+  categories: boolean;
 }

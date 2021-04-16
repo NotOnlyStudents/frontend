@@ -1,4 +1,4 @@
-export type Category = string;
+import { Category } from './category';
 
 export interface CategoriesGETRequest {
   data: Category[]

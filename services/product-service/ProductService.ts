@@ -3,6 +3,9 @@ import { PLPProductItem, Product, ProductFilter } from 'interfaces/products/prod
 interface ProductService {
   getAllProduct(params?: ProductFilter) : Promise<PLPProductItem[]>;
   getProductById(id: string) : Promise<Product>;
+  createProduct(product: Product) : Promise<Product>;
+  editProduct(id: string, product: Product) : Promise<Product>;
+  deleteProduct(id: string) : Promise<void>
 }
 
 export default ProductService;

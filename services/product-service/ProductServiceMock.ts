@@ -2,8 +2,9 @@ import faker from 'faker';
 import {
   PLPProductItem, Product, ProductFilter,
 } from 'interfaces/products/product';
+import ProductService from './ProductService';
 
-class ProductServiceMock {
+class ProductServiceMock implements ProductService {
   getAllProduct = async (params?: ProductFilter): Promise<PLPProductItem[]> => (
     (new Array(10)).fill(0)).map(
     (): PLPProductItem => ({
@@ -29,6 +30,20 @@ class ProductServiceMock {
     discount: faker.datatype.number({ min: 0, max: 100 }),
     categories: ['a', 'b', 'c'],
   });
+
+  createProduct = async (product: Product): Promise<Product> => ({
+    id: faker.datatype.uuid(),
+    ...product,
+  });
+
+  editProduct = async (id: string, product: Product): Promise<Product> => ({
+    id,
+    ...product,
+  });
+
+  deleteProduct = async (id: string): Promise<void> => {
+
+  };
 }
 
 export default ProductServiceMock;

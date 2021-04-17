@@ -51,13 +51,13 @@ function PLPFilter({ filter, handleChangeFilter }: Props) {
     handleChangeFilter(filterSort);
   };
 
-  /* <AutocompleteCategories
-    selectedCategories={filter.categories}
-    handleChangeCategories={this.handleChangeCategories}
-  /> */
-
   return (
     <Box p={2}>
+      <AutocompleteCategories
+        selectedCategories={filter.categories}
+        error={false}
+        handleChangeCategories={handleChangeCategories}
+      />
       <CheckboxEvidence
         selectedEvidence={filter.evidence}
         handleChangeEvidence={handleChangeEvidence}

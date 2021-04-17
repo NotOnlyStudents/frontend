@@ -40,6 +40,9 @@ class PLPCustomer extends React.Component<Props, State> {
         offset: 1,
         categories: [],
         available: false,
+        evidence: false,
+        priceMin: 0,
+        priceMax: 0,
         sort: SortType.alphabetical,
       },
       products: [],
@@ -57,6 +60,18 @@ class PLPCustomer extends React.Component<Props, State> {
 
       if (!newState.filters.available) {
         newState.filters.available = false;
+      }
+
+      if (!newState.filters.evidence) {
+        newState.filters.evidence = false;
+      }
+
+      if (!newState.filters.priceMin) {
+        newState.filters.priceMin = 0;
+      }
+
+      if (!newState.filters.priceMax) {
+        newState.filters.priceMax = 0;
       }
 
       if (!newState.filters.sort) {
@@ -84,6 +99,24 @@ class PLPCustomer extends React.Component<Props, State> {
       query.available = filters.available.toString();
     } else {
       delete query.available;
+    }
+
+    if (filters.evidence) {
+      query.evidence = filters.evidence.toString();
+    } else {
+      delete query.evidence;
+    }
+
+    if (filters.priceMin) {
+      query.priceMin = filters.priceMin.toString();
+    } else {
+      delete query.priceMin;
+    }
+
+    if (filters.priceMax) {
+      query.priceMax = filters.priceMax.toString();
+    } else {
+      delete query.priceMax;
     }
 
     if (filters.sort !== SortType.alphabetical) {
@@ -151,7 +184,7 @@ class PLPCustomer extends React.Component<Props, State> {
 
 export async function getServerSideProps({ query }) {
   const filters: ProductFilter = query;
-
+  console.log(query);
   if (query.categories) {
     if (!Array.isArray(query.categories)) {
       filters.categories = [query.categories];
@@ -160,6 +193,18 @@ export async function getServerSideProps({ query }) {
 
   if (query.available) {
     filters.available = query.available === 'true';
+  }
+
+  if (query.evidence) {
+    filters.evidence = query.evidence === 'true';
+  }
+
+  if (query.priceMin) {
+    filters.priceMin = query.priceMin;
+  }
+
+  if (query.priceMax) {
+    filters.priceMax = query.priceMax;
   }
 
   filters.limit = PLPCustomer.limit;

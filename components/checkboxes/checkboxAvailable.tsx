@@ -11,8 +11,6 @@ function CheckboxAvailable({
 }: Props) {
   const [checked, setChecked] = React.useState(false);
 
-  console.log('Checked: ', selectedAvailable);
-
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     handleChangeAvailable(event.target.checked);
   };

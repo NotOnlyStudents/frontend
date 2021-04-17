@@ -8,23 +8,18 @@ interface Props {
   handleChangeMinPrice: (minPrice: number) => void;
 }
 
-function TextfieldMinPrice(
-  {
-    selectedMinPrice, handleChangeMinPrice,
-  }:Props,
-) {
-  const [value, setValue] = React.useState(0);
+function TextfieldMinPrice({
+  selectedMinPrice, handleChangeMinPrice,
+}:Props) {
+  const [value, setValue] = React.useState('');
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setValue(+event.target.value);
     handleChangeMinPrice(+event.target.value);
   };
 
   React.useEffect(() => {
-    if (selectedMinPrice !== undefined) {
-      setValue(selectedMinPrice);
-    }
-  });
+    setValue(selectedMinPrice.toString());
+  }, [selectedMinPrice]);
 
   return (
     <FormControl>
@@ -35,6 +30,7 @@ function TextfieldMinPrice(
         onChange={handleChange}
         startAdornment={<InputAdornment position="start">€</InputAdornment>}
         type="number"
+        placeholder="min price"
       />
     </FormControl>
   );

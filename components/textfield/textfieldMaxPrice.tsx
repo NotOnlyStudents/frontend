@@ -8,23 +8,18 @@ interface Props {
   handleChangeMaxPrice: (maxPrice: number) => void;
 }
 
-function TextfieldMaxPrice(
-  {
-    selectedMaxPrice, handleChangeMaxPrice,
-  }:Props,
-) {
-  const [value, setValue] = React.useState(0);
+function TextfieldMaxPrice({
+  selectedMaxPrice, handleChangeMaxPrice,
+}:Props) {
+  const [value, setValue] = React.useState('');
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setValue(+event.target.value);
     handleChangeMaxPrice(+event.target.value);
   };
 
   React.useEffect(() => {
-    if (selectedMaxPrice !== undefined) {
-      setValue(selectedMaxPrice);
-    }
-  });
+    setValue(selectedMaxPrice.toString());
+  }, [selectedMaxPrice]);
 
   return (
     <FormControl>
@@ -35,6 +30,7 @@ function TextfieldMaxPrice(
         onChange={handleChange}
         startAdornment={<InputAdornment position="start">€</InputAdornment>}
         type="number"
+        placeholder="max price"
       />
     </FormControl>
   );

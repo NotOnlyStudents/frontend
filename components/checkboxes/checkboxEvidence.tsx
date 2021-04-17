@@ -6,28 +6,23 @@ interface Props {
   handleChangeEvidence: (evidence: boolean) => void;
 }
 
-function CheckboxEvidence(
-  {
-    selectedEvidence, handleChangeEvidence,
-  }: Props,
-) {
-  const [state, setState] = React.useState(false);
+function CheckboxEvidence({
+  selectedEvidence, handleChangeEvidence,
+}: Props) {
+  const [checked, setChecked] = React.useState(false);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setState(event.target.checked);
     handleChangeEvidence(event.target.checked);
   };
 
   React.useEffect(() => {
-    if (selectedEvidence) {
-      // console.log(selectedEvidence);
-      setState(true);
-    }
-  });
+    setChecked(selectedEvidence);
+  }, [selectedEvidence]);
+
   return (
     <FormControlLabel
       control={
-        <Checkbox checked={state} onChange={handleChange} name="Evidence" inputProps={{ 'aria-label': 'Checbox for evidence' }} />
+        <Checkbox checked={checked} onChange={handleChange} name="Evidence" inputProps={{ 'aria-label': 'Checbox for evidence' }} />
       }
       label="Evidence"
     />

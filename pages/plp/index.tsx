@@ -51,36 +51,14 @@ class PLPCustomer extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    this.setState(() => {
-      const newState: State = { ...this.props };
+    this.setState((state: State) => {
+      const { filters, products, totalProducts } = this.props;
 
-      if (!newState.filters.offset) {
-        newState.filters.offset = 1;
-      }
-
-      if (!newState.filters.available) {
-        newState.filters.available = false;
-      }
-
-      if (!newState.filters.evidence) {
-        newState.filters.evidence = false;
-      }
-
-      if (!newState.filters.priceMin) {
-        newState.filters.priceMin = 0;
-      }
-
-      if (!newState.filters.priceMax) {
-        newState.filters.priceMax = 0;
-      }
-
-      if (!newState.filters.sort) {
-        newState.filters.sort = SortType.alphabetical;
-      }
-
-      if (!newState.filters.categories) {
-        newState.filters.categories = [];
-      }
+      const newState: State = {
+        filters: { ...state.filters, ...filters },
+        products: [...state.products, ...products],
+        totalProducts,
+      };
 
       return newState;
     });

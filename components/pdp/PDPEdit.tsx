@@ -1,7 +1,7 @@
 import Head from 'next/head';
 import React from 'react';
 import {
-  Box, Button, FormGroup, FormLabel, InputAdornment, Snackbar, TextField, Typography,
+  Box, Button, InputAdornment, Snackbar, TextField, Typography,
 } from '@material-ui/core';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import CheckIcon from '@material-ui/icons/Check';
@@ -14,6 +14,7 @@ import ProductService from 'services/product-service';
 import ProductServiceType from 'services/product-service/ProductService';
 import AutocompleteCategories from 'components/autocomplete/autocompleteCategories';
 import { Category } from 'interfaces/categories/category';
+import PDPEvidence from './PDPEvidence';
 
 interface AlertState {
   validation: boolean
@@ -48,8 +49,8 @@ class PDPEdit extends React.Component<Props, State> {
         quantity: props.product.quantity,
         price: props.product.price,
         evidence: props.product.evidence || false,
-        discount: props.product.discount !== null ? props.product.discount : 0,
         categories: props.product.categories,
+        discount: props.product.discount !== null ? props.product.discount : 0,
       };
     } else {
       this.title = 'Creating new product';
@@ -90,11 +91,21 @@ class PDPEdit extends React.Component<Props, State> {
     });
   };
 
-  handleChangePrice = (value: string) => {
+  handleChangeEvidence = async (evidence: boolean) => {
     this.setState((state: State) => {
       const newState = state;
 
-      newState.product.price = value ? parseFloat(value).toFixed(2) : value;
+      newState.product.evidence = evidence;
+
+      return newState;
+    });
+  };
+
+  handleChangePrice = (value: number) => {
+    this.setState((state: State) => {
+      const newState = state;
+
+      newState.product.price = value;
 
       return newState;
     });
@@ -237,9 +248,15 @@ class PDPEdit extends React.Component<Props, State> {
         <Head>
           <title>{`${this.title} | EmporioLambda`}</title>
         </Head>
-        <Typography variant="h4" component="h2">
-          {this.title}
-        </Typography>
+        <Box>
+          <Typography variant="h4" component="h2">
+            {this.title}
+          </Typography>
+          <PDPEvidence
+            evidence={product.evidence}
+            handleChangeEvidence={this.handleChangeEvidence}
+          />
+        </Box>
         <TextFieldValidation
           id="name"
           label="Product name"

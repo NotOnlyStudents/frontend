@@ -11,8 +11,9 @@ import React from 'react';
 import { Edit } from '@material-ui/icons';
 import { NextRouter, useRouter } from 'next/router';
 import PriceItem from 'components/price-item/PriceItem';
+import ProductService from 'services/product-service';
 import PDPRemove from './PDPRemove';
-import PDPStar from './PDPStar';
+import PDPEvidence from './PDPEvidence';
 
 interface Props {
   product: Product,
@@ -74,6 +75,8 @@ function PDPView({ product, edit }: Props) : React.ReactElement {
   const classes = useStyles();
   const router: NextRouter = useRouter();
 
+  const [evidence, setEvidence] = React.useState(product.evidence);
+
   const [counter, setCounter] = React.useState(1);
 
   const [actualImg, setActualImg] = React.useState(product.images[0]);
@@ -82,14 +85,27 @@ function PDPView({ product, edit }: Props) : React.ReactElement {
     router.push(`/pdp/edit/${product.id}`);
   };
 
+  const handleChangeEvidance = async (ev: boolean) => {
+    try {
+      if (ev) {
+        await (new ProductService()).removeFromEvidence(product.id);
+      } else {
+        await (new ProductService()).addToEvidence(product.id);
+      }
+      setEvidence(ev);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const renderEditOptions = () => (edit ? (
     <Box display="flex">
       <IconButton color="primary" onClick={handleClickEditButton}>
         <Edit />
       </IconButton>
-      <PDPStar
-        id={product.id}
-        evidance={product.evidence}
+      <PDPEvidence
+        evidence={evidence}
+        handleChangeEvidence={handleChangeEvidance}
       />
       <PDPRemove
         id={product.id}

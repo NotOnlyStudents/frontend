@@ -1,26 +1,34 @@
+import { Button, makeStyles } from '@material-ui/core';
 import React from 'react';
-import Link from 'next/link';
+import HeaderMenuMobile from './HeaderMenuMobile';
 
-import Button from '@material-ui/core/Button';
+const useStyles = makeStyles({
+  desktopIcon: {
+    color: 'white',
+  },
+});
 
-interface Props { }
-
-interface State { }
-
-class HeaderNotAuthenticated extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-  }
-
-  render(): React.ReactElement {
-    return (
-      <>
-        <Link href="/authenticator">
-          <Button variant="contained" color="secondary">Login!</Button>
-        </Link>
-      </>
-    );
-  }
+function HeaderNotAuthenticated() : React.ReactElement {
+  return (
+    <>
+      <HeaderMenuMobile
+        desktopMenu={[
+          <Button
+            href="/"
+            variant="contained"
+            color="primary"
+          >
+            Login!
+          </Button>,
+        ]}
+        mobileMenu={[
+          <Button href="/authenticator" disableRipple>
+            Login!
+          </Button>,
+        ]}
+      />
+    </>
+  );
 }
 
 export default HeaderNotAuthenticated;

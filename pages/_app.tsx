@@ -1,14 +1,13 @@
 import { AppProps } from 'next/app';
-import { AuthContextProvider } from 'context/authContext';
-import { Amplify, Auth } from 'aws-amplify';
+import { AuthContextProvider } from 'lib/authContext';
 import React from 'react';
 import Head from 'next/head';
 import Layout from 'components/Layout';
 import theme from 'styles/theme';
-
-import 'styles/global.scss';
 import { ThemeProvider } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
+
+import 'styles/global.scss';
 
 // Amplify.configure({
 //   Auth: {

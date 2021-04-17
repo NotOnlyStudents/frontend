@@ -1,14 +1,14 @@
-import { Category } from './category';
+import { Category } from '../categories/category';
 
 export interface Product {
-  id: string;
+  id?: string;
   name: string;
   description: string;
   images: string[];
   quantity: number;
   price: number;
-  evidence: boolean;
-  discount: number;
+  evidence?: boolean;
+  discount?: number;
   categories: Category[];
 }
 
@@ -17,13 +17,15 @@ export interface PLPProductItem {
   name: string,
   price: number,
   image: string,
-  evidence: string,
+  evidence: boolean,
   discount: number,
   quantity: number
 }
 
-export interface ProductsGETRequest {
-  products: PLPProductItem[]
+export enum SortType {
+  alphabetical = 'alphabetical',
+  cheaper = 'cheaper',
+  expensive = 'expensive',
 }
 
 export interface ProductFilter {
@@ -32,6 +34,18 @@ export interface ProductFilter {
   priceMax?: number,
   priceMin?: number,
   available?: boolean,
-  evidance?: boolean,
-  offset?: number
+  evidence?: boolean,
+  offset?: number,
+  limit?: number,
+  sort?: SortType,
+}
+
+export interface ProductValidation {
+  name: boolean;
+  images: boolean;
+  quantity: boolean;
+  price: boolean;
+  evidence: boolean;
+  discount: boolean;
+  categories: boolean;
 }

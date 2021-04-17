@@ -13,6 +13,7 @@ import {
 import QuantityManager from 'components/quantity-manager/QuantityManager';
 
 import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart';
+import PriceItem from 'components/price-item/PriceItem';
 
 interface Props {
   product: PLPProductItem
@@ -25,6 +26,11 @@ const useStyles = makeStyles({
   image: {
     height: 300,
   },
+  notAvailableText: {
+    width: '100%',
+    textAlign: 'right',
+    backgroundColor: 'white',
+  },
 });
 
 function PLPProduct({ product }: Props) {
@@ -35,20 +41,14 @@ function PLPProduct({ product }: Props) {
   const showNotAvailableBanner = () : React.ReactElement | void => {
     if (product.quantity <= 0) {
       return (
-        <Typography variant="caption" color="error">
+        <Typography className={classes.notAvailableText} color="error">
           Not available
         </Typography>
       );
     }
   };
 
-  const showInEvidenceBanner = () : React.ReactElement | void => {
-    if (product.evidence) {
-      return (
-        <StarIcon color="secondary" />
-      );
-    }
-  };
+  const showInEvidenceBanner = () : React.ReactElement => (product.evidence ? <StarIcon style={{ color: '#FFEB3B' }} fontSize="large" /> : <></>);
 
   return (
     <Card className={classes.root}>
@@ -57,9 +57,9 @@ function PLPProduct({ product }: Props) {
           className={classes.image}
           image={product.image}
         />
-        <Box position="absolute" display="flex" flexDirection="column" alignItems="flex-end" top={5} right={5}>
-          { showInEvidenceBanner() }
+        <Box position="absolute" display="flex" flexDirection="column" alignItems="flex-end" width="100%" top={0}>
           { showNotAvailableBanner() }
+          { showInEvidenceBanner() }
         </Box>
       </Box>
       <CardContent>
@@ -68,9 +68,10 @@ function PLPProduct({ product }: Props) {
         </Typography>
         <Box display="flex" justifyContent="space-between" alignItems="center">
           <QuantityManager counter={counter} handleCounterChange={setCounter} />
-          <Typography variant="button">
-            { product.price }
-          </Typography>
+          <PriceItem
+            price={product.price}
+            discount={product.discount}
+          />
         </Box>
       </CardContent>
       <CardActions>

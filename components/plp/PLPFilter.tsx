@@ -1,135 +1,85 @@
 import React from 'react';
-import Autocomplete from '@material-ui/lab/Autocomplete';
-import TextField from '@material-ui/core/TextField';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import Checkbox from '@material-ui/core/Checkbox';
-
-import { ProductFilter } from 'interfaces/products/product';
-import { getCategories } from 'services/productService';
-import { Category } from 'interfaces/products/category';
-import { FormControlLabel } from '@material-ui/core';
+import { ProductFilter, SortType } from 'interfaces/products/product';
+import { Category } from 'interfaces/categories/category';
+import CheckboxEvidence from 'components/checkboxes/checkboxEvidence';
+import CheckboxAvailable from 'components/checkboxes/checkboxAvailable';
+import AutocompleteCategories from 'components/autocomplete/autocompleteCategories';
+import TextfieldMaxPrice from 'components/textfield/textfieldMaxPrice';
+import TextfieldMinPrice from 'components/textfield/textfieldMinPrice';
+import SortProducts from 'components/sort-products/SortProducts';
+import { Box } from '@material-ui/core';
 
 interface Props {
   filter: ProductFilter;
   handleChangeFilter: (filter: ProductFilter) => void;
 }
 
-interface State {
-  categoriesOptions: Category[]
-}
-
-class PLPFilter extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-
-    this.state = {
-      categoriesOptions: [],
-    };
-  }
-
-  getAllCategories = async () => {
-    const categories : Category[] = await getCategories();
-
-    this.setState({ categoriesOptions: categories });
+function PLPFilter({ filter, handleChangeFilter }: Props) {
+  const handleChangeCategories = (categories: Category[]) => {
+    const filterCategories: ProductFilter = { ...filter };
+    filterCategories.categories = categories;
+    handleChangeFilter(filterCategories);
   };
 
-  async Categories() {
-    const [open, setOpen] = React.useState(false);
-    const [options, setOptions] = React.useState<Category[]>([]);
-    const loading = open && options.length === 0;
+  const handleChangeEvidence = (evidence: boolean) => {
+    const filterEvidence: ProductFilter = { ...filter };
+    filterEvidence.evidence = evidence;
+    handleChangeFilter(filterEvidence);
+  };
 
-    React.useEffect(() => {
-      let active = true;
+  const handleChangeMinPrice = (minPrice: number) => {
+    const filterMinPrice: ProductFilter = { ...filter };
+    filterMinPrice.priceMin = minPrice;
+    handleChangeFilter(filterMinPrice);
+  };
 
-      if (!loading) {
-        return undefined;
-      }
+  const handleChangeMaxPrice = (maxPrice: number) => {
+    const filterMaxPrice: ProductFilter = { ...filter };
+    filterMaxPrice.priceMax = maxPrice;
+    handleChangeFilter(filterMaxPrice);
+  };
 
-      (async () => {
-        const categories = await getCategories();
-        if (active) {
-          setOptions(
-            Object.keys(categories).map(
-              (key) => categories[key].item[0],
-            ) as Category[],
-          );
-        }
-      })();
+  const handleChangeAvailable = (available: boolean) => {
+    const filterAvailable: ProductFilter = { ...filter };
+    filterAvailable.available = available;
+    handleChangeFilter(filterAvailable);
+  };
 
-      return () => {
-        active = false;
-      };
-    }, [loading]);
+  const handleChangeSort = (sort: SortType) => {
+    const filterSort: ProductFilter = { ...filter };
+    filterSort.sort = sort;
+    handleChangeFilter(filterSort);
+  };
 
-    React.useEffect(() => {
-      if (!open) {
-        setOptions([]);
-      }
-    }, [open]);
-
-    return (
-      <Autocomplete
-        multiple
-        id="Categories"
-        style={{ width: 300 }}
-        open={open}
-        onOpen={this.getAllCategories}
-        getOptionSelected={(option, value) => option.name === value.name}
-        getOptionLabel={(option) => option.name}
-        options={this.state.categoriesOptions}
-        loading={loading}
-        renderInput={(params) => (
-          <TextField
-            {...params}
-            label="Categories"
-            InputProps={{
-              ...params.InputProps,
-            }}
-          />
-        )}
+  return (
+    <Box p={2}>
+      <AutocompleteCategories
+        selectedCategories={filter.categories}
+        error={false}
+        handleChangeCategories={handleChangeCategories}
       />
-    );
-  }
-
-  /* Evidence() {
-    const [checked, setChecked] = React.useState(false);
-
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-      setChecked(event.target.checked);
-    };
-
-    return (
-      <FormControlLabel
-        control={
-          <Checkbox
-            checked={checked}
-            onChange={handleChange}
-            inputProps={{ "aria-label": "product in evidence" }}
-          />
-        }
-        label="evidence"
+      <CheckboxEvidence
+        selectedEvidence={filter.evidence}
+        handleChangeEvidence={handleChangeEvidence}
       />
-    );
-  } */
-
-  render(): React.ReactElement {
-    return (
-      <>
-        <>{this.Categories()}</>
-        <>{this.Evidence()}</>
-        <TextField
-          id="minNumber"
-          label="Minimum Price"
-          type="number"
-        />
-        <TextField
-          id="maxNumber"
-          label="Maximum Price"
-          type="number"
-        />
-      </>
-    );
-  }
+      <CheckboxAvailable
+        selectedAvailable={filter.available}
+        handleChangeAvailable={handleChangeAvailable}
+      />
+      <TextfieldMinPrice
+        selectedMinPrice={filter.priceMin}
+        handleChangeMinPrice={handleChangeMinPrice}
+      />
+      <TextfieldMaxPrice
+        selectedMaxPrice={filter.priceMax}
+        handleChangeMaxPrice={handleChangeMaxPrice}
+      />
+      <SortProducts
+        sort={filter.sort}
+        handleChangeSort={handleChangeSort}
+      />
+    </Box>
+  );
 }
 
 export default PLPFilter;

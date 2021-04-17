@@ -1,7 +1,7 @@
 import React from 'react';
 import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
-import {Product} from 'interfaces/product';
+import {Product} from "interfaces/products/product";
 import {
   Box, InputLabel, Link, MenuItem, Select,
 } from '@material-ui/core';
@@ -21,7 +21,7 @@ interface Props {
 
 export default function CartItem({item, index, handleChange, handleRemove}:Props) {
   var name = item.name;
-  name += item.available? "" :  " (Not available at the moment)";
+  //name += item.available? "" :  " (Not available at the moment)";
   const [counter, setCounter] = React.useState(item.quantity);
 
   return (
@@ -55,7 +55,7 @@ export default function CartItem({item, index, handleChange, handleRemove}:Props
             <Link id={index.toString()} onClick={handleRemove}> Remove Item </Link>
           </Box>
           <Typography variant="button">
-            { item.price }€
+            { item.price * item.quantity }€
           </Typography>
       </Box>
     </Box>);

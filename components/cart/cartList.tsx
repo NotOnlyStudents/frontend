@@ -1,5 +1,5 @@
 import React from 'react';
-import {Product} from 'interfaces/product';
+import {Product} from 'interfaces/products/product';
 import { Box, Button } from '@material-ui/core';
 import  CartItem  from "./cartItem";
 import QuantityManager from 'components/quantity-manager/QuantityManager';

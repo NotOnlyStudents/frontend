@@ -1,7 +1,8 @@
 import React from 'react';
-import {Product} from '../../interfaces/product';
+import {Product} from 'interfaces/product';
 import { Box, Button } from '@material-ui/core';
 import  CartItem  from "./cartItem";
+import QuantityManager from 'components/quantity-manager/QuantityManager';
 
 
 interface Props {
@@ -26,14 +27,23 @@ class CartList extends React.Component<Props,State> {
       this.updateCartPrice;
     }
 
-    handleChange = (event): void =>  {
-      event.preventDefault();
+    handleChange = (num:number): void =>
+    { 
       var p = this.props.items;
+      p[0].quantity= num;
+      this.setState({items:p});
+      //Chiamata a put/patch API TODO:
+    }
+
+/*
+    handleChange = (event): void =>  {
+      console.log(event.target);
+      /*var p = this.props.items;
       var i:number= event.target.name;
       p[i].quantity= event.target.value;
       this.setState({items:p});
       //Chiamata a put/patch API TODO:
-    }
+}*/
 
     handleRemove = (event): void => {
       event.preventDefault();
@@ -68,7 +78,8 @@ class CartList extends React.Component<Props,State> {
         items.map(
       (item: Product, index: number): React.ReactElement => (
         <Box key={item.id}>
-        <CartItem item={item} index={index} handleChange={this.handleChange} handleRemove={this.handleRemove} />
+        <CartItem item={item} index={index} handleChange={this.handleChange} handleRemove={this.handleRemove}/>
+        <QuantityManager counter={item.quantity} handleCounterChange={this.handleChange} />
         </Box>
       ),));
   }

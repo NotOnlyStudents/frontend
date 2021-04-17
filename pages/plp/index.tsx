@@ -78,6 +78,10 @@ class PLPCustomer extends React.Component<Props, State> {
         newState.filters.sort = SortType.alphabetical;
       }
 
+      if (!newState.filters.categories) {
+        newState.filters.categories = [];
+      }
+
       return newState;
     });
   }

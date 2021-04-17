@@ -3,23 +3,34 @@ import { Alert, Color } from '@material-ui/lab';
 import React from 'react';
 
 interface Props {
+  children: string;
+  id: string;
   open: boolean;
   severity: Color;
-  text: string;
   duration: number;
+  handleClose: (id: string) => void;
 }
 
 function EMLSnackbar({
+  children,
+  id,
   open,
   severity,
-  text,
   duration,
+  handleClose,
 }: Props): React.ReactElement {
-  return (
+  const onClose = () => {
+    handleClose(id);
+  };
 
-    <Snackbar open={open} autoHideDuration={duration}>
+  return (
+    <Snackbar
+      open={open}
+      autoHideDuration={duration}
+      onClose={onClose}
+    >
       <Alert severity={severity}>
-        { text }
+        {children}
       </Alert>
     </Snackbar>
   );

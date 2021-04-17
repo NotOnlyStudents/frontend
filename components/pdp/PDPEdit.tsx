@@ -1,19 +1,19 @@
 import Head from 'next/head';
 import React from 'react';
 import {
-  Box, Button, InputAdornment, Snackbar, TextField, Typography,
+  Box, Button, InputAdornment, TextField, Typography,
 } from '@material-ui/core';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import CheckIcon from '@material-ui/icons/Check';
 import ImagesUploader from 'components/images-uploader/ImagesUploader';
 import TextFieldValidation from 'components/validation/TextFieldValidation';
 import { Product, ProductValidation } from 'interfaces/products/product';
-import { Alert } from '@material-ui/lab';
 import { NextRouter, withRouter } from 'next/router';
 import ProductService from 'services/product-service';
 import ProductServiceType from 'services/product-service/ProductService';
 import AutocompleteCategories from 'components/autocomplete/autocompleteCategories';
 import { Category } from 'interfaces/categories/category';
+import EMLSnackbar from 'components/snackbar/EMLSnackbar';
 import PDPEvidence from './PDPEvidence';
 
 interface AlertState {
@@ -23,6 +23,8 @@ interface AlertState {
 interface Props {
   router: NextRouter;
   product: Product;
+  title: string;
+  creation?: boolean;
 }
 interface State {
   product: Product;
@@ -31,43 +33,13 @@ interface State {
 }
 
 class PDPEdit extends React.Component<Props, State> {
-  readonly title: string = '';
-
   readonly imageLimit = 4;
 
   constructor(props: Props) {
     super(props);
 
-    let product: Product;
-
-    if (props.product) {
-      this.title = `Editing ${props.product.name}`;
-      product = {
-        name: props.product.name,
-        description: props.product.description,
-        images: props.product.images,
-        quantity: props.product.quantity,
-        price: props.product.price,
-        evidence: props.product.evidence || false,
-        categories: props.product.categories,
-        discount: props.product.discount !== null ? props.product.discount : 0,
-      };
-    } else {
-      this.title = 'Creating new product';
-      product = {
-        name: '',
-        description: '',
-        images: [],
-        quantity: 0,
-        price: 1,
-        evidence: false,
-        discount: 0,
-        categories: [],
-      };
-    }
-
     this.state = {
-      product,
+      product: props.product,
       validation: {
         name: false,
         images: false,
@@ -208,8 +180,14 @@ class PDPEdit extends React.Component<Props, State> {
     );
   };
 
-  handleCloseAlertValidation = () => {
-    this.setState({ alert: { validation: false } });
+  handleCloseAlert = (id: string) => {
+    this.setState((state: State) => {
+      const newState: State = state;
+
+      newState.alert[id] = false;
+
+      return newState;
+    });
   };
 
   handleClickCancel = () => {
@@ -241,21 +219,26 @@ class PDPEdit extends React.Component<Props, State> {
   };
 
   render() {
+    const { title, creation } = this.props;
     const { product, validation, alert } = this.state;
+
+    const renderEvidence = () => (creation ? (
+      <PDPEvidence
+        evidence={product.evidence}
+        handleChangeEvidence={this.handleChangeEvidence}
+      />
+    ) : <></>);
 
     return (
       <Box>
         <Head>
-          <title>{`${this.title} | EmporioLambda`}</title>
+          <title>{`${title} | EmporioLambda`}</title>
         </Head>
-        <Box>
+        <Box display="flex" alignItems="center" justifyContent="space-between">
           <Typography variant="h4" component="h2">
-            {this.title}
+            {title}
           </Typography>
-          <PDPEvidence
-            evidence={product.evidence}
-            handleChangeEvidence={this.handleChangeEvidence}
-          />
+          { renderEvidence() }
         </Box>
         <TextFieldValidation
           id="name"
@@ -356,11 +339,15 @@ class PDPEdit extends React.Component<Props, State> {
             Save
           </Button>
         </Box>
-        <Snackbar open={alert.validation} autoHideDuration={4000}>
-          <Alert severity="info">
-            Not all fields satisfy the minimum requirements
-          </Alert>
-        </Snackbar>
+        <EMLSnackbar
+          id="validation"
+          open={alert.validation}
+          severity="info"
+          duration={4000}
+          handleClose={this.handleCloseAlert}
+        >
+          Some field doesn't satisfy the minimal requirements
+        </EMLSnackbar>
       </Box>
     );
   }

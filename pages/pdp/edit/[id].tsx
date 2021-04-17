@@ -18,10 +18,26 @@ function PDPEditPage({ product }: Props) {
     { name: 'Edit' },
   ];
 
+  const title = `Editing ${product.name}`;
+
+  const p: Product = {
+    name: product.name,
+    description: product.description,
+    images: product.images,
+    quantity: product.quantity,
+    price: product.price,
+    evidence: product.evidence || false,
+    categories: product.categories,
+    discount: product.discount !== null ? product.discount : 0,
+  };
+
   return (
     <>
       <EMLBreadcrumb paths={breadcrumbPaths} />
-      <PDPEdit product={product} />
+      <PDPEdit
+        title={title}
+        product={p}
+      />
     </>
   );
 }

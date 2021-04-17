@@ -1,14 +1,32 @@
+import { Button, makeStyles } from '@material-ui/core';
 import React from 'react';
-import Link from 'next/link';
+import HeaderMenuMobile from './HeaderMenuMobile';
 
-import Button from '@material-ui/core/Button';
+const useStyles = makeStyles({
+  desktopIcon: {
+    color: 'white',
+  },
+});
 
 function HeaderNotAuthenticated() : React.ReactElement {
   return (
     <>
-      <Link href="/authenticator">
-        <Button variant="contained" color="secondary">Login!</Button>
-      </Link>
+      <HeaderMenuMobile
+        desktopMenu={[
+          <Button
+            href="/"
+            variant="contained"
+            color="primary"
+          >
+            Login!
+          </Button>,
+        ]}
+        mobileMenu={[
+          <Button href="/authenticator" disableRipple>
+            Login!
+          </Button>,
+        ]}
+      />
     </>
   );
 }

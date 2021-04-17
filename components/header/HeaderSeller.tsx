@@ -1,18 +1,33 @@
 import React from 'react';
-import Link from 'next/link';
 
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import { Button, IconButton, makeStyles } from '@material-ui/core';
+import HeaderMenuMobile from './HeaderMenuMobile';
 
-interface Props { }
-
-interface State { }
+const useStyles = makeStyles({
+  desktopIcon: {
+    color: 'white',
+  },
+});
 
 function HeaderSeller() : React.ReactElement {
+  const classes = useStyles();
+
   return (
     <>
-      <Link href="/personalArea">
-        <ExitToAppIcon aria-label="logout" />
-      </Link>
+      <HeaderMenuMobile
+        desktopMenu={[
+          <IconButton className={classes.desktopIcon} href="/">
+            <ExitToAppIcon aria-label="logout" />
+          </IconButton>,
+        ]}
+        mobileMenu={[
+          <Button href="/" disableRipple>
+            <ExitToAppIcon aria-label="logout" />
+            Logout
+          </Button>,
+        ]}
+      />
     </>
   );
 }

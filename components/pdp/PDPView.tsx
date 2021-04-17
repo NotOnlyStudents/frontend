@@ -10,6 +10,7 @@ import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart';
 import React from 'react';
 import { Edit } from '@material-ui/icons';
 import { NextRouter, useRouter } from 'next/router';
+import PriceItem from 'components/price-item/PriceItem';
 import PDPRemove from './PDPRemove';
 import PDPStar from './PDPStar';
 
@@ -142,9 +143,10 @@ function PDPView({ product, edit }: Props) : React.ReactElement {
             Add to cart
           </Typography>
           <Box display="flex" alignItems="center">
-            <Typography>
-              {product.price}
-            </Typography>
+            <PriceItem
+              price={product.price}
+              discount={product.discount}
+            />
             <Box display="flex" flexGrow={1} />
             <QuantityManager counter={counter} handleCounterChange={setCounter} />
             <Button

@@ -1,11 +1,13 @@
 import React from 'react';
-import { ProductFilter } from 'interfaces/products/product';
+import { ProductFilter, SortType } from 'interfaces/products/product';
 import { Category } from 'interfaces/categories/category';
 import CheckboxEvidence from 'components/checkboxes/checkboxEvidence';
 import CheckboxAvailable from 'components/checkboxes/checkboxAvailable';
 import AutocompleteCategories from 'components/autocomplete/autocompleteCategories';
 import TextfieldMaxPrice from 'components/textfield/textfieldMaxPrice';
 import TextfieldMinPrice from 'components/textfield/textfieldMinPrice';
+import SortProducts from 'components/sort-products/SortProducts';
+import { Box } from '@material-ui/core';
 
 interface Props {
   filter: ProductFilter;
@@ -43,13 +45,19 @@ function PLPFilter({ filter, handleChangeFilter }: Props) {
     handleChangeFilter(filterAvailable);
   };
 
+  const handleChangeSort = (sort: SortType) => {
+    const filterSort: ProductFilter = { ...filter };
+    filterSort.sort = sort;
+    handleChangeFilter(filterSort);
+  };
+
   /* <AutocompleteCategories
     selectedCategories={filter.categories}
     handleChangeCategories={this.handleChangeCategories}
   /> */
 
   return (
-    <>
+    <Box p={2}>
       <CheckboxEvidence
         selectedEvidence={filter.evidence}
         handleChangeEvidence={handleChangeEvidence}
@@ -66,7 +74,11 @@ function PLPFilter({ filter, handleChangeFilter }: Props) {
         selectedMaxPrice={filter.priceMax}
         handleChangeMaxPrice={handleChangeMaxPrice}
       />
-    </>
+      <SortProducts
+        sort={filter.sort}
+        handleChangeSort={handleChangeSort}
+      />
+    </Box>
   );
 }
 

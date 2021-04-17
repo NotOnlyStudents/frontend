@@ -11,6 +11,7 @@ import React, { useState } from 'react';
 import Toolbar from '@material-ui/core/Toolbar';
 import SearchIcon from '@material-ui/icons/Search';
 import Router, { NextRouter, useRouter } from 'next/router';
+import LogoIcon from 'components/icons/LogoIcon';
 import HeaderNotAuthenticated from './HeaderNotAuthenticated';
 import HeaderSeller from './HeaderSeller';
 import HeaderCustomer from './HeaderCustomer';
@@ -26,6 +27,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'space-between',
   },
   link: {
+    display: 'flex',
+    alignItems: 'center',
     color: 'white',
     '&:hover': {
       textDecoration: 'none',
@@ -111,6 +114,7 @@ function Header({ authState, username }: Props): React.ReactElement {
       <Toolbar className={classes.container}>
         <Typography variant="h6" component="h1" noWrap>
           <Link className={classes.link} href="/">
+            <LogoIcon />
             EmporioLambda
           </Link>
         </Typography>

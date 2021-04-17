@@ -12,6 +12,8 @@ import { Alert } from '@material-ui/lab';
 import { NextRouter, withRouter } from 'next/router';
 import ProductService from 'services/product-service';
 import ProductServiceType from 'services/product-service/ProductService';
+import AutocompleteCategories from 'components/autocomplete/autocompleteCategories';
+import { Category } from 'interfaces/categories/category';
 
 interface AlertState {
   validation: boolean
@@ -88,11 +90,11 @@ class PDPEdit extends React.Component<Props, State> {
     });
   };
 
-  handleChangePrice = (value: number) => {
+  handleChangePrice = (value: string) => {
     this.setState((state: State) => {
       const newState = state;
 
-      newState.product.price = value;
+      newState.product.price = value ? parseFloat(value).toFixed(2) : value;
 
       return newState;
     });
@@ -108,11 +110,37 @@ class PDPEdit extends React.Component<Props, State> {
     });
   };
 
-  handleChangeQuantity = (value: number) => {
+  handleChangeQuantity = (value: string) => {
     this.setState((state: State) => {
       const newState = state;
 
       newState.product.quantity = value;
+
+      return newState;
+    });
+  };
+
+  handleChangeCategories = (categories: Category[]) => {
+    this.setState((state: State) => {
+      const newState = state;
+
+      if (categories.length === 0) {
+        newState.validation.categories = true;
+      } else {
+        newState.validation.categories = false;
+      }
+
+      newState.product.categories = categories;
+
+      return newState;
+    });
+  };
+
+  handleChangeDiscount = (discount: number) => {
+    this.setState((state: State) => {
+      const newState = state;
+
+      newState.product.discount = discount;
 
       return newState;
     });
@@ -193,9 +221,9 @@ class PDPEdit extends React.Component<Props, State> {
         newProduct = await ps.createProduct(product);
       }
 
-      router.push({
-        pathname: `/pdp/${newProduct.id}`,
-      });
+      // router.push({
+      //   pathname: `/pdp/${newProduct.id}`,
+      // });
     } else {
       this.setState({ alert: { validation: true } });
     }
@@ -209,7 +237,7 @@ class PDPEdit extends React.Component<Props, State> {
         <Head>
           <title>{`${this.title} | EmporioLambda`}</title>
         </Head>
-        <Typography variant="h4" component="h2" noWrap>
+        <Typography variant="h4" component="h2">
           {this.title}
         </Typography>
         <TextFieldValidation
@@ -235,33 +263,52 @@ class PDPEdit extends React.Component<Props, State> {
           margin="normal"
           onChange={this.handleChangeDescription}
         />
-        <TextFieldValidation
-          id="price"
-          label="Product price"
-          placeholder="Insert product price"
-          value={product.price}
-          type="number"
-          margin="normal"
-          InputProps={{
-            endAdornment: <InputAdornment position="end">€</InputAdornment>,
-          }}
-          error={validation.price}
-          setError={this.setError}
-          handleChange={this.handleChangePrice}
-          rules="required|numeric|min:0"
+        <AutocompleteCategories
+          selectedCategories={product.categories}
+          error={validation.categories}
+          handleChangeCategories={this.handleChangeCategories}
         />
-        <TextFieldValidation
-          id="quantity"
-          label="Product quantity"
-          placeholder="Insert product quantity"
-          value={product.quantity}
-          type="number"
-          margin="normal"
-          error={validation.quantity}
-          setError={this.setError}
-          handleChange={this.handleChangeQuantity}
-          rules="required|integer"
-        />
+        <Box display="flex" justifyContent="space-between">
+          <TextFieldValidation
+            id="price"
+            label="Product price"
+            placeholder="Insert product price"
+            value={product.price}
+            type="number"
+            margin="normal"
+            InputProps={{
+              endAdornment: <InputAdornment position="end">€</InputAdornment>,
+            }}
+            error={validation.price}
+            setError={this.setError}
+            handleChange={this.handleChangePrice}
+            rules="required|numeric|min:0"
+          />
+          <TextFieldValidation
+            id="quantity"
+            label="Product quantity"
+            placeholder="Insert product quantity"
+            value={product.quantity}
+            type="number"
+            margin="normal"
+            error={validation.quantity}
+            setError={this.setError}
+            handleChange={this.handleChangeQuantity}
+            rules="required|integer"
+          />
+          <TextFieldValidation
+            id="discount"
+            label="Product discount"
+            placeholder="Insert product discount"
+            value={product.discount}
+            type="number"
+            margin="normal"
+            error={validation.discount}
+            setError={this.setError}
+            handleChange={this.handleChangeDiscount}
+            rules="integer|min:0|max:100"
+          />
+        </Box>
         <ImagesUploader
           images={product.images}
           handleAddImage={this.handleAddImage}
@@ -270,11 +317,10 @@ class PDPEdit extends React.Component<Props, State> {
           disabled={this.reachedImageLimit()}
         />
         <Box
-          position="absolute"
+          position="relative"
           display="flex"
+          marginTop={10}
           justifyContent="space-between"
-          width="95%"
-          bottom={15}
         >
           <Button
             variant="contained"

@@ -2,24 +2,24 @@ import React from 'react';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { Category } from 'interfaces/categories/category';
-import CategoryService from 'services/category-service/CategoryService';
+import CategoryService from 'services/category-service';
 
 interface Props {
-  selectedCategories: Category[]
-  handleChangeCategories: (categories: Category[]) => void;
+  selectedCategories: Category[],
+  error: boolean,
+  handleChangeCategories: (categories: Category[]) => void
 }
 
 function AutocompleteCategories(
-  { selectedCategories, handleChangeCategories }: Props,
+  { selectedCategories, error, handleChangeCategories }: Props,
 ) {
-  const [value, setValue] = React.useState([]);
   const [options, setOptions] = React.useState([]);
 
   const getallCategories = async () => {
     let categoriesOptions = [];
 
     try {
-      categoriesOptions = await getCategories();
+      categoriesOptions = await (new CategoryService()).getCategories();
     } catch (error) {
       console.error(error);
     }
@@ -31,11 +31,6 @@ function AutocompleteCategories(
     getallCategories();
   }, []);
 
-  React.useEffect(() => {
-    if (selectedCategories !== undefined) {
-      setValue(selectedCategories);
-    }
-  });
   return (
     <Autocomplete
       multiple
@@ -43,12 +38,19 @@ function AutocompleteCategories(
       options={options}
       onChange={(event, v: Category[]) => {
         handleChangeCategories(v);
-        setValue(v);
       }}
       getOptionLabel={(option) => option}
-      style={{ width: 300 }}
-      value={value}
-      renderInput={(params) => <TextField {...params} label="Categories" variant="standard" type="text" inputProps={{ 'aria-label': 'categories input' }} />}
+      fullWidth
+      value={selectedCategories}
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          error={error}
+          variant="standard"
+          label="Categories value"
+          placeholder="Insert categories"
+        />
+      )}
     />
   );
 }

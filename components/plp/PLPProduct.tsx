@@ -13,6 +13,7 @@ import {
 import QuantityManager from 'components/quantity-manager/QuantityManager';
 
 import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart';
+import PriceItem from 'components/price-item/PriceItem';
 
 interface Props {
   product: PLPProductItem
@@ -67,9 +68,10 @@ function PLPProduct({ product }: Props) {
         </Typography>
         <Box display="flex" justifyContent="space-between" alignItems="center">
           <QuantityManager counter={counter} handleCounterChange={setCounter} />
-          <Typography variant="button">
-            { product.price }
-          </Typography>
+          <PriceItem
+            price={product.price}
+            discount={product.discount}
+          />
         </Box>
       </CardContent>
       <CardActions>

@@ -23,7 +23,9 @@ export interface PLPProductItem {
 }
 
 export enum SortType {
-  'alphaasc', 'pricedesc', 'priceasc',
+  alphabetical = 'alphabetical',
+  cheaper = 'cheaper',
+  expensive = 'expensive',
 }
 
 export interface ProductFilter {
@@ -34,7 +36,8 @@ export interface ProductFilter {
   available?: boolean,
   evidence?: boolean,
   offset?: number,
-  sort?: SortType
+  limit?: number,
+  sort?: SortType,
 }
 
 export interface ProductValidation {

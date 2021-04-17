@@ -43,7 +43,7 @@ function Home({ products }: Props) : React.ReactElement {
         <title>Home | EmporioLambda</title>
       </Head>
       <div className={classes.root}>
-        <CardMedia component="img" image="/home.jpg" />
+        <CardMedia component="img" image="/images/home.jpg" />
         <Typography className={classes.description} component="span" align="center">
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Reprehenderit ipsa
           impedit explicabo officiis necessitatibus at cum, rerum ea perferendis

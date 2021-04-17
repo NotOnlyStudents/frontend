@@ -28,7 +28,7 @@ class ProductServiceMock implements ProductService {
     price: parseFloat(faker.commerce.price()),
     evidence: faker.datatype.boolean(),
     discount: faker.datatype.number({ min: 0, max: 100 }),
-    categories: ['a', 'b', 'c'],
+    categories: ['a', 'b'],
   });
 
   createProduct = async (product: Product): Promise<Product> => ({

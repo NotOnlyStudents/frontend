@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { PLPProductItem, ProductFilter } from 'interfaces/products/product';
+import { PLPProductItem, ProductFilter, SortType } from 'interfaces/products/product';
 import ProductService from 'services/product-service';
 import PLPFilter from 'components/plp/PLPFilter';
 import EMLPagination from 'components/pagination/EMLPagination';
@@ -25,7 +25,7 @@ interface State {
 }
 
 class PLPCustomer extends React.Component<Props, State> {
-  private static limit = 25;
+  public static limit = 25;
 
   breadcrumbPaths: BreadcrumbPath[] = [
     { name: 'Home', href: '/', icon: HomeIcon },
@@ -36,7 +36,12 @@ class PLPCustomer extends React.Component<Props, State> {
     super(props);
 
     this.state = {
-      filters: { offset: 1, categories: [], available: false },
+      filters: {
+        offset: 1,
+        categories: [],
+        available: false,
+        sort: SortType.alphabetical,
+      },
       products: [],
       totalProducts: 0,
     };
@@ -54,7 +59,9 @@ class PLPCustomer extends React.Component<Props, State> {
         newState.filters.available = false;
       }
 
-      console.log(newState);
+      if (!newState.filters.sort) {
+        newState.filters.sort = SortType.alphabetical;
+      }
 
       return newState;
     });
@@ -67,6 +74,8 @@ class PLPCustomer extends React.Component<Props, State> {
       ...router.query,
     };
 
+    delete query.limit;
+
     if (filters.categories) {
       query.categories = filters.categories;
     }
@@ -77,10 +86,17 @@ class PLPCustomer extends React.Component<Props, State> {
       delete query.available;
     }
 
+    if (filters.sort !== SortType.alphabetical) {
+      query.sort = filters.sort;
+    } else {
+      delete query.sort;
+    }
+
     router.push({
-      pathname: '',
+      pathname: '/plp',
       query,
-    }, undefined, { shallow: true });
+    });
+    // }, undefined, { shallow: true });
 
     this.setState({ filters });
     this.fetchAllFilteredProducts();
@@ -90,9 +106,10 @@ class PLPCustomer extends React.Component<Props, State> {
     const { router } = this.props;
 
     router.push({
-      pathname: '',
+      pathname: '/plp',
       query: { ...router.query, offset },
-    }, undefined, { shallow: true });
+    });
+    // }, undefined, { shallow: true });
     this.setState({ filters: { offset } });
     this.fetchAllFilteredProducts();
   };
@@ -145,7 +162,7 @@ export async function getServerSideProps({ query }) {
     filters.available = query.available === 'true';
   }
 
-  console.log(filters);
+  filters.limit = PLPCustomer.limit;
 
   let products = [];
 

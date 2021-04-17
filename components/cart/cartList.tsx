@@ -26,28 +26,16 @@ class CartList extends React.Component<Props,State> {
     {
       this.updateCartPrice;
     }
-    componentDidUpdate()
-    {
-      this.updateCartPrice;
-    }
-
-    handleChange = (num:number): void =>
-    { 
-      var p = this.props.items;
-      p[0].quantity= num;
-      this.setState({items:p});
-      //Chiamata a put/patch API TODO:
-    }
-
-/*
+ 
     handleChange = (event): void =>  {
       console.log(event.target);
-      /*var p = this.props.items;
+      var p = this.props.items;
       var i:number= event.target.name;
       p[i].quantity= event.target.value;
       this.setState({items:p});
       //Chiamata a put/patch API TODO:
-}*/
+}
+
 
     handleRemove = (event): void => {
       event.preventDefault();

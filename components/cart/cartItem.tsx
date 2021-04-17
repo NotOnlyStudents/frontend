@@ -11,7 +11,7 @@ import { PersonalVideoSharp } from '@material-ui/icons';
 interface Props {
   item: Product
   index: number
-  handleChange: (number) => void
+  handleChange: (event) => void
   handleRemove: (event) => void
 
 }
@@ -32,17 +32,8 @@ export default function CartItem({item, index, handleChange, handleRemove}:Props
             <Typography variant="button">
               { item.name }
             </Typography>
-            <QuantityManager counter={counter} handleCounterChange={setCounter} />
-            <Link id={index.toString()} onClick={handleRemove}> Remove Item </Link>
-          </Box>
-          <Typography variant="button">
-            { item.price }€
-          </Typography>
-      </Box>
-    </Box>);
-}
-
-/*              <Select
+            <InputLabel> Quantity </InputLabel>
+            <Select
                 name = {index.toString()}
                 value={item.quantity}
                 onChange={handleChange}
@@ -60,4 +51,12 @@ export default function CartItem({item, index, handleChange, handleRemove}:Props
                 <MenuItem value={8}>8</MenuItem>
                 <MenuItem value={9}>9</MenuItem>
                 <MenuItem value={10}>10</MenuItem>
-              </Select>*/
+              </Select>
+            <Link id={index.toString()} onClick={handleRemove}> Remove Item </Link>
+          </Box>
+          <Typography variant="button">
+            { item.price }€
+          </Typography>
+      </Box>
+    </Box>);
+}

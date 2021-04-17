@@ -12,7 +12,6 @@ interface Props {
 function QuantityManager({ counter, handleCounterChange }: Props) {
   const handleCounterMinus = () => {
     if (counter > 1) handleCounterChange(counter - 1);
-    console.log(counter);
   };
 
   const handleCounterPlus = () => handleCounterChange(counter + 1);

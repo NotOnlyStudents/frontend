@@ -26,6 +26,10 @@ class CartList extends React.Component<Props,State> {
     {
       this.updateCartPrice;
     }
+    componentDidUpdate()
+    {
+      this.updateCartPrice;
+    }
 
     handleChange = (num:number): void =>
     { 
@@ -79,7 +83,6 @@ class CartList extends React.Component<Props,State> {
       (item: Product, index: number): React.ReactElement => (
         <Box key={item.id}>
         <CartItem item={item} index={index} handleChange={this.handleChange} handleRemove={this.handleRemove}/>
-        <QuantityManager counter={item.quantity} handleCounterChange={this.handleChange} />
         </Box>
       ),));
   }

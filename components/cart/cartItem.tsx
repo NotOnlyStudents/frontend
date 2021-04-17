@@ -22,10 +22,8 @@ interface Props {
 export default function CartItem({item, index, handleChange, handleRemove}:Props) {
   var name = item.name;
   name += item.available? "" :  " (Not available at the moment)";
+  const [counter, setCounter] = React.useState(item.quantity);
 
-  //const classes = useStyles();
-
-//CardMedia contiene Immagine
   return (
     <Box width='60%'>
       <Box display="flex" justifyContent="space-between" alignItems="center">
@@ -34,15 +32,14 @@ export default function CartItem({item, index, handleChange, handleRemove}:Props
             <Typography variant="button">
               { item.name }
             </Typography>
+            <QuantityManager counter={counter} handleCounterChange={setCounter} />
             <Link id={index.toString()} onClick={handleRemove}> Remove Item </Link>
           </Box>
           <Typography variant="button">
             { item.price }€
           </Typography>
       </Box>
-    </Box>
-
-);
+    </Box>);
 }
 
 /*              <Select

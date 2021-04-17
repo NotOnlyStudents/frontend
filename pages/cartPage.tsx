@@ -14,17 +14,18 @@ interface Props {
 
 
 function cartPage({ cart }: Props){
-  breadcrumbPaths: BreadcrumbPath[] = [
-    { name: 'Home', href: '/', icon: HomeIcon },
-    { name: 'Product List Page' },
-  ];
+
 //console.log(cart["products"][0]);
+ const breadcrumbPaths:BreadcrumbPath[] = [
+  { name: 'Home', href: '/', icon: HomeIcon },
+  { name: 'Cart Page' },
+];
 
  return (<>
       <Head>
         <title> Products List Page | EmporioLambda</title>
       </Head>
-      <EMLBreadcrumb paths={this.breadcrumbPaths} />
+      <EMLBreadcrumb paths={breadcrumbPaths} />
       <h1>Your Cart</h1>
       <CartList items={cart["products"]}/>
     </>

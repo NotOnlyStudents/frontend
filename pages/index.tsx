@@ -63,7 +63,7 @@ function Home({ products }: Props) : React.ReactElement {
 }
 
 export async function getServerSideProps() {
-  const filters: ProductFilter = { evidance: true };
+  const filters: ProductFilter = { evidence: true };
 
   let products = [];
 

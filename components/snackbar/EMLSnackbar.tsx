@@ -7,7 +7,12 @@ interface Props {
   id: string;
   open: boolean;
   severity: Color;
-  duration: number;
+  duration?: number;
+  handleClose: (id: string) => void;
+}
+
+export interface CustomSnackbarProps {
+  open: boolean;
   handleClose: (id: string) => void;
 }
 
@@ -35,5 +40,9 @@ function EMLSnackbar({
     </Snackbar>
   );
 }
+
+EMLSnackbar.defaultProps = {
+  duration: 4000,
+};
 
 export default EMLSnackbar;

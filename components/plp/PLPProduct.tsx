@@ -10,11 +10,13 @@ import { makeStyles } from '@material-ui/core/styles';
 import {
   Box, Button, CardActions, IconButton, Link,
 } from '@material-ui/core';
-import QuantityManager from 'components/quantity-manager/QuantityManager';
+import QuantityManager from 'components/quantity/QuantityManager';
 
 import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart';
 import PriceItem from 'components/price-item/PriceItem';
 import EMLSnackbar from 'components/snackbar/EMLSnackbar';
+import SnackbarAddToCartSuccess, { addToCartSuccessId } from 'components/snackbar/cart/SnackbarAddToCartSuccess';
+import SnackbarAddToCartError, { addToCartErrorId } from 'components/snackbar/cart/SnackbarAddToCartError';
 
 interface Props {
   product: PLPProductItem
@@ -36,7 +38,10 @@ const useStyles = makeStyles({
 
 function PLPProduct({ product }: Props) {
   const [counter, setCounter] = React.useState(1);
-  const [alert, setAlert] = React.useState({ add_to_cart: false });
+  const [alert, setAlert] = React.useState({
+    [addToCartSuccessId]: false,
+    [addToCartErrorId]: false,
+  });
 
   const classes = useStyles();
 
@@ -48,12 +53,16 @@ function PLPProduct({ product }: Props) {
     setAlert(newAlert);
   };
 
-  const handleCloseAlert = (id: string) => {
+  const closeAlert = (id: string) => {
     changeAlert(id, false);
   };
 
+  const openAlert = (id: string) => {
+    changeAlert(id, true);
+  };
+
   const handleAddToCart = () => {
-    changeAlert('add_to_cart', true);
+    openAlert(addToCartSuccessId);
   };
 
   const showNotAvailableBanner = () : React.ReactElement | void => {
@@ -104,15 +113,17 @@ function PLPProduct({ product }: Props) {
           </Box>
         </CardActions>
       </Card>
-      <EMLSnackbar
-        id="add_to_cart"
-        open={alert.add_to_cart}
-        severity="success"
-        duration={4000}
-        handleClose={handleCloseAlert}
-      >
-        { `${product.name} added to cart` }
-      </EMLSnackbar>
+      <SnackbarAddToCartSuccess
+        productName={product.name}
+        open={alert[addToCartSuccessId]}
+        handleClose={closeAlert}
+      />
+
+      <SnackbarAddToCartError
+        productName={product.name}
+        open={alert[addToCartErrorId]}
+        handleClose={closeAlert}
+      />
     </>
   );
 }

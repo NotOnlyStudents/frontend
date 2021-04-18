@@ -26,7 +26,7 @@ function PDPPage({ product }: Props) {
         </title>
       </Head>
       <EMLBreadcrumb paths={breadcrumbPaths} />
-      <PDPView product={product} />
+      <PDPView product={product} edit />
     </>
   );
 }

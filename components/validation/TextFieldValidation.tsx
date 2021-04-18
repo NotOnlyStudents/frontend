@@ -16,7 +16,7 @@ interface Props {
   handleChange?: (value: unknown) => void;
   setError?: (id: string, error: boolean) => void;
   rules?: string,
-  InputProps?: unknown
+  InputProps?: unknown,
 }
 
 function TextFieldValidation(

@@ -1,8 +1,8 @@
 import React from 'react';
 import {
-  InputAdornment, Snackbar, TextField,
+  InputAdornment, makeStyles, Snackbar, TextField,
 } from '@material-ui/core';
-import EMLSnackbar from 'components/snackbar/EMLSnackbar';
+// import EMLSnackbar from 'components/snackbar/EMLSnackbar';
 import { Alert } from '@material-ui/lab';
 
 interface Props {
@@ -11,15 +11,22 @@ interface Props {
   handleChangeMaxPrice: (maxPrice: number) => void;
 }
 
+const useStyles = makeStyles({
+  price: {
+    padding: '0.5em',
+  },
+});
+
 function TextfieldMaxPrice({
   selectedMaxPrice, handleChangeMaxPrice,
   selectedMinPrice,
 }:Props) {
-  const [value, setValue] = React.useState('');
+  const [value, setValue] = React.useState<number>();
   const [error, setError] = React.useState(false);
+  const classes = useStyles();
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (+event.target.value > selectedMaxPrice) {
+    if (+event.target.value < selectedMinPrice) {
       setError(true);
     } else {
       setError(false);
@@ -27,26 +34,23 @@ function TextfieldMaxPrice({
     }
   };
 
-  const handleFocus = (event: FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setValue('0');
-    handleChangeMaxPrice(0);
-  };
-
   React.useEffect(() => {
-    setValue(selectedMaxPrice.toString());
+    setValue(selectedMaxPrice);
   }, [selectedMaxPrice]);
 
   return (
     <>
       <TextField
         id="max price"
+        label="max price"
+        variant="outlined"
+        className={classes.price}
         value={value}
         onChange={handleChange}
         type="number"
-        error={value < '0' || error || selectedMinPrice > selectedMaxPrice}
-        helperText={value < '0' && 'Value must be positive'}
+        error={value < 0 || error || selectedMinPrice > selectedMaxPrice}
+        helperText={value < 0 && 'Value must be positive'}
         placeholder="max price"
-        onFocus={handleFocus}
         InputProps={{
           startAdornment: <InputAdornment position="start">€</InputAdornment>,
         }}

@@ -60,24 +60,28 @@ function PLPFilter({ filter, handleChangeFilter }: Props) {
         selectedCategories={filter.categories}
         handleChangeCategories={handleChangeCategories}
       />
-      <CheckboxEvidence
-        selectedEvidence={filter.evidence}
-        handleChangeEvidence={handleChangeEvidence}
-      />
-      <CheckboxAvailable
-        selectedAvailable={filter.available}
-        handleChangeAvailable={handleChangeAvailable}
-      />
-      <TextfieldMinPrice
-        selectedMinPrice={filter.priceMin}
-        selectedMaxPrice={filter.priceMax}
-        handleChangeMinPrice={handleChangeMinPrice}
-      />
-      <TextfieldMaxPrice
-        selectedMaxPrice={filter.priceMax}
-        selectedMinPrice={filter.priceMin}
-        handleChangeMaxPrice={handleChangeMaxPrice}
-      />
+      <Box m={1}>
+        <CheckboxEvidence
+          selectedEvidence={filter.evidence}
+          handleChangeEvidence={handleChangeEvidence}
+        />
+        <CheckboxAvailable
+          selectedAvailable={filter.available}
+          handleChangeAvailable={handleChangeAvailable}
+        />
+      </Box>
+      <Box>
+        <TextfieldMinPrice
+          selectedMinPrice={filter.priceMin}
+          selectedMaxPrice={filter.priceMax}
+          handleChangeMinPrice={handleChangeMinPrice}
+        />
+        <TextfieldMaxPrice
+          selectedMaxPrice={filter.priceMax}
+          selectedMinPrice={filter.priceMin}
+          handleChangeMaxPrice={handleChangeMaxPrice}
+        />
+      </Box>
       <SortProducts
         sort={filter.sort}
         handleChangeSort={handleChangeSort}

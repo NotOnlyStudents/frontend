@@ -1,14 +1,21 @@
 import {
-  Box, InputBase, InputLabel, MenuItem, Select, Theme,
+  Box, FormControl, InputBase, InputLabel, makeStyles, MenuItem, Select, Theme,
 } from '@material-ui/core';
 import { createStyles, withStyles } from '@material-ui/styles';
 import { SortType } from 'interfaces/products/product';
 import React from 'react';
 
+const useStyles = makeStyles((theme: Theme) => createStyles({
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: 120,
+  },
+}));
+
 const BootstrapInput = withStyles((theme: Theme) => createStyles({
   root: {
     'label + &': {
-      marginTop: theme.spacing(3),
+      marginTop: theme.spacing(2),
     },
   },
   input: {
@@ -52,6 +59,8 @@ function SortProducts({
     handleChangeSort(event.target.value);
   };
 
+  const classes = useStyles();
+
   return (
     <Box
       display="flex"
@@ -59,18 +68,20 @@ function SortProducts({
       flexDirection="column"
       alignItems="flex-end"
     >
-      <InputLabel id="sort-products-label">Sort type</InputLabel>
-      <Select
-        id="sort-products"
-        labelId="sort-products-label"
-        value={sort}
-        onChange={onChangeSort}
-        input={<BootstrapInput />}
-      >
-        <MenuItem value={SortType.alphabetical}>Alphabetical</MenuItem>
-        <MenuItem value={SortType.cheaper}>Cheaper</MenuItem>
-        <MenuItem value={SortType.expensive}>Expensive</MenuItem>
-      </Select>
+      <FormControl className={classes.formControl}>
+        <InputLabel shrink htmlFor="sort-products-label">Sort type</InputLabel>
+        <Select
+          id="sort-products"
+          labelId="sort-products-label"
+          value={sort}
+          onChange={onChangeSort}
+          input={<BootstrapInput />}
+        >
+          <MenuItem value={SortType.alphabetical}>Alphabetical</MenuItem>
+          <MenuItem value={SortType.cheaper}>Cheaper</MenuItem>
+          <MenuItem value={SortType.expensive}>Expensive</MenuItem>
+        </Select>
+      </FormControl>
     </Box>
   );
 }

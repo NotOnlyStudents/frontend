@@ -28,15 +28,19 @@ function PLPFilter({ filter, handleChangeFilter }: Props) {
   };
 
   const handleChangeMinPrice = (minPrice: number) => {
-    const filterMinPrice: ProductFilter = { ...filter };
-    filterMinPrice.priceMin = minPrice;
-    handleChangeFilter(filterMinPrice);
+    if (minPrice >= 0) {
+      const filterMinPrice: ProductFilter = { ...filter };
+      filterMinPrice.priceMin = minPrice;
+      handleChangeFilter(filterMinPrice);
+    }
   };
 
   const handleChangeMaxPrice = (maxPrice: number) => {
-    const filterMaxPrice: ProductFilter = { ...filter };
-    filterMaxPrice.priceMax = maxPrice;
-    handleChangeFilter(filterMaxPrice);
+    if (maxPrice >= 0) {
+      const filterMaxPrice: ProductFilter = { ...filter };
+      filterMaxPrice.priceMax = maxPrice;
+      handleChangeFilter(filterMaxPrice);
+    }
   };
 
   const handleChangeAvailable = (available: boolean) => {
@@ -50,12 +54,10 @@ function PLPFilter({ filter, handleChangeFilter }: Props) {
     filterSort.sort = sort;
     handleChangeFilter(filterSort);
   };
-
   return (
     <Box p={2}>
       <AutocompleteCategories
         selectedCategories={filter.categories}
-        error={false}
         handleChangeCategories={handleChangeCategories}
       />
       <CheckboxEvidence
@@ -68,10 +70,12 @@ function PLPFilter({ filter, handleChangeFilter }: Props) {
       />
       <TextfieldMinPrice
         selectedMinPrice={filter.priceMin}
+        selectedMaxPrice={filter.priceMax}
         handleChangeMinPrice={handleChangeMinPrice}
       />
       <TextfieldMaxPrice
         selectedMaxPrice={filter.priceMax}
+        selectedMinPrice={filter.priceMin}
         handleChangeMaxPrice={handleChangeMaxPrice}
       />
       <SortProducts

@@ -10,6 +10,7 @@ import { NextRouter, withRouter } from 'next/router';
 import EMLBreadcrumb from 'components/breadcrumb/EMLBreadcrumb';
 import HomeIcon from '@material-ui/icons/Home';
 import { BreadcrumbPath } from 'interfaces/breadcrumb';
+import NoResult from 'components/noresult/noResult';
 
 interface Props {
   router: NextRouter,
@@ -110,8 +111,8 @@ class PLPCustomer extends React.Component<Props, State> {
     router.push({
       pathname: '/plp',
       query,
-    });
-    // }, undefined, { shallow: true });
+    // });
+    }, undefined, { shallow: true });
 
     this.setState({ filters });
     this.fetchAllFilteredProducts();
@@ -141,25 +142,29 @@ class PLPCustomer extends React.Component<Props, State> {
     const {
       filters, products, totalProducts,
     } = this.state;
-
+    if (products.length !== 0) {
+      return (
+        <>
+          <Head>
+            <title>Products List Page | EmporioLambda</title>
+          </Head>
+          <EMLBreadcrumb paths={this.breadcrumbPaths} />
+          <PLPFilter
+            filter={filters}
+            handleChangeFilter={this.handleChangeFilters}
+          />
+          <PLPList products={products} />
+          <EMLPagination
+            totalElements={totalProducts}
+            limit={PLPCustomer.limit}
+            page={filters.offset}
+            handleChangePagination={this.handleChangePagination}
+          />
+        </>
+      );
+    }
     return (
-      <>
-        <Head>
-          <title>Products List Page | EmporioLambda</title>
-        </Head>
-        <EMLBreadcrumb paths={this.breadcrumbPaths} />
-        <PLPFilter
-          filter={filters}
-          handleChangeFilter={this.handleChangeFilters}
-        />
-        <PLPList products={products} />
-        <EMLPagination
-          totalElements={totalProducts}
-          limit={PLPCustomer.limit}
-          page={filters.offset}
-          handleChangePagination={this.handleChangePagination}
-        />
-      </>
+      <NoResult />
     );
   }
 }

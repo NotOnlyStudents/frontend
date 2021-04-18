@@ -69,6 +69,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
     transition: theme.transitions.create('width'),
     width: '100%',
+    [theme.breakpoints.up('sm')]: {
+      width: '100%',
+    },
   },
 }));
 
@@ -105,7 +108,7 @@ function Header({ authState, username }: Props): React.ReactElement {
         delete newPage.query.text;
       }
 
-      Router.push(newPage, undefined, { shallow: true });
+      Router.push(newPage);
     }
   };
 

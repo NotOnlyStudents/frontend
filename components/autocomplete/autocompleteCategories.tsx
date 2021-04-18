@@ -6,12 +6,11 @@ import CategoryService from 'services/category-service';
 
 interface Props {
   selectedCategories: Category[],
-  error: boolean,
   handleChangeCategories: (categories: Category[]) => void
 }
 
 function AutocompleteCategories(
-  { selectedCategories, error, handleChangeCategories }: Props,
+  { selectedCategories, handleChangeCategories }: Props,
 ) {
   const [options, setOptions] = React.useState([]);
 
@@ -45,7 +44,6 @@ function AutocompleteCategories(
       renderInput={(params) => (
         <TextField
           {...params}
-          error={error}
           variant="standard"
           label="Categories value"
           placeholder="Insert categories"

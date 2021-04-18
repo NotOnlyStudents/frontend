@@ -47,7 +47,6 @@ class PDPEdit extends React.Component<Props, State> {
         price: false,
         discount: false,
         evidence: false,
-        categories: false,
       },
       alert: { validation: false },
     };
@@ -106,15 +105,7 @@ class PDPEdit extends React.Component<Props, State> {
   handleChangeCategories = (categories: Category[]) => {
     this.setState((state: State) => {
       const newState = state;
-
-      if (categories.length === 0) {
-        newState.validation.categories = true;
-      } else {
-        newState.validation.categories = false;
-      }
-
       newState.product.categories = categories;
-
       return newState;
     });
   };
@@ -215,6 +206,7 @@ class PDPEdit extends React.Component<Props, State> {
       // });
     } else {
       this.setState({ alert: { validation: true } });
+      setTimeout(() => { this.setState({ alert: { validation: false } }); }, 4000);
     }
   };
 
@@ -265,7 +257,6 @@ class PDPEdit extends React.Component<Props, State> {
         />
         <AutocompleteCategories
           selectedCategories={product.categories}
-          error={validation.categories}
           handleChangeCategories={this.handleChangeCategories}
         />
         <Box display="flex" justifyContent="space-between">

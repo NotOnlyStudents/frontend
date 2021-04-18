@@ -6,7 +6,7 @@ import ProductService from './ProductService';
 
 class ProductServiceMock implements ProductService {
   getAllProduct = async (params?: ProductFilter): Promise<PLPProductItem[]> => (
-    (new Array(10)).fill(0)).map(
+    /* (new Array(10)).fill(0)).map(
     (): PLPProductItem => ({
       id: faker.datatype.uuid(),
       name: faker.commerce.productName(),
@@ -16,7 +16,8 @@ class ProductServiceMock implements ProductService {
       evidence: faker.datatype.boolean(),
       quantity: faker.datatype.number({ min: 0 }),
     }
-    ),
+    ), */
+    []
   );
 
   getProductById = async (id: string): Promise<Product> => ({

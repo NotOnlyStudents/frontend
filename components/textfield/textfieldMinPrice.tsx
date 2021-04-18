@@ -19,7 +19,7 @@ function TextfieldMinPrice({
   const [error, setError] = React.useState(false);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (+event.target.value > selectedMaxPrice) {
+    if (event.target.value > selectedMaxPrice) {
       setError(true);
     } else {
       setError(false);

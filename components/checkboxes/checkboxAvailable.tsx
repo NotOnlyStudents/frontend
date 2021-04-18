@@ -21,10 +21,16 @@ function CheckboxAvailable({
 
   return (
     <FormControlLabel
-      control={
-        <Checkbox checked={checked} onChange={handleChange} name="Available" inputProps={{ 'aria-label': 'Checbox for available' }} />
-      }
+      control={(
+        <Checkbox
+          checked={checked}
+          onChange={handleChange}
+          name="Available"
+          inputProps={{ 'aria-label': 'Checbox for available' }}
+        />
+      )}
       label="Available"
+      labelPlacement="bottom"
     />
   );
 }

@@ -4,7 +4,7 @@ import React from 'react';
 function LogoIcon() {
   return (
     <Icon>
-      <img src="/images/logo.svg" height={25} width={25} alt="Logo" />
+      <img src="/images/icons/logo.svg" height={25} width={25} alt="Logo" />
     </Icon>
   );
 }

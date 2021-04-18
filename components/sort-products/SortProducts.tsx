@@ -1,5 +1,5 @@
 import {
-  Box, InputBase, InputLabel, MenuItem, Select, Theme,
+  Box, InputBase, MenuItem, Select, Theme,
 } from '@material-ui/core';
 import { createStyles, withStyles } from '@material-ui/styles';
 import { SortType } from 'interfaces/products/product';
@@ -55,11 +55,9 @@ function SortProducts({
   return (
     <Box
       display="flex"
-      width="100%"
       flexDirection="column"
       alignItems="flex-end"
     >
-      <InputLabel id="sort-products-label">Sort type</InputLabel>
       <Select
         id="sort-products"
         labelId="sort-products-label"

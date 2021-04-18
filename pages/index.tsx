@@ -6,6 +6,7 @@ import { PLPProductItem, ProductFilter } from 'interfaces/products/product';
 import ProductService from 'services/product-service';
 import Head from 'next/head';
 import PLPList from 'components/plp/PLPList';
+import NoResult from 'components/noresult/NoResult';
 
 interface Props {
   products: PLPProductItem[];
@@ -37,6 +38,21 @@ const useStyles = makeStyles({
 function Home({ products }: Props) : React.ReactElement {
   const classes = useStyles();
 
+  const renderProductsInEvidenceList = () => (products.length !== 0
+    ? (
+      <>
+        <Typography
+          className={classes.evidanceTitle}
+          variant="h4"
+          component="h2"
+        >
+          Featured products
+        </Typography>
+        <PLPList products={products} />
+      </>
+    )
+    : <></>);
+
   return (
     <>
       <Head>
@@ -50,14 +66,7 @@ function Home({ products }: Props) : React.ReactElement {
           consequuntur provident praesentium eligendi tenetur nisi ipsum et officia ullam. A.
         </Typography>
       </div>
-      <Typography
-        className={classes.evidanceTitle}
-        variant="h4"
-        component="h2"
-      >
-        Featured products
-      </Typography>
-      <PLPList products={products} />
+      { renderProductsInEvidenceList() }
     </>
   );
 }

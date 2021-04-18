@@ -47,5 +47,4 @@ export interface ProductValidation {
   price: boolean;
   evidence: boolean;
   discount: boolean;
-  categories: boolean;
 }

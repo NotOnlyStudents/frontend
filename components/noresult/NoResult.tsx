@@ -29,7 +29,7 @@ function NoResult(): React.ReactElement {
   return (
     <>
       <div id="icon" className={classes.container}>
-        <NotInterestedIcon className={classes.resultIcon} />
+        <NotInterestedIcon className={classes.resultIcon} color="primary" />
       </div>
       <p className={classes.resultPhrase}>No result found</p>
     </>

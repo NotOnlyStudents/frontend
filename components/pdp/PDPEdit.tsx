@@ -13,11 +13,11 @@ import ProductService from 'services/product-service';
 import ProductServiceType from 'services/product-service/ProductService';
 import AutocompleteCategories from 'components/autocomplete/autocompleteCategories';
 import { Category } from 'interfaces/categories/category';
-import EMLSnackbar from 'components/snackbar/EMLSnackbar';
+import SnackbarProductNotValid, { productNotValidId } from 'components/snackbar/product/SnackbarProductNotValid';
 import PDPEvidence from './PDPEvidence';
 
 interface AlertState {
-  validation: boolean
+  [key: string]: boolean
 }
 
 interface Props {
@@ -48,7 +48,7 @@ class PDPEdit extends React.Component<Props, State> {
         discount: false,
         evidence: false,
       },
-      alert: { validation: false },
+      alert: { [productNotValidId]: false },
     };
   }
 
@@ -191,6 +191,7 @@ class PDPEdit extends React.Component<Props, State> {
     if (this.checkValidation()) {
       const { router } = this.props;
       const { product } = this.state;
+
       let newProduct: Product;
 
       const ps: ProductServiceType = new ProductService();
@@ -205,8 +206,7 @@ class PDPEdit extends React.Component<Props, State> {
       //   pathname: `/pdp/${newProduct.id}`,
       // });
     } else {
-      this.setState({ alert: { validation: true } });
-      setTimeout(() => { this.setState({ alert: { validation: false } }); }, 4000);
+      this.setState({ alert: { [productNotValidId]: true } });
     }
   };
 
@@ -275,18 +275,23 @@ class PDPEdit extends React.Component<Props, State> {
             handleChange={this.handleChangePrice}
             rules="required|numeric|min:0"
           />
-          <TextFieldValidation
-            id="quantity"
-            label="Product quantity"
-            placeholder="Insert product quantity"
-            value={product.quantity}
-            type="number"
-            margin="normal"
-            error={validation.quantity}
-            setError={this.setError}
-            handleChange={this.handleChangeQuantity}
-            rules="required|integer"
-          />
+          {
+            creation
+              ? (
+                <TextFieldValidation
+                  id="quantity"
+                  label="Product quantity"
+                  placeholder="Insert product quantity"
+                  value={product.quantity}
+                  type="number"
+                  margin="normal"
+                  error={validation.quantity}
+                  setError={this.setError}
+                  handleChange={this.handleChangeQuantity}
+                  rules="required|integer"
+                />
+              ) : <></>
+          }
           <TextFieldValidation
             id="discount"
             label="Product discount"
@@ -330,15 +335,10 @@ class PDPEdit extends React.Component<Props, State> {
             Save
           </Button>
         </Box>
-        <EMLSnackbar
-          id="validation"
-          open={alert.validation}
-          severity="info"
-          duration={4000}
+        <SnackbarProductNotValid
+          open={alert[productNotValidId]}
           handleClose={this.handleCloseAlert}
-        >
-          Some field doesn't satisfy the minimal requirements
-        </EMLSnackbar>
+        />
       </Box>
     );
   }

@@ -80,7 +80,7 @@ function PDPView({ product, edit }: Props) : React.ReactElement {
   };
 
   const handleClickEditButton = () => {
-    router.push(`/pdp/edit/${product.id}`);
+    router.push(`/seller/pdp/edit/${product.id}`);
   };
 
   const handleChangeEvidance = async (ev: boolean) => {
@@ -111,7 +111,7 @@ function PDPView({ product, edit }: Props) : React.ReactElement {
     openAlert(addToCartSuccessId);
   };
 
-  const renderEditOptions = () => (edit ? (
+  const renderEditOptionsIfSeller = () => (edit ? (
     <Box display="flex">
       <IconButton color="primary" onClick={handleClickEditButton}>
         <Edit />
@@ -168,7 +168,7 @@ function PDPView({ product, edit }: Props) : React.ReactElement {
           <Typography variant="h4" component="h2" noWrap>
             { product.name }
           </Typography>
-          { renderEditOptions() }
+          { renderEditOptionsIfSeller() }
         </Box>
         <Box className={classes.container} display="flex">
           <ImageSwitcher images={product.images} />
@@ -199,6 +199,7 @@ function PDPView({ product, edit }: Props) : React.ReactElement {
           {product.description}
         </Typography>
       </Box>
+
       <SnackbarChangeQuantitySuccess
         open={alert[changeQuantitySuccessId]}
         handleClose={closeAlert}

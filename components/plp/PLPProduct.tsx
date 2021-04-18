@@ -14,12 +14,12 @@ import QuantityManager from 'components/quantity/QuantityManager';
 
 import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart';
 import PriceItem from 'components/price-item/PriceItem';
-import EMLSnackbar from 'components/snackbar/EMLSnackbar';
 import SnackbarAddToCartSuccess, { addToCartSuccessId } from 'components/snackbar/cart/SnackbarAddToCartSuccess';
 import SnackbarAddToCartError, { addToCartErrorId } from 'components/snackbar/cart/SnackbarAddToCartError';
 
 interface Props {
   product: PLPProductItem
+  seller?: boolean
 }
 
 const useStyles = makeStyles({
@@ -36,7 +36,7 @@ const useStyles = makeStyles({
   },
 });
 
-function PLPProduct({ product }: Props) {
+function PLPProduct({ product, seller }: Props) {
   const [counter, setCounter] = React.useState(1);
   const [alert, setAlert] = React.useState({
     [addToCartSuccessId]: false,
@@ -77,6 +77,19 @@ function PLPProduct({ product }: Props) {
 
   const showInEvidenceBanner = () : React.ReactElement => (product.evidence ? <StarIcon style={{ color: '#FFEB3B' }} fontSize="large" /> : <></>);
 
+  const renderAddToCartIfCustomer = () => (!seller
+    ? (
+      <IconButton color="primary" onClick={handleAddToCart}>
+        <AddShoppingCartIcon />
+      </IconButton>
+    )
+    : <></>);
+
+  const renderQuantityManagerIfCustomer = () => (!seller
+    ? <QuantityManager counter={counter} handleCounterChange={setCounter} />
+    : <></>
+  );
+
   return (
     <>
       <Card className={classes.root}>
@@ -95,7 +108,7 @@ function PLPProduct({ product }: Props) {
             { product.name }
           </Typography>
           <Box display="flex" justifyContent="space-between" alignItems="center">
-            <QuantityManager counter={counter} handleCounterChange={setCounter} />
+            { renderQuantityManagerIfCustomer() }
             <PriceItem
               price={product.price}
               discount={product.discount}
@@ -107,9 +120,7 @@ function PLPProduct({ product }: Props) {
             <Button component={Link} size="small" color="primary" href={`/pdp/${product.id}`}>
               See more details
             </Button>
-            <IconButton color="primary" onClick={handleAddToCart}>
-              <AddShoppingCartIcon />
-            </IconButton>
+            { renderAddToCartIfCustomer() }
           </Box>
         </CardActions>
       </Card>

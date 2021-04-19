@@ -67,6 +67,7 @@ function NoProductInCart() {
           return to
           {' '}
           <Link
+            href="/"
             className={classes.link}
             underline="always"
           >

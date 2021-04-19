@@ -1,4 +1,3 @@
-import Layout from 'components/Layout';
 import CartList from 'components/cart/cartList';
 import CartService from 'services/cart-service/CartServiceMock';
 import { BreadcrumbPath } from 'interfaces/breadcrumb';
@@ -8,6 +7,7 @@ import React from 'react';
 import Head from 'next/head';
 import { Typography } from '@material-ui/core';
 import NoProductInCart from 'components/noresult/NoProductsInCart';
+import { Cart } from 'interfaces/cart/cart';
 
 interface Props {
   cart: Cart;
@@ -38,7 +38,7 @@ function cartPage({ cart }: Props) {
 }
 
 export async function getServerSideProps() {
-  let products = [];
+  const products = [];
 
   try {
     products = await (new CartService()).getCartProducts();

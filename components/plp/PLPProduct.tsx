@@ -90,6 +90,8 @@ function PLPProduct({ product, seller }: Props) {
     : <></>
   );
 
+  const getHrefPDP = () => (seller ? `/seller/pdp/${product.id}` : `/pdp/${product.id}`);
+
   return (
     <>
       <Card className={classes.root}>
@@ -117,7 +119,7 @@ function PLPProduct({ product, seller }: Props) {
         </CardContent>
         <CardActions>
           <Box display="flex" justifyContent="flex-end" width="100%">
-            <Button component={Link} size="small" color="primary" href={`/pdp/${product.id}`}>
+            <Button component={Link} size="small" color="primary" href={getHrefPDP()}>
               See more details
             </Button>
             { renderAddToCartIfCustomer() }

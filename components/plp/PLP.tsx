@@ -113,7 +113,13 @@ class PLP extends React.Component<Props, State> {
       pathname: '',
       query: { ...router.query, offset },
     });
-    this.setState({ filters: { offset } });
+    this.setState((state: State) => {
+      const newState: State = state;
+
+      newState.filters.offset = offset;
+
+      return newState;
+    });
     this.fetchAllFilteredProducts();
   };
 

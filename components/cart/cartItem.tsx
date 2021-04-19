@@ -28,7 +28,7 @@ const useStyles = makeStyles({
 
 function CartItem({
   item, index, handleChangeQuantity, handleRemoveProduct,
-}:Props) {
+}: Props) {
   const classes = useStyles();
 
   const [alert, setAlert] = React.useState({

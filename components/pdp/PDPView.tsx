@@ -122,6 +122,7 @@ function PDPView({ product, edit }: Props) : React.ReactElement {
       />
       <PDPRemove
         id={product.id}
+        productName={product.name}
       />
     </Box>
   ) : <></>);

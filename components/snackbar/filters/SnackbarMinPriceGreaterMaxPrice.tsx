@@ -1,21 +1,21 @@
 import React from 'react';
 import EMLSnackbar, { CustomSnackbarProps } from '../EMLSnackbar';
 
-export const productNotValidId = 'validation';
+export const minPriceGreaterMaxPrice = 'min_price_greater_max_price';
 
-function SnackbarProductNotValid({
+function SnackbarMinPriceGreaterMaxPrice({
   open, handleClose,
 }: CustomSnackbarProps) {
   return (
     <EMLSnackbar
-      id={productNotValidId}
+      id={minPriceGreaterMaxPrice}
       open={open}
       severity="error"
       handleClose={handleClose}
     >
-      Some field doesn't satisfy the minimal requirements
+      Min price cannot be greater than max price
     </EMLSnackbar>
   );
 }
 
-export default SnackbarProductNotValid;
+export default SnackbarMinPriceGreaterMaxPrice;

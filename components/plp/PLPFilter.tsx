@@ -74,14 +74,25 @@ function PLPFilter({ filter, seller, handleChangeFilter }: Props) {
     )
     : <></>);
 
+  // return (
+  //   <Box className={classes.container}>
+  //     <Box display="flex">
+  //       <AutocompleteCategories
+  //         selectedCategories={filter.categories}
+  //         handleChangeCategories={handleChangeCategories}
+  //       />
+  //       { renderCheckboxAvailableIfSeller() }
   return (
-    <Box className={classes.container}>
+    <Box p={2}>
       <Box display="flex">
         <AutocompleteCategories
           selectedCategories={filter.categories}
           handleChangeCategories={handleChangeCategories}
         />
-        { renderCheckboxAvailableIfSeller() }
+        <CheckboxEvidence
+          selectedEvidence={filter.evidence}
+          handleChangeEvidence={handleChangeEvidence}
+        />
         <CheckboxAvailable
           selectedAvailable={filter.available}
           handleChangeAvailable={handleChangeAvailable}
@@ -89,11 +100,13 @@ function PLPFilter({ filter, seller, handleChangeFilter }: Props) {
       </Box>
       <Box display="flex">
         <TextfieldMinPrice
+          selectedMinPrice={filter.priceMin}
           selectedMaxPrice={filter.priceMax}
           handleChangeMinPrice={handleChangeMinPrice}
         />
         <TextfieldMaxPrice
           selectedMaxPrice={filter.priceMax}
+          selectedMinPrice={filter.priceMin}
           handleChangeMaxPrice={handleChangeMaxPrice}
         />
         <Box flexGrow={1} />

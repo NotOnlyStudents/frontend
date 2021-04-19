@@ -3,16 +3,39 @@ import {
   Button, Dialog, DialogActions, DialogTitle, IconButton,
 } from '@material-ui/core';
 import { Delete, Remove } from '@material-ui/icons';
+import SnackbarDeleteProductSuccess, { productDeleteSuccess } from 'components/snackbar/product/SnackbarDeleteProductSuccess';
+import SnackbarDeleteProductError, { productDeleteError } from 'components/snackbar/product/SnackbarDeleteProductError';
 
 interface Props {
-  id: string
+  id: string,
+  productName: string
 }
 
-function PDPRemove({ id }: Props) {
+function PDPRemove({ id, productName }: Props) {
   const [openModal, setOpenModal] = React.useState(false);
 
+  const [alert, setAlert] = React.useState({
+    [productDeleteSuccess]: false,
+    [productDeleteError]: false,
+  });
+
+  const changeAlert = (alertId: string, show: boolean) => {
+    const newAlert = { ...alert };
+
+    newAlert[alertId] = show;
+
+    setAlert(newAlert);
+  };
+
+  const openAlert = (alertId: string) => {
+    changeAlert(alertId, true);
+  };
+  const closeAlert = (alertId: string) => {
+    changeAlert(alertId, false);
+  };
+
   const handleRemoveProduct = () => {
-    console.log(`Delete product ${id}`);
+    openAlert(productDeleteSuccess);
     setOpenModal(false);
   };
 
@@ -32,9 +55,22 @@ function PDPRemove({ id }: Props) {
           </Button>
         </DialogActions>
       </Dialog>
+
       <IconButton color="primary" onClick={() => { setOpenModal(true); }}>
         <Delete />
       </IconButton>
+
+      <SnackbarDeleteProductSuccess
+        productName={productName}
+        open={alert[productDeleteSuccess]}
+        handleClose={closeAlert}
+      />
+
+      <SnackbarDeleteProductError
+        productName={productName}
+        open={alert[productDeleteError]}
+        handleClose={closeAlert}
+      />
     </>
   );
 }

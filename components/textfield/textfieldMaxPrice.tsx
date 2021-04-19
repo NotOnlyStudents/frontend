@@ -1,9 +1,10 @@
 import React from 'react';
 import {
-  InputAdornment, Snackbar, TextField,
+  InputAdornment, makeStyles, Snackbar, TextField,
 } from '@material-ui/core';
-import EMLSnackbar from 'components/snackbar/EMLSnackbar';
+// import EMLSnackbar from 'components/snackbar/EMLSnackbar';
 import { Alert } from '@material-ui/lab';
+import SnackbarMaxPriceLowerMinPrice, { maxPriceLowerMinPrice } from 'components/snackbar/filters/SnackbarMaxPriceLowerMinPrice';
 
 interface Props {
   selectedMaxPrice: number
@@ -11,51 +12,70 @@ interface Props {
   handleChangeMaxPrice: (maxPrice: number) => void;
 }
 
+const useStyles = makeStyles({
+  price: {
+    padding: '0.5em',
+  },
+});
+
 function TextfieldMaxPrice({
   selectedMaxPrice, handleChangeMaxPrice,
   selectedMinPrice,
 }:Props) {
-  const [value, setValue] = React.useState('');
-  const [error, setError] = React.useState(false);
+  const [value, setValue] = React.useState<number>(selectedMaxPrice);
+  const [alert, setAlert] = React.useState({
+    [maxPriceLowerMinPrice]: false,
+  });
+  const classes = useStyles();
+
+  const changeAlert = (id: string, show: boolean) => {
+    const newAlert = { ...alert };
+
+    newAlert[id] = show;
+
+    setAlert(newAlert);
+  };
+
+  const closeAlert = (id: string) => {
+    changeAlert(id, false);
+  };
+
+  const openAlert = (id: string) => {
+    changeAlert(id, true);
+  };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (+event.target.value > selectedMaxPrice) {
-      setError(true);
+    if (+event.target.value < selectedMinPrice) {
+      openAlert(maxPriceLowerMinPrice);
     } else {
-      setError(false);
       handleChangeMaxPrice(+event.target.value);
     }
   };
 
-  const handleFocus = (event: FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setValue('0');
-    handleChangeMaxPrice(0);
-  };
-
   React.useEffect(() => {
-    setValue(selectedMaxPrice.toString());
+    setValue(selectedMaxPrice);
   }, [selectedMaxPrice]);
 
   return (
     <>
       <TextField
         id="max price"
+        label="max price"
+        variant="outlined"
+        className={classes.price}
         value={value}
         onChange={handleChange}
         type="number"
-        error={value < '0' || error || selectedMinPrice > selectedMaxPrice}
-        helperText={value < '0' && 'Value must be positive'}
-        placeholder="max price"
-        onFocus={handleFocus}
+        helperText="Value must be greater than min price"
+        placeholder="Max price"
         InputProps={{
           startAdornment: <InputAdornment position="start">€</InputAdornment>,
         }}
       />
-      <Snackbar open={error || selectedMinPrice > selectedMaxPrice} autoHideDuration={3000}>
-        <Alert severity="error">
-          Min price cannot be greater than max price
-        </Alert>
-      </Snackbar>
+      <SnackbarMaxPriceLowerMinPrice
+        open={alert[maxPriceLowerMinPrice]}
+        handleClose={closeAlert}
+      />
     </>
   );
   // <EMLSnackbar id="error_price" open={

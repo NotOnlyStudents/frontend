@@ -50,6 +50,7 @@ function TextFieldValidation(
       helperText={helperText}
       fullWidth={fullWidth}
       error={error}
+      variant="outlined"
       value={value}
       multiline={multiline}
       type={type}

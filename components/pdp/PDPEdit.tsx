@@ -214,12 +214,31 @@ class PDPEdit extends React.Component<Props, State> {
     const { title, creation } = this.props;
     const { product, validation, alert } = this.state;
 
-    const renderEvidence = () => (creation ? (
+    const renderEvidenceIfCreation = () => (creation ? (
       <PDPEvidence
         evidence={product.evidence}
         handleChangeEvidence={this.handleChangeEvidence}
       />
     ) : <></>);
+
+    const renderQuantityManagerIfCreation = () => (
+      creation
+        ? (
+          <TextFieldValidation
+            id="quantity"
+            label="Product quantity"
+            placeholder="Insert product quantity"
+            value={product.quantity}
+            type="number"
+            margin="normal"
+            error={validation.quantity}
+            setError={this.setError}
+            handleChange={this.handleChangeQuantity}
+            rules="required|integer"
+            helperText="Product quantity is required and must be an integer"
+          />
+        ) : <></>
+    );
 
     return (
       <Box>
@@ -230,13 +249,13 @@ class PDPEdit extends React.Component<Props, State> {
           <Typography variant="h4" component="h2">
             {title}
           </Typography>
-          { renderEvidence() }
+          { renderEvidenceIfCreation() }
         </Box>
         <TextFieldValidation
           id="name"
           label="Product name"
           placeholder="Insert product name"
-          helperText="Full width!"
+          helperText="required name up to 100 characters long"
           value={product.name}
           fullWidth
           margin="normal"
@@ -252,6 +271,7 @@ class PDPEdit extends React.Component<Props, State> {
           value={product.description}
           fullWidth
           multiline
+          variant="outlined"
           margin="normal"
           onChange={this.handleChangeDescription}
         />
@@ -267,31 +287,16 @@ class PDPEdit extends React.Component<Props, State> {
             value={product.price}
             type="number"
             margin="normal"
+            helperText="Product price is required"
             InputProps={{
-              endAdornment: <InputAdornment position="end">€</InputAdornment>,
+              startAdornment: <InputAdornment position="start">€</InputAdornment>,
             }}
             error={validation.price}
             setError={this.setError}
             handleChange={this.handleChangePrice}
             rules="required|numeric|min:0"
           />
-          {
-            creation
-              ? (
-                <TextFieldValidation
-                  id="quantity"
-                  label="Product quantity"
-                  placeholder="Insert product quantity"
-                  value={product.quantity}
-                  type="number"
-                  margin="normal"
-                  error={validation.quantity}
-                  setError={this.setError}
-                  handleChange={this.handleChangeQuantity}
-                  rules="required|integer"
-                />
-              ) : <></>
-          }
+          { renderQuantityManagerIfCreation() }
           <TextFieldValidation
             id="discount"
             label="Product discount"
@@ -303,6 +308,7 @@ class PDPEdit extends React.Component<Props, State> {
             setError={this.setError}
             handleChange={this.handleChangeDiscount}
             rules="integer|min:0|max:100"
+            helperText="Product price must be an integer between 0 and 100"
           />
         </Box>
         <ImagesUploader

@@ -1,12 +1,13 @@
 import React from 'react';
-import { CardMedia, fade, Typography } from '@material-ui/core';
+import {
+  Button, CardMedia, fade, Link, Typography,
+} from '@material-ui/core';
 
 import { makeStyles } from '@material-ui/styles';
 import { PLPProductItem, ProductFilter } from 'interfaces/products/product';
 import ProductService from 'services/product-service';
 import Head from 'next/head';
 import PLPList from 'components/plp/PLPList';
-import NoResult from 'components/noresult/NoResult';
 
 interface Props {
   products: PLPProductItem[];
@@ -30,7 +31,7 @@ const useStyles = makeStyles({
     color: 'white',
     width: '100%',
   },
-  evidanceTitle: {
+  evidenceTitle: {
     padding: '1.5rem 0 1rem 0',
   },
 });
@@ -42,12 +43,15 @@ function Home({ products }: Props) : React.ReactElement {
     ? (
       <>
         <Typography
-          className={classes.evidanceTitle}
+          className={classes.evidenceTitle}
           variant="h4"
           component="h2"
         >
           Featured products
         </Typography>
+        <Button component={Link} size="small" color="primary" href="/plp">
+          Hurry up to see all the products
+        </Button>
         <PLPList products={products} />
       </>
     )

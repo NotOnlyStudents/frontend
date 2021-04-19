@@ -1,53 +1,51 @@
-import { AppProps } from 'next/app'
-import { AuthContextProvider } from 'context/authContext'
-import { Amplify, Auth } from 'aws-amplify'
+import { AppProps } from 'next/app';
+import { AuthContextProvider } from 'lib/authContext';
 import React from 'react';
+import Head from 'next/head';
+import Layout from 'components/Layout';
+import theme from 'styles/theme';
+import { ThemeProvider } from '@material-ui/core/styles';
+import CssBaseline from '@material-ui/core/CssBaseline';
 
-//import 'styles/global.css'
+import 'styles/global.scss';
 
-Amplify.configure({
-  Auth: {
-    region: process.env.USER_POOL_REGION,
-    userPoolId: process.env.USER_POOL_ID,
-    userPoolWebClientId: process.env.USER_POOL_CLIENT_ID,
-  },
-      // Configuration for cookie storage
-    // see https://aws-amplify.github.io/docs/js/authentication
-    cookieStorage: {
-      // REQUIRED - Cookie domain
-      // This should be the subdomain in production as
-      // the cookie should only be present for the current site
-      domain: process.env.AUTH_COOKIE_DOMAIN,
-      // OPTIONAL - Cookie path
-      path: "/",
-      // OPTIONAL - Cookie expiration in days
-      expires: 7,
-      // OPTIONAL - Cookie secure flag
-      // Either true or false, indicating whether the cookie
-      // transmission requires a secure protocol (https).
-      // The cookie should be set to secure in production.
-      secure: false,
-    },
-  ssr: true
-});
-/*
- Auth.configure({
-   oauth: {
-     domain: process.env.IDP_DOMAIN,
-     scope: ["email", "openid"],
-     // Where users get sent after logging in.
-     // This has to be set to be the full URL of the /token page.
-     redirectSignIn: process.env.REDIRECT_SIGN_IN,
-     // Where users are sent after they sign out.
-     redirectSignOut: process.env.REDIRECT_SIGN_OUT,
-     responseType: "token"
-   }
- });
-*/
-export default function App({ Component, pageProps }: AppProps) {
-  return(
+// Amplify.configure({
+//   Auth: {
+//     region: process.env.USER_POOL_REGION,
+//     userPoolId: process.env.USER_POOL_ID,
+//     userPoolWebClientId: process.env.USER_POOL_CLIENT_ID,
+//   },
+//     cookieStorage: {
+//       domain: process.env.AUTH_COOKIE_DOMAIN,
+//       path: "/",
+//       expires: 7,
+//       secure: false,
+//     },
+//   ssr: true
+// });
+
+function App({ Component, pageProps }: AppProps) {
+  React.useEffect(() => {
+    // Remove the server-side injected CSS.
+    const jssStyles = document.querySelector('#jss-server-side');
+    if (jssStyles) {
+      jssStyles.parentElement.removeChild(jssStyles);
+    }
+  }, []);
+
+  return (
     <AuthContextProvider>
-      <Component {...pageProps} />
-    </AuthContextProvider>    
+      <Head>
+        <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
+      </Head>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <Layout>
+          <Component {...pageProps} />
+        </Layout>
+      </ThemeProvider>
+    </AuthContextProvider>
   );
 }
+
+export default App;

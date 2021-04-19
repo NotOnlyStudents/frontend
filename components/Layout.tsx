@@ -1,68 +1,72 @@
 import React, { useEffect } from 'react';
-import Link from 'next/link';
-import Head from 'next/head';
+import { CognitoUser } from '@aws-amplify/auth';
+import { withSSRContext } from 'aws-amplify';
 import { AuthState, onAuthUIStateChange } from '@aws-amplify/ui-components';
-import { useAuthContext } from 'context/authContext';
+import { useAuthContext } from 'lib/authContext';
 
-// const name = 'EmporioLambda';
-export const siteTitle = 'EmporioLambda';
 
-export default function Layout({
-  children,
-  _authState,
-  _username,
-}: {
+
+import Header from 'components/header/Header';
+
+interface Props {
   children: React.ReactNode,
-  _authState:AuthState,
-  _username:string | undefined
-}) {
+  _authState?: AuthState,
+  _username?: string | undefined
+}
+
+function Layout({ children, _authState, _username }: Props) {
   const {
     authState, username, setAuthState, setUsername,
   } = useAuthContext();
 
-  useEffect(() => {
-    setAuthState(_authState);
-    setUsername(_username);
+  useEffect(
+    () => {
+      setAuthState(_authState);
+      setUsername(_username);
 
-    return onAuthUIStateChange((nextAuthState: AuthState) => {
-      if (nextAuthState === AuthState.SignedOut) {
-        setAuthState(nextAuthState);
-        setUsername(undefined);
-      }
-    });
-  }, []);
+      return onAuthUIStateChange((nextAuthState: AuthState) => {
+        if (nextAuthState === AuthState.SignedOut) {
+          setAuthState(nextAuthState);
+          setUsername(undefined);
+        }
+      });
+    },
+    [],
+  );
 
   return (
     <>
-      <Head>
-        <link rel="icon" href="/favicon.ico" />
-        <meta
-          name="description"
-          content="Emporio Lambda"
-        />
-        <meta
-          property="og:image"
-          content={`https://og-image.now.sh/${encodeURI(
-            siteTitle,
-          )}.png?theme=light&md=0&fontSize=75px&images=https%3A%2F%2Fassets.vercel.com%2Fimage%2Fupload%2Ffront%2Fassets%2Fdesign%2Fnextjs-black-logo.svg`}
-        />
-        <meta name="og:title" content={siteTitle} />
-        <meta name="twitter:card" content="summary_large_image" />
-      </Head>
-      <header>
-        {authState === AuthState.SignedIn && username ? (
-          <>
-            <Link href="/personalArea">
-              <button type="button" name="personalArea">Your personal Area!</button>
-            </Link>
-          </>
-        ) : (
-          <Link href="/authenticator">
-            <button type="button" name="loginButton">Login!</button>
-          </Link>
-        )}
-      </header>
-      {children}
+      <Header
+        authState={authState}
+        username={username}
+      />
+      <main>
+        {children}
+      </main>
     </>
   );
 }
+
+export async function getServerSideProps(context) {
+  const { Auth } = withSSRContext(context);
+
+  try {
+    const user: CognitoUser = await Auth.currentAuthenticatedUser();
+
+    return {
+      props: {
+        _authState: AuthState.SignedIn,
+        _username: user.getUsername(),
+      },
+    };
+  } catch (err) {
+    return {
+      props: {
+        _authState: AuthState.SignedOut,
+      },
+    };
+  }
+}
+
+export default Layout;
+

@@ -1,6 +1,5 @@
-import { Product } from "../interfaces/products/product";
-
+import { CartProduct } from './products/product';
 
 export interface Cart{
-    products:Product[];
+  products: CartProduct[];
 }

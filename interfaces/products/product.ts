@@ -22,6 +22,15 @@ export interface PLPProductItem {
   quantity: number
 }
 
+export interface CartProduct {
+  id?: string;
+  name?: string;
+  image?: string;
+  quantity?: number;
+  price?: number;
+  discount?: number;
+}
+
 export enum SortType {
   alphabetical = 'alphabetical',
   cheaper = 'cheaper',

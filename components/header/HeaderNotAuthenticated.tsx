@@ -1,8 +1,9 @@
 import {
-  IconButton, makeStyles, Link,
+  IconButton, makeStyles, Link, Icon,
 } from '@material-ui/core';
 import LoginIcon from 'components/icons/LoginIcon';
 import React from 'react';
+import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import HeaderMenuMobile from './HeaderMenuMobile';
 
 const useStyles = makeStyles({
@@ -18,11 +19,18 @@ function HeaderNotAuthenticated(): React.ReactElement {
     <>
       <HeaderMenuMobile
         desktopMenu={[
+          <IconButton href="/cart" className={classes.desktopIcon}>
+            <ShoppingCartIcon />
+          </IconButton>,
           <IconButton href="/" className={classes.desktopIcon}>
             <LoginIcon />
           </IconButton>,
         ]}
         mobileMenu={[
+          <Link href="/cart">
+            <ShoppingCartIcon />
+            Cart
+          </Link>,
           <Link href="/" underline="none">
             <LoginIcon />
             Login

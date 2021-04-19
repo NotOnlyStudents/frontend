@@ -15,7 +15,7 @@ function QuantityManager({ counter, handleCounterChange }: Props) {
   };
 
   const handleCounterPlus = () => {
-    if(counter < 10) handleCounterChange(counter + 1);
+    handleCounterChange(counter + 1);
   };
 
   return (

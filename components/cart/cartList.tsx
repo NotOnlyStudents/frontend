@@ -1,102 +1,103 @@
 import React from 'react';
-import {Product} from 'interfaces/products/product';
-import { Box, Button } from '@material-ui/core';
-import  CartItem  from "./cartItem";
-import QuantityManager from 'components/quantity-manager/QuantityManager';
-
+import { CartProduct, Product } from 'interfaces/products/product';
+import { Box, Button, Typography } from '@material-ui/core';
+import ShopIcon from '@material-ui/icons/Shop';
+import CartItem from './cartItem';
 
 interface Props {
-  items: Product[];
+  items: CartProduct[];
 }
 
 interface State{
-  totalPrice: number;
-  items: Product[];
+  items: CartProduct[];
 }
 
-
-
-class CartList extends React.Component<Props,State> {
-    constructor(props){
-      super(props);
-      this.state={totalPrice:0, items:this.props.items};
-    }
-
-    componentDidMount()
-    {
-      this.updateCartPrice;
-    }
- 
-    handleChange = (event): void =>  {
-      console.log(event.target);
-      var p = this.props.items;
-      var i:number= event.target.name;
-      p[i].quantity= event.target.value;
-      this.setState({items:p});
-      //Chiamata a put/patch API TODO:
-}
-
-
-    handleRemove = (event): void => {
-      event.preventDefault();
-      var i:number=event.target.id;
-      var p = this.state.items;
-      p.splice(i,1);
-      this.setState({items:p});
-      //Chiamata a put/patch API TODO:
-    }
-
-    handleSubmit = (): void =>
-    {
-      console.log(this.state); 
-      //Si prosegue con checkout API TODO:
-    }
-    
-    updateCartPrice = (): void =>
-    {
-      var tot=0;
-      const items = this.state.items? this.state.items:this.props.items;
-      for(var i = 0; i<items.length;i++)
-      {
-        tot = tot + items[i].price * items[i].quantity;
-      }
-      this.state={totalPrice:tot, items:items};
-    }
-
-    renderAllItems = (): React.ReactElement[] =>{
-      this.updateCartPrice();
-      const items = this.state.items? this.state.items:this.props.items;
-      return(
-        items.map(
-      (item: Product, index: number): React.ReactElement => (
-        <Box key={item.id}>
-        <CartItem item={item} index={index} handleChange={this.handleChange} handleRemove={this.handleRemove}/>
-        </Box>
-      ),));
+class CartList extends React.Component<Props, State> {
+  constructor(props) {
+    super(props);
+    this.state = { items: props.items };
   }
 
-    renderButton = (): React.ReactElement => {
-      if(this.state.items.length!=0)
-      { return (<Button id="submit" onClick={this.handleSubmit}> Proceed to order </Button>) }
-      else { return null; }
+  handleChangeQuantity = (quantity: number, index: number): void => {
+    this.setState((state: State) => {
+      const newState: State = state;
 
-    }
+      newState.items[index].quantity = quantity;
 
+      return newState;
+    });
+  };
 
+  handleRemoveProduct = (index: number): void => {
+    this.setState((state: State) => {
+      const newState: State = state;
+
+      newState.items.splice(index, 1);
+
+      return newState;
+    });
+  };
+
+  handleSubmit = (): void => {
+    console.log(this.state);
+    // Si prosegue con checkout API TODO:
+  };
+
+  calculateTotalPrice = (): number => (
+    this.state.items
+      .map((item: CartProduct) => (item.quantity * item.price))
+      .reduce(
+        (totalPrice, price): number => (
+          totalPrice + price
+        ),
+        0,
+      )
+  );
+
+  renderAllItems = (): React.ReactElement[] => (
+    this.state.items.map(
+      (item: Product, index: number): React.ReactElement => (
+        <CartItem
+          key={item.id}
+          item={item}
+          index={index}
+          handleChangeQuantity={this.handleChangeQuantity}
+          handleRemoveProduct={this.handleRemoveProduct}
+        />
+      ),
+    ));
 
   render() {
-   return(
-    <div id ="root">
-      {this.renderAllItems()}
-      <div>{this.state.totalPrice!=0 ? "Total price of the cart: " + this.state.totalPrice + "€" : "The Cart is empty"}</div>
-      {this.renderButton()}
-    </div>
-   );
+    return (
+      <Box>
+        <Box
+          display="flex"
+          alignItems="center"
+          justifyContent="flex-end"
+        >
+          <Box
+            display="flex"
+            marginRight={2}
+          >
+            <Typography>
+              Total price: &nbsp;
+            </Typography>
+            <Typography variant="button">
+              {`${this.calculateTotalPrice()}€`}
+            </Typography>
+          </Box>
+          <Button
+            variant="contained"
+            color="primary"
+            startIcon={<ShopIcon />}
+          >
+            Buy
+          </Button>
+        </Box>
+        {this.renderAllItems()}
+      </Box>
+    );
   }
 }
 
-
-
 export default CartList;
-
-

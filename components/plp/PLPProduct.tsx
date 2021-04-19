@@ -124,6 +124,7 @@ function PLPProduct({ product, seller }: Props) {
           </Box>
         </CardActions>
       </Card>
+
       <SnackbarAddToCartSuccess
         productName={product.name}
         open={alert[addToCartSuccessId]}

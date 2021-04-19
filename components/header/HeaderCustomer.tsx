@@ -3,6 +3,7 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import { Button, IconButton, Link } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
+import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import HeaderMenuMobile from './HeaderMenuMobile';
 
 const useStyles = makeStyles({
@@ -18,6 +19,9 @@ function HeaderCustomer() : React.ReactElement {
     <>
       <HeaderMenuMobile
         desktopMenu={[
+          <IconButton href="/cart" className={classes.desktopIcon}>
+            <ShoppingCartIcon />
+          </IconButton>,
           <IconButton className={classes.desktopIcon} href="/">
             <AccountCircleIcon aria-label="Your personal area" />
           </IconButton>,
@@ -26,6 +30,10 @@ function HeaderCustomer() : React.ReactElement {
           </IconButton>,
         ]}
         mobileMenu={[
+          <Link href="/cart">
+            <ShoppingCartIcon />
+            Cart
+          </Link>,
           <Button href="/" disableRipple>
             <AccountCircleIcon aria-label="Your personal area" />
             Your personal area

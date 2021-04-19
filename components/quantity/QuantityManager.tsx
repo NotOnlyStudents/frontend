@@ -6,7 +6,7 @@ import { Add, Remove } from '@material-ui/icons';
 
 interface Props {
   counter: number;
-  handleCounterChange: (number) => void;
+  handleCounterChange: (counter: number) => void;
 }
 
 function QuantityManager({ counter, handleCounterChange }: Props) {

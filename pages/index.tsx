@@ -1,6 +1,8 @@
 
 import React from 'react';
-import { CardMedia, fade, Typography } from '@material-ui/core';
+import {
+  Button, CardMedia, fade, Link, Typography,
+} from '@material-ui/core';
 
 import { makeStyles } from '@material-ui/styles';
 import { PLPProductItem, ProductFilter } from 'interfaces/products/product';
@@ -30,13 +32,31 @@ const useStyles = makeStyles({
     color: 'white',
     width: '100%',
   },
-  evidanceTitle: {
+  evidenceTitle: {
     padding: '1.5rem 0 1rem 0',
   },
 });
 
 function Home({ products }: Props) : React.ReactElement {
   const classes = useStyles();
+
+  const renderProductsInEvidenceList = () => (products.length !== 0
+    ? (
+      <>
+        <Typography
+          className={classes.evidenceTitle}
+          variant="h4"
+          component="h2"
+        >
+          Featured products
+        </Typography>
+        <Button component={Link} size="small" color="primary" href="/plp">
+          Hurry up to see all the products
+        </Button>
+        <PLPList products={products} />
+      </>
+    )
+    : <></>);
 
   return (
     <>
@@ -51,20 +71,13 @@ function Home({ products }: Props) : React.ReactElement {
           consequuntur provident praesentium eligendi tenetur nisi ipsum et officia ullam. A.
         </Typography>
       </div>
-      <Typography
-        className={classes.evidanceTitle}
-        variant="h4"
-        component="h2"
-      >
-        Featured products
-      </Typography>
-      <PLPList products={products} />
+      { renderProductsInEvidenceList() }
     </>
   );
 }
 
 export async function getServerSideProps() {
-  const filters: ProductFilter = { evidance: true };
+  const filters: ProductFilter = { evidence: true };
 
   let products = [];
 

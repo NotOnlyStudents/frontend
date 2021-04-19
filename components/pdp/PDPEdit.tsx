@@ -1,27 +1,30 @@
 import Head from 'next/head';
 import React from 'react';
 import {
-  Box, Button, FormGroup, FormLabel, InputAdornment, Snackbar, TextField, Typography,
+  Box, Button, InputAdornment, TextField, Typography,
 } from '@material-ui/core';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import CheckIcon from '@material-ui/icons/Check';
 import ImagesUploader from 'components/images-uploader/ImagesUploader';
 import TextFieldValidation from 'components/validation/TextFieldValidation';
 import { Product, ProductValidation } from 'interfaces/products/product';
-import { Alert } from '@material-ui/lab';
 import { NextRouter, withRouter } from 'next/router';
 import ProductService from 'services/product-service';
 import ProductServiceType from 'services/product-service/ProductService';
 import AutocompleteCategories from 'components/autocomplete/autocompleteCategories';
 import { Category } from 'interfaces/categories/category';
+import SnackbarProductNotValid, { productNotValidId } from 'components/snackbar/product/SnackbarProductNotValid';
+import PDPEvidence from './PDPEvidence';
 
 interface AlertState {
-  validation: boolean
+  [key: string]: boolean
 }
 
 interface Props {
   router: NextRouter;
   product: Product;
+  title: string;
+  creation?: boolean;
 }
 interface State {
   product: Product;
@@ -30,43 +33,13 @@ interface State {
 }
 
 class PDPEdit extends React.Component<Props, State> {
-  readonly title: string = '';
-
   readonly imageLimit = 4;
 
   constructor(props: Props) {
     super(props);
 
-    let product: Product;
-
-    if (props.product) {
-      this.title = `Editing ${props.product.name}`;
-      product = {
-        name: props.product.name,
-        description: props.product.description,
-        images: props.product.images,
-        quantity: props.product.quantity,
-        price: props.product.price,
-        evidence: props.product.evidence || false,
-        discount: props.product.discount !== null ? props.product.discount : 0,
-        categories: props.product.categories,
-      };
-    } else {
-      this.title = 'Creating new product';
-      product = {
-        name: '',
-        description: '',
-        images: [],
-        quantity: 0,
-        price: 1,
-        evidence: false,
-        discount: 0,
-        categories: [],
-      };
-    }
-
     this.state = {
-      product,
+      product: props.product,
       validation: {
         name: false,
         images: false,
@@ -74,9 +47,8 @@ class PDPEdit extends React.Component<Props, State> {
         price: false,
         discount: false,
         evidence: false,
-        categories: false,
       },
-      alert: { validation: false },
+      alert: { [productNotValidId]: false },
     };
   }
 
@@ -90,11 +62,21 @@ class PDPEdit extends React.Component<Props, State> {
     });
   };
 
-  handleChangePrice = (value: string) => {
+  handleChangeEvidence = async (evidence: boolean) => {
     this.setState((state: State) => {
       const newState = state;
 
-      newState.product.price = value ? parseFloat(value).toFixed(2) : value;
+      newState.product.evidence = evidence;
+
+      return newState;
+    });
+  };
+
+  handleChangePrice = (value: number) => {
+    this.setState((state: State) => {
+      const newState = state;
+
+      newState.product.price = value;
 
       return newState;
     });
@@ -123,15 +105,7 @@ class PDPEdit extends React.Component<Props, State> {
   handleChangeCategories = (categories: Category[]) => {
     this.setState((state: State) => {
       const newState = state;
-
-      if (categories.length === 0) {
-        newState.validation.categories = true;
-      } else {
-        newState.validation.categories = false;
-      }
-
       newState.product.categories = categories;
-
       return newState;
     });
   };
@@ -197,8 +171,14 @@ class PDPEdit extends React.Component<Props, State> {
     );
   };
 
-  handleCloseAlertValidation = () => {
-    this.setState({ alert: { validation: false } });
+  handleCloseAlert = (id: string) => {
+    this.setState((state: State) => {
+      const newState: State = state;
+
+      newState.alert[id] = false;
+
+      return newState;
+    });
   };
 
   handleClickCancel = () => {
@@ -211,6 +191,7 @@ class PDPEdit extends React.Component<Props, State> {
     if (this.checkValidation()) {
       const { router } = this.props;
       const { product } = this.state;
+
       let newProduct: Product;
 
       const ps: ProductServiceType = new ProductService();
@@ -225,26 +206,56 @@ class PDPEdit extends React.Component<Props, State> {
       //   pathname: `/pdp/${newProduct.id}`,
       // });
     } else {
-      this.setState({ alert: { validation: true } });
+      this.setState({ alert: { [productNotValidId]: true } });
     }
   };
 
   render() {
+    const { title, creation } = this.props;
     const { product, validation, alert } = this.state;
+
+    const renderEvidenceIfCreation = () => (creation ? (
+      <PDPEvidence
+        evidence={product.evidence}
+        handleChangeEvidence={this.handleChangeEvidence}
+      />
+    ) : <></>);
+
+    const renderQuantityManagerIfCreation = () => (
+      creation
+        ? (
+          <TextFieldValidation
+            id="quantity"
+            label="Product quantity"
+            placeholder="Insert product quantity"
+            value={product.quantity}
+            type="number"
+            margin="normal"
+            error={validation.quantity}
+            setError={this.setError}
+            handleChange={this.handleChangeQuantity}
+            rules="required|integer"
+            helperText="Product quantity is required and must be an integer"
+          />
+        ) : <></>
+    );
 
     return (
       <Box>
         <Head>
-          <title>{`${this.title} | EmporioLambda`}</title>
+          <title>{`${title} | EmporioLambda`}</title>
         </Head>
-        <Typography variant="h4" component="h2">
-          {this.title}
-        </Typography>
+        <Box display="flex" alignItems="center" justifyContent="space-between">
+          <Typography variant="h4" component="h2">
+            {title}
+          </Typography>
+          { renderEvidenceIfCreation() }
+        </Box>
         <TextFieldValidation
           id="name"
           label="Product name"
           placeholder="Insert product name"
-          helperText="Full width!"
+          helperText="required name up to 100 characters long"
           value={product.name}
           fullWidth
           margin="normal"
@@ -260,12 +271,12 @@ class PDPEdit extends React.Component<Props, State> {
           value={product.description}
           fullWidth
           multiline
+          variant="outlined"
           margin="normal"
           onChange={this.handleChangeDescription}
         />
         <AutocompleteCategories
           selectedCategories={product.categories}
-          error={validation.categories}
           handleChangeCategories={this.handleChangeCategories}
         />
         <Box display="flex" justifyContent="space-between">
@@ -276,26 +287,16 @@ class PDPEdit extends React.Component<Props, State> {
             value={product.price}
             type="number"
             margin="normal"
+            helperText="Product price is required"
             InputProps={{
-              endAdornment: <InputAdornment position="end">€</InputAdornment>,
+              startAdornment: <InputAdornment position="start">€</InputAdornment>,
             }}
             error={validation.price}
             setError={this.setError}
             handleChange={this.handleChangePrice}
             rules="required|numeric|min:0"
           />
-          <TextFieldValidation
-            id="quantity"
-            label="Product quantity"
-            placeholder="Insert product quantity"
-            value={product.quantity}
-            type="number"
-            margin="normal"
-            error={validation.quantity}
-            setError={this.setError}
-            handleChange={this.handleChangeQuantity}
-            rules="required|integer"
-          />
+          { renderQuantityManagerIfCreation() }
           <TextFieldValidation
             id="discount"
             label="Product discount"
@@ -307,6 +308,7 @@ class PDPEdit extends React.Component<Props, State> {
             setError={this.setError}
             handleChange={this.handleChangeDiscount}
             rules="integer|min:0|max:100"
+            helperText="Product price must be an integer between 0 and 100"
           />
         </Box>
         <ImagesUploader
@@ -339,11 +341,10 @@ class PDPEdit extends React.Component<Props, State> {
             Save
           </Button>
         </Box>
-        <Snackbar open={alert.validation} autoHideDuration={4000}>
-          <Alert severity="info">
-            Not all fields satisfy the minimum requirements
-          </Alert>
-        </Snackbar>
+        <SnackbarProductNotValid
+          open={alert[productNotValidId]}
+          handleClose={this.handleCloseAlert}
+        />
       </Box>
     );
   }

@@ -3,17 +3,27 @@ import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { Category } from 'interfaces/categories/category';
 import CategoryService from 'services/category-service';
+import { makeStyles } from '@material-ui/core';
 
 interface Props {
   selectedCategories: Category[],
-  error: boolean,
-  handleChangeCategories: (categories: Category[]) => void
+  handleChangeCategories: (categories: Category[]) => void,
+  helperText?: string
 }
 
-function AutocompleteCategories(
-  { selectedCategories, error, handleChangeCategories }: Props,
-) {
-  const [options, setOptions] = React.useState([]);
+const useStyles = makeStyles({
+  categories: {
+    padding: '0.5em 0',
+  },
+});
+
+function AutocompleteCategories({
+  selectedCategories,
+  helperText,
+  handleChangeCategories,
+}: Props) {
+  const [options, setOptions] = React.useState<Category[]>([]);
+  const classes = useStyles();
 
   const getallCategories = async () => {
     let categoriesOptions = [];
@@ -35,6 +45,7 @@ function AutocompleteCategories(
     <Autocomplete
       multiple
       id="categories"
+      className={classes.categories}
       options={options}
       onChange={(event, v: Category[]) => {
         handleChangeCategories(v);
@@ -45,8 +56,8 @@ function AutocompleteCategories(
       renderInput={(params) => (
         <TextField
           {...params}
-          error={error}
-          variant="standard"
+          variant="outlined"
+          helperText={helperText}
           label="Categories value"
           placeholder="Insert categories"
         />
@@ -54,5 +65,9 @@ function AutocompleteCategories(
     />
   );
 }
+
+AutocompleteCategories.defaultProps = {
+  helperText: '',
+};
 
 export default AutocompleteCategories;

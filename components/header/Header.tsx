@@ -37,8 +37,14 @@ const useStyles = makeStyles((theme: Theme) => ({
       textDecoration: 'none',
     },
   },
-  search: {
+  searchContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+    flexGrow: 1,
     position: 'relative',
+  },
+  search: {
+    width: '80%',
     borderRadius: theme.shape.borderRadius,
     backgroundColor: fade(theme.palette.common.white, 0.15),
     '&:hover': {
@@ -57,6 +63,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   inputRoot: {
     color: 'inherit',
+    width: '100%',
   },
   inputInput: {
     padding: theme.spacing(1, 1, 1, 0),
@@ -64,10 +71,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     transition: theme.transitions.create('width'),
     width: '100%',
     [theme.breakpoints.up('sm')]: {
-      width: '12ch',
-      '&:focus': {
-        width: '20ch',
-      },
+      width: '100%',
     },
   },
 }));
@@ -105,34 +109,36 @@ function Header({ authState, username }: Props): React.ReactElement {
         delete newPage.query.text;
       }
 
-      Router.push(newPage, undefined, { shallow: true });
+      Router.push(newPage);
     }
   };
 
   return (
     <AppBar position="sticky">
       <Toolbar className={classes.container}>
-        <Typography variant="h6" component="h1" noWrap>
+        <Typography variant="h6" component="h1">
           <Link className={classes.link} href="/">
             <LogoIcon />
             EmporioLambda
           </Link>
         </Typography>
-        <div className={classes.search}>
-          <div className={classes.searchIcon}>
-            <SearchIcon />
+        <div className={classes.searchContainer}>
+          <div className={classes.search}>
+            <div className={classes.searchIcon}>
+              <SearchIcon />
+            </div>
+            <InputBase
+              placeholder="Search…"
+              value={searchText}
+              classes={{
+                root: classes.inputRoot,
+                input: classes.inputInput,
+              }}
+              inputProps={{ 'aria-label': 'search' }}
+              onChange={(event) => setSearchText(event.target.value)}
+              onKeyUp={handleSearchEnter}
+            />
           </div>
-          <InputBase
-            placeholder="Search…"
-            value={searchText}
-            classes={{
-              root: classes.inputRoot,
-              input: classes.inputInput,
-            }}
-            inputProps={{ 'aria-label': 'search' }}
-            onChange={(event) => setSearchText(event.target.value)}
-            onKeyUp={handleSearchEnter}
-          />
         </div>
         <div>
           {renderHeader()}

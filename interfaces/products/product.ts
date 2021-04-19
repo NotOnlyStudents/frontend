@@ -2,14 +2,14 @@ import { Category } from '../categories/category';
 
 export interface Product {
   id?: string;
-  name: string;
-  description: string;
-  images: string[];
-  quantity: number;
-  price: number;
+  name?: string;
+  description?: string;
+  images?: string[];
+  quantity?: number;
+  price?: number;
   evidence?: boolean;
   discount?: number;
-  categories: Category[];
+  categories?: Category[];
 }
 
 export interface PLPProductItem {
@@ -47,5 +47,4 @@ export interface ProductValidation {
   price: boolean;
   evidence: boolean;
   discount: boolean;
-  categories: boolean;
 }

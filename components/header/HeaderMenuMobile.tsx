@@ -94,9 +94,17 @@ function HeaderMenuMobile({
 
   const mobileMenuId = 'not-authenticated-menu-mobile';
 
+  const renderDesktopMenuIcons = () => desktopMenu.map(
+    (item: React.ReactElement, index: number) => (
+      <Box key={index} onClick={handleMobileMenuClose}>
+        {item}
+      </Box>
+    ),
+  );
+
   const renderMobileMenuIcons = (): React.ReactElement[] => mobileMenu.map(
-    (item: React.ReactElement): React.ReactElement => (
-      <MenuItem onClick={handleMobileMenuClose}>
+    (item: React.ReactElement, index: number): React.ReactElement => (
+      <MenuItem key={index} onClick={handleMobileMenuClose}>
         {item}
       </MenuItem>
     ),
@@ -105,7 +113,7 @@ function HeaderMenuMobile({
   return (
     <>
       <Box className={classes.sectionDesktop}>
-        { desktopMenu }
+        { renderDesktopMenuIcons() }
       </Box>
       <Box className={classes.sectionMobile}>
         <IconButton

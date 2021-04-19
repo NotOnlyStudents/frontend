@@ -1,27 +1,32 @@
-import PDPEdit from 'components/pdp/PDPEdit';
-import { BreadcrumbPath } from 'interfaces/breadcrumb';
+import PDPView from 'components/pdp/PDPView';
 import { Product } from 'interfaces/products/product';
+import Head from 'next/head';
 import React from 'react';
 import ProductService from 'services/product-service';
 import HomeIcon from '@material-ui/icons/Home';
 import EMLBreadcrumb from 'components/breadcrumb/EMLBreadcrumb';
+import { BreadcrumbPath } from 'interfaces/breadcrumb';
 
 interface Props {
   product: Product
 }
 
-function PDPEditPage({ product }: Props) {
+function PDPPage({ product }: Props) {
   const breadcrumbPaths: BreadcrumbPath[] = [
     { name: 'Home', href: '/', icon: HomeIcon },
     { name: 'Product List Page', href: '/plp' },
-    { name: product.name, href: `/pdp/${product.id}` },
-    { name: 'Edit' },
+    { name: product.name },
   ];
 
   return (
     <>
+      <Head>
+        <title>
+          { `${product.name} | EmporioLambda` }
+        </title>
+      </Head>
       <EMLBreadcrumb paths={breadcrumbPaths} />
-      <PDPEdit product={product} />
+      <PDPView product={product} edit />
     </>
   );
 }
@@ -42,4 +47,4 @@ export async function getServerSideProps({ query }) {
   };
 }
 
-export default PDPEditPage;
+export default PDPPage;

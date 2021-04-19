@@ -15,7 +15,7 @@ interface Props {
   totalProducts: number
 }
 
-function PLPCustomerPage({ filters, products, totalProducts }: Props) {
+function PLPSellerPage({ filters, products, totalProducts }: Props) {
   const breadcrumbPaths: BreadcrumbPath[] = [
     { name: 'Home', href: '/', icon: HomeIcon },
     { name: 'Product List Page' },
@@ -28,6 +28,7 @@ function PLPCustomerPage({ filters, products, totalProducts }: Props) {
           filters={filters}
           products={products}
           totalProducts={totalProducts}
+          seller
         />
       )
       : <NoResult />
@@ -88,4 +89,4 @@ export async function getServerSideProps({ query }) {
   };
 }
 
-export default PLPCustomerPage;
+export default PLPSellerPage;

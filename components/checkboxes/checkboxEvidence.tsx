@@ -25,6 +25,7 @@ function CheckboxEvidence({
         <Checkbox checked={checked} onChange={handleChange} name="Evidence" inputProps={{ 'aria-label': 'Checbox for evidence' }} />
       }
       label="Evidence"
+      labelPlacement="bottom"
     />
   );
 }

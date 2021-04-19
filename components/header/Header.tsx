@@ -96,7 +96,9 @@ function Header({ authState, username }: Props): React.ReactElement {
     return header;
   };
 
-  const handleSearchEnter = (event: React.KeyboardEvent<typeof InputBase>) => {
+  const handleSearchEnter = (
+    event: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
     if (event.key === 'Enter') {
       const newPage = {
         pathname: '/plp',

@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import React from 'react';
+import React, { DetailedHTMLProps, InputHTMLAttributes } from 'react';
 import {
   Box, Button, InputAdornment, TextField, Typography,
 } from '@material-ui/core';
@@ -82,7 +82,7 @@ class PDPEdit extends React.Component<Props, State> {
     });
   };
 
-  handleChangeDescription = (event: React.ChangeEvent<Element>) => {
+  handleChangeDescription = (event: React.ChangeEvent<HTMLInputElement>) => {
     this.setState((state: State) => {
       const newState = state;
 
@@ -130,7 +130,9 @@ class PDPEdit extends React.Component<Props, State> {
     });
   };
 
-  handleAddImage = (event: Event) => {
+  handleAddImage = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     if (!this.reachedImageLimit()) {
       const reader = new FileReader();
       const file = event.target.files[0];

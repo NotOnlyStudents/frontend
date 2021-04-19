@@ -1,13 +1,6 @@
-import HTTPRequest from 'lib/HTTPRequest';
 import {
   CartProduct,
-  PLPProductItem, Product, ProductFilter,
 } from 'interfaces/products/product';
-import queryString from 'query-string';
-import {
-  ProductsDELETERequest, ProductsGETRequest, ProductsPATCHRequest, ProductsPOSTRequest,
-} from 'interfaces/products/product-request';
-import { Cart } from 'interfaces/cart';
 import faker from 'faker';
 import CartService from './CartService';
 

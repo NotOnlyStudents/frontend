@@ -95,7 +95,7 @@ export default class FormPersonalArea extends React.Component<User, any> {
           Your email:
           {this.state.email}
         </p>
-        <form onSubmit={this.handleSubmit}>
+        <form>
           <p>Change your name:</p>
           <input
             type="text"

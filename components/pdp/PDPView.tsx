@@ -141,7 +141,7 @@ function PDPView({ product, edit }: Props) : React.ReactElement {
     edit
       ? (
         <FillQuantity
-          quantity={quantity}
+          quantity={quantity as number}
           handleCounterChange={handleQuantityChange}
         />
       )

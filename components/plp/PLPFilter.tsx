@@ -8,7 +8,6 @@ import TextfieldMaxPrice from 'components/textfield/textfieldMaxPrice';
 import TextfieldMinPrice from 'components/textfield/textfieldMinPrice';
 import SortProducts from 'components/sort-products/SortProducts';
 import { Box } from '@material-ui/core';
-import { makeStyles } from '@material-ui/styles';
 
 interface Props {
   filter: ProductFilter;
@@ -16,15 +15,7 @@ interface Props {
   handleChangeFilter: (filter: ProductFilter) => void;
 }
 
-const useStyles = makeStyles({
-  container: {
-    margin: '0 2em 2em 2em',
-  },
-});
-
 function PLPFilter({ filter, seller, handleChangeFilter }: Props) {
-  const classes = useStyles();
-
   const handleChangeCategories = (categories: Category[]) => {
     const filterCategories: ProductFilter = { ...filter };
     filterCategories.categories = categories;
@@ -65,7 +56,7 @@ function PLPFilter({ filter, seller, handleChangeFilter }: Props) {
     handleChangeFilter(filterSort);
   };
 
-  const renderCheckboxAvailableIfSeller = () => (seller
+  const renderCheckboxEvidenceIfSeller = () => (seller
     ? (
       <CheckboxEvidence
         selectedEvidence={filter.evidence}
@@ -89,10 +80,7 @@ function PLPFilter({ filter, seller, handleChangeFilter }: Props) {
           selectedCategories={filter.categories}
           handleChangeCategories={handleChangeCategories}
         />
-        <CheckboxEvidence
-          selectedEvidence={filter.evidence}
-          handleChangeEvidence={handleChangeEvidence}
-        />
+        { renderCheckboxEvidenceIfSeller() }
         <CheckboxAvailable
           selectedAvailable={filter.available}
           handleChangeAvailable={handleChangeAvailable}

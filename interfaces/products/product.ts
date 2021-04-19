@@ -5,7 +5,7 @@ export interface Product {
   name?: string;
   description?: string;
   images?: string[];
-  quantity?: number;
+  quantity?: number | string;
   price?: number;
   evidence?: boolean;
   discount?: number;

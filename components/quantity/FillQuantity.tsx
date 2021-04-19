@@ -32,7 +32,7 @@ function PDPFillQuantity({ quantity, handleCounterChange }: Props) {
   const handleCounterPlus = () => setCounter(counter + 1);
 
   const renderSaveQuantity = () => (
-    quantity !== counter && counter != ''
+    quantity !== counter && !error.quantity
       ? (
         <IconButton onClick={() => { handleCounterChange(counter); }}>
           <CheckIcon />

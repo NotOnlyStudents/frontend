@@ -2,7 +2,6 @@ import HTTPRequest from 'lib/HTTPRequest';
 import {
   CartProduct,
 } from 'interfaces/products/product';
-import { Cart } from 'interfaces/cart';
 import { CartGETRequest } from 'interfaces/cart/cart-request';
 import CartService from './CartService';
 

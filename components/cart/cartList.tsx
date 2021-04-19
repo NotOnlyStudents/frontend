@@ -56,7 +56,7 @@ class CartList extends React.Component<Props, State> {
 
   renderAllItems = (): React.ReactElement[] => (
     this.state.items.map(
-      (item: Product, index: number): React.ReactElement => (
+      (item: CartProduct, index: number): React.ReactElement => (
         <CartItem
           key={item.id}
           item={item}

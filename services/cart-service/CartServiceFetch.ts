@@ -1,21 +1,18 @@
 import HTTPRequest from 'lib/HTTPRequest';
 import {
-  PLPProductItem, Product, ProductFilter,
+  CartProduct,
 } from 'interfaces/products/product';
-import queryString from 'query-string';
-import {
-  ProductsDELETERequest, ProductsGETRequest, ProductsPATCHRequest, ProductsPOSTRequest,
-} from 'interfaces/products/product-request';
-import CartService from './CartService';
 import { Cart } from 'interfaces/cart';
+import { CartGETRequest } from 'interfaces/cart/cart-request';
+import CartService from './CartService';
 
 class CartServiceFetch implements CartService {
-    getCartItems = async (): Promise<Cart> => {
-        const req: HTTPRequest = new HTTPRequest(`cart/`);
-        const res: Cart = await req.get<Cart>();
-        return res;
-    }
-}
+  getCartProducts = async (): Promise<CartProduct[]> => {
+    const req: HTTPRequest = new HTTPRequest('cart');
+    const res: CartGETRequest = await req.get<CartGETRequest>();
 
+    return res.data;
+  };
+}
 
 export default CartServiceFetch;

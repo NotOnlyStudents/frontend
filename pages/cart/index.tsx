@@ -1,7 +1,6 @@
 import Layout from 'components/Layout';
 import CartList from 'components/cart/cartList';
 import CartService from 'services/cart-service/CartServiceMock';
-import { Cart } from 'interfaces/cart';
 import { BreadcrumbPath } from 'interfaces/breadcrumb';
 import EMLBreadcrumb from 'components/breadcrumb/EMLBreadcrumb';
 import HomeIcon from '@material-ui/icons/Home';
@@ -39,13 +38,13 @@ function cartPage({ cart }: Props) {
 }
 
 export async function getServerSideProps() {
-  const products = [];
+  let products = [];
 
-  // try {
-  //   cart = await (new CartService()).getCartItems();
-  // } catch (error) {
-  //   console.log(error);
-  // }
+  try {
+    products = await (new CartService()).getCartProducts();
+  } catch (error) {
+    console.log(error);
+  }
 
   return {
     props: {

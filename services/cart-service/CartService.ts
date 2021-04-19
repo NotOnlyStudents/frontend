@@ -1,9 +1,7 @@
-//import React from "react";
-import {Cart} from "interfaces/cart";
-import {Product} from "interfaces/products/product";
+import { CartProduct } from 'interfaces/products/product';
 
 interface CartService{
-    getCartItems():Promise<Cart>;
-  }
-  
+  getCartProducts(): Promise<CartProduct[]>;
+}
+
 export default CartService;

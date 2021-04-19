@@ -38,7 +38,7 @@ function cartPage({ cart }: Props) {
 }
 
 export async function getServerSideProps() {
-  const products = [];
+  let products = [];
 
   try {
     products = await (new CartService()).getCartProducts();

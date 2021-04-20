@@ -14,7 +14,6 @@ const useStyles = makeStyles({
 
 function HeaderNotAuthenticated(): React.ReactElement {
   const classes = useStyles();
-
   return (
     <>
       <HeaderMenuMobile
@@ -22,7 +21,7 @@ function HeaderNotAuthenticated(): React.ReactElement {
           <IconButton href="/cart" className={classes.desktopIcon}>
             <ShoppingCartIcon />
           </IconButton>,
-          <IconButton href="/" className={classes.desktopIcon}>
+          <IconButton href="/authenticator" className={classes.desktopIcon}>
             <LoginIcon />
           </IconButton>,
         ]}

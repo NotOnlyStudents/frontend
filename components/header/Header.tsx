@@ -86,7 +86,6 @@ function Header({ authState, username }: Props): React.ReactElement {
   const renderHeader = (): React.ReactElement => {
     const isSigned: boolean = authState === AuthState.SignedIn;
     let header: React.ReactElement;
-
     if (isSigned) {
       header = username === sellerUsername ? (<HeaderSeller />) : (<HeaderCustomer />);
     } else {

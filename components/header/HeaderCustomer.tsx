@@ -14,7 +14,6 @@ const useStyles = makeStyles({
 
 function HeaderCustomer() : React.ReactElement {
   const classes = useStyles();
-
   return (
     <>
       <HeaderMenuMobile
@@ -22,7 +21,7 @@ function HeaderCustomer() : React.ReactElement {
           <IconButton href="/cart" className={classes.desktopIcon}>
             <ShoppingCartIcon />
           </IconButton>,
-          <IconButton className={classes.desktopIcon} href="/">
+          <IconButton className={classes.desktopIcon} href="/personalArea">
             <AccountCircleIcon aria-label="Your personal area" />
           </IconButton>,
           <IconButton className={classes.desktopIcon} href="/">
@@ -34,7 +33,7 @@ function HeaderCustomer() : React.ReactElement {
             <ShoppingCartIcon />
             Cart
           </Link>,
-          <Button href="/" disableRipple>
+          <Button href="/personalArea" disableRipple>
             <AccountCircleIcon aria-label="Your personal area" />
             Your personal area
           </Button>,

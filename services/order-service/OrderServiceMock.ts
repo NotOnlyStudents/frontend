@@ -2,8 +2,8 @@ import faker from 'faker';
 import {
   Order, OrderFilter,
 } from 'interfaces/orders/orders';
-import OrderService from './OrderService';
 import { PLPProductItem } from 'interfaces/products/product';
+import OrderService from './OrderService';
 
 class OrderServiceMock implements OrderService {
   getAllOrder = async (params?: OrderFilter): Promise<Order[]> => (
@@ -11,16 +11,15 @@ class OrderServiceMock implements OrderService {
     (): Order => ({
       id: faker.datatype.uuid(),
       customerEmail: faker.internet.email(),
-      //price: parseFloat(faker.commerce.price()),
-      address: ({
+      // price: parseFloat(faker.commerce.price()),
+      address: {
         id: faker.datatype.uuid(),
         nation: 'Italy',
         city: 'Padua',
         address: 'Via di non so dove',
-        cap: faker.datatype.number({min:1, max:100}),
-      }
-      ),
-      products: (new Array(2)).fill(0).map((): PLPProductItem =>({
+        cap: faker.datatype.number({ min: 1, max: 100 }),
+      },
+      products: (new Array(2)).fill(0).map((): PLPProductItem => ({
         id: faker.datatype.uuid(),
         name: faker.datatype.string(),
         image: 'https://picsum.photos/id/0/5616/3744',
@@ -28,10 +27,9 @@ class OrderServiceMock implements OrderService {
         price: faker.datatype.number(),
         evidence: faker.datatype.boolean(),
         discount: faker.datatype.number(),
-      }),
-      ),
+      })),
       additionalInfo: faker.datatype.string(),
-      //data: faker.datatype.datetime(),
+      // data: faker.datatype.datetime(),
       status: faker.datatype.string(),
     }
     ),
@@ -45,10 +43,10 @@ class OrderServiceMock implements OrderService {
       nation: 'Italy',
       city: 'Padua',
       address: 'Via di non so dove',
-      cap: faker.datatype.number({min:1, max:100}),
+      cap: faker.datatype.number({ min: 1, max: 100 }),
     }
     ),
-    products: (new Array(2)).fill(0).map((): PLPProductItem =>({
+    products: (new Array(2)).fill(0).map((): PLPProductItem => ({
       id: faker.datatype.uuid(),
       name: faker.datatype.string(),
       image: faker.random.image(),
@@ -56,13 +54,11 @@ class OrderServiceMock implements OrderService {
       price: faker.datatype.number(),
       evidence: faker.datatype.boolean(),
       discount: faker.datatype.number(),
-    }),
-    ),
+    })),
     additionalInfo: faker.datatype.string(),
-    //data: faker.datatype.datetime(),
+    // data: faker.datatype.datetime(),
     status: faker.datatype.string(),
   });
-  
 }
 
 export default OrderServiceMock;

@@ -1,3 +1,4 @@
+import { Button } from '@material-ui/core';
 import { Auth } from 'aws-amplify';
 import Link from 'next/link';
 import React from 'react';
@@ -37,7 +38,7 @@ export default class FormPersonalArea extends React.Component<User, any> {
     this.setState({ [nam]: val });
   };
 
-  async handleSubmit(event: Event): Promise<void> {
+  async handleSubmit(event):Promise<void> {
     event.preventDefault();
     try {
       if (this.state.newName == '' && this.state.newSurname == '') {
@@ -110,14 +111,14 @@ export default class FormPersonalArea extends React.Component<User, any> {
           />
           <br />
           <br />
-          <input type="submit" value="Save changes!" />
+          <Button onClick={this.handleSubmit}>Save Changes!</Button>
         </form>
         <br />
         <Link href="/">
-          <button name="loginButton" onClick={this.signOut}>Sign out</button>
+          <Button name="loginButton" onClick={this.signOut}>Sign out</Button>
         </Link>
         <br />
-        <button name="deleteAccountButton" onClick={this.deleteUser}>Delete Account</button>
+        <Button name="deleteAccountButton" onClick={this.deleteUser}>Delete Account</Button>
       </>
     );
   }

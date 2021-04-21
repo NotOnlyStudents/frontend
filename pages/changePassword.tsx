@@ -8,11 +8,11 @@ import FormPassword from 'components/users/changePasswordForm';
 
 export default function changePassowrd(props) {
   return (
-    <Layout _authState={props._authState} _username={props._username}>
+    <>
       <div id="root">
         <FormPassword />
       </div>
-    </Layout>
+    </>
   );
 }
 

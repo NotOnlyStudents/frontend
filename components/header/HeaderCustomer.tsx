@@ -5,12 +5,22 @@ import { Button, IconButton, Link } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import HeaderMenuMobile from './HeaderMenuMobile';
+import { Auth } from 'aws-amplify';
 
 const useStyles = makeStyles({
   desktopIcon: {
     color: 'white',
   },
 });
+
+async function signOut() {
+  try {
+    await Auth.signOut();
+    document.location.href = '/';
+  } catch (error) {
+    console.log('error signing out: ', error);
+  }
+}
 
 function HeaderCustomer() : React.ReactElement {
   const classes = useStyles();
@@ -24,7 +34,7 @@ function HeaderCustomer() : React.ReactElement {
           <IconButton className={classes.desktopIcon} href="/personalArea">
             <AccountCircleIcon aria-label="Your personal area" />
           </IconButton>,
-          <IconButton className={classes.desktopIcon} href="/">
+          <IconButton onClick={signOut} className={classes.desktopIcon}>
             <ExitToAppIcon aria-label="logout" />
           </IconButton>,
         ]}
@@ -37,7 +47,7 @@ function HeaderCustomer() : React.ReactElement {
             <AccountCircleIcon aria-label="Your personal area" />
             Your personal area
           </Button>,
-          <Button href="/" disableRipple>
+          <Button>
             <ExitToAppIcon aria-label="logout" />
             Logout
           </Button>,

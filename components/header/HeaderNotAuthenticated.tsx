@@ -12,6 +12,9 @@ const useStyles = makeStyles({
   },
 });
 
+
+
+
 function HeaderNotAuthenticated(): React.ReactElement {
   const classes = useStyles();
   return (

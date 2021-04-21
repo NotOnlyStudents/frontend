@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import React from 'react';
 import FormPersonalArea from 'components/users/personalAreaForm';
+import { Button } from '@material-ui/core';
 
 export default function PersonalArea() {
   return (
@@ -9,7 +10,7 @@ export default function PersonalArea() {
         <FormPersonalArea />
       </div>
       <Link href="/changePassword">
-        <button>Change your password!</button>
+        <Button>Change your password!</Button>
       </Link>
     </>
   );

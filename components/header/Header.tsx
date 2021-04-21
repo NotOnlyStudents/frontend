@@ -16,11 +16,9 @@ import HeaderNotAuthenticated from './HeaderNotAuthenticated';
 import HeaderSeller from './HeaderSeller';
 import HeaderCustomer from './HeaderCustomer';
 import { Auth } from 'aws-amplify';
+import { withStyles } from '@material-ui/styles';
 
-interface Props {
-  authState: AuthState;
-  username: string | undefined;
-}
+
 
 const useStyles = makeStyles((theme: Theme) => ({
   container: {
@@ -118,6 +116,14 @@ class Header extends React.Component<any,any>{
     }
   }
 
+  /*
+  handleLogin()
+  {
+    console.log("Eccomi");
+    document.location.href=("/authenticator");
+    this.setState({});
+  }*/
+
   async componentDidMount() {
     try {
       const { attributes } = await Auth.currentAuthenticatedUser();
@@ -129,7 +135,7 @@ class Header extends React.Component<any,any>{
     if (this.state.item) {
       this.setState({header:<HeaderCustomer />});
     } else {
-      this.setState({header:<HeaderNotAuthenticated />});
+      this.setState({header:<HeaderNotAuthenticated/>});
     }
   }
   
@@ -163,5 +169,9 @@ class Header extends React.Component<any,any>{
     );
 }
 }
-
-export default Header;
+/*
+Header.propTypes = {
+  classes: PropTypes.object.isRequired,
+};
+*/
+export default withStyles(useStyles)(Header)

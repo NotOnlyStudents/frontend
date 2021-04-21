@@ -15,7 +15,9 @@ Amplify.configure({
     region: process.env.USER_POOL_REGION,
     userPoolId: process.env.NEXT_PUBLIC_USER_POOL_ID,
     userPoolWebClientId: process.env.NEXT_PUBLIC_USER_POOL_CLIENT_ID,
+    mandatorySignIn: true
   },
+    
       // Configuration for cookie storage
     // see https://aws-amplify.github.io/docs/js/authentication
     cookieStorage: {

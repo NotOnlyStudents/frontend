@@ -29,12 +29,12 @@ export default class FormPassword extends React.Component<Props, State> {
     // this.setState({ [nam]: val });
   };
 
-  // handleSubmit = (event: FormEventHandler<HTMLFormElement>) => {
-  //   Auth.currentAuthenticatedUser()
-  //     .then((user) => Auth.changePassword(user, this.state.oldPassword, this.state.newPassword))
-  //     .then((data) => { alert('You change your password with success!'); document.location.href = '/'; })
-  //     .catch((err) => alert('There was a problem!'));
-  // };
+   handleSubmit = (event: FormEventHandler<HTMLFormElement>) => {
+     Auth.currentAuthenticatedUser()
+       .then((user) => Auth.changePassword(user, this.state.oldPassword, this.state.newPassword))
+       .then((data) => { alert('You change your password with success!'); document.location.href = '/'; })
+       .catch((err) => alert('There was a problem!'));
+   };
 
   render() {
     return (

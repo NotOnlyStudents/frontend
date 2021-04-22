@@ -174,4 +174,5 @@ Header.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 */
-export default withStyles(useStyles)(Header)
+//export default withStyles(useStyles)(Header)
+export default Header

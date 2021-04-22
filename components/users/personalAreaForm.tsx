@@ -59,14 +59,7 @@ export default class FormPersonalArea extends React.Component<User, any> {
     }
   }
 
-  async signOut() {
-    try {
-      await Auth.signOut();
-      document.location.href = '/';
-    } catch (error) {
-      console.log('error signing out: ', error);
-    }
-  }
+
 
   async deleteUser() {
     const user = await Auth.currentAuthenticatedUser();
@@ -114,9 +107,6 @@ export default class FormPersonalArea extends React.Component<User, any> {
           <Button onClick={this.handleSubmit}>Save Changes!</Button>
         </form>
         <br />
-        <Link href="/">
-          <Button name="loginButton" onClick={this.signOut}>Sign out</Button>
-        </Link>
         <br />
         <Button name="deleteAccountButton" onClick={this.deleteUser}>Delete Account</Button>
       </>

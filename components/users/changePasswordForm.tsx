@@ -1,3 +1,4 @@
+import { Button } from '@material-ui/core';
 import { Auth } from 'aws-amplify';
 import React, { FormEventHandler } from 'react';
 
@@ -20,20 +21,28 @@ export default class FormPassword extends React.Component<Props, State> {
     };
 
     this.handleChange = this.handleChange.bind(this);
-    // this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   handleChange = (event) => {
     const nam = event.target.name;
     const val = event.target.value;
-    // this.setState({ [nam]: val });
+    if(nam=="oldPassword")
+    {
+      this.setState({ oldPassword : val });
+    }
+    else
+    {
+      this.setState({ oldPassword : val });
+    }
+    
   };
 
-   handleSubmit = (event: FormEventHandler<HTMLFormElement>) => {
+   handleSubmit = (event) => {
      Auth.currentAuthenticatedUser()
-       .then((user) => Auth.changePassword(user, this.state.oldPassword, this.state.newPassword))
+       .then((user) => { Auth.changePassword(user, this.state.oldPassword, this.state.newPassword);})
        .then((data) => { alert('You change your password with success!'); document.location.href = '/'; })
-       .catch((err) => alert('There was a problem!'));
+       .catch((err) =>{ alert(err.message);});
    };
 
   render() {
@@ -46,7 +55,7 @@ export default class FormPassword extends React.Component<Props, State> {
           <label>New password:</label>
           <input name="newPassword" type="password" onChange={this.handleChange} />
           <br />
-          <input type="submit" value="Save changes!" />
+          <Button onClick={this.handleSubmit}>Save changes!</Button> 
         </form>
       </>
     );

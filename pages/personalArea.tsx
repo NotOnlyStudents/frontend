@@ -9,9 +9,6 @@ export default function PersonalArea() {
       <div id="root">
         <FormPersonalArea />
       </div>
-      <Link href="/changePassword">
-        <Button>Change your password!</Button>
-      </Link>
     </>
   );
 }

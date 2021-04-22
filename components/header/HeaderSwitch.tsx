@@ -17,7 +17,7 @@ export default class HeaderSwtich extends React.Component<any,any>{
       } catch {
         this.setState({ item:false})
       }
-  
+        //attributes.name="seller"  ?
       if (this.state.item) {
         this.setState({header:<HeaderCustomer />});
       } else {

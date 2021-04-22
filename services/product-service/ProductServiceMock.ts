@@ -17,6 +17,7 @@ class ProductServiceMock implements ProductService {
       quantity: faker.datatype.number({ min: 0 }),
     }
     ),
+    // []
   );
 
   getProductById = async (id: string): Promise<Product> => ({

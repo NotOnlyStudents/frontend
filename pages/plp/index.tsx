@@ -7,7 +7,7 @@ import EMLBreadcrumb from 'components/breadcrumb/EMLBreadcrumb';
 import HomeIcon from '@material-ui/icons/Home';
 import { BreadcrumbPath } from 'interfaces/breadcrumb';
 import PLP from 'components/plp/PLP';
-import NoResult from 'components/noresult/NoResult';
+import NoResultProduct from 'components/noresult/NoResultProduct';
 
 interface Props {
   filters: ProductFilter,
@@ -30,7 +30,7 @@ function PLPCustomerPage({ filters, products, totalProducts }: Props) {
           totalProducts={totalProducts}
         />
       )
-      : <NoResult />
+      : <NoResultProduct />
   );
 
   return (

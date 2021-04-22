@@ -1,19 +1,19 @@
-import { Button } from '@material-ui/core';
+import { Box, Button, TextField } from '@material-ui/core';
 import { Auth } from 'aws-amplify';
-import React, { FormEventHandler } from 'react';
+import React from 'react';
 
 interface Props{
   oldPassword?:string;
   newPassword?:string;
 }
 
-interface State {
-  oldPassword: string,
-  newPassword: string
+interface State{
+  oldPassword:string;
+  newPassword?:string;
 }
 
-export default class FormPassword extends React.Component<Props, State> {
-  constructor(props: Props) {
+export default class FormPassword extends React.Component<Props, any> {
+  constructor(props) {
     super(props);
     this.state = {
       oldPassword: '',
@@ -24,40 +24,31 @@ export default class FormPassword extends React.Component<Props, State> {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  handleChange = (event) => {
-    const nam = event.target.name;
-    const val = event.target.value;
-    if(nam=="oldPassword")
-    {
-      this.setState({ oldPassword : val });
+    handleChange = (event) => {
+      const nam = event.target.name;
+      const val = event.target.value;
+      this.setState({ [nam]: val });
     }
-    else
-    {
-      this.setState({ oldPassword : val });
+
+    async handleSubmit(event) {
+      event.preventDefault();
+      Auth.currentAuthenticatedUser()
+        .then((user) => Auth.changePassword(user, this.state.oldPassword, this.state.newPassword))
+        .then((data) => { alert('You change your password with success!'); document.location.href = '/'; })
+        .catch((err) => alert('There was a problem!'));
     }
-    
-  };
 
-   handleSubmit = (event) => {
-     Auth.currentAuthenticatedUser()
-       .then((user) => { Auth.changePassword(user, this.state.oldPassword, this.state.newPassword);})
-       .then((data) => { alert('You change your password with success!'); document.location.href = '/'; })
-       .catch((err) =>{ alert(err.message);});
-   };
-
-  render() {
-    return (
-      <>
-        <form>
-          <label>Old password:</label>
-          <input name="oldPassword" type="password" onChange={this.handleChange} />
-          <br />
-          <label>New password:</label>
-          <input name="newPassword" type="password" onChange={this.handleChange} />
-          <br />
-          <Button onClick={this.handleSubmit}>Save changes!</Button> 
-        </form>
-      </>
-    );
-  }
+    render() {
+      return (
+          <form onSubmit={this.handleSubmit}>
+            <Box display="flex" paddingLeft={2} paddingTop={4}>
+              <Box display="flex" flexDirection="column">
+                <TextField label="Old password:" type="password" name="oldPassword" onChange={this.handleChange}/> 
+                <TextField label="New password:" type="password" name="newPassword" onChange={this.handleChange}/> <br />
+                <Button type="submit" variant="contained" color="primary" onClick={this.handleSubmit}>Save Changes!</Button>
+              </Box>
+            </Box>
+          </form>
+      );
+    }
 }

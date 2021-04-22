@@ -1,5 +1,6 @@
-import { Button } from '@material-ui/core';
+import { Box, Button, TextField, Typography } from '@material-ui/core';
 import { Auth } from 'aws-amplify';
+import TextFieldValidation from 'components/validation/TextFieldValidation';
 import Link from 'next/link';
 import React from 'react';
 
@@ -62,53 +63,51 @@ export default class FormPersonalArea extends React.Component<User, any> {
 
 
   async deleteUser() {
-    const user = await Auth.currentAuthenticatedUser();
-    user.deleteUser((error) => {
-      if (error) {
-        alert('There was a problem!');
-      } else {
-        alert('You delete your account with success');
-        document.location.href = '/';
-      }
-    });
+    if (window.confirm('Are you sure you wish to delete your account? =('))
+    { 
+      const user = await Auth.currentAuthenticatedUser();
+      user.deleteUser((error) => {
+        if (error) {
+          alert('There was a problem!');
+        } else {
+          alert('You delete your account with success');
+          document.location.href = '/';
+        }
+      });
+    }
   }
 
   render(): React.ReactElement {
     return (
       <>
-        <h1>Personal Area:</h1>
-        <p>
-          Your name:
-          {this.state.name}
-        </p>
-        <p>
-          Your surname:
-          {this.state.surname}
-        </p>
-        <p>
-          Your email:
-          {this.state.email}
-        </p>
+        <Typography variant="h3" component="h2">Personal Area:</Typography>
+        <Box border={1} marginTop={4}>
+          <Box m={2}>
+          <Typography> {this.state.name} {this.state.surname}</Typography> 
+          <Typography>Email: {this.state.email}</Typography>
+          </Box>
+        </Box>
         <form>
-          <p>Change your name:</p>
-          <input
-            type="text"
-            name="newName"
-            onChange={this.handleChange}
-          />
-          <p>Change your Surname:</p>
-          <input
-            type="text"
-            name="newSurname"
-            onChange={this.handleChange}
-          />
-          <br />
-          <br />
-          <Button onClick={this.handleSubmit}>Save Changes!</Button>
+        <Box display="flex" paddingLeft={2} paddingTop={4}>
+          <Box display="flex">
+            <TextField label="Change your name:" type="text" name="newName" onChange={this.handleChange}/> 
+            <Box paddingLeft={2}>
+              <TextField label="Change your Surname:" type="text" name="newSurname" onChange={this.handleChange}/> 
+            </Box>
+          </Box>
+          <Box display="flex" paddingLeft={4}>
+            <Button variant="contained" color="primary" onClick={this.handleSubmit}>Save Changes!</Button>
+          </Box>
+        </Box>
         </form>
+        <Box paddingTop={4}>
+        <Link href="/changePassword" >
+          <Button variant="contained" color="primary">Change your password!</Button>
+        </Link>
         <br />
         <br />
-        <Button name="deleteAccountButton" onClick={this.deleteUser}>Delete Account</Button>
+        <Button variant="contained" color="primary" name="deleteAccountButton" onClick={this.deleteUser}>Delete Account</Button>
+        </Box>
       </>
     );
   }

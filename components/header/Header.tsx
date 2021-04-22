@@ -15,10 +15,12 @@ import LogoIcon from 'components/icons/LogoIcon';
 import HeaderNotAuthenticated from './HeaderNotAuthenticated';
 import HeaderSeller from './HeaderSeller';
 import HeaderCustomer from './HeaderCustomer';
-import { Auth } from 'aws-amplify';
-import { withStyles } from '@material-ui/styles';
+import HeaderSwitch from './HeaderSwitch';
 
-
+interface Props {
+  authState: AuthState;
+  username: string | undefined;
+}
 
 const useStyles = makeStyles((theme: Theme) => ({
   container: {
@@ -75,73 +77,16 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-/*
- function supporto()
-{
-    try{
-    const { attributes } = 
-        console.log(attributes);
-    if(attributes!=null)
-    {
-        console.log("uomo");
-      return true;
-    }
-    else{
-        console.log("ciao");
-      return false;
-    }
-  }
-  catch{
-      console.log("merad");
-    return false;
-  }
-}*/
-//  const sellerUsername = 'seller';
-//username === sellerUsername ? (<HeaderSeller />) : (<HeaderCustomer />);
-class Header extends React.Component<any,any>{
-  constructor(props)
-  {
-    super(props);
-    this.state = {item:false, header:null};
-  }
-  async supporto()
-  {
-    const { attributes } = await Auth.currentAuthenticatedUser();
-    if(attributes!=null)
-    {
-      return true;
-    }
-    else{
-      return false;
-    }
-  }
+function Header({ authState, username }: Props): React.ReactElement {
+  const sellerUsername = 'seller';
+  const classes = useStyles();
+  const router: NextRouter = useRouter();
 
-  /*
-  handleLogin()
-  {
-    console.log("Eccomi");
-    document.location.href=("/authenticator");
-    this.setState({});
-  }*/
-
-  async componentDidMount() {
-    try {
-      const { attributes } = await Auth.currentAuthenticatedUser();
-      this.setState({ item: true });
-    } catch {
-      this.setState({ item:false})
-    }
-
-    if (this.state.item) {
-      this.setState({header:<HeaderCustomer />});
-    } else {
-      this.setState({header:<HeaderNotAuthenticated/>});
-    }
-  }
-  
+  const [searchText, setSearchText] = useState(router.query.text || '');
 
 
- /* const handleSearchEnter = (
+
+  const handleSearchEnter = (
     event: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     if (event.key === 'Enter') {
@@ -157,22 +102,42 @@ class Header extends React.Component<any,any>{
       }
 
       Router.push(newPage);
-    }*/
+    }
+  };
 
-  render(): React.ReactElement{
-    return (
-      <AppBar position="sticky">
-          <div>
-            {this.state.header}
+  return (
+    <AppBar position="sticky">
+      <Toolbar className={classes.container}>
+        <Typography variant="h6" component="h1">
+          <Link className={classes.link} href="/">
+            <LogoIcon />
+            EmporioLambda
+          </Link>
+        </Typography>
+        <div className={classes.searchContainer}>
+          <div className={classes.search}>
+            <div className={classes.searchIcon}>
+              <SearchIcon />
+            </div>
+            <InputBase
+              placeholder="Search…"
+              value={searchText}
+              classes={{
+                root: classes.inputRoot,
+                input: classes.inputInput,
+              }}
+              inputProps={{ 'aria-label': 'search' }}
+              onChange={(event) => setSearchText(event.target.value)}
+              onKeyUp={handleSearchEnter}
+            />
           </div>
-      </AppBar>
-    );
+        </div>
+        <div>
+          <HeaderSwitch />
+        </div>
+      </Toolbar>
+    </AppBar>
+  );
 }
-}
-/*
-Header.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
-*/
-//export default withStyles(useStyles)(Header)
-export default Header
+
+export default Header;

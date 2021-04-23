@@ -10,14 +10,13 @@ import { useAuthContext } from 'lib/authContext';
 
 function Authenticator() {
   const { setAuthState, setUsername } = useAuthContext();
-  const router = useRouter();
+  //const router = useRouter();
 
   useEffect(() => onAuthUIStateChange((nextAuthState: AuthState, authData: CognitoUser) => {
     if (nextAuthState === AuthState.SignedIn) {
       setAuthState(nextAuthState);
       setUsername(authData.getUsername());
-
-      router.replace('/');
+      document.location.href = '/';
     }
   }), []);
 

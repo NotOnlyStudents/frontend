@@ -3,7 +3,15 @@ import React from "react";
 import HeaderCustomer from "./HeaderCustomer";
 import HeaderNotAuthenticated from "./HeaderNotAuthenticated";
 
-export default class HeaderSwtich extends React.Component<any,any>{
+interface State{
+  item:boolean,
+  header: React.ReactElement
+}
+
+interface Props{
+}
+
+export default class HeaderSwtich extends React.Component<Props,State>{
     constructor(props)
     {
       super(props);
@@ -13,6 +21,7 @@ export default class HeaderSwtich extends React.Component<any,any>{
     async componentDidMount() {
       try {
         const { attributes } = await Auth.currentAuthenticatedUser();
+        console.log(attributes);
         this.setState({ item: true });
       } catch {
         this.setState({ item:false})
@@ -28,9 +37,5 @@ export default class HeaderSwtich extends React.Component<any,any>{
     render(): React.ReactElement{
       return (<>{this.state.header}</>);
   }
-  }
-  /*
-  Header.propTypes = {
-    classes: PropTypes.object.isRequired,
-  };
-  */
+}
+

@@ -31,7 +31,7 @@ function HeaderCustomer() : React.ReactElement {
           <IconButton href="/cart" className={classes.desktopIcon}>
             <ShoppingCartIcon />
           </IconButton>,
-          <IconButton className={classes.desktopIcon} href="/personalArea">
+          <IconButton className={classes.desktopIcon} href="/users/personalArea">
             <AccountCircleIcon aria-label="Your personal area" />
           </IconButton>,
           <IconButton onClick={signOut} className={classes.desktopIcon}>
@@ -43,7 +43,7 @@ function HeaderCustomer() : React.ReactElement {
             <ShoppingCartIcon />
             Cart
           </Link>,
-          <Button href="/personalArea" disableRipple>
+          <Button href="/users/personalArea" disableRipple>
             <AccountCircleIcon aria-label="Your personal area" />
             Your personal area
           </Button>,

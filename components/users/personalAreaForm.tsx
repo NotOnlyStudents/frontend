@@ -4,13 +4,21 @@ import TextFieldValidation from 'components/validation/TextFieldValidation';
 import Link from 'next/link';
 import React from 'react';
 
-export interface User {
+export interface Props {
   name?: string;
   surname?: string;
   email?: string
 }
 
-export default class FormPersonalArea extends React.Component<User, any> {
+export interface State { 
+    name?: string,
+    surname?: string,
+    email?: string,
+    newName?: string,
+    newSurname?: string
+ }
+
+export default class PersonalAreaForm extends React.Component<Props, State> {
   constructor(props) {
     super(props);
     this.state = {
@@ -24,7 +32,7 @@ export default class FormPersonalArea extends React.Component<User, any> {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  async componentDidMount() {
+  async componentDidMount():Promise<void>  {
     try {
       const { attributes } = await Auth.currentAuthenticatedUser();
       this.setState({ name: attributes.name, surname: attributes['custom:surname'], email: attributes.email });
@@ -62,7 +70,7 @@ export default class FormPersonalArea extends React.Component<User, any> {
 
 
 
-  async deleteUser() {
+  async deleteUser():Promise<void>  {
     if (window.confirm('Are you sure you wish to delete your account? =('))
     { 
       const user = await Auth.currentAuthenticatedUser();
@@ -101,7 +109,7 @@ export default class FormPersonalArea extends React.Component<User, any> {
         </Box>
         </form>
         <Box paddingTop={4}>
-        <Link href="/changePassword" >
+        <Link href="/users/changePassword" >
           <Button variant="contained" color="primary">Change your password!</Button>
         </Link>
         <br />

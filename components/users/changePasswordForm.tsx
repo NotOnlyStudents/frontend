@@ -37,7 +37,7 @@ export default class FormPassword extends React.Component<Props, State> {
       }
     }
 
-    async handleSubmit(event) {
+    async handleSubmit(event):Promise<void>  {
       event.preventDefault();
       if(this.state.oldPassword!=this.state.newPassword)
       {
@@ -52,7 +52,7 @@ export default class FormPassword extends React.Component<Props, State> {
       }
     }
 
-    render() {
+    render():React.ReactElement {
       return (
           <form onSubmit={this.handleSubmit}>
             <Box display="flex" paddingLeft={2} paddingTop={2}>

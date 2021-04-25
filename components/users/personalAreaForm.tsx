@@ -3,6 +3,7 @@ import { Auth } from 'aws-amplify';
 import TextFieldValidation from 'components/validation/TextFieldValidation';
 import Link from 'next/link';
 import React from 'react';
+import PersonalAreaCompanyForm from './personalAreaCompanyForm';
 
 export interface Props {
   name?: string;
@@ -85,6 +86,13 @@ export default class PersonalAreaForm extends React.Component<Props, State> {
     }
   }
 
+
+
+  //TO DO: VERIFY SELLER ACCOUNT
+  renderCompanyForm = (): React.ReactElement => (<PersonalAreaCompanyForm/>);
+
+
+
   render(): React.ReactElement {
     return (
       <>
@@ -96,18 +104,19 @@ export default class PersonalAreaForm extends React.Component<Props, State> {
           </Box>
         </Box>
         <form>
-        <Box display="flex" paddingLeft={2} paddingTop={4}>
-          <Box display="flex">
-            <TextField label="Change your name:" type="text" name="newName" onChange={this.handleChange}/> 
-            <Box paddingLeft={2}>
-              <TextField label="Change your Surname:" type="text" name="newSurname" onChange={this.handleChange}/> 
+          <Box display="flex" paddingLeft={2} paddingTop={4}>
+            <Box display="flex">
+              <TextField label="Change your name:" type="text" name="newName" onChange={this.handleChange}/> 
+              <Box paddingLeft={2}>
+                <TextField label="Change your Surname:" type="text" name="newSurname" onChange={this.handleChange}/> 
+              </Box>
+            </Box>
+            <Box display="flex" paddingLeft={4}>
+              <Button variant="contained" color="primary" onClick={this.handleSubmit}>Save Changes!</Button>
             </Box>
           </Box>
-          <Box display="flex" paddingLeft={4}>
-            <Button variant="contained" color="primary" onClick={this.handleSubmit}>Save Changes!</Button>
-          </Box>
-        </Box>
         </form>
+        {this.renderCompanyForm()}
         <Box paddingTop={4}>
         <Link href="/users/changePassword" >
           <Button variant="contained" color="primary">Change your password!</Button>

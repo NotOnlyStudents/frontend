@@ -13,16 +13,9 @@ const useStyles = makeStyles({
   },
 });
 
-async function signOut() {
-  try {
-    await Auth.signOut();
-    document.location.href = '/';
-  } catch (error) {
-    console.log('error signing out: ', error);
-  }
-}
 
-function HeaderCustomer() : React.ReactElement {
+
+function HeaderCustomer({signOut}) : React.ReactElement {
   const classes = useStyles();
   return (
     <>
@@ -47,7 +40,7 @@ function HeaderCustomer() : React.ReactElement {
             <AccountCircleIcon aria-label="Your personal area" />
             Your personal area
           </Button>,
-          <Button>
+          <Button onClick={signOut}>
             <ExitToAppIcon aria-label="logout" />
             Logout
           </Button>,

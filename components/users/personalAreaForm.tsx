@@ -49,7 +49,6 @@ export default class PersonalAreaForm extends React.Component<Props, State> {
   };
 
   async handleSubmit(event):Promise<void> {
-    event.preventDefault();
     try {
       if (this.state.newName == '' && this.state.newSurname == '') {
         alert('Please insert some data');

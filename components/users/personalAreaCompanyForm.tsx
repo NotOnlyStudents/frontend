@@ -25,34 +25,19 @@ export default class PersonalAreaCompanyForm extends React.Component<Props, Stat
       companyDescription: '',
       logo: '',
     };
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
 
   handleChange = (event) => {
-  /*  const nam = event.target.name;
+    const nam = event.target.name;
     const val = event.target.value;
-    this.setState({ [nam]: val });*/
+    this.setState({ [nam]: val });
   };
 
   async handleSubmit(event):Promise<void> {
-   /* event.preventDefault();
-    try {
-      if (this.state.newName == '' && this.state.newSurname == '') {
-        alert('Please insert some data');
-      } else {
-        const user = await Auth.currentAuthenticatedUser();
-        if (this.state.newName != '') {
-          await Auth.updateUserAttributes(user, { name: this.state.newName });
-        }
-        if (this.state.newSurname != '') {
-          await Auth.updateUserAttributes(user, { 'custom:surname': this.state.newSurname });
-        }
-        alert('Data updated successfully');
-        document.location.href = '/';
-      }
-    } catch {
-      alert('There was a problem with the server');
-    }*/
+    console.log(this.state.companyName + " " + this.state.companyDescription + " " + this.state.logo);
   }
 
   handleAddImage(event)
@@ -74,17 +59,18 @@ export default class PersonalAreaCompanyForm extends React.Component<Props, Stat
         <Box display="flex" flexDirection="column">  
           <Box display="flex" paddingLeft={2} paddingTop={4}>
             <Box display="flex">
-              <TextField label="Company's name:" type="text" name="newName" onChange={this.handleChange}/> 
+              <TextField label="Company's name:" type="text" name="companyName" onChange={this.handleChange}/> 
               <label htmlFor="images-picker">
                   <Fab component="span" color="primary">
                     <AddPhotoAlternateIcon />
                   </Fab>
                   <input
+                    name = "logo"
                     accept="image/*"
                     id="images-picker"
                     type="file"
                     hidden
-                    onChange={this.handleAddImage}
+                    onChange={this.handleChange}
                   />
                 </label>
             </Box>
@@ -92,13 +78,14 @@ export default class PersonalAreaCompanyForm extends React.Component<Props, Stat
                   <Button variant="contained" color="primary" onClick={this.handleSubmit}>Save Changes!</Button>
                 </Box>
               </Box>
-              <Box display="flex" paddingLeft={4}>
+              <Box display="flex" paddingLeft={2} paddingTop={2}>
                   <TextField
+                    name = "companyDescription"
+                    onChange={this.handleChange}
                     id="standard-multiline-static"
-                    label="Multiline"
+                    label="Company's description"
                     multiline
                     rows={4}
-                    defaultValue="Your company's description"
                   />
               </Box>
             </Box>

@@ -58,8 +58,10 @@ export default class PersonalAreaCompanyForm extends React.Component<Props, Stat
         <form>
         <Box display="flex" flexDirection="column">  
           <Box display="flex" paddingLeft={2} paddingTop={4}>
-            <Box display="flex">
               <TextField label="Company's name:" type="text" name="companyName" onChange={this.handleChange}/> 
+              <Box paddingLeft={4} paddingTop={2} paddingRight={2}>
+                <Typography>New logo:</Typography>
+              </Box>
               <label htmlFor="images-picker">
                   <Fab component="span" color="primary">
                     <AddPhotoAlternateIcon />
@@ -73,22 +75,25 @@ export default class PersonalAreaCompanyForm extends React.Component<Props, Stat
                     onChange={this.handleChange}
                   />
                 </label>
-            </Box>
-                <Box display = "flex" paddingLeft={2}>
-                  <Button variant="contained" color="primary" onClick={this.handleSubmit}>Save Changes!</Button>
-                </Box>
+          </Box>
+            <Box display="flex" paddingTop={2}>
+              <Box display="flex" paddingLeft={2} width={415}>
+                <TextField
+                  fullWidth
+                  name = "companyDescription"
+                  onChange={this.handleChange}
+                  id="standard-multiline-static"
+                  label="Company's description"
+                  multiline
+                  rows={4}/>
               </Box>
-              <Box display="flex" paddingLeft={2} paddingTop={2}>
-                  <TextField
-                    name = "companyDescription"
-                    onChange={this.handleChange}
-                    id="standard-multiline-static"
-                    label="Company's description"
-                    multiline
-                    rows={4}
-                  />
+              <Box display = "flex" paddingLeft={2} paddingTop={5} height={87}>
+                <Button variant="contained" color="primary" onClick={this.handleSubmit}>Save Changes!</Button>
               </Box>
             </Box>
+        </Box>
+        <br/>
+        <Box borderBottom={1} width="100%"></Box>
         </form>
     </>
     );

@@ -116,13 +116,13 @@ export default class PersonalAreaForm extends React.Component<Props, State> {
           </Box>
         </form>
         {this.renderCompanyForm()}
-        <Box paddingTop={4}>
-        <Link href="/users/changePassword" >
-          <Button variant="contained" color="primary">Change your password!</Button>
-        </Link>
-        <br />
-        <br />
-        <Button variant="contained" color="primary" name="deleteAccountButton" onClick={this.deleteUser}>Delete Account</Button>
+        <Box paddingTop={4} >
+          <Link href="/users/changePassword" >
+            <Button variant="contained" color="secondary">Change your password!</Button>
+          </Link>
+          <br />
+          <br />
+          <Button variant="contained" color="secondary" name="deleteAccountButton" onClick={this.deleteUser}>Delete Account</Button>
         </Box>
       </>
     );

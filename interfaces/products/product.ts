@@ -19,7 +19,7 @@ export interface PLPProductItem {
   image: string,
   evidence: boolean,
   discount: number,
-  quantity: number
+  quantity: number,
 }
 
 export enum SortType {
@@ -47,4 +47,9 @@ export interface ProductValidation {
   price: boolean;
   evidence: boolean;
   discount: boolean;
+}
+
+export interface ProductPaginator {
+  total: number,
+  products: PLPProductItem[]
 }

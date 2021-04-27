@@ -189,22 +189,26 @@ class PDPEdit extends React.Component<Props, State> {
 
   handleClickSave = async () => {
     if (this.checkValidation()) {
-      const { router } = this.props;
+      const { router, creation } = this.props;
       const { product } = this.state;
 
       let newProduct: Product;
 
       const ps: ProductServiceType = new ProductService();
 
-      if (product.id) {
+      console.log(product);
+
+      if (!creation) {
         newProduct = await ps.editProduct(product.id, product);
       } else {
         newProduct = await ps.createProduct(product);
       }
 
-      // router.push({
-      //   pathname: `/pdp/${newProduct.id}`,
-      // });
+      console.log(newProduct);
+
+      router.push({
+        pathname: `/seller/pdp/${newProduct.id}`,
+      });
     } else {
       this.setState({ alert: { [productNotValidId]: true } });
     }

@@ -11,49 +11,36 @@ interface Props {
   router: NextRouter,
   filters: ProductFilter,
   products: PLPProductItem[],
-  totalProducts: number,
+  total: number,
   seller?: boolean
 }
 
 interface State {
   filters: ProductFilter,
   products: PLPProductItem[],
-  totalProducts: number
+  total: number,
 }
 
 class PLP extends React.Component<Props, State> {
-  public static readonly limit = 25;
+  public static readonly limit = 24;
 
   constructor(props: Props) {
     super(props);
 
     this.state = {
       filters: {
-        offset: 1,
+        offset: 0,
         categories: [],
         available: false,
         evidence: false,
         priceMin: 0,
         priceMax: 0,
         sort: SortType.alphabetical,
+        ...props.filters,
       },
-      products: [],
-      totalProducts: 0,
+      products: props.products,
+      total: props.total,
     };
-  }
-
-  componentDidMount() {
-    this.setState((state: State) => {
-      const { filters, products, totalProducts } = this.props;
-
-      const newState: State = {
-        filters: { ...state.filters, ...filters },
-        products: [...state.products, ...products],
-        totalProducts,
-      };
-
-      return newState;
-    });
   }
 
   handleChangeFilters = async (filters: ProductFilter) => {
@@ -97,13 +84,15 @@ class PLP extends React.Component<Props, State> {
       delete query.sort;
     }
 
+    delete query.offset;
+
     router.push({
       pathname: '',
       query,
-    }, undefined, { shallow: true });
+    });
 
-    this.setState({ filters });
-    this.fetchAllFilteredProducts();
+    // this.setState({ filters });
+    setTimeout(() => { router.reload(); }, 1000);
   };
 
   handleChangePagination = (offset: number) => {
@@ -111,18 +100,17 @@ class PLP extends React.Component<Props, State> {
 
     router.push({
       pathname: '',
-      query: { ...router.query, offset },
+      query: { ...router.query, offset: offset - 1 },
     });
-    this.setState({ filters: { offset } });
-    this.fetchAllFilteredProducts();
-  };
+    // this.setState((state) => {
+    //   const newState: State = state;
 
-  fetchAllFilteredProducts = () => {
-    // this.setState({ loading: true });
+    //   newState.filters.offset = offset - 1;
 
-    // const products = await getAllProduct(this.state.filters);
+    //   return newState;
+    // });
 
-    // this.setState(() => ({ products, loading: false }));
+    setTimeout(() => { router.reload(); }, 1000);
   };
 
   render(): React.ReactElement {
@@ -130,7 +118,7 @@ class PLP extends React.Component<Props, State> {
       seller,
     } = this.props;
     const {
-      filters, products, totalProducts,
+      filters, products, total,
     } = this.state;
 
     return (
@@ -145,9 +133,9 @@ class PLP extends React.Component<Props, State> {
           seller={seller}
         />
         <EMLPagination
-          totalElements={totalProducts}
+          totalElements={total}
           limit={PLP.limit}
-          page={filters.offset}
+          page={filters.offset + 1}
           handleChangePagination={this.handleChangePagination}
         />
       </>

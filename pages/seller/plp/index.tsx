@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { PLPProductItem, ProductFilter } from 'interfaces/products/product';
+import { PLPProductItem, ProductFilter, ProductPaginator } from 'interfaces/products/product';
 import ProductService from 'services/product-service';
 import Head from 'next/head';
 import EMLBreadcrumb from 'components/breadcrumb/EMLBreadcrumb';
@@ -12,10 +12,10 @@ import NoResultProduct from 'components/noresult/NoResultProduct';
 interface Props {
   filters: ProductFilter,
   products: PLPProductItem[],
-  totalProducts: number
+  total: number
 }
 
-function PLPSellerPage({ filters, products, totalProducts }: Props) {
+function PLPSellerPage({ filters, products, total }: Props) {
   const breadcrumbPaths: BreadcrumbPath[] = [
     { name: 'Home', href: '/', icon: HomeIcon },
     { name: 'Product List Page' },
@@ -27,7 +27,7 @@ function PLPSellerPage({ filters, products, totalProducts }: Props) {
         <PLP
           filters={filters}
           products={products}
-          totalProducts={totalProducts}
+          total={total}
           seller
         />
       )
@@ -70,12 +70,12 @@ export async function getServerSideProps({ query }) {
     filters.priceMax = query.priceMax;
   }
 
-  filters.limit = 25;
+  filters.limit = 24;
 
-  let products = [];
+  let paginator: ProductPaginator;
 
   try {
-    products = await (new ProductService()).getAllProduct(filters);
+    paginator = await (new ProductService()).getAllProduct(filters);
   } catch (error) {
     console.error(error);
   }
@@ -83,8 +83,8 @@ export async function getServerSideProps({ query }) {
   return {
     props: {
       filters,
-      products,
-      totalProducts: 250,
+      products: paginator.products,
+      total: paginator.total,
     },
   };
 }

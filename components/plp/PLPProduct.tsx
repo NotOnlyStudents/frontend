@@ -117,7 +117,12 @@ function PLPProduct({ product, seller }: Props) {
         </CardContent>
         <CardActions>
           <Box display="flex" justifyContent="flex-end" width="100%">
-            <Button component={Link} size="small" color="primary" href={`/pdp/${product.id}`}>
+            <Button
+              component={Link}
+              size="small"
+              color="primary"
+              href={seller ? `/seller/pdp/${product.id}` : `/pdp/${product.id}`}
+            >
               See more details
             </Button>
             { renderAddToCartIfCustomer() }

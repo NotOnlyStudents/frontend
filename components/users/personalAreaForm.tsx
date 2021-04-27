@@ -3,7 +3,7 @@ import { Auth } from 'aws-amplify';
 import TextFieldValidation from 'components/validation/TextFieldValidation';
 import Link from 'next/link';
 import React from 'react';
-import PersonalAreaCompanyForm from './personalAreaCompanyForm';
+import SellerSide from './SellerSide';
 
 export interface Props {
   name?: string;
@@ -17,6 +17,7 @@ export interface State {
     email?: string,
     newName?: string,
     newSurname?: string
+    seller?: React.ReactElement
  }
 
 export default class PersonalAreaForm extends React.Component<Props, State> {
@@ -36,7 +37,10 @@ export default class PersonalAreaForm extends React.Component<Props, State> {
   async componentDidMount():Promise<void>  {
     try {
       const { attributes } = await Auth.currentAuthenticatedUser();
-      this.setState({ name: attributes.name, surname: attributes['custom:surname'], email: attributes.email });
+      const { signInUserSession } = await Auth.currentAuthenticatedUser();
+      this.setState({ name: attributes['custom:firstName'], surname: attributes['custom:lastName'], email: attributes.email });
+      if(signInUserSession.accessToken.payload["cognito:groups"][0]=="sellers")
+        this.setState({seller:<SellerSide />});
     } catch {
       document.location.href = '/';
     }
@@ -55,10 +59,10 @@ export default class PersonalAreaForm extends React.Component<Props, State> {
       } else {
         const user = await Auth.currentAuthenticatedUser();
         if (this.state.newName != '') {
-          await Auth.updateUserAttributes(user, { name: this.state.newName });
+          await Auth.updateUserAttributes(user, { 'custom:firstName': this.state.newName });
         }
         if (this.state.newSurname != '') {
-          await Auth.updateUserAttributes(user, { 'custom:surname': this.state.newSurname });
+          await Auth.updateUserAttributes(user, { 'custom:lastName': this.state.newSurname });
         }
         alert('Data updated successfully');
         document.location.href = '/';
@@ -87,11 +91,6 @@ export default class PersonalAreaForm extends React.Component<Props, State> {
 
 
 
-  //TO DO: VERIFY SELLER ACCOUNT
-  renderCompanyForm = (): React.ReactElement => (<PersonalAreaCompanyForm/>);
-
-
-
   render(): React.ReactElement {
     return (
       <>
@@ -115,7 +114,7 @@ export default class PersonalAreaForm extends React.Component<Props, State> {
             </Box>
           </Box>
         </form>
-        {this.renderCompanyForm()}
+        {this.state.seller}
         <Box paddingTop={4} >
           <Link href="/users/changePassword" >
             <Button variant="contained" color="secondary">Change your password!</Button>

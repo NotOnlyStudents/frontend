@@ -7,30 +7,25 @@ import AddPhotoAlternateIcon from '@material-ui/icons/AddPhotoAlternate';
 
 
 
-export interface Props {
-  name?: string;
+interface Props {
 }
 
-export interface State { 
-    companyName?: string,
-    companyDescription?: string,
-    logo?: string
- }
+interface State{}
 
-export default class PersonalAreaCompanyForm extends React.Component<Props, State> {
+export default class SellederSide extends React.Component<Props, State> {
   constructor(props) {
     super(props);
-    this.state = {
+  /*  this.state = {
       companyName: '',
       companyDescription: '',
       logo: '',
     };
     this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);*/
   }
 
 
-  handleChange = (event) => {
+ /* handleChange = (event) => {
     const nam = event.target.name;
     const val = event.target.value;
     this.setState({ [nam]: val });
@@ -43,12 +38,10 @@ export default class PersonalAreaCompanyForm extends React.Component<Props, Stat
   handleAddImage(event)
   {
     console.log(event.target.value);
-  }
+  }*/
 
-  render(): React.ReactElement {
-    return (
-    <>
-        <Box border={1} marginTop={4}>
+  /*
+          <Box border={1} marginTop={4}>
           <Box m={2}>
             <Typography> Company Name: </Typography> 
             <Typography> Company Description: </Typography>
@@ -96,6 +89,11 @@ export default class PersonalAreaCompanyForm extends React.Component<Props, Stat
         <Box borderBottom={1} width="100%"></Box>
         </form>
     </>
+   */
+
+  render(): React.ReactElement {
+    return (
+    <>Button 1 + Button 2</>
     );
   }
 }

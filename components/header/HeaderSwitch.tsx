@@ -29,8 +29,8 @@ export default class HeaderSwtich extends React.Component<Props,State>{
   
     async componentDidMount() {
       try {
-        const { attributes } = await Auth.currentAuthenticatedUser();
-        if(attributes.name=="seller")
+        const { signInUserSession } = await Auth.currentAuthenticatedUser();
+        if(signInUserSession.accessToken.payload["cognito:groups"][0]=="sellers")
           this.setState({header:<HeaderSeller signOut={signOut}/>});
         else
           this.setState({header:<HeaderCustomer signOut={signOut}/>});

@@ -93,10 +93,7 @@ function PLPFilter({ filter, seller, handleChangeFilter }: Props) {
           selectedEvidence={filter.evidence}
           handleChangeEvidence={handleChangeEvidence}
         />
-        <CheckboxAvailable
-          selectedAvailable={filter.available}
-          handleChangeAvailable={handleChangeAvailable}
-        />
+        { renderCheckboxAvailableIfSeller() }
       </Box>
       <Box display="flex">
         <TextfieldMinPrice

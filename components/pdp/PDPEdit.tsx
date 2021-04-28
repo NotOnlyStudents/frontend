@@ -14,11 +14,9 @@ import ProductServiceType from 'services/product-service/ProductService';
 import AutocompleteCategories from 'components/autocomplete/autocompleteCategories';
 import { Category } from 'interfaces/categories/category';
 import SnackbarProductNotValid, { productNotValidId } from 'components/snackbar/product/SnackbarProductNotValid';
+import { AlertState } from 'interfaces/alert';
+import { getViewProductLink } from 'lib/links';
 import PDPEvidence from './PDPEvidence';
-
-interface AlertState {
-  [key: string]: boolean
-}
 
 interface Props {
   router: NextRouter;
@@ -196,18 +194,14 @@ class PDPEdit extends React.Component<Props, State> {
 
       const ps: ProductServiceType = new ProductService();
 
-      console.log(product);
-
       if (!creation) {
         newProduct = await ps.editProduct(product.id, product);
       } else {
         newProduct = await ps.createProduct(product);
       }
 
-      console.log(newProduct);
-
       router.push({
-        pathname: `/seller/pdp/${newProduct.id}`,
+        pathname: getViewProductLink(newProduct.id, true),
       });
     } else {
       this.setState({ alert: { [productNotValidId]: true } });

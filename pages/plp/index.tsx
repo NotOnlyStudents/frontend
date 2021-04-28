@@ -7,31 +7,21 @@ import EMLBreadcrumb from 'components/breadcrumb/EMLBreadcrumb';
 import HomeIcon from '@material-ui/icons/Home';
 import { BreadcrumbPath } from 'interfaces/breadcrumb';
 import PLP from 'components/plp/PLP';
-import NoResultProduct from 'components/noresult/NoResultProduct';
 
 interface Props {
   filters: ProductFilter,
   products: PLPProductItem[],
-  total: number
+  total: number,
+  error: boolean
 }
 
-function PLPCustomerPage({ filters, products, total }: Props) {
+function PLPCustomerPage({
+  filters, products, total, error,
+}: Props) {
   const breadcrumbPaths: BreadcrumbPath[] = [
     { name: 'Home', href: '/', icon: HomeIcon },
     { name: 'Product List Page' },
   ];
-
-  const renderProductsList = () => (
-    products.length !== 0
-      ? (
-        <PLP
-          filters={filters}
-          products={products}
-          total={total}
-        />
-      )
-      : <NoResultProduct />
-  );
 
   return (
     <>
@@ -39,7 +29,12 @@ function PLPCustomerPage({ filters, products, total }: Props) {
         <title>Products List Page | EmporioLambda</title>
       </Head>
       <EMLBreadcrumb paths={breadcrumbPaths} />
-      { renderProductsList() }
+      <PLP
+        filters={filters}
+        products={products}
+        total={total}
+        error={error}
+      />
     </>
   );
 }
@@ -73,11 +68,16 @@ export async function getServerSideProps({ query }) {
   filters.limit = 24;
 
   let paginator: ProductPaginator;
+  let error = false;
 
   try {
     paginator = await (new ProductService()).getAllProduct(filters);
-  } catch (error) {
-    console.error(error);
+  } catch (e) {
+    paginator = {
+      products: [],
+      total: 0,
+    };
+    error = true;
   }
 
   return {
@@ -85,6 +85,7 @@ export async function getServerSideProps({ query }) {
       filters,
       products: paginator.products,
       total: paginator.total,
+      error,
     },
   };
 }

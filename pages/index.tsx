@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  Button, CardMedia, fade, Link, Typography,
+  CardMedia, fade, Link, Typography,
 } from '@material-ui/core';
 
 import { makeStyles } from '@material-ui/styles';
@@ -8,6 +8,7 @@ import { PLPProductItem, ProductFilter } from 'interfaces/products/product';
 import ProductService from 'services/product-service';
 import Head from 'next/head';
 import PLPList from 'components/plp/PLPList';
+import { getPLPLink } from 'lib/links';
 
 interface Props {
   products: PLPProductItem[];
@@ -30,6 +31,7 @@ const useStyles = makeStyles({
     backgroundColor: fade('#000', 0.5),
     color: 'white',
     width: '100%',
+    fontSize: '1.5em',
   },
   evidenceTitle: {
     padding: '1.5rem 0 1rem 0',
@@ -49,9 +51,6 @@ function Home({ products }: Props) : React.ReactElement {
         >
           Featured products
         </Typography>
-        <Button component={Link} size="small" color="primary" href="/plp">
-          Hurry up to see all the products
-        </Button>
         <PLPList products={products} />
       </>
     )
@@ -65,9 +64,18 @@ function Home({ products }: Props) : React.ReactElement {
       <div className={classes.root}>
         <CardMedia component="img" image="/images/home.jpg" />
         <Typography className={classes.description} component="span" align="center">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Reprehenderit ipsa
-          impedit explicabo officiis necessitatibus at cum, rerum ea perferendis
-          consequuntur provident praesentium eligendi tenetur nisi ipsum et officia ullam. A.
+          Science fiction, novels, fairy tales, fantasy and many other literary genres.
+          <br />
+          Here at EmporioLambda you can find many books for all tastes and people.
+          <br />
+          Start searching in our large library, or
+          <Link
+            href={getPLPLink()}
+            color="inherit"
+            underline="always"
+          >
+            browse it aimlessly.
+          </Link>
         </Typography>
       </div>
       { renderProductsInEvidenceList() }

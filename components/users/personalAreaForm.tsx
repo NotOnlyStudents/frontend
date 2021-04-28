@@ -94,7 +94,6 @@ export default class PersonalAreaForm extends React.Component<Props, State> {
   render(): React.ReactElement {
     return (
       <>
-        <Typography variant="h3" component="h2">Personal Area:</Typography>
         <Box border={1} marginTop={4}>
           <Box m={2}>
           <Typography> {this.state.name} {this.state.surname}</Typography> 
@@ -117,11 +116,11 @@ export default class PersonalAreaForm extends React.Component<Props, State> {
         {this.state.seller}
         <Box paddingTop={4} >
           <Link href="/users/changePassword" >
-            <Button variant="contained" color="secondary">Change your password!</Button>
+            <Button variant="contained" color="primary">Change your password!</Button>
           </Link>
           <br />
           <br />
-          <Button variant="contained" color="secondary" name="deleteAccountButton" onClick={this.deleteUser}>Delete Account</Button>
+          <Button variant="contained" color="primary" name="deleteAccountButton" onClick={this.deleteUser}>Delete Account</Button>
         </Box>
       </>
     );

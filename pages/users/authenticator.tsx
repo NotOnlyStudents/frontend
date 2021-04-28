@@ -20,11 +20,25 @@ function Authenticator() {
     }
   }), []);
 
+  /*
+  const signUpFields = [
+    {
+
+      type: "email",
+      label: "custom_label",
+      placeholder: "Custom placeholder",
+      hint: null,
+      required: true,
+    },
+  ];*/
+
   return (
     <AmplifyAuthenticator usernameAlias="email">
       <AmplifySignUp
+        slot="sign-up"
+        usernameAlias="email"
         formFields={[
-          { type: 'name', placeholder: 'Enter your first name', label: 'First Name *' },
+          { type: 'custom:firstName', placeholder: 'Enter your first name', label: 'First Name *' },
           { type: 'custom:lastName', placeholder: 'Enter your last name', label: 'Last Name *' },
           { type: 'email' },
           { type: 'password' },

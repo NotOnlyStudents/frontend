@@ -93,7 +93,12 @@ export default class SellederSide extends React.Component<Props, State> {
 
   render(): React.ReactElement {
     return (
-    <>Button 1 + Button 2</>
+    <Box display="flex" marginTop={4}>
+      <Button variant="contained" color="primary" href="/plp">Modify your products</Button>
+      <Box marginLeft={2}>
+        <Button variant="contained" color="primary" >Modify your categories</Button>
+      </Box>
+    </Box>
     );
   }
 }

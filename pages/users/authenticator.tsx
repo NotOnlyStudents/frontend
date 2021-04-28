@@ -23,10 +23,8 @@ function Authenticator() {
   return (
     <AmplifyAuthenticator usernameAlias="email">
       <AmplifySignUp
-        slot="sign-up"
-        usernameAlias="email"
         formFields={[
-          { type: 'custom:firstName', placeholder: 'Enter your first name', label: 'First Name *' },
+          { type: 'name', placeholder: 'Enter your first name', label: 'First Name *' },
           { type: 'custom:lastName', placeholder: 'Enter your last name', label: 'Last Name *' },
           { type: 'email' },
           { type: 'password' },

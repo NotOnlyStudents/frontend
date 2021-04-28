@@ -34,7 +34,10 @@ function EMLSnackbar({
       autoHideDuration={duration}
       onClose={onClose}
     >
-      <Alert severity={severity}>
+      <Alert
+        severity={severity}
+        onClose={() => {}}
+      >
         {children}
       </Alert>
     </Snackbar>

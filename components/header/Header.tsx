@@ -101,7 +101,10 @@ function Header({ authState, username }: Props): React.ReactElement {
         delete newPage.query.text;
       }
 
+      delete newPage.query.offset;
+
       Router.push(newPage);
+      // Router.reload();
     }
   };
 

@@ -79,17 +79,17 @@ function Home({ products }: Props) : React.ReactElement {
 export async function getServerSideProps() {
   const filters: ProductFilter = { evidence: true };
 
-  let products = [];
+  let paginator;
 
   try {
-    products = await (new ProductService()).getAllProduct(filters);
+    paginator = await (new ProductService()).getAllProduct(filters);
   } catch (error) {
     console.log(error);
   }
 
   return {
     props: {
-      products,
+      products: paginator.products,
     },
   };
 }

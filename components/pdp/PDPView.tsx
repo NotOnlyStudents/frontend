@@ -11,7 +11,6 @@ import React from 'react';
 import { Edit } from '@material-ui/icons';
 import { NextRouter, useRouter } from 'next/router';
 import PriceItem from 'components/price-item/PriceItem';
-import ProductService from 'services/product-service';
 import FillQuantity from 'components/quantity/FillQuantity';
 import ImageSwitcher from 'components/image-switcher/ImageSwitcher';
 import SnackbarChangeEvidenceSuccess, { changeEvidenceSuccessId } from 'components/snackbar/evidence/SnackbarChangeEvidenceSuccess';
@@ -20,6 +19,7 @@ import SnackbarChangeQuantityError, { changeQuantityErrorId } from 'components/s
 import SnackbarChangeQuantitySuccess, { changeQuantitySuccessId } from 'components/snackbar/quantity/SnackbarChangeQuantitySuccess';
 import SnackbarAddToCartSuccess, { addToCartSuccessId } from 'components/snackbar/cart/SnackbarAddToCartSuccess';
 import SnackbarAddToCartError, { addToCartErrorId } from 'components/snackbar/cart/SnackbarAddToCartError';
+import ProductService from 'services/product-service';
 import PDPRemove from './PDPRemove';
 import PDPEvidence from './PDPEvidence';
 
@@ -85,21 +85,19 @@ function PDPView({ product, edit }: Props) : React.ReactElement {
 
   const handleChangeEvidance = async (ev: boolean) => {
     try {
-      if (ev) {
-        await (new ProductService()).removeFromEvidence(product.id);
-      } else {
-        await (new ProductService()).addToEvidence(product.id);
-      }
+      console.log(ev);
+      await (new ProductService()).editProduct(product.id, { ...product, evidence: ev });
       setEvidence(ev);
       openAlert(changeEvidenceSuccessId);
     } catch (error) {
+      console.error(error);
       openAlert(changeEvidenceErrorId);
     }
   };
 
   const handleQuantityChange = async (q: number) => {
     try {
-      await (new ProductService()).editProduct(product.id, { quantity: q });
+      await (new ProductService()).editProduct(product.id, { ...product, quantity: q });
       setQuantity(q);
       openAlert(changeQuantitySuccessId);
     } catch (error) {

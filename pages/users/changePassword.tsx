@@ -2,17 +2,25 @@ import React from 'react';
 import { CognitoUser } from '@aws-amplify/auth';
 import { withSSRContext } from 'aws-amplify';
 import { AuthState } from '@aws-amplify/ui-components';
-import Layout from 'components/Layout';
 import 'components/users/personalAreaForm';
 import FormPassword from 'components/users/changePasswordForm';
+import { BreadcrumbPath } from 'interfaces/breadcrumb';
+import HomeIcon from '@material-ui/icons/Home';
+import EMLBreadcrumb from 'components/breadcrumb/EMLBreadcrumb';
 
-export default function changePassowrd(props) {
+function changePassowrd() {
+  const breadcrumbPaths:BreadcrumbPath[] = [
+    { name: 'Home', href: '/', icon: HomeIcon },
+    { name: 'Personal Area', href:'/users/personalArea' },
+    { name: 'Change Password'}
+  ];
   return (
-    <Layout _authState={props._authState} _username={props._username}>
+    <>
       <div id="root">
+        <EMLBreadcrumb paths={breadcrumbPaths} />
         <FormPassword />
       </div>
-    </Layout>
+    </>
   );
 }
 
@@ -34,3 +42,5 @@ export async function getServerSideProps(context) {
     };
   }
 }
+
+export default changePassowrd;

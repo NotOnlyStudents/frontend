@@ -91,8 +91,6 @@ function PLPProduct({ product, seller }: Props) {
     : <></>
   );
 
-  const getHrefPDP = () => (seller ? `/seller/pdp/${product.id}` : `/pdp/${product.id}`);
-
   return (
     <>
       <Card className={classes.root}>
@@ -132,7 +130,6 @@ function PLPProduct({ product, seller }: Props) {
           </Box>
         </CardActions>
       </Card>
-
       <SnackbarAddToCartSuccess
         productName={product.name}
         open={alert[addToCartSuccessId]}

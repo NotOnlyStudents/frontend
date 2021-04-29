@@ -16,6 +16,7 @@ import { getHomeLink, getPLPLink } from 'lib/links';
 import HeaderNotAuthenticated from './HeaderNotAuthenticated';
 import HeaderSeller from './HeaderSeller';
 import HeaderCustomer from './HeaderCustomer';
+import HeaderSwitch from './HeaderSwitch';
 
 interface Props {
   authState: AuthState;
@@ -78,24 +79,13 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 function Header({ authState, username }: Props): React.ReactElement {
-  const sellerUsername = 'seller';
+  //const sellerUsername = 'seller';
   const classes = useStyles();
   const router: NextRouter = useRouter();
 
   const [searchText, setSearchText] = useState(router.query.text || '');
 
-  const renderHeader = (): React.ReactElement => {
-    const isSigned: boolean = authState === AuthState.SignedIn;
-    let header: React.ReactElement;
 
-    if (isSigned) {
-      header = username === sellerUsername ? (<HeaderSeller />) : (<HeaderCustomer />);
-    } else {
-      header = <HeaderNotAuthenticated />;
-    }
-
-    return header;
-  };
 
   const handleSearchEnter = (
     event: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -148,7 +138,7 @@ function Header({ authState, username }: Props): React.ReactElement {
           </div>
         </div>
         <div>
-          {renderHeader()}
+          <HeaderSwitch />
         </div>
       </Toolbar>
     </AppBar>

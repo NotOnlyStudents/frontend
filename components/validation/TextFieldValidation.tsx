@@ -4,6 +4,7 @@ import Validator from 'validatorjs';
 
 interface Props {
   id?: string,
+  name?: string,
   label?: string,
   placeholder?: string,
   helperText?: string,

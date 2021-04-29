@@ -34,7 +34,7 @@ function PLPSellerPage({
         filters={filters}
         products={products}
         total={total}
-        seller
+        seller={true}
         error={error}
       />
     </>

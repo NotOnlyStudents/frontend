@@ -1,59 +1,56 @@
 import React from 'react';
 
-import { PLPProductItem, ProductFilter, SortType } from 'interfaces/products/product';
+import {
+  PLPProductItem, ProductFilter, ProductPaginator, SortType,
+} from 'interfaces/products/product';
 import ProductService from 'services/product-service';
 import PLPFilter from 'components/plp/PLPFilter';
 import EMLPagination from 'components/pagination/EMLPagination';
 import PLPList from 'components/plp/PLPList';
 import { NextRouter, withRouter } from 'next/router';
+import NoResultProduct from 'components/noresult/NoResultProduct';
+import { AlertState } from 'interfaces/alert';
+import SnackbarErrorRetrievingData, { errorRetrievingDataId } from 'components/snackbar/common-snackbar/SnackbarErrorRetrievingData';
 
 interface Props {
   router: NextRouter,
   filters: ProductFilter,
   products: PLPProductItem[],
-  totalProducts: number,
-  seller?: boolean
+  total: number,
+  seller?: boolean,
+  error?: boolean
 }
 
 interface State {
   filters: ProductFilter,
   products: PLPProductItem[],
-  totalProducts: number
+  total: number,
+  alert: AlertState
 }
 
 class PLP extends React.Component<Props, State> {
-  public static readonly limit = 25;
+  public static readonly limit = 24;
 
   constructor(props: Props) {
     super(props);
 
     this.state = {
       filters: {
-        offset: 1,
+        offset: 0,
         categories: [],
         available: false,
         evidence: false,
         priceMin: 0,
         priceMax: 0,
         sort: SortType.alphabetical,
+        ...props.filters,
       },
-      products: [],
-      totalProducts: 0,
+      products: props.products,
+      total: props.total,
+      alert: {
+        [errorRetrievingDataId]: props.error,
+      },
     };
-  }
-
-  componentDidMount() {
-    this.setState((state: State) => {
-      const { filters, products, totalProducts } = this.props;
-
-      const newState: State = {
-        filters: { ...state.filters, ...filters },
-        products: [...state.products, ...products],
-        totalProducts,
-      };
-
-      return newState;
-    });
   }
 
   handleChangeFilters = async (filters: ProductFilter) => {
@@ -97,38 +94,93 @@ class PLP extends React.Component<Props, State> {
       delete query.sort;
     }
 
+    delete query.offset;
+
     router.push({
       pathname: '',
       query,
-    }, undefined, { shallow: true });
+    });
 
     this.setState({ filters });
-    this.fetchAllFilteredProducts();
+
+    this.fetchAllProducts(query);
+
+    // setTimeout(() => { router.reload(); }, 1000);
   };
 
   handleChangePagination = (offset: number) => {
     const { router } = this.props;
 
+    const query = { ...router.query, offset: offset - 1 };
+
     router.push({
       pathname: '',
-      query: { ...router.query, offset },
+      query,
     });
-    this.setState((state: State) => {
+    this.setState((state) => {
       const newState: State = state;
 
-      newState.filters.offset = offset;
+      newState.filters.offset = offset - 1;
 
       return newState;
     });
-    this.fetchAllFilteredProducts();
+
+    this.fetchAllProducts(query);
+
+    // setTimeout(() => { router.reload(); }, 1000);
   };
 
-  fetchAllFilteredProducts = () => {
-    // this.setState({ loading: true });
+  fetchAllProducts = async (query) => {
+    let paginator: ProductPaginator;
 
-    // const products = await getAllProduct(this.state.filters);
+    try {
+      paginator = await (new ProductService()).getAllProduct(query);
+    } catch (error) {
+      paginator = {
+        products: [],
+        total: 0,
+      };
+      this.openAlert(errorRetrievingDataId);
+    }
 
-    // this.setState(() => ({ products, loading: false }));
+    this.setState({
+      products: paginator.products,
+      total: paginator.total,
+    });
+  };
+
+  changeAlert = (id: string, error: boolean) => {
+    this.setState((state: State) => {
+      const newState = state;
+
+      newState.alert[id] = error;
+
+      return newState;
+    });
+  };
+
+  handleCloseAlert = (id: string) => {
+    this.changeAlert(id, false);
+  };
+
+  openAlert = (id: string) => {
+    this.changeAlert(id, true);
+  };
+
+  renderPLPListIfThereAreProducts = () => {
+    const { seller } = this.props;
+    const { products } = this.state;
+
+    return (
+      products.length !== 0
+        ? (
+          <PLPList
+            products={products}
+            seller={seller}
+          />
+        )
+        : <NoResultProduct />
+    );
   };
 
   render(): React.ReactElement {
@@ -136,7 +188,7 @@ class PLP extends React.Component<Props, State> {
       seller,
     } = this.props;
     const {
-      filters, products, totalProducts,
+      filters, total, alert,
     } = this.state;
 
     return (
@@ -146,15 +198,16 @@ class PLP extends React.Component<Props, State> {
           handleChangeFilter={this.handleChangeFilters}
           seller={seller}
         />
-        <PLPList
-          products={products}
-          seller={seller}
-        />
+        {this.renderPLPListIfThereAreProducts()}
         <EMLPagination
-          totalElements={totalProducts}
+          totalElements={total}
           limit={PLP.limit}
-          page={filters.offset}
+          page={filters.offset + 1}
           handleChangePagination={this.handleChangePagination}
+        />
+        <SnackbarErrorRetrievingData
+          open={alert[errorRetrievingDataId]}
+          handleClose={this.handleCloseAlert}
         />
       </>
     );

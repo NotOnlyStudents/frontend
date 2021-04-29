@@ -34,12 +34,21 @@ function Layout({ children, _authState, _username }: Props) {
     [],
   );
 
+  function renderChildren(children)
+  { 
+    if(children.type.name!="Authenticator")
+    {
+      return (<Header
+      authState={authState}
+      username={username}
+      />);
+    }
+  }
+
+
   return (
     <>
-      <Header
-        authState={authState}
-        username={username}
-      />
+      {renderChildren(children)}
       <main>
         {children}
       </main>

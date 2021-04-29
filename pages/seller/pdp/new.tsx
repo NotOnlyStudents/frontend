@@ -4,11 +4,12 @@ import React from 'react';
 import HomeIcon from '@material-ui/icons/Home';
 import EMLBreadcrumb from 'components/breadcrumb/EMLBreadcrumb';
 import { Product } from 'interfaces/products/product';
+import { getHomeLink, getPLPLink } from 'lib/links';
 
 function PDPNewPage() {
   const breadcrumbPaths: BreadcrumbPath[] = [
-    { name: 'Home', href: '/', icon: HomeIcon },
-    { name: 'Product List Page', href: '/plp' },
+    { name: 'Home', href: getHomeLink(true), icon: HomeIcon },
+    { name: 'Product List Page', href: getPLPLink(true) },
     { name: 'New' },
   ];
 

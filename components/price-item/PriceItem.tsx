@@ -26,7 +26,7 @@ const useStyles = makeStyles({
 function PriceItem({ price, quantity, discount } : Props) {
   const classes = useStyles();
 
-  const calculateDiscount = (p) => ((p - (p * discount) / (100)) * quantity).toFixed(2);
+  const calculateDiscount = (Math.round((price - (price * discount) / (100)) * 100) / 100).toFixed(2);
 
   return (
     <Box display="flex" className={classes.root}>
@@ -39,7 +39,7 @@ function PriceItem({ price, quantity, discount } : Props) {
           ? (
             <>
               <Typography className={classes.discount}>
-                {calculateDiscount(price)}
+                { calculateDiscount }
                 €
               </Typography>
               <Typography className={classes.discount}>

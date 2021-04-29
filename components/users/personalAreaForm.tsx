@@ -36,6 +36,7 @@ export default class PersonalAreaForm extends React.Component<Props, State> {
 
   async componentDidMount():Promise<void>  {
     try {
+      console.log(Auth.currentAuthenticatedUser());
       const { attributes } = await Auth.currentAuthenticatedUser();
       const { signInUserSession } = await Auth.currentAuthenticatedUser();
       this.setState({ name: attributes['custom:firstName'], surname: attributes['custom:lastName'], email: attributes.email });
@@ -70,6 +71,12 @@ export default class PersonalAreaForm extends React.Component<Props, State> {
     } catch {
       alert('There was a problem with the server');
     }
+   /* let user = await Auth.currentAuthenticatedUser();
+    let result = await Auth.updateUserAttributes(user, {
+      'email': 'matteo16.martini@gmail.com',
+    });
+  console.log(result);*/
+    
   }
 
 
@@ -89,7 +96,9 @@ export default class PersonalAreaForm extends React.Component<Props, State> {
     }
   }
 
-
+/*  <Box paddingLeft={2}>
+    <TextField label="Change your Email:" type="text" name="email" onChange={this.handleChange}/> 
+    </Box> */
 
   render(): React.ReactElement {
     return (
@@ -113,8 +122,7 @@ export default class PersonalAreaForm extends React.Component<Props, State> {
             </Box>
           </Box>
         </form>
-        {this.state.seller}
-        <Box paddingTop={4} >
+        <Box paddingTop={4} paddingBottom={2} borderBottom={1}>
           <Link href="/users/changePassword" >
             <Button variant="contained" color="primary">Change your password!</Button>
           </Link>
@@ -122,6 +130,7 @@ export default class PersonalAreaForm extends React.Component<Props, State> {
           <br />
           <Button variant="contained" color="primary" name="deleteAccountButton" onClick={this.deleteUser}>Delete Account</Button>
         </Box>
+        {this.state.seller}
       </>
     );
   }

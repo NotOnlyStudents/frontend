@@ -9,6 +9,7 @@ import ProductService from 'services/product-service';
 import Head from 'next/head';
 import PLPList from 'components/plp/PLPList';
 import { getPLPLink } from 'lib/links';
+import HomeSwitch from 'components/home/homeSwitch';
 
 interface Props {
   products: PLPProductItem[];
@@ -42,20 +43,6 @@ const useStyles = makeStyles({
 function Home({ products }: Props) : React.ReactElement {
   const classes = useStyles();
 
-  const renderProductsInEvidenceList = () => (products.length !== 0
-    ? (
-      <>
-        <Typography
-          className={classes.evidenceTitle}
-          variant="h4"
-          component="h2"
-        >
-          Featured products
-        </Typography>
-        <PLPList products={products} />
-      </>
-    )
-    : <></>);
 
   return (
     <>
@@ -83,7 +70,7 @@ function Home({ products }: Props) : React.ReactElement {
           </Link>
         </Typography>
       </div>
-      { renderProductsInEvidenceList() }
+      <HomeSwitch products={products} classes={classes}/>
     </>
   );
 }

@@ -79,7 +79,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 function Header({ authState, username }: Props): React.ReactElement {
-  const sellerUsername = 'seller';
+  //const sellerUsername = 'seller';
   const classes = useStyles();
   const router: NextRouter = useRouter();
 

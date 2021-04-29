@@ -34,9 +34,6 @@ interface State{
                 >
                   Featured products
                 </Typography>
-                <Button component={Link} size="small" color="primary" href="/plp">
-                  Hurry up to see all the products
-                </Button>
                 <PLPList products={this.props.products} />
               </>
             )

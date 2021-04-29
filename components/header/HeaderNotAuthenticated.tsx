@@ -23,7 +23,7 @@ function HeaderNotAuthenticated(): React.ReactElement {
           <IconButton href="/cart" className={classes.desktopIcon}>
             <ShoppingCartIcon />
           </IconButton>,
-          <IconButton href="/" className={classes.desktopIcon}>
+          <IconButton href="/users/authenticator" className={classes.desktopIcon}>
             <LoginIcon />
           </IconButton>,
         ]}
@@ -32,7 +32,7 @@ function HeaderNotAuthenticated(): React.ReactElement {
             <ShoppingCartIcon />
             Cart
           </HeaderMobileLink>,
-          <HeaderMobileLink href="/">
+          <HeaderMobileLink href="/users/authenticator">
             <LoginIcon />
             Login
           </HeaderMobileLink>,

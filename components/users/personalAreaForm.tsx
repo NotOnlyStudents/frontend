@@ -123,7 +123,7 @@ export default class PersonalAreaForm extends React.Component<Props, State> {
             </Box>
           </Box>
         </form>
-        <Box paddingTop={4} paddingBottom={2} borderBottom={1}>
+        <Box paddingTop={4} paddingBottom={2}>
           <Link href="/users/changePassword" >
             <Button variant="contained" color="primary">Change your password!</Button>
           </Link>

@@ -1,10 +1,11 @@
 import {
-  IconButton, makeStyles, Link, Icon,
+  IconButton, makeStyles,
 } from '@material-ui/core';
 import LoginIcon from 'components/icons/LoginIcon';
 import React from 'react';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import HeaderMenuMobile from './HeaderMenuMobile';
+import HeaderMobileLink from './HeaderMobileLink';
 
 const useStyles = makeStyles({
   desktopIcon: {
@@ -27,14 +28,14 @@ function HeaderNotAuthenticated(): React.ReactElement {
           </IconButton>,
         ]}
         mobileMenu={[
-          <Link href="/cart">
+          <HeaderMobileLink href="/cart">
             <ShoppingCartIcon />
             Cart
-          </Link>,
-          <Link href="/" underline="none">
+          </HeaderMobileLink>,
+          <HeaderMobileLink href="/">
             <LoginIcon />
             Login
-          </Link>,
+          </HeaderMobileLink>,
         ]}
       />
     </>

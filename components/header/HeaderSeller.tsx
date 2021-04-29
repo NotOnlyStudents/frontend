@@ -1,8 +1,9 @@
 import React from 'react';
 
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
-import { Button, IconButton, makeStyles } from '@material-ui/core';
+import { IconButton, makeStyles } from '@material-ui/core';
 import HeaderMenuMobile from './HeaderMenuMobile';
+import HeaderMobileLink from './HeaderMobileLink';
 
 const useStyles = makeStyles({
   desktopIcon: {
@@ -22,10 +23,10 @@ function HeaderSeller() : React.ReactElement {
           </IconButton>,
         ]}
         mobileMenu={[
-          <Button href="/" disableRipple>
+          <HeaderMobileLink href="/">
             <ExitToAppIcon aria-label="logout" />
             Logout
-          </Button>,
+          </HeaderMobileLink>,
         ]}
       />
     </>

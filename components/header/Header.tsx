@@ -12,6 +12,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import SearchIcon from '@material-ui/icons/Search';
 import Router, { NextRouter, useRouter } from 'next/router';
 import LogoIcon from 'components/icons/LogoIcon';
+import { getHomeLink, getPLPLink } from 'lib/links';
 import HeaderNotAuthenticated from './HeaderNotAuthenticated';
 import HeaderSeller from './HeaderSeller';
 import HeaderCustomer from './HeaderCustomer';
@@ -101,7 +102,7 @@ function Header({ authState, username }: Props): React.ReactElement {
   ) => {
     if (event.key === 'Enter') {
       const newPage = {
-        pathname: '/plp',
+        pathname: getPLPLink(),
         query: router.query,
       };
 
@@ -111,7 +112,11 @@ function Header({ authState, username }: Props): React.ReactElement {
         delete newPage.query.text;
       }
 
-      Router.push(newPage);
+      delete newPage.query.offset;
+
+      router.push(newPage);
+
+      setTimeout(() => { router.reload(); }, 1000);
     }
   };
 
@@ -119,7 +124,7 @@ function Header({ authState, username }: Props): React.ReactElement {
     <AppBar position="sticky">
       <Toolbar className={classes.container}>
         <Typography variant="h6" component="h1">
-          <Link className={classes.link} href="/">
+          <Link className={classes.link} href={getHomeLink()}>
             <LogoIcon />
             EmporioLambda
           </Link>

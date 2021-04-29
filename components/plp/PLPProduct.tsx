@@ -16,6 +16,7 @@ import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart';
 import PriceItem from 'components/price-item/PriceItem';
 import SnackbarAddToCartSuccess, { addToCartSuccessId } from 'components/snackbar/cart/SnackbarAddToCartSuccess';
 import SnackbarAddToCartError, { addToCartErrorId } from 'components/snackbar/cart/SnackbarAddToCartError';
+import { getViewProductLink } from 'lib/links';
 
 interface Props {
   product: PLPProductItem
@@ -119,7 +120,12 @@ function PLPProduct({ product, seller }: Props) {
         </CardContent>
         <CardActions>
           <Box display="flex" justifyContent="flex-end" width="100%">
-            <Button component={Link} size="small" color="primary" href={getHrefPDP()}>
+            <Button
+              component={Link}
+              size="small"
+              color="primary"
+              href={getViewProductLink(product.id, seller)}
+            >
               See more details
             </Button>
             { renderAddToCartIfCustomer() }

@@ -1,30 +1,38 @@
 import HTTPRequest from 'lib/HTTPRequest';
 import {
-  PLPProductItem, Product, ProductFilter,
+  PLPProductItem, Product, ProductFilter, ProductPaginator,
 } from 'interfaces/products/product';
 import queryString from 'query-string';
 import {
-  ProductsDELETERequest, ProductsGETRequest, ProductsPATCHRequest, ProductsPOSTRequest,
+  CreateProductRequest,
+  DeleteProductRequest, EditProductRequest, GetAllProductsRequest, GetOneProductRequest,
 } from 'interfaces/products/product-request';
+import { productToPLPProductItem } from 'interfaces/products/product-converter';
 import ProductService from './ProductService';
 
 class ProductServiceFetch implements ProductService {
-  getAllProduct = async (params?: ProductFilter): Promise<PLPProductItem[]> => {
+  getAllProduct = async (params?: ProductFilter): Promise<ProductPaginator> => {
     const req: HTTPRequest = new HTTPRequest('products');
     let query: string = queryString.stringify(params);
 
     if (query) { query = `?${query}`; }
 
-    const res: ProductsGETRequest = await req.get<ProductsGETRequest>(query);
+    const res: GetAllProductsRequest = await req.get<GetAllProductsRequest>(query);
 
-    return res.data;
+    const paginator: ProductPaginator = {
+      products: res.data.products.map((product) => productToPLPProductItem(product)),
+      total: res.data.total,
+    };
+
+    return paginator;
   };
 
   getProductById = async (id: string): Promise<Product> => {
-    const req: HTTPRequest = new HTTPRequest(`prodcuts/${id}`);
-    const res: Product = await req.get<Product>();
+    const req: HTTPRequest = new HTTPRequest(`products/${id}`);
 
-    return res;
+    const res: GetOneProductRequest = await req.get<GetOneProductRequest>();
+
+    return res.data.token.data;
   };
 
   createProduct = async (product: Product): Promise<Product> => {
@@ -32,7 +40,7 @@ class ProductServiceFetch implements ProductService {
 
     const body: string = JSON.stringify(product);
 
-    const res: ProductsPOSTRequest = await req.post<ProductsPOSTRequest>(body);
+    const res: CreateProductRequest = await req.post<CreateProductRequest>(body);
 
     return res.data;
   };
@@ -42,7 +50,11 @@ class ProductServiceFetch implements ProductService {
 
     const body: string = JSON.stringify(product);
 
-    const res: ProductsPATCHRequest = await req.patch<ProductsPATCHRequest>(body);
+    console.log(product);
+
+    const res: EditProductRequest = await req.patch<EditProductRequest>(body);
+
+    console.log(res);
 
     return res.data;
   };
@@ -50,7 +62,7 @@ class ProductServiceFetch implements ProductService {
   deleteProduct = async (id: string) : Promise<void> => {
     const req: HTTPRequest = new HTTPRequest(`products/${id}`);
 
-    await req.delete<ProductsDELETERequest>();
+    await req.delete<DeleteProductRequest>();
   };
 
   addToEvidence = async (id: string): Promise<void> => {
@@ -58,7 +70,7 @@ class ProductServiceFetch implements ProductService {
 
     const body: string = JSON.stringify({ evidence: true });
 
-    await req.patch<ProductsPATCHRequest>(body);
+    await req.patch<EditProductRequest>(body);
   };
 
   removeFromEvidence = async (id: string): Promise<void> => {
@@ -66,7 +78,7 @@ class ProductServiceFetch implements ProductService {
 
     const body: string = JSON.stringify({ evidence: false });
 
-    await req.patch<ProductsPATCHRequest>(body);
+    await req.patch<EditProductRequest>(body);
   };
 }
 

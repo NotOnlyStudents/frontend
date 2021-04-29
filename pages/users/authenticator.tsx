@@ -10,16 +10,27 @@ import { useAuthContext } from 'lib/authContext';
 
 function Authenticator() {
   const { setAuthState, setUsername } = useAuthContext();
-  const router = useRouter();
+  //const router = useRouter();
 
   useEffect(() => onAuthUIStateChange((nextAuthState: AuthState, authData: CognitoUser) => {
     if (nextAuthState === AuthState.SignedIn) {
       setAuthState(nextAuthState);
       setUsername(authData.getUsername());
-
-      router.replace('/');
+      document.location.href = '/';
     }
   }), []);
+
+  /*
+  const signUpFields = [
+    {
+
+      type: "email",
+      label: "custom_label",
+      placeholder: "Custom placeholder",
+      hint: null,
+      required: true,
+    },
+  ];*/
 
   return (
     <AmplifyAuthenticator usernameAlias="email">
@@ -27,8 +38,8 @@ function Authenticator() {
         slot="sign-up"
         usernameAlias="email"
         formFields={[
-          { type: 'name', placeholder: 'Enter your first name', label: 'First Name *' },
-          { type: 'custom:surname', placeholder: 'Enter your last name', label: 'Last Name *' },
+          { type: 'custom:firstName', placeholder: 'Enter your first name', label: 'First Name *' },
+          { type: 'custom:lastName', placeholder: 'Enter your last name', label: 'Last Name *' },
           { type: 'email' },
           { type: 'password' },
         ]}

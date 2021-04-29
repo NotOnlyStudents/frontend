@@ -16,11 +16,12 @@ interface Props {
   handleChangeIndex: (value: number) => void,
   handleAddNewAddress: (address: Address, index?: number) => void,
   selectedAddress: number,
+  handleRemoveOneAddress: (index: number) => void,
 }
 
 function AddressList(
   {
-    addresses, handleAddNewAddress, handleChangeIndex, selectedAddress,
+    addresses, handleAddNewAddress, handleChangeIndex, selectedAddress, handleRemoveOneAddress,
   }: Props,
 ) : React.ReactElement {
   const [open, setOpen] = React.useState(false);
@@ -54,7 +55,12 @@ function AddressList(
   const renderAllAddress = (): React.ReactElement[] => addresses.map(
     (address: Address, index: number): React.ReactElement => (
       <Box key={address.id}>
-        <AddressView address={address} handleAddNewAddress={handleCloseDialog} index={index} />
+        <AddressView
+          address={address}
+          handleAddNewAddress={handleCloseDialog}
+          index={index}
+          handleRemoveAddress={handleRemoveOneAddress}
+        />
       </Box>
     ),
   );

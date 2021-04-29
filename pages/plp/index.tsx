@@ -1,37 +1,27 @@
 import React from 'react';
 
-import { PLPProductItem, ProductFilter } from 'interfaces/products/product';
+import { PLPProductItem, ProductFilter, ProductPaginator } from 'interfaces/products/product';
 import ProductService from 'services/product-service';
 import Head from 'next/head';
 import EMLBreadcrumb from 'components/breadcrumb/EMLBreadcrumb';
 import HomeIcon from '@material-ui/icons/Home';
 import { BreadcrumbPath } from 'interfaces/breadcrumb';
 import PLP from 'components/plp/PLP';
-import NoResult from 'components/noresult/NoResult';
 
 interface Props {
   filters: ProductFilter,
   products: PLPProductItem[],
-  totalProducts: number
+  total: number,
+  error: boolean
 }
 
-function PLPCustomerPage({ filters, products, totalProducts }: Props) {
+function PLPCustomerPage({
+  filters, products, total, error,
+}: Props) {
   const breadcrumbPaths: BreadcrumbPath[] = [
     { name: 'Home', href: '/', icon: HomeIcon },
     { name: 'Product List Page' },
   ];
-
-  const renderProductsList = () => (
-    products.length !== 0
-      ? (
-        <PLP
-          filters={filters}
-          products={products}
-          totalProducts={totalProducts}
-        />
-      )
-      : <NoResult />
-  );
 
   return (
     <>
@@ -39,7 +29,12 @@ function PLPCustomerPage({ filters, products, totalProducts }: Props) {
         <title>Products List Page | EmporioLambda</title>
       </Head>
       <EMLBreadcrumb paths={breadcrumbPaths} />
-      { renderProductsList() }
+      <PLP
+        filters={filters}
+        products={products}
+        total={total}
+        error={error}
+      />
     </>
   );
 }
@@ -68,22 +63,29 @@ export async function getServerSideProps({ query }) {
   if (query.priceMax) {
     filters.priceMax = query.priceMax;
   }
+  filters.offset = parseInt(query.offset) || 0;
 
-  filters.limit = 25;
+  filters.limit = 24;
 
-  let products = [];
+  let paginator: ProductPaginator;
+  let error = false;
 
   try {
-    products = await (new ProductService()).getAllProduct(filters);
-  } catch (error) {
-    console.error(error);
+    paginator = await (new ProductService()).getAllProduct(filters);
+  } catch (e) {
+    paginator = {
+      products: [],
+      total: 0,
+    };
+    error = true;
   }
 
   return {
     props: {
       filters,
-      products,
-      totalProducts: 250,
+      products: paginator.products,
+      total: paginator.total,
+      error,
     },
   };
 }

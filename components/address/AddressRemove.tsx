@@ -2,25 +2,22 @@ import React from 'react';
 import {
   Button, Dialog, DialogActions, DialogTitle, IconButton,
 } from '@material-ui/core';
-import { Delete, Remove } from '@material-ui/icons';
-import SnackbarDeleteProductSuccess, { productDeleteSuccess } from 'components/snackbar/product/SnackbarDeleteProductSuccess';
-import SnackbarDeleteProductError, { productDeleteError } from 'components/snackbar/product/SnackbarDeleteProductError';
-import ProductService from 'services/product-service';
-import { useRouter } from 'next/router';
+import { Delete } from '@material-ui/icons';
+// import SnackbarDeleteAddressSuccess, { addressDeleteSuccess } from 'components/snackbar/product/SnackbarDeleteProductSuccess';
+// import SnackbarDeleteAddressError, { addressDeleteError } from 'components/snackbar/product/SnackbarDeleteProductError';
+import AddressService from 'services/address-service';
 
 interface Props {
   id: string,
-  productName: string
+  onRemove: () => void,
 }
 
-function PDPRemove({ id, productName }: Props) {
+function AddressRemove({ id, onRemove }: Props) {
   const [openModal, setOpenModal] = React.useState(false);
 
-  const router = useRouter();
-
   const [alert, setAlert] = React.useState({
-    [productDeleteSuccess]: false,
-    [productDeleteError]: false,
+    [addressDeleteSuccess]: false,
+    [addressDeleteError]: false,
   });
 
   const changeAlert = (alertId: string, show: boolean) => {
@@ -40,12 +37,11 @@ function PDPRemove({ id, productName }: Props) {
 
   const handleRemoveProduct = async () => {
     try {
-      await (new ProductService()).deleteProduct(id);
+      await (new AddressService()).deleteAddress(id);
 
-      openAlert(productDeleteSuccess);
+      openAlert(addressDeleteSuccess);
       setOpenModal(false);
-
-      router.push('/seller/plp');
+      onRemove();
     } catch (error) {
 
     }
@@ -57,7 +53,7 @@ function PDPRemove({ id, productName }: Props) {
         open={openModal}
         aria-labelledby="alert-dialog-title"
       >
-        <DialogTitle id="alert-dialog-title">Are you sure to delete this product?</DialogTitle>
+        <DialogTitle id="alert-dialog-title">Are you sure to delete this address?</DialogTitle>
         <DialogActions>
           <Button onClick={() => { setOpenModal(false); }} color="primary">
             NO
@@ -72,19 +68,17 @@ function PDPRemove({ id, productName }: Props) {
         <Delete />
       </IconButton>
 
-      <SnackbarDeleteProductSuccess
-        productName={productName}
-        open={alert[productDeleteSuccess]}
+      <SnackbarDeleteAddressSuccess
+        open={alert[addressDeleteSuccess]}
         handleClose={closeAlert}
       />
 
-      <SnackbarDeleteProductError
-        productName={productName}
-        open={alert[productDeleteError]}
+      <SnackbarDeleteAddressError
+        open={alert[addressDeleteError]}
         handleClose={closeAlert}
       />
     </>
   );
 }
 
-export default PDPRemove;
+export default AddressRemove;

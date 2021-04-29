@@ -21,6 +21,7 @@ function PDPEditPage({ product }: Props) {
   const title = `Editing ${product.name}`;
 
   const p: Product = {
+    id: product.id,
     name: product.name,
     description: product.description,
     images: product.images,

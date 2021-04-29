@@ -47,7 +47,7 @@ function ImageSwitcher({ images }: Props) {
 
   const [actualImg, setActualImg] = React.useState(images[0]);
 
-  const renderImages = () : React.ReactElement[] => images
+  const renderSideImages = () : React.ReactElement[] => images
     .filter((image: string) => image !== actualImg)
     .map((image: string) : React.ReactElement => (
       <CardMedia
@@ -58,14 +58,26 @@ function ImageSwitcher({ images }: Props) {
       />
     ));
 
+  const renderSideBox = () : React.ReactElement => {
+    const otherImages = renderSideImages();
+
+    return (
+      otherImages.length !== 0
+        ? (
+          <Box
+            display="flex"
+            className={classes.otherImages}
+          >
+            {otherImages}
+          </Box>
+        )
+        : <></>
+    );
+  };
+
   return (
     <Box className={classes.containerImages} display="flex" minHeight="35em">
-      <Box
-        display="flex"
-        className={classes.otherImages}
-      >
-        {renderImages()}
-      </Box>
+      {renderSideBox()}
       <Box display="flex" width="100%" height="35em" justifyContent="center" alignItems="center">
         <CardMedia className={classes.selectedImg} image={actualImg} />
       </Box>

@@ -12,16 +12,24 @@ interface Props {
 function EMLPagination({
   totalElements, limit, page, handleChangePagination,
 } : Props) : React.ReactElement {
-  const totalPage = totalElements / limit;
+  const totalPage = (totalElements / limit | 0) + 1;
 
   const handleClickPagination = (event: ChangeEvent<unknown>, value: number): void => {
     handleChangePagination(value);
   };
 
   return (
-    <Box display="flex" justifyContent="center" alignItems="center" p={2}>
-      <Pagination count={totalPage} page={page} onChange={handleClickPagination} />
-    </Box>
+    (totalElements > limit)
+      ? (
+        <Box display="flex" justifyContent="center" alignItems="center" p={4}>
+          <Pagination
+            count={totalPage}
+            page={page}
+            onChange={handleClickPagination}
+          />
+        </Box>
+      )
+      : <></>
   );
 }
 

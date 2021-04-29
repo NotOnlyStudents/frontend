@@ -12,9 +12,11 @@ import Toolbar from '@material-ui/core/Toolbar';
 import SearchIcon from '@material-ui/icons/Search';
 import Router, { NextRouter, useRouter } from 'next/router';
 import LogoIcon from 'components/icons/LogoIcon';
+import { getHomeLink, getPLPLink } from 'lib/links';
 import HeaderNotAuthenticated from './HeaderNotAuthenticated';
 import HeaderSeller from './HeaderSeller';
 import HeaderCustomer from './HeaderCustomer';
+import HeaderSwitch from './HeaderSwitch';
 
 interface Props {
   authState: AuthState;
@@ -77,31 +79,20 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 function Header({ authState, username }: Props): React.ReactElement {
-  const sellerUsername = 'seller';
+  //const sellerUsername = 'seller';
   const classes = useStyles();
   const router: NextRouter = useRouter();
 
   const [searchText, setSearchText] = useState(router.query.text || '');
 
-  const renderHeader = (): React.ReactElement => {
-    const isSigned: boolean = authState === AuthState.SignedIn;
-    let header: React.ReactElement;
 
-    if (isSigned) {
-      header = username === sellerUsername ? (<HeaderSeller />) : (<HeaderCustomer />);
-    } else {
-      header = <HeaderNotAuthenticated />;
-    }
-
-    return header;
-  };
 
   const handleSearchEnter = (
     event: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     if (event.key === 'Enter') {
       const newPage = {
-        pathname: '/plp',
+        pathname: getPLPLink(),
         query: router.query,
       };
 
@@ -111,7 +102,11 @@ function Header({ authState, username }: Props): React.ReactElement {
         delete newPage.query.text;
       }
 
-      Router.push(newPage);
+      delete newPage.query.offset;
+
+      router.push(newPage);
+
+      setTimeout(() => { router.reload(); }, 1000);
     }
   };
 
@@ -119,7 +114,7 @@ function Header({ authState, username }: Props): React.ReactElement {
     <AppBar position="sticky">
       <Toolbar className={classes.container}>
         <Typography variant="h6" component="h1">
-          <Link className={classes.link} href="/">
+          <Link className={classes.link} href={getHomeLink()}>
             <LogoIcon />
             EmporioLambda
           </Link>
@@ -143,7 +138,7 @@ function Header({ authState, username }: Props): React.ReactElement {
           </div>
         </div>
         <div>
-          {renderHeader()}
+          <HeaderSwitch />
         </div>
       </Toolbar>
     </AppBar>

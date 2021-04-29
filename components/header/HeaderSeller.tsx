@@ -3,8 +3,10 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import { Button, IconButton, makeStyles } from '@material-ui/core';
 import HeaderMenuMobile from './HeaderMenuMobile';
-import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart';
+import AddProductIcon from 'components/icons/AddProductIcon';
+import PLPIcon from 'components/icons/PLPIcon';
 import HeaderMobileLink from './HeaderMobileLink';
+import ListAltIcon from '@material-ui/icons/ListAlt';
 
 const useStyles = makeStyles({
   desktopIcon: {
@@ -20,7 +22,13 @@ function HeaderSeller({signOut}) : React.ReactElement {
       <HeaderMenuMobile
         desktopMenu={[
           <IconButton className={classes.desktopIcon} href='/seller/pdp/new'>
-            <AddShoppingCartIcon aria-label="logout" />
+            <AddProductIcon aria-label="Add product" />
+          </IconButton>,
+          <IconButton className={classes.desktopIcon} href="/seller/plp">
+            <PLPIcon aria-label="Plp" />
+          </IconButton>,
+          <IconButton className={classes.desktopIcon} href="/seller/categories">
+            <ListAltIcon aria-label="Categories" />
           </IconButton>,
           <IconButton className={classes.desktopIcon} href="/users/personalArea">
             <AccountCircleIcon aria-label="Your personal area" />
@@ -31,9 +39,17 @@ function HeaderSeller({signOut}) : React.ReactElement {
         ]}
         mobileMenu={[
           <HeaderMobileLink href='/seller/pdp/new'>
-            <AddShoppingCartIcon aria-label="Add product" />
+            <AddProductIcon />
             Add product
           </HeaderMobileLink>,
+          <HeaderMobileLink href='/seller/plp'>
+          <PLPIcon />
+          Plp
+        </HeaderMobileLink>,
+         <HeaderMobileLink href='/seller/categories'>
+         <ListAltIcon />
+         Categories
+        </HeaderMobileLink>,
           <HeaderMobileLink href="/users/personalArea">
             <AccountCircleIcon aria-label="Your personal area" />
             Personal Area

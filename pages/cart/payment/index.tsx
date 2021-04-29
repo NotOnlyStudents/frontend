@@ -1,5 +1,4 @@
 import React from 'react';
-
 import Head from 'next/head';
 import EMLBreadcrumb from 'components/breadcrumb/EMLBreadcrumb';
 import HomeIcon from '@material-ui/icons/Home';
@@ -8,9 +7,12 @@ import { Cart } from 'interfaces/cart/cart';
 import { Address } from 'interfaces/address/address';
 import AddressList from 'components/address/AddressList';
 import AddressService from 'services/address-service';
-import { Button, Link, TextField } from '@material-ui/core';
+import {
+  Button, Collapse, IconButton, Link, TextField, Typography,
+} from '@material-ui/core';
 import CartService from 'services/cart-service';
 import CartList from 'components/cart/cartList';
+import { ExpandLess, ExpandMore } from '@material-ui/icons';
 
 interface Props {
   cart: Cart,
@@ -21,6 +23,7 @@ interface State {
   addresses: Address[];
   cart: Cart,
   selectedAddress: number;
+  expanded: boolean;
 }
 
 class PaymentPage extends React.Component<Props, State> {
@@ -37,8 +40,13 @@ class PaymentPage extends React.Component<Props, State> {
       cart: props.cart,
       addresses: props.addresses,
       selectedAddress: 0,
+      expandend: false,
     };
   }
+
+  handleExpandClick = () => {
+    this.setState({ expanded: !this.state.expanded });
+  };
 
   handleChangeAddress = (value: number) => {
     this.setState({ selectedAddress: value });
@@ -55,14 +63,24 @@ class PaymentPage extends React.Component<Props, State> {
   };
 
   render() {
-    const { addresses, selectedAddress, cart } = this.state;
+    const {
+      addresses, selectedAddress, cart, expanded,
+    } = this.state;
     return (
       <>
         <Head>
           <title>Payment | EmporioLambda</title>
         </Head>
         <EMLBreadcrumb paths={this.breadcrumbPaths} />
-        <CartList items={cart.products} payment />
+        <Typography>
+          Cart Products
+          <IconButton onClick={this.handleExpandClick} aria-expanded={expanded} aria-label="show more">
+            {expanded ? <ExpandLess /> : <ExpandMore />}
+          </IconButton>
+        </Typography>
+        <Collapse in={expanded} timeout="auto" unmountOnExit>
+          <CartList items={cart.products} payment />
+        </Collapse>
         <AddressList
           addresses={addresses}
           selectedAddress={selectedAddress}
@@ -78,7 +96,7 @@ class PaymentPage extends React.Component<Props, State> {
           variant="outlined"
           margin="normal"
         />
-        <Button component={Link} variant="contained" color="primary" href="/plp"> Checkout </Button>
+        <Button component={Link} variant="contained" color="primary" href="/"> Checkout </Button>
       </>
     );
   }

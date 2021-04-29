@@ -133,8 +133,6 @@ class PLP extends React.Component<Props, State> {
   fetchAllProducts = async (query) => {
     let paginator: ProductPaginator;
 
-    console.log(query);
-
     try {
       paginator = await (new ProductService()).getAllProduct(query);
     } catch (error) {

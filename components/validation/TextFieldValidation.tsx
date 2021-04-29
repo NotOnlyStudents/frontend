@@ -12,7 +12,7 @@ interface Props {
   fullWidth?: boolean,
   type?: string,
   multiline?: boolean,
-  margin?: string,
+  margin?: 'none' | 'dense' | 'normal',
   handleChange?: (value: unknown) => void;
   setError?: (id: string, error: boolean) => void;
   rules?: string,
@@ -72,5 +72,9 @@ function TextFieldValidation(
     />
   );
 }
+
+TextFieldValidation.defaultProps = {
+  margin: 'none',
+};
 
 export default TextFieldValidation;

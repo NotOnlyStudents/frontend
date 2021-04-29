@@ -97,7 +97,9 @@ function Header({ authState, username }: Props): React.ReactElement {
     return header;
   };
 
-  const handleSearchEnter = (event: React.KeyboardEvent<typeof InputBase>) => {
+  const handleSearchEnter = (
+    event: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
     if (event.key === 'Enter') {
       const newPage = {
         pathname: getPLPLink(),
@@ -114,7 +116,7 @@ function Header({ authState, username }: Props): React.ReactElement {
 
       router.push(newPage);
 
-      setTimeout(() => { router.reload(); }, 2000);
+      setTimeout(() => { router.reload(); }, 1000);
     }
   };
 

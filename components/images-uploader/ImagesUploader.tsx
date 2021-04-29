@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  Box, Fab, makeStyles, Theme, Typography,
+  Box, Fab, makeStyles, Typography,
 } from '@material-ui/core';
 import grey from '@material-ui/core/colors/grey';
 
@@ -12,7 +12,8 @@ interface Props {
   disabled: boolean;
   error: boolean;
   handleRemoveImage: (image: string) => void;
-  handleAddImage: (event: Event) => void;
+  handleAddImage: (
+    event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 const useStyles = makeStyles({

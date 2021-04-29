@@ -31,7 +31,8 @@ const useStyles = makeStyles({
     backgroundColor: fade('#000', 0.5),
     color: 'white',
     width: '100%',
-    fontSize: '1.5em',
+    fontSize: '1.2em',
+    padding: '1em',
   },
   evidenceTitle: {
     padding: '1.5rem 0 1rem 0',
@@ -63,7 +64,11 @@ function Home({ products }: Props) : React.ReactElement {
       </Head>
       <div className={classes.root}>
         <CardMedia component="img" image="/images/home.jpg" />
-        <Typography className={classes.description} component="span" align="center">
+        <Typography
+          className={classes.description}
+          component="span"
+          align="center"
+        >
           Science fiction, novels, fairy tales, fantasy and many other literary genres.
           <br />
           Here at EmporioLambda you can find many books for all tastes and people.

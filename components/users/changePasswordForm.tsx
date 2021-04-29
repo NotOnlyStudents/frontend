@@ -1,5 +1,5 @@
 import { Auth } from 'aws-amplify';
-import React from 'react';
+import React, { FormEventHandler } from 'react';
 
 interface Props{
   oldPassword?:string;
@@ -20,27 +20,26 @@ export default class FormPassword extends React.Component<Props, State> {
     };
 
     this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
+    // this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   handleChange = (event) => {
     const nam = event.target.name;
     const val = event.target.value;
-    this.setState({ [nam]: val });
+    // this.setState({ [nam]: val });
   };
 
-  handleSubmit = (event: Event) => {
-    event.preventDefault();
-    Auth.currentAuthenticatedUser()
-      .then((user) => Auth.changePassword(user, this.state.oldPassword, this.state.newPassword))
-      .then((data) => { alert('You change your password with success!'); document.location.href = '/'; })
-      .catch((err) => alert('There was a problem!'));
-  };
+  // handleSubmit = (event: FormEventHandler<HTMLFormElement>) => {
+  //   Auth.currentAuthenticatedUser()
+  //     .then((user) => Auth.changePassword(user, this.state.oldPassword, this.state.newPassword))
+  //     .then((data) => { alert('You change your password with success!'); document.location.href = '/'; })
+  //     .catch((err) => alert('There was a problem!'));
+  // };
 
   render() {
     return (
       <>
-        <form onSubmit={this.handleSubmit}>
+        <form>
           <label>Old password:</label>
           <input name="oldPassword" type="password" onChange={this.handleChange} />
           <br />

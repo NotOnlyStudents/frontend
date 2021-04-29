@@ -5,7 +5,7 @@ export interface Product {
   name?: string;
   description?: string;
   images?: string[];
-  quantity?: number;
+  quantity?: number | string;
   price?: number;
   evidence?: boolean;
   discount?: number;
@@ -20,6 +20,15 @@ export interface PLPProductItem {
   evidence: boolean,
   discount: number,
   quantity: number,
+}
+
+export interface CartProduct {
+  id?: string;
+  name?: string;
+  image?: string;
+  quantity?: number;
+  price?: number;
+  discount?: number;
 }
 
 export enum SortType {

@@ -5,7 +5,8 @@ import React from 'react';
 
 interface Props {
   price: number,
-  discount: number
+  discount: number,
+  quantity?: number
 }
 
 const useStyles = makeStyles({
@@ -22,7 +23,7 @@ const useStyles = makeStyles({
   },
 });
 
-function PriceItem({ price, discount } : Props) {
+function PriceItem({ price, quantity, discount } : Props) {
   const classes = useStyles();
 
   const calculateDiscount = (Math.round((price - (price * discount) / (100)) * 100) / 100).toFixed(2);
@@ -30,7 +31,7 @@ function PriceItem({ price, discount } : Props) {
   return (
     <Box display="flex" className={classes.root}>
       <Typography className={discount ? classes.price : ''}>
-        {price}
+        {price * quantity}
         €
       </Typography>
       {
@@ -51,5 +52,9 @@ function PriceItem({ price, discount } : Props) {
     </Box>
   );
 }
+
+PriceItem.defaultProps = {
+  quantity: 1,
+};
 
 export default PriceItem;

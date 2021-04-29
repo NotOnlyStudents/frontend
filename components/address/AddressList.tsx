@@ -12,18 +12,19 @@ import AddressView from './AddressView';
 
 interface Props {
   addresses: Address[];
-  // cart: Cart;
   handleChangeIndex: (value: number) => void,
   handleAddNewAddress: (address: Address, index?: number) => void,
   selectedAddress: number,
   handleRemoveOneAddress: (index: number) => void,
 }
 
-function AddressList(
-  {
-    addresses, handleAddNewAddress, handleChangeIndex, selectedAddress, handleRemoveOneAddress,
-  }: Props,
-) : React.ReactElement {
+function AddressList({
+  addresses,
+  handleAddNewAddress,
+  handleChangeIndex,
+  selectedAddress,
+  handleRemoveOneAddress,
+}: Props) : React.ReactElement {
   const [open, setOpen] = React.useState(false);
 
   const newAddress: Address = {
@@ -54,40 +55,35 @@ function AddressList(
 
   const renderAllAddress = (): React.ReactElement[] => addresses.map(
     (address: Address, index: number): React.ReactElement => (
-      <Box key={address.id}>
-        <AddressView
-          address={address}
-          handleAddNewAddress={handleCloseDialog}
-          index={index}
-          handleRemoveAddress={handleRemoveOneAddress}
-        />
-      </Box>
+      <AddressView
+        key={address.id}
+        address={address}
+        handleAddNewAddress={handleCloseDialog}
+        index={index}
+        handleRemoveAddress={handleRemoveOneAddress}
+      />
     ),
   );
 
   return (
-    <Grid container spacing={3} justify="center" alignItems="center">
-      <Grid item>
-        <Box>
-          <FormControl component="fieldset">
-            <FormLabel component="legend">Addresses</FormLabel>
-            <RadioGroup aria-label="address" name="address" value={selectedAddress} onChange={handleChange}>
-              {renderAllAddress()}
-            </RadioGroup>
-          </FormControl>
-        </Box>
-        <Button
-          color="primary"
-          variant="text"
-          onClick={handleClickOpen}
-        >
-          Add new address
-        </Button>
-        <Dialog open={open} onClose={handleClose}>
-          <AddressEdit address={newAddress} handleAddAddress={handleCloseDialog} creation />
-        </Dialog>
-      </Grid>
-    </Grid>
+    <Box>
+      <FormControl component="fieldset" fullWidth>
+        <FormLabel component="legend">Addresses</FormLabel>
+        <RadioGroup aria-label="address" name="address" value={selectedAddress} onChange={handleChange}>
+          {renderAllAddress()}
+        </RadioGroup>
+      </FormControl>
+      <Button
+        color="primary"
+        variant="text"
+        onClick={handleClickOpen}
+      >
+        Add new address
+      </Button>
+      <Dialog open={open} onClose={handleClose}>
+        <AddressEdit address={newAddress} handleAddAddress={handleCloseDialog} creation />
+      </Dialog>
+    </Box>
   );
 }
 

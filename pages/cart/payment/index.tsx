@@ -8,6 +8,7 @@ import { Address } from 'interfaces/address/address';
 import AddressList from 'components/address/AddressList';
 import AddressService from 'services/address-service';
 import {
+  Box,
   Button, Collapse, IconButton, Link, TextField, Typography,
 } from '@material-ui/core';
 import CartService from 'services/cart-service';
@@ -104,17 +105,27 @@ class PaymentPage extends React.Component<Props, State> {
           selectedAddress={selectedAddress}
           handleChangeIndex={this.handleChangeAddress}
           handleAddNewAddress={this.handleAddAddress}
+          handleRemoveOneAddress={this.handleRemoveAddress}
         />
         <TextField
           id="description"
-          label="Address description"
-          placeholder="Insert some detail of your address"
+          label="Additional informations"
+          placeholder="Add more information for order delivery"
           fullWidth
           multiline
           variant="outlined"
           margin="normal"
         />
-        <Button component={Link} variant="contained" color="primary" href="/"> Checkout </Button>
+        <Box width="100%" display="flex" justifyContent="flex-end">
+          <Button
+            variant="contained"
+            color="primary"
+            href="/"
+          >
+            Checkout
+          </Button>
+
+        </Box>
       </>
     );
   }

@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  Box,
   Dialog, FormControlLabel, IconButton, Radio,
 } from '@material-ui/core';
 import { Edit } from '@material-ui/icons';
@@ -35,21 +36,23 @@ function AddressView({
   };
 
   return (
-    <>
+    <Box width="100%" display="flex" justifyContent="space-between">
       <FormControlLabel
         id={address.id}
         value={index}
         control={<Radio />}
         label={`${address.address},${address.city},${address.cap},${address.nation}`}
       />
-      <IconButton color="primary" onClick={handleClickEditButton}>
-        <Edit />
-      </IconButton>
-      <AddressRemove id={address.id} onRemove={() => handleRemoveAddress(index)} />
+      <Box>
+        <IconButton color="primary" onClick={handleClickEditButton}>
+          <Edit />
+        </IconButton>
+        <AddressRemove id={address.id} onRemove={() => handleRemoveAddress(index)} />
+      </Box>
       <Dialog open={edit} onClose={handleCloseEdit}>
         <AddressEdit address={address} handleChangeAddresses={handleCloseDialog} />
       </Dialog>
-    </>
+    </Box>
   );
 }
 

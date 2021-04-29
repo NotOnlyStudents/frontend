@@ -3,8 +3,12 @@ import {
   Button, Dialog, DialogActions, DialogTitle, IconButton,
 } from '@material-ui/core';
 import { Delete } from '@material-ui/icons';
-// import SnackbarDeleteAddressSuccess, { addressDeleteSuccess } from 'components/snackbar/product/SnackbarDeleteProductSuccess';
-// import SnackbarDeleteAddressError, { addressDeleteError } from 'components/snackbar/product/SnackbarDeleteProductError';
+import SnackbarDeleteAddressSuccess, {
+  addressDeleteSuccess,
+} from 'components/snackbar/address/SnackbarDeleteAddressSuccess';
+import SnackbarDeleteAddressError, {
+  addressDeleteError,
+} from 'components/snackbar/address/SnackbarDeleteAddressError';
 import AddressService from 'services/address-service';
 
 interface Props {
@@ -40,10 +44,11 @@ function AddressRemove({ id, onRemove }: Props) {
       await (new AddressService()).deleteAddress(id);
 
       openAlert(addressDeleteSuccess);
-      setOpenModal(false);
       onRemove();
     } catch (error) {
-
+      openAlert(addressDeleteError);
+    } finally {
+      setOpenModal(false);
     }
   };
 

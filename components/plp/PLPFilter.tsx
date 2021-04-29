@@ -65,14 +65,6 @@ function PLPFilter({ filter, seller, handleChangeFilter }: Props) {
     )
     : <></>);
 
-  // return (
-  //   <Box className={classes.container}>
-  //     <Box display="flex">
-  //       <AutocompleteCategories
-  //         selectedCategories={filter.categories}
-  //         handleChangeCategories={handleChangeCategories}
-  //       />
-  //       { renderCheckboxAvailableIfSeller() }
   return (
     <Box p={2}>
       <Box display="flex">

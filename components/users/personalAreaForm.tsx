@@ -36,12 +36,13 @@ export default class PersonalAreaForm extends React.Component<Props, State> {
 
   async componentDidMount():Promise<void>  {
     try {
-      console.log(Auth.currentAuthenticatedUser());
+      //Categories arriva da serverSideProps di la
+      const categories = ['Carte','Tavolo','Bicicletta'];
       const { attributes } = await Auth.currentAuthenticatedUser();
       const { signInUserSession } = await Auth.currentAuthenticatedUser();
       this.setState({ name: attributes['custom:firstName'], surname: attributes['custom:lastName'], email: attributes.email });
       if(signInUserSession.accessToken.payload["cognito:groups"][0]=="sellers")
-        this.setState({seller:<SellerSide />});
+        this.setState({seller:<SellerSide categories={categories}/>});
     } catch {
       document.location.href = '/';
     }
@@ -117,7 +118,7 @@ export default class PersonalAreaForm extends React.Component<Props, State> {
                 <TextField label="Change your Surname:" type="text" name="newSurname" onChange={this.handleChange}/> 
               </Box>
             </Box>
-            <Box display="flex" paddingLeft={4}>
+            <Box  paddingLeft={4} paddingTop={2}>
               <Button variant="contained" color="primary" onClick={this.handleSubmit}>Save Changes!</Button>
             </Box>
           </Box>

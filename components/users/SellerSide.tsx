@@ -1,102 +1,119 @@
-import { Box, Button, TextField, Typography, Fab, Input } from '@material-ui/core';
+import { Box, Button, TextField, Typography, Fab, Input, InputLabel, Select, MenuItem } from '@material-ui/core';
 import { Auth } from 'aws-amplify';
 import TextFieldValidation from 'components/validation/TextFieldValidation';
 import Link from 'next/link';
 import React from 'react';
 import AddPhotoAlternateIcon from '@material-ui/icons/AddPhotoAlternate';
+import { ThreeSixtySharp } from '@material-ui/icons';
+import { getEnabledCategories } from 'node:trace_events';
 
 
 
 interface Props {
+  categories:string[]
 }
 
-interface State{}
+interface State{
+  categories?:string[],
+  selectedCategory?: string,
+  newCategoryName?: string,
+  categoryNewName?: string
+}
 
 export default class SellederSide extends React.Component<Props, State> {
   constructor(props) {
     super(props);
-  /*  this.state = {
-      companyName: '',
-      companyDescription: '',
-      logo: '',
-    };
+    this.state={
+      categories: this.props.categories,
+      selectedCategory: this.props.categories[0],
+      newCategoryName: '',
+      categoryNewName: ''
+    }
     this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);*/
   }
 
 
- /* handleChange = (event) => {
+  handleChange = (event) => {
     const nam = event.target.name;
     const val = event.target.value;
     this.setState({ [nam]: val });
   };
 
-  async handleSubmit(event):Promise<void> {
-    console.log(this.state.companyName + " " + this.state.companyDescription + " " + this.state.logo);
+  handleAdd = (event) =>
+  {
+    var newCategories = this.state.categories;
+    newCategories.push(this.state.newCategoryName);
+    this.setState({categories:newCategories, selectedCategory:newCategories[0], newCategoryName:''});
+    alert("Category added with success!");
   }
 
-  handleAddImage(event)
-  {
-    console.log(event.target.value);
-  }*/
+  renameCategory = (event) =>{
+    var categories =this.state.categories;
+    const index = categories.indexOf(this.state.selectedCategory);
+    categories[index] = this.state.categoryNewName;
+    this.setState({categories:categories, selectedCategory:categories[0], categoryNewName:''});
+    alert("Category renamed with success!");
+  }
 
-  /*
-          <Box border={1} marginTop={4}>
-          <Box m={2}>
-            <Typography> Company Name: </Typography> 
-            <Typography> Company Description: </Typography>
-            <Typography> Company Logo: </Typography>
-          </Box>
-        </Box>
-        <form>
-        <Box display="flex" flexDirection="column">  
-          <Box display="flex" paddingLeft={2} paddingTop={4}>
-              <TextField label="Company's name:" type="text" name="companyName" onChange={this.handleChange}/> 
-              <Box paddingLeft={4} paddingTop={2} paddingRight={2}>
-                <Typography>New logo:</Typography>
-              </Box>
-              <label htmlFor="images-picker">
-                  <Fab component="span" color="primary">
-                    <AddPhotoAlternateIcon />
-                  </Fab>
-                  <input
-                    name = "logo"
-                    accept="image/*"
-                    id="images-picker"
-                    type="file"
-                    hidden
-                    onChange={this.handleChange}
-                  />
-                </label>
-          </Box>
-            <Box display="flex" paddingTop={2}>
-              <Box display="flex" paddingLeft={2} width={415}>
-                <TextField
-                  fullWidth
-                  name = "companyDescription"
-                  onChange={this.handleChange}
-                  id="standard-multiline-static"
-                  label="Company's description"
-                  multiline
-                  rows={4}/>
-              </Box>
-              <Box display = "flex" paddingLeft={2} paddingTop={5} height={87}>
-                <Button variant="contained" color="primary" onClick={this.handleSubmit}>Save Changes!</Button>
-              </Box>
-            </Box>
-        </Box>
-        <br/>
-        <Box borderBottom={1} width="100%"></Box>
-        </form>
-    </>
-   */
+  deleteCategory = (event) =>{
+    if(this.state.categories.length!=1)
+    {
+        const cat = this.state.categories;
+        const toRemove = this.state.selectedCategory;
+        var filtered = cat.filter(function(value, index, cat){ 
+          return value != toRemove;
+      });
+        this.setState({categories:filtered, selectedCategory:filtered[0]});
+        alert("Category removed with success!");
+    }
+    else
+    {
+      alert("You must have at least one category");
+    }
+  }
+
+
+  renderItems = (): React.ReactElement[] => (
+    this.state.categories.map(
+        (value:string, index: number): React.ReactElement => (
+          <MenuItem
+            key={index}
+            value={this.state.categories[index]}>
+            {this.state.categories[index]}
+          </MenuItem>
+        ),
+      ));
+  
 
   render(): React.ReactElement {
     return (
     <Box paddingTop={2} flexDirection="column">
       <Button variant="contained" color="primary" href="/seller/plp">Modify your products</Button>
       <Box paddingTop={2}>
-        <Button variant="contained" color="primary" >Modify your categories</Button>
+        <Typography> Your Categories: </Typography>
+        <Box display="flex" flexDirection="row">
+        <Select name="selectedCategory"
+          value={this.state.selectedCategory}
+          onChange={this.handleChange}
+        >
+          {this.renderItems()}
+        </Select>
+          <Box paddingLeft={3}>
+            <TextField label="Rename category:" type="text" name="categoryNewName" onChange={this.handleChange}/> 
+          </Box>
+          <Box paddingTop={2} paddingLeft={3}>
+            <Button variant="contained" color="primary" name="renameCategoryButton" onClick={this.renameCategory}>Rename</Button>
+          </Box>
+          <Box paddingTop={2} paddingLeft={3}>
+            <Button variant="contained" color="primary" name="deleteCategoryButton" onClick={this.deleteCategory}>Delete this category</Button>
+          </Box>
+        </Box>
+        <Box display="flex" paddingTop={2} flexDirection="row">
+          <TextField label="New category:" type="text" name="newCategoryName" onChange={this.handleChange}/> 
+          <Box paddingLeft={2} paddingTop={2}>
+            <Button variant="contained" color="primary" name="addCategoryButton" onClick={this.handleAdd}>Add a new category</Button>
+          </Box>
+        </Box>
       </Box>
     </Box>
     );

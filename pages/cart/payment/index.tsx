@@ -44,6 +44,24 @@ class PaymentPage extends React.Component<Props, State> {
     };
   }
 
+  handleRemoveAddress = (index: number) => {
+    this.setState((state: State) => {
+      const newState: State = state;
+      newState.addresses.splice(index, 1);
+      if (index < state.selectedAddress) {
+        newState.selectedAddress -= 1;
+      }
+      if (index === state.selectedAddress) {
+        if (state.addresses.length === 0) {
+          newState.selectedAddress = -1;
+        } else {
+          newState.selectedAddress = (index + 1) % newState.addresses.length;
+        }
+      }
+      return newState;
+    });
+  };
+
   handleExpandClick = () => {
     this.setState({ expanded: !this.state.expanded });
   };

@@ -1,54 +1,22 @@
-import React, { useEffect } from 'react';
-import { CognitoUser } from '@aws-amplify/auth';
+import React from 'react';
 import { withSSRContext } from 'aws-amplify';
 import { AuthState, onAuthUIStateChange } from '@aws-amplify/ui-components';
-import { useAuthContext } from 'lib/authContext';
-
-
+import { isSeller, useAuthContext } from 'lib/authContext';
 
 import Header from 'components/header/Header';
+import { SignedState } from 'interfaces/login';
 
 interface Props {
   children: React.ReactNode,
-  _authState?: AuthState,
-  _username?: string | undefined
+  signedState: SignedState
 }
 
-function Layout({ children, _authState, _username }: Props) {
-  const {
-    authState, username, setAuthState, setUsername,
-  } = useAuthContext();
-
-  useEffect(
-    () => {
-      setAuthState(_authState);
-      setUsername(_username);
-
-      return onAuthUIStateChange((nextAuthState: AuthState) => {
-        if (nextAuthState === AuthState.SignedOut) {
-          setAuthState(nextAuthState);
-          setUsername(undefined);
-        }
-      });
-    },
-    [],
-  );
-
-  function renderChildren(children)
-  { 
-    if(children.type.name!="Authenticator")
-    {
-      return (<Header
-      authState={authState}
-      username={username}
-      />);
-    }
-  }
-
-
+function Layout({ children, signedState }: Props) {
   return (
     <>
-      {renderChildren(children)}
+      {/* <Header
+        signedState={signedState}
+      /> */}
       <main>
         {children}
       </main>
@@ -58,24 +26,24 @@ function Layout({ children, _authState, _username }: Props) {
 
 export async function getServerSideProps(context) {
   const { Auth } = withSSRContext(context);
+  let signedState: SignedState;
 
   try {
-    const user: CognitoUser = await Auth.currentAuthenticatedUser();
-
-    return {
-      props: {
-        _authState: AuthState.SignedIn,
-        _username: user.getUsername(),
-      },
-    };
-  } catch (err) {
-    return {
-      props: {
-        _authState: AuthState.SignedOut,
-      },
-    };
+    const { signInUserSession } = await Auth.currentAuthenticatedUser();
+    if (isSeller(signInUserSession)) {
+      signedState = SignedState.Seller;
+    } else {
+      signedState = SignedState.Customer;
+    }
+  } catch {
+    signedState = SignedState.NotAuthenticated;
   }
+
+  return {
+    props: {
+      signedState,
+    },
+  };
 }
 
 export default Layout;
-

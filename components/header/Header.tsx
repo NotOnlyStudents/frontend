@@ -13,15 +13,9 @@ import SearchIcon from '@material-ui/icons/Search';
 import Router, { NextRouter, useRouter } from 'next/router';
 import LogoIcon from 'components/icons/LogoIcon';
 import { getHomeLink, getPLPLink } from 'lib/links';
-import HeaderNotAuthenticated from './HeaderNotAuthenticated';
-import HeaderSeller from './HeaderSeller';
-import HeaderCustomer from './HeaderCustomer';
+import { SignedState } from 'interfaces/login';
 import HeaderSwitch from './HeaderSwitch';
-
-interface Props {
-  authState: AuthState;
-  username: string | undefined;
-}
+import HeaderNotAuthenticated from './HeaderNotAuthenticated';
 
 const useStyles = makeStyles((theme: Theme) => ({
   container: {
@@ -78,14 +72,15 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-function Header({ authState, username }: Props): React.ReactElement {
-  //const sellerUsername = 'seller';
+interface Props {
+  signedState: SignedState
+}
+
+function Header({ signedState }: Props): React.ReactElement {
   const classes = useStyles();
   const router: NextRouter = useRouter();
 
   const [searchText, setSearchText] = useState(router.query.text || '');
-
-
 
   const handleSearchEnter = (
     event: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -110,11 +105,31 @@ function Header({ authState, username }: Props): React.ReactElement {
     }
   };
 
+  const renderHeaderIcons = () => {
+    switch (signedState) {
+      case SignedState.Seller: {
+        return <HeaderSeller />;
+      }
+      case SignedState.Customer: {
+        return <HeaderCustomer />;
+      }
+      case SignedState.NotAuthenticated: {
+        return <HeaderNotAuthenticated />;
+      }
+      default: {
+        return <></>;
+      }
+    }
+  };
+
   return (
     <AppBar position="sticky">
       <Toolbar className={classes.container}>
         <Typography variant="h6" component="h1">
-          <Link className={classes.link} href={getHomeLink()}>
+          <Link
+            className={classes.link}
+            href={getHomeLink(signedState === SignedState.Seller)}
+          >
             <LogoIcon />
             EmporioLambda
           </Link>
@@ -137,9 +152,7 @@ function Header({ authState, username }: Props): React.ReactElement {
             />
           </div>
         </div>
-        <div>
-          <HeaderSwitch />
-        </div>
+        { renderHeaderIcons() }
       </Toolbar>
     </AppBar>
   );

@@ -2,6 +2,18 @@ export function getHomeLink(seller: boolean = false) {
   return seller ? '/seller' : '/';
 }
 
+export function getLoginLink() {
+  return '/login';
+}
+
+export function getCartLink() {
+  return 'cart';
+}
+
+export function getPersonalAreaLink(seller: boolean = false) {
+  return seller ? '/seller/personal-area' : '/personal-area';
+}
+
 export function getPLPLink(seller: boolean = false) {
   return seller ? '/seller/plp' : '/plp';
 }
@@ -16,4 +28,8 @@ export function getEditProductLink(id: string) {
 
 export function getNewProductLink() {
   return '/seller/pdp/new';
+}
+
+export function getCategoriesLink() {
+  return '/seller/categories';
 }

@@ -1,6 +1,9 @@
 import React, { createContext, useContext, useState } from 'react';
 
 import { AuthState } from '@aws-amplify/ui-components';
+import Auth from '@aws-amplify/auth';
+import { useRouter } from 'next/router';
+import { getHomeLink } from './links';
 
 interface AuthContextProps {
   readonly authState: AuthState,
@@ -13,7 +16,11 @@ interface AuthContextProps {
 
 export const AuthContext = createContext<Partial<AuthContextProps>>({});
 
-export function AuthContextProvider({ children }) {
+interface Props {
+  children: React.ReactElement;
+}
+
+export function AuthContextProvider({ children }: Props) {
   const [authState, setAuthState] = useState<AuthState>();
   const [username, setUsername] = useState<string | undefined>();
 
@@ -32,4 +39,18 @@ export function AuthContextProvider({ children }) {
 
 export function useAuthContext() {
   return useContext(AuthContext);
+}
+
+export function isSeller(signInUserSession): boolean {
+  return signInUserSession.accessToken.payload['cognito:groups'][0] === 'sellers';
+}
+
+export async function signOut() {
+  try {
+    await Auth.signOut();
+    const router = useRouter();
+    router.push(getHomeLink());
+  } catch (error) {
+    console.log('error signing out: ', error);
+  }
 }

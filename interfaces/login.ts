@@ -1,5 +1,5 @@
 export enum SignedState {
-  Seller,
-  Customer,
-  NotAuthenticated,
+  Seller = 'Seller',
+  Customer = 'Customer',
+  NotAuthenticated = 'NotAuthenticated',
 }

@@ -5,14 +5,27 @@ import AddProductIcon from 'components/icons/AddProductIcon';
 import PLPIcon from 'components/icons/PLPIcon';
 import ListAltIcon from '@material-ui/icons/ListAlt';
 import {
-  getCategoriesLink, getNewProductLink, getPersonalAreaLink, getPLPLink,
+  getCategoriesLink, getHomeLink, getNewProductLink, getPersonalAreaLink, getPLPLink,
 } from 'lib/links';
-import { signOut } from 'lib/authContext';
+import { useRouter } from 'next/router';
+import { Auth } from 'aws-amplify';
 import HeaderMobileLink from './links/HeaderMobileLink';
 import HeaderMenuMobile from './HeaderMenuMobile';
 import HeaderDesktopLink from './links/HeaderDesktopLink';
 
 function HeaderSeller() : React.ReactElement {
+  const router = useRouter();
+
+  const handleSignOut = async () => {
+    try {
+      await Auth.signOut();
+      await router.push(getHomeLink(true));
+      router.reload();
+    } catch (error) {
+      console.log('error signing out: ', error);
+    }
+  };
+
   return (
     <>
       <HeaderMenuMobile
@@ -29,7 +42,7 @@ function HeaderSeller() : React.ReactElement {
           <HeaderDesktopLink href={getPersonalAreaLink(true)}>
             <AccountCircleIcon aria-label="Your personal area" />
           </HeaderDesktopLink>,
-          <HeaderDesktopLink onClick={signOut}>
+          <HeaderDesktopLink onClick={handleSignOut}>
             <ExitToAppIcon aria-label="logout" />
           </HeaderDesktopLink>,
         ]}
@@ -50,7 +63,7 @@ function HeaderSeller() : React.ReactElement {
             <AccountCircleIcon aria-label="Your personal area" />
             Personal Area
           </HeaderMobileLink>,
-          <HeaderMobileLink onClick={signOut}>
+          <HeaderMobileLink onClick={handleSignOut}>
             <ExitToAppIcon aria-label="logout" />
             Logout
           </HeaderMobileLink>,

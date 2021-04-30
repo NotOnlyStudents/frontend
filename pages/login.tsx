@@ -17,13 +17,13 @@ function Login() {
   const { setAuthState, setUsername } = useAuthContext();
   const router = useRouter();
 
-  useEffect(() => onAuthUIStateChange((nextAuthState: AuthState, authData: CognitoUser) => {
-    console.log('a');
+  useEffect(() => onAuthUIStateChange(async (nextAuthState: AuthState, authData: CognitoUser) => {
     if (nextAuthState === AuthState.SignedIn) {
       setAuthState(nextAuthState);
       setUsername(authData.getUsername());
 
-      router.push(getHomeLink());
+      await router.push(getHomeLink());
+      router.reload();
     }
   }), []);
 
@@ -39,7 +39,7 @@ function Login() {
           formFields={[
             { type: 'custom:firstName', placeholder: 'Enter your first name', label: 'First Name *' },
             { type: 'custom:lastName', placeholder: 'Enter your last name', label: 'Last Name *' },
-            { type: 'email ' },
+            { type: 'email' },
             { type: 'password' },
           ]}
         />

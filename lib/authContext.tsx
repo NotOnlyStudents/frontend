@@ -44,13 +44,3 @@ export function useAuthContext() {
 export function isSeller(signInUserSession): boolean {
   return signInUserSession.accessToken.payload['cognito:groups'][0] === 'sellers';
 }
-
-export async function signOut() {
-  try {
-    await Auth.signOut();
-    const router = useRouter();
-    router.push(getHomeLink());
-  } catch (error) {
-    console.log('error signing out: ', error);
-  }
-}

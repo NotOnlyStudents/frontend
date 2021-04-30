@@ -14,8 +14,11 @@ import Router, { NextRouter, useRouter } from 'next/router';
 import LogoIcon from 'components/icons/LogoIcon';
 import { getHomeLink, getPLPLink } from 'lib/links';
 import { SignedState } from 'interfaces/login';
-import HeaderSwitch from './HeaderSwitch';
+import Auth from '@aws-amplify/auth';
+import { isSeller } from 'lib/authContext';
 import HeaderNotAuthenticated from './HeaderNotAuthenticated';
+import HeaderSeller from './HeaderSeller';
+import HeaderCustomer from './HeaderCustomer';
 
 const useStyles = makeStyles((theme: Theme) => ({
   container: {
@@ -72,22 +75,36 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-interface Props {
-  signedState: SignedState
-}
-
-function Header({ signedState }: Props): React.ReactElement {
+function Header(): React.ReactElement {
   const classes = useStyles();
   const router: NextRouter = useRouter();
 
   const [searchText, setSearchText] = useState(router.query.text || '');
+  const [signedState, setSignedState] = useState(SignedState.NotAuthenticated);
 
-  const handleSearchEnter = (
+  const checkSignedState = async () => {
+    try {
+      const { signInUserSession } = await Auth.currentAuthenticatedUser();
+      if (isSeller(signInUserSession)) {
+        setSignedState(SignedState.Seller);
+      } else {
+        setSignedState(SignedState.Customer);
+      }
+    } catch {
+      setSignedState(SignedState.NotAuthenticated);
+    }
+  };
+
+  React.useEffect(() => {
+    checkSignedState();
+  }, []);
+
+  const handleSearchEnter = async (
     event: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     if (event.key === 'Enter') {
       const newPage = {
-        pathname: getPLPLink(),
+        pathname: getPLPLink(signedState === SignedState.Seller),
         query: router.query,
       };
 
@@ -99,9 +116,8 @@ function Header({ signedState }: Props): React.ReactElement {
 
       delete newPage.query.offset;
 
-      router.push(newPage);
-
-      setTimeout(() => { router.reload(); }, 1000);
+      await router.push(newPage);
+      router.reload();
     }
   };
 

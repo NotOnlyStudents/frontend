@@ -3,7 +3,6 @@ import { Auth } from 'aws-amplify';
 import TextFieldValidation from 'components/validation/TextFieldValidation';
 import Link from 'next/link';
 import React from 'react';
-import SellerSide from './SellerSide';
 
 export interface Props {
   name?: string;
@@ -17,7 +16,6 @@ export interface State {
     email?: string,
     newName?: string,
     newSurname?: string
-    seller?: React.ReactElement
  }
 
 export default class PersonalAreaForm extends React.Component<Props, State> {
@@ -36,13 +34,9 @@ export default class PersonalAreaForm extends React.Component<Props, State> {
 
   async componentDidMount():Promise<void>  {
     try {
-      //Categories arriva da serverSideProps di la
-      const categories = ['Carte','Tavolo','Bicicletta'];
       const { attributes } = await Auth.currentAuthenticatedUser();
       const { signInUserSession } = await Auth.currentAuthenticatedUser();
       this.setState({ name: attributes['custom:firstName'], surname: attributes['custom:lastName'], email: attributes.email });
-      if(signInUserSession.accessToken.payload["cognito:groups"][0]=="sellers")
-        this.setState({seller:<SellerSide categories={categories}/>});
     } catch {
       document.location.href = '/';
     }
@@ -131,7 +125,6 @@ export default class PersonalAreaForm extends React.Component<Props, State> {
           <br />
           <Button variant="contained" color="primary" name="deleteAccountButton" onClick={this.deleteUser}>Delete Account</Button>
         </Box>
-        {this.state.seller}
       </>
     );
   }

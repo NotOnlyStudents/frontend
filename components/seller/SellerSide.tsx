@@ -1,6 +1,5 @@
 import { Box, Button, TextField, Typography, Fab, Input, InputLabel, Select, MenuItem } from '@material-ui/core';
 import { Auth } from 'aws-amplify';
-import TextFieldValidation from 'components/validation/TextFieldValidation';
 import Link from 'next/link';
 import React from 'react';
 import AddPhotoAlternateIcon from '@material-ui/icons/AddPhotoAlternate';
@@ -20,7 +19,7 @@ interface State{
   categoryNewName?: string
 }
 
-export default class SellederSide extends React.Component<Props, State> {
+export default class SellerSide extends React.Component<Props, State> {
   constructor(props) {
     super(props);
     this.state={
@@ -29,7 +28,6 @@ export default class SellederSide extends React.Component<Props, State> {
       newCategoryName: '',
       categoryNewName: ''
     }
-    this.handleChange = this.handleChange.bind(this);
   }
 
 
@@ -48,9 +46,11 @@ export default class SellederSide extends React.Component<Props, State> {
   }
 
   renameCategory = (event) =>{
+    event.preventDefault;
     var categories =this.state.categories;
     const index = categories.indexOf(this.state.selectedCategory);
     categories[index] = this.state.categoryNewName;
+    const voidString ="";
     this.setState({categories:categories, selectedCategory:categories[0], categoryNewName:''});
     alert("Category renamed with success!");
   }
@@ -87,11 +87,9 @@ export default class SellederSide extends React.Component<Props, State> {
 
   render(): React.ReactElement {
     return (
-    <Box paddingTop={2} flexDirection="column" borderTop={1}>
-      <Button variant="contained" color="primary" href="/seller/plp">Modify your products</Button>
-      <Box paddingTop={2}>
-        <Typography> Your Categories: </Typography>
-        <Box display="flex" flexDirection="row">
+    <Box paddingTop={2} flexDirection="column">
+        <Typography variant="h4"> Your Categories: </Typography>
+        <Box display="flex" flexDirection="row" paddingTop={2}>
         <Select name="selectedCategory"
           value={this.state.selectedCategory}
           onChange={this.handleChange}
@@ -99,22 +97,22 @@ export default class SellederSide extends React.Component<Props, State> {
           {this.renderItems()}
         </Select>
           <Box paddingLeft={3}>
-            <TextField label="Rename category:" type="text" name="categoryNewName" onChange={this.handleChange}/> 
+            <TextField label="New:" type="text" name="categoryNewName" value={this.state.categoryNewName} onChange={this.handleChange}/> 
           </Box>
           <Box paddingTop={2} paddingLeft={3}>
-            <Button variant="contained" color="primary" name="renameCategoryButton" onClick={this.renameCategory}>Rename</Button>
-          </Box>
-          <Box paddingTop={2} paddingLeft={3}>
-            <Button variant="contained" color="primary" name="deleteCategoryButton" onClick={this.deleteCategory}>Delete this category</Button>
+            <Button variant="contained" color="primary" name="renameCategoryButton" onClick={this.renameCategory}>Rename selected category</Button>
           </Box>
         </Box>
-        <Box display="flex" paddingTop={2} flexDirection="row">
-          <TextField label="New category:" type="text" name="newCategoryName" onChange={this.handleChange}/> 
+        <Box paddingTop={2} paddingBottom={4}>
+            <Button variant="contained" color="primary" name="deleteCategoryButton" onClick={this.deleteCategory}>Delete selected category</Button>
+        </Box>
+        <Typography variant="h5"> Add a new Category: </Typography>
+        <Box display="flex" flexDirection="row">
+          <TextField label="Category name:" type="text" name="newCategoryName" value={this.state.newCategoryName}onChange={this.handleChange}/> 
           <Box paddingLeft={2} paddingTop={2}>
-            <Button variant="contained" color="primary" name="addCategoryButton" onClick={this.handleAdd}>Add a new category</Button>
+            <Button variant="contained" color="primary" name="addCategoryButton" onClick={this.handleAdd}>Add</Button>
           </Box>
         </Box>
-      </Box>
     </Box>
     );
   }

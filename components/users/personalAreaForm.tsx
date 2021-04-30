@@ -1,4 +1,6 @@
-import { Box, Button, TextField, Typography } from '@material-ui/core';
+import {
+  Box, Button, TextField, Typography,
+} from '@material-ui/core';
 import { Auth } from 'aws-amplify';
 import TextFieldValidation from 'components/validation/TextFieldValidation';
 import Link from 'next/link';
@@ -10,13 +12,13 @@ export interface Props {
   email?: string
 }
 
-export interface State { 
-    name?: string,
-    surname?: string,
-    email?: string,
-    newName?: string,
-    newSurname?: string
- }
+export interface State {
+  name?: string,
+  surname?: string,
+  email?: string,
+  newName?: string,
+  newSurname?: string
+}
 
 export default class PersonalAreaForm extends React.Component<Props, State> {
   constructor(props) {
@@ -32,7 +34,7 @@ export default class PersonalAreaForm extends React.Component<Props, State> {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  async componentDidMount():Promise<void>  {
+  async componentDidMount():Promise<void> {
     try {
       const { attributes } = await Auth.currentAuthenticatedUser();
       const { signInUserSession } = await Auth.currentAuthenticatedUser();
@@ -66,19 +68,15 @@ export default class PersonalAreaForm extends React.Component<Props, State> {
     } catch {
       alert('There was a problem with the server');
     }
-   /* let user = await Auth.currentAuthenticatedUser();
+    /* let user = await Auth.currentAuthenticatedUser();
     let result = await Auth.updateUserAttributes(user, {
       'email': 'matteo16.martini@gmail.com',
     });
-  console.log(result);*/
-    
+  console.log(result); */
   }
 
-
-
-  async deleteUser():Promise<void>  {
-    if (window.confirm('Are you sure you wish to delete your account? =('))
-    { 
+  async deleteUser():Promise<void> {
+    if (window.confirm('Are you sure you wish to delete your account? =(')) {
       const user = await Auth.currentAuthenticatedUser();
       user.deleteUser((error) => {
         if (error) {
@@ -91,8 +89,8 @@ export default class PersonalAreaForm extends React.Component<Props, State> {
     }
   }
 
-/*  <Box paddingLeft={2}>
-    <TextField label="Change your Email:" type="text" name="email" onChange={this.handleChange}/> 
+  /*  <Box paddingLeft={2}>
+    <TextField label="Change your Email:" type="text" name="email" onChange={this.handleChange}/>
     </Box> */
 
   render(): React.ReactElement {
@@ -100,25 +98,34 @@ export default class PersonalAreaForm extends React.Component<Props, State> {
       <>
         <Box border={1} marginTop={4}>
           <Box m={2}>
-          <Typography> {this.state.name} {this.state.surname}</Typography> 
-          <Typography>Email: {this.state.email}</Typography>
+            <Typography>
+              {' '}
+              {this.state.name}
+              {' '}
+              {this.state.surname}
+            </Typography>
+            <Typography>
+              Email:
+              {' '}
+              {this.state.email}
+            </Typography>
           </Box>
         </Box>
         <form>
           <Box display="flex" paddingLeft={2} paddingTop={4}>
             <Box display="flex">
-              <TextField label="Change your name:" type="text" name="newName" onChange={this.handleChange}/> 
+              <TextField label="Change your name:" type="text" name="newName" onChange={this.handleChange} />
               <Box paddingLeft={2}>
-                <TextField label="Change your Surname:" type="text" name="newSurname" onChange={this.handleChange}/> 
+                <TextField label="Change your Surname:" type="text" name="newSurname" onChange={this.handleChange} />
               </Box>
             </Box>
-            <Box  paddingLeft={4} paddingTop={2}>
+            <Box paddingLeft={4} paddingTop={2}>
               <Button variant="contained" color="primary" onClick={this.handleSubmit}>Save Changes!</Button>
             </Box>
           </Box>
         </form>
         <Box paddingTop={4} paddingBottom={2}>
-          <Link href="/users/changePassword" >
+          <Link href="/users/changePassword">
             <Button variant="contained" color="primary">Change your password!</Button>
           </Link>
           <br />

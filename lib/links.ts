@@ -14,6 +14,10 @@ export function getPersonalAreaLink(seller: boolean = false) {
   return seller ? '/seller/personal-area' : '/personal-area';
 }
 
+export function getEditPersonalAreaLink(seller: boolean = false) {
+  return seller ? '/seller/personal-area/edit' : '/personal-area/edit';
+}
+
 export function getPLPLink(seller: boolean = false) {
   return seller ? '/seller/plp' : '/plp';
 }

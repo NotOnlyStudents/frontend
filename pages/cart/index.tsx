@@ -1,5 +1,5 @@
 import CartList from 'components/cart/cartList';
-import CartService from 'services/cart-service/CartServiceMock';
+import CartService from 'services/cart-service/CartServiceFetch';
 import { BreadcrumbPath } from 'interfaces/breadcrumb';
 import EMLBreadcrumb from 'components/breadcrumb/EMLBreadcrumb';
 import HomeIcon from '@material-ui/icons/Home';
@@ -8,6 +8,9 @@ import Head from 'next/head';
 import { Typography } from '@material-ui/core';
 import NoProductInCart from 'components/noresult/NoProductsInCart';
 import { Cart } from 'interfaces/cart/cart';
+import { Auth, withSSRContext } from 'aws-amplify';
+import { CognitoUser } from '@aws-amplify/auth';
+import { AuthState } from '@aws-amplify/ui-components';
 
 interface Props {
   cart: Cart;
@@ -37,14 +40,22 @@ function cartPage({ cart }: Props) {
   );
 }
 
-export async function getServerSideProps() {
+export async function getServerSideProps(context) {
   let products = [];
+  const { Auth } = withSSRContext(context);
 
   try {
-    products = await (new CartService()).getCartProducts();
-  } catch (error) {
-    console.log(error);
-  }
+    const user = await Auth.currentAuthenticatedUser();
+    const token = user.signInUserSession.idToken.jwtToken;
+    try {
+      products = await (new CartService()).getCartProducts(token);
+      console.log(products);
+    } catch (error) {
+      console.log(error);
+    }
+  } 
+  catch{console.log("There was a problem with server");}
+
 
   return {
     props: {

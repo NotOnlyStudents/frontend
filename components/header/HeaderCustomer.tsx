@@ -6,15 +6,18 @@ import { makeStyles } from '@material-ui/styles';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import HeaderMenuMobile from './HeaderMenuMobile';
 
+import { Auth } from 'aws-amplify';
+
 const useStyles = makeStyles({
   desktopIcon: {
     color: 'white',
   },
 });
 
-function HeaderCustomer() : React.ReactElement {
-  const classes = useStyles();
 
+
+function HeaderCustomer({signOut}) : React.ReactElement {
+  const classes = useStyles();
   return (
     <>
       <HeaderMenuMobile
@@ -22,10 +25,10 @@ function HeaderCustomer() : React.ReactElement {
           <IconButton href="/cart" className={classes.desktopIcon}>
             <ShoppingCartIcon />
           </IconButton>,
-          <IconButton className={classes.desktopIcon} href="/">
+          <IconButton className={classes.desktopIcon} href="/users/personalArea">
             <AccountCircleIcon aria-label="Your personal area" />
           </IconButton>,
-          <IconButton className={classes.desktopIcon} href="/">
+          <IconButton onClick={signOut} className={classes.desktopIcon}>
             <ExitToAppIcon aria-label="logout" />
           </IconButton>,
         ]}
@@ -34,11 +37,11 @@ function HeaderCustomer() : React.ReactElement {
             <ShoppingCartIcon />
             Cart
           </Link>,
-          <Button href="/" disableRipple>
+          <Button href="/users/personalArea" disableRipple>
             <AccountCircleIcon aria-label="Your personal area" />
             Your personal area
           </Button>,
-          <Button href="/" disableRipple>
+          <Button onClick={signOut}>
             <ExitToAppIcon aria-label="logout" />
             Logout
           </Button>,

@@ -1,14 +1,26 @@
+import { Box, Button, TextField, Typography } from '@material-ui/core';
 import { Auth } from 'aws-amplify';
+import TextFieldValidation from 'components/validation/TextFieldValidation';
 import Link from 'next/link';
 import React from 'react';
+import SellerSide from './SellerSide';
 
-export interface User {
+export interface Props {
   name?: string;
   surname?: string;
   email?: string
 }
 
-export default class FormPersonalArea extends React.Component<User, any> {
+export interface State { 
+    name?: string,
+    surname?: string,
+    email?: string,
+    newName?: string,
+    newSurname?: string
+    seller?: React.ReactElement
+ }
+
+export default class PersonalAreaForm extends React.Component<Props, State> {
   constructor(props) {
     super(props);
     this.state = {
@@ -22,10 +34,15 @@ export default class FormPersonalArea extends React.Component<User, any> {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  async componentDidMount() {
+  async componentDidMount():Promise<void>  {
     try {
+      //Categories arriva da serverSideProps di la
+      const categories = ['Carte','Tavolo','Bicicletta'];
       const { attributes } = await Auth.currentAuthenticatedUser();
-      this.setState({ name: attributes.name, surname: attributes['custom:surname'], email: attributes.email });
+      const { signInUserSession } = await Auth.currentAuthenticatedUser();
+      this.setState({ name: attributes['custom:firstName'], surname: attributes['custom:lastName'], email: attributes.email });
+      if(signInUserSession.accessToken.payload["cognito:groups"][0]=="sellers")
+        this.setState({seller:<SellerSide categories={categories}/>});
     } catch {
       document.location.href = '/';
     }
@@ -37,18 +54,17 @@ export default class FormPersonalArea extends React.Component<User, any> {
     this.setState({ [nam]: val });
   };
 
-  async handleSubmit(event: Event): Promise<void> {
-    event.preventDefault();
+  async handleSubmit(event):Promise<void> {
     try {
       if (this.state.newName == '' && this.state.newSurname == '') {
         alert('Please insert some data');
       } else {
         const user = await Auth.currentAuthenticatedUser();
         if (this.state.newName != '') {
-          await Auth.updateUserAttributes(user, { name: this.state.newName });
+          await Auth.updateUserAttributes(user, { 'custom:firstName': this.state.newName });
         }
         if (this.state.newSurname != '') {
-          await Auth.updateUserAttributes(user, { 'custom:surname': this.state.newSurname });
+          await Auth.updateUserAttributes(user, { 'custom:lastName': this.state.newSurname });
         }
         alert('Data updated successfully');
         document.location.href = '/';
@@ -56,68 +72,66 @@ export default class FormPersonalArea extends React.Component<User, any> {
     } catch {
       alert('There was a problem with the server');
     }
+   /* let user = await Auth.currentAuthenticatedUser();
+    let result = await Auth.updateUserAttributes(user, {
+      'email': 'matteo16.martini@gmail.com',
+    });
+  console.log(result);*/
+    
   }
 
-  async signOut() {
-    try {
-      await Auth.signOut();
-      document.location.href = '/';
-    } catch (error) {
-      console.log('error signing out: ', error);
+
+
+  async deleteUser():Promise<void>  {
+    if (window.confirm('Are you sure you wish to delete your account? =('))
+    { 
+      const user = await Auth.currentAuthenticatedUser();
+      user.deleteUser((error) => {
+        if (error) {
+          alert('There was a problem!');
+        } else {
+          alert('You delete your account with success');
+          document.location.href = '/';
+        }
+      });
     }
   }
 
-  async deleteUser() {
-    const user = await Auth.currentAuthenticatedUser();
-    user.deleteUser((error) => {
-      if (error) {
-        alert('There was a problem!');
-      } else {
-        alert('You delete your account with success');
-        document.location.href = '/';
-      }
-    });
-  }
+/*  <Box paddingLeft={2}>
+    <TextField label="Change your Email:" type="text" name="email" onChange={this.handleChange}/> 
+    </Box> */
 
   render(): React.ReactElement {
     return (
       <>
-        <h1>Personal Area:</h1>
-        <p>
-          Your name:
-          {this.state.name}
-        </p>
-        <p>
-          Your surname:
-          {this.state.surname}
-        </p>
-        <p>
-          Your email:
-          {this.state.email}
-        </p>
+        <Box border={1} marginTop={4}>
+          <Box m={2}>
+          <Typography> {this.state.name} {this.state.surname}</Typography> 
+          <Typography>Email: {this.state.email}</Typography>
+          </Box>
+        </Box>
         <form>
-          <p>Change your name:</p>
-          <input
-            type="text"
-            name="newName"
-            onChange={this.handleChange}
-          />
-          <p>Change your Surname:</p>
-          <input
-            type="text"
-            name="newSurname"
-            onChange={this.handleChange}
-          />
-          <br />
-          <br />
-          <input type="submit" value="Save changes!" />
+          <Box display="flex" paddingLeft={2} paddingTop={4}>
+            <Box display="flex">
+              <TextField label="Change your name:" type="text" name="newName" onChange={this.handleChange}/> 
+              <Box paddingLeft={2}>
+                <TextField label="Change your Surname:" type="text" name="newSurname" onChange={this.handleChange}/> 
+              </Box>
+            </Box>
+            <Box  paddingLeft={4} paddingTop={2}>
+              <Button variant="contained" color="primary" onClick={this.handleSubmit}>Save Changes!</Button>
+            </Box>
+          </Box>
         </form>
-        <br />
-        <Link href="/">
-          <button name="loginButton" onClick={this.signOut}>Sign out</button>
-        </Link>
-        <br />
-        <button name="deleteAccountButton" onClick={this.deleteUser}>Delete Account</button>
+        <Box paddingTop={4} paddingBottom={2}>
+          <Link href="/users/changePassword" >
+            <Button variant="contained" color="primary">Change your password!</Button>
+          </Link>
+          <br />
+          <br />
+          <Button variant="contained" color="primary" name="deleteAccountButton" onClick={this.deleteUser}>Delete Account</Button>
+        </Box>
+        {this.state.seller}
       </>
     );
   }

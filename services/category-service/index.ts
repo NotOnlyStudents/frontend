@@ -1,4 +1,4 @@
 import CategoryServiceFetch from './CategoryServiceFetch';
 import CategoryServiceMock from './CategoryServiceMock';
 
-export default process.env.NODE_ENV === 'development' ? CategoryServiceMock : CategoryServiceFetch;
+export default process.env.NEXT_PUBLIC_SERVICE_METHOD === 'mock' ? CategoryServiceMock : CategoryServiceFetch;

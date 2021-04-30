@@ -3,7 +3,7 @@ import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
 import { CartProduct } from 'interfaces/products/product';
 import {
-  Box, Button, InputLabel, Link, makeStyles, MenuItem, Select,
+  Box, Button, Link, makeStyles,
 } from '@material-ui/core';
 import QuantityManager from 'components/quantity/QuantityManager';
 import SnackbarChangeQuantitySuccess, { changeQuantitySuccessId } from 'components/snackbar/quantity/SnackbarChangeQuantitySuccess';
@@ -15,6 +15,7 @@ import PriceItem from 'components/price-item/PriceItem';
 interface Props {
   item: CartProduct
   index: number
+  payments?: boolean;
   handleChangeQuantity: (quantity: number, index: number) => void
   handleRemoveProduct: (index: number) => void
 }
@@ -27,7 +28,7 @@ const useStyles = makeStyles({
 });
 
 function CartItem({
-  item, index, handleChangeQuantity, handleRemoveProduct,
+  item, index, payments, handleChangeQuantity, handleRemoveProduct,
 }: Props) {
   const classes = useStyles();
 
@@ -91,13 +92,9 @@ function CartItem({
             { item.name }
           </Typography>
           <Box>
-            <Button
-              color="primary"
-              variant="text"
-              onClick={handleClickRemove}
-            >
-              Remove product
-            </Button>
+            {
+            (!payments) ? <Button color="primary" variant="text" onClick={handleClickRemove}> Remove product </Button> : <></>
+            }
             <Button
               href={`/pdp/${item.id}`}
               component={Link}
@@ -108,10 +105,16 @@ function CartItem({
             </Button>
           </Box>
           <Box flexGrow={1} />
-          <QuantityManager
-            counter={item.quantity}
-            handleCounterChange={handleCounterChange}
-          />
+          {
+            (!payments)
+              ? <QuantityManager counter={item.quantity} handleCounterChange={handleCounterChange} />
+              : (
+                <p>
+                  Quantity:
+                  {item.quantity}
+                </p>
+              )
+          }
         </Box>
         <Box
           display="flex"

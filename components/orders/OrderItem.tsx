@@ -8,7 +8,7 @@
 // import { useHistory } from 'react-router-dom';
 // import {
 //     Box, Button, CardActions, IconButton, Link,
-// } from '@material-ui/core'; 
+// } from '@material-ui/core';
 
 // interface Props {
 //     item: OrderItem[]
@@ -30,11 +30,11 @@
 //         <List className={classes.root}>
 //             {item.map((item: OrderProduct): React.ReactElement => (
 //                 <Box position="relative" display="block">
-//                     <ListItem  
-//                         button 
+//                     <ListItem
+//                         button
 //                         key={item.id}
 //                         onClick={() => history.push(`/pdp/${item.id}`)}
-//                         >        
+//                         >
 //                         <ListItemIcon className= {classes.image}>
 //                             {item.image}
 //                         </ListItemIcon>

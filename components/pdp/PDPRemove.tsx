@@ -5,6 +5,8 @@ import {
 import { Delete, Remove } from '@material-ui/icons';
 import SnackbarDeleteProductSuccess, { productDeleteSuccess } from 'components/snackbar/product/SnackbarDeleteProductSuccess';
 import SnackbarDeleteProductError, { productDeleteError } from 'components/snackbar/product/SnackbarDeleteProductError';
+import ProductService from 'services/product-service';
+import { useRouter } from 'next/router';
 
 interface Props {
   id: string,
@@ -13,6 +15,8 @@ interface Props {
 
 function PDPRemove({ id, productName }: Props) {
   const [openModal, setOpenModal] = React.useState(false);
+
+  const router = useRouter();
 
   const [alert, setAlert] = React.useState({
     [productDeleteSuccess]: false,
@@ -34,9 +38,17 @@ function PDPRemove({ id, productName }: Props) {
     changeAlert(alertId, false);
   };
 
-  const handleRemoveProduct = () => {
-    openAlert(productDeleteSuccess);
-    setOpenModal(false);
+  const handleRemoveProduct = async () => {
+    try {
+      await (new ProductService()).deleteProduct(id);
+
+      openAlert(productDeleteSuccess);
+      setOpenModal(false);
+
+      router.push('/seller/plp');
+    } catch (error) {
+
+    }
   };
 
   return (

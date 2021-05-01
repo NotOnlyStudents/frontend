@@ -1,15 +1,28 @@
-import { PLPProductItem, Product } from './product';
+import { Product, ProductPaginator } from './product';
 
-export interface ProductsGETRequest {
-  data: PLPProductItem[]
+export interface GetAllProductsRequest {
+  data: {
+    total: number,
+    products: Product[]
+  }
 }
 
-export interface ProductsPOSTRequest {
+export interface GetOneProductRequest {
+  data: {
+    token: {
+      data: Product
+    },
+    timeout: string
+  },
+  hmac: string
+}
+
+export interface CreateProductRequest {
   data: Product
 }
 
-export interface ProductsPATCHRequest {
+export interface EditProductRequest {
   data: Product
 }
 
-export interface ProductsDELETERequest { }
+export interface DeleteProductRequest { }

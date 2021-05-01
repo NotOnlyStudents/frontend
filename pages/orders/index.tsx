@@ -79,6 +79,7 @@ class OrderCustomer extends React.Component<Props, State> {
           <title>Orders List Page | EmporioLambda</title>
         </Head>
         <EMLBreadcrumb paths={this.breadcrumbPaths} />
+        
         <OrdersList orders={orders} />
         <EMLPagination
           totalElements={totalOrders}
@@ -100,7 +101,6 @@ export async function getServerSideProps({ query }) {
   } catch (error) {
     console.log();
   }
-  console.log(orders);
   return {
     props: {
       filters,

@@ -14,7 +14,6 @@ class OrderServiceFetch implements OrderService {
     if(query) { query = `?${query}`; }
 
     const res: OrdersGetRequest = await req.get<OrdersGetRequest>(query);
-
     return res.orders;
 };
 

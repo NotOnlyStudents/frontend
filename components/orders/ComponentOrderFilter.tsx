@@ -3,7 +3,7 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import TextField from '@material-ui/core/TextField';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Checkbox from '@material-ui/core/Checkbox';
-import { OrderFilter } from 'interfaces/products/product';
+import { OrderFilter, SortOrderType } from 'interfaces/orders/orders';
 import { FormControlLabel } from '@material-ui/core';
 
 interface Props {
@@ -11,12 +11,16 @@ interface Props {
     handleChangeFilter: (filter: OrderFilter) => void;
 }
 
-class ComponentOrderFilter extends React.Component<Props> {
-    constructor(props: Props) {
-        super(props);
+function ComponentOrderFilter({ filter, handleChangeFilter }: Props) {
+    const handlChangeSort =  (sort: SortOrderType) => {
+        const filterSort: OrderFilter = { ...filter };
+        filterSort.sort = sort;
+        handleChangeFilter(filterSort);
     };
 
-
+    const handleChangeMinData = (minData: string) => {
+        if()
+    };
 }
 
 export default ComponentOrderFilter;

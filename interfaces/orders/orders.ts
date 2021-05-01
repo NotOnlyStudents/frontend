@@ -18,22 +18,13 @@ export interface OrderFilter {
   sort?: SortOrderType
 }
   
-/* export interface OrderItem {
-  id: string,
-  name: string,
-  quantity: number,
-  image: string,
-  price: string
-} */
-  
 export interface Order {
   id: string;
   customerEmail: string;
   address: Address;
-  //price: number;
   products: PLPProductItem[];
   additionalInfo: string;
-  data?: Date;
+  date?: string;
   status: string;
 }
   

@@ -7,16 +7,14 @@ import { OrderFilter } from 'interfaces/products/product';
 import { FormControlLabel } from '@material-ui/core';
 
 interface Props {
-    filter: OrderFilter;
-    handleChangeFilter: (filter: OrderFilter) => void;
+  filter: OrderFilter;
+  handleChangeFilter: (filter: OrderFilter) => void;
 }
 
 class ComponentOrderFilter extends React.Component<Props> {
-    constructor(props: Props) {
-        super(props);
-    };
-
-
+  constructor(props: Props) {
+    super(props);
+  }
 }
 
 export default ComponentOrderFilter;

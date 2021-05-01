@@ -1,7 +1,6 @@
 import React from 'react';
 import OrderService from 'services/order-service';
 import { Order, OrderFilter } from 'interfaces/orders/orders';
-// import PLPFilter from 'components/plp/PLPFilter';
 import EMLPagination from 'components/pagination/EMLPagination';
 import OrdersList from 'components/orders/OrdersList';
 import Head from 'next/head';
@@ -9,7 +8,6 @@ import { NextRouter, withRouter } from 'next/router';
 import EMLBreadcrumb from 'components/breadcrumb/EMLBreadcrumb';
 import HomeIcon from '@material-ui/icons/Home';
 import { BreadcrumbPath } from 'interfaces/breadcrumb';
-import ProductService from 'services/product-service';
 
 interface Props {
   router: NextRouter,
@@ -79,7 +77,6 @@ class OrderCustomer extends React.Component<Props, State> {
           <title>Orders List Page | EmporioLambda</title>
         </Head>
         <EMLBreadcrumb paths={this.breadcrumbPaths} />
-        
         <OrdersList orders={orders} />
         <EMLPagination
           totalElements={totalOrders}

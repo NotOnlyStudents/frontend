@@ -77,7 +77,7 @@ function CartItem({
       borderColor="primary"
       marginBottom={3}
     >
-      <Box display="flex">
+      <Box display="flex" margin="auto">
         <CardMedia
           className={classes.image}
           image={item.image}

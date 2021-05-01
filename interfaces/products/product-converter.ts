@@ -1,4 +1,4 @@
-import { PLPProductItem } from './product';
+import { PLPProductItem, Product } from './product';
 
 export function productToPLPProductItem(
   product: Product,

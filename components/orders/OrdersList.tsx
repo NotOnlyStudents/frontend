@@ -10,7 +10,7 @@ interface Props {
 function OrdersList({ orders }: Props) : React.ReactElement {
   const renderAllOrders = (): React.ReactElement[] => orders.map(
     (item: Order): React.ReactElement => (
-      <Grid key={item.id} item> 
+      <Grid key={item.id} item xs={12} sm={12} md={12} lg={12}>
         <OrderProduct order={item} />
       </Grid>
     ),

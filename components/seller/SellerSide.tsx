@@ -5,6 +5,7 @@ import React from 'react';
 import AddPhotoAlternateIcon from '@material-ui/icons/AddPhotoAlternate';
 import { ThreeSixtySharp } from '@material-ui/icons';
 import { getEnabledCategories } from 'node:trace_events';
+import CategoryView from 'components/categories/CategoryView';
 
 
 
@@ -73,21 +74,27 @@ export default class SellerSide extends React.Component<Props, State> {
   }
 
 
-  renderItems = (): React.ReactElement[] => (
-    this.state.categories.map(
-        (value:string, index: number): React.ReactElement => (
-          <MenuItem
-            key={index}
-            value={this.state.categories[index]}>
-            {this.state.categories[index]}
-          </MenuItem>
-        ),
-      ));
+  renderItems = (): React.ReactElement[] => this.state.categories.map(
+    (category: string, index: number): React.ReactElement => (
+      <CategoryView
+        category={this.state.categories[0]}
+        index={index}
+      />
+    ),
+  );
   
 
   render(): React.ReactElement {
     return (
-    <Box paddingTop={2} flexDirection="column">
+    <>
+    {this.renderItems()}
+    </>
+    );
+  }
+}
+
+
+/*<Box paddingTop={2} flexDirection="column">
         <Typography variant="h4"> Your Categories: </Typography>
         <Box display="flex" flexDirection="row" paddingTop={2}>
         <Select name="selectedCategory"
@@ -113,7 +120,4 @@ export default class SellerSide extends React.Component<Props, State> {
             <Button variant="contained" color="primary" name="addCategoryButton" onClick={this.handleAdd}>Add</Button>
           </Box>
         </Box>
-    </Box>
-    );
-  }
-}
+    </Box> */

@@ -1,5 +1,5 @@
 import { AppProps } from 'next/app';
-import { AuthContextProvider } from 'lib/authContext';
+import AuthContextProvider from 'lib/authContext';
 import React from 'react';
 import Head from 'next/head';
 import Layout from 'components/Layout';

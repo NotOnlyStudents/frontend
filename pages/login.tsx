@@ -8,22 +8,28 @@ import {
 import { AuthState, onAuthUIStateChange } from '@aws-amplify/ui-components';
 import { CognitoUser } from '@aws-amplify/auth';
 
-import { useAuthContext } from 'lib/authContext';
+import { CognitoCustomAttributes, getSignedState, useAuthContext } from 'lib/authContext';
 import { useRouter } from 'next/router';
 import { getHomeLink } from 'lib/links';
 import Head from 'next/head';
 
 function Login() {
-  const { setAuthState, setUsername } = useAuthContext();
+  const { setAuthState, setUserInfo, setSignedState } = useAuthContext();
   const router = useRouter();
 
-  useEffect(() => onAuthUIStateChange(async (nextAuthState: AuthState, authData: CognitoUser) => {
+  useEffect(() => onAuthUIStateChange(async (nextAuthState: AuthState, authData: object) => {
     if (nextAuthState === AuthState.SignedIn) {
-      setAuthState(nextAuthState);
-      setUsername(authData.getUsername());
+      const { attributes, signInUserSession } = authData;
 
-      await router.push(getHomeLink());
-      router.reload();
+      setAuthState(nextAuthState);
+      setUserInfo({
+        name: attributes[CognitoCustomAttributes.name],
+        surname: attributes[CognitoCustomAttributes.surname],
+        email: attributes.email,
+      });
+      setSignedState(getSignedState(signInUserSession));
+
+      router.push(getHomeLink());
     }
   }), []);
 

@@ -9,18 +9,22 @@ import {
 } from 'lib/links';
 import { useRouter } from 'next/router';
 import { Auth } from 'aws-amplify';
+import { useAuthContext } from 'lib/authContext';
+import { SignedState } from 'interfaces/login';
 import HeaderMobileLink from './links/HeaderMobileLink';
 import HeaderMenuMobile from './HeaderMenuMobile';
 import HeaderDesktopLink from './links/HeaderDesktopLink';
 
 function HeaderSeller() : React.ReactElement {
   const router = useRouter();
+  const { setSignedState } = useAuthContext();
 
   const handleSignOut = async () => {
     try {
       await Auth.signOut();
       await router.push(getHomeLink(true));
-      router.reload();
+
+      setSignedState(SignedState.NotAuthenticated);
     } catch (error) {
       console.log('error signing out: ', error);
     }

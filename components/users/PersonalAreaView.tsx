@@ -1,15 +1,35 @@
 import React from 'react';
 import { Box, IconButton, Typography } from '@material-ui/core';
-import { PersonalAreaInformations } from 'interfaces/users/users';
+import { UserInfo } from 'interfaces/users/users';
 import EditIcon from '@material-ui/icons/Edit';
 import { getEditPersonalAreaLink } from 'lib/links';
+import { Auth } from 'aws-amplify';
 
 interface Props {
-  info: PersonalAreaInformations,
   seller?: boolean,
 }
 
-function PersonalAreaView({ info, seller }: Props) {
+function PersonalAreaView({ seller }: Props) {
+  const [info, setInfo] = React.useState<UserInfo>({
+    name: '',
+    surname: '',
+    email: '',
+  });
+
+  const getPersonalInformation = async () => {
+    const { attributes } = await Auth.currentAuthenticatedUser();
+
+    setInfo({
+      name: attributes['custom:firstName'],
+      surname: attributes['custom:lastName'],
+      email: attributes.email,
+    });
+  };
+
+  React.useEffect(() => {
+    getPersonalInformation();
+  }, []);
+
   return (
     <>
       <Box display="flex" justifyContent="space-between">

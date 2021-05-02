@@ -15,7 +15,7 @@ import LogoIcon from 'components/icons/LogoIcon';
 import { getHomeLink, getPLPLink } from 'lib/links';
 import { SignedState } from 'interfaces/login';
 import Auth from '@aws-amplify/auth';
-import { isSeller } from 'lib/authContext';
+import { isSeller, useAuthContext } from 'lib/authContext';
 import HeaderNotAuthenticated from './HeaderNotAuthenticated';
 import HeaderSeller from './HeaderSeller';
 import HeaderCustomer from './HeaderCustomer';
@@ -79,25 +79,9 @@ function Header(): React.ReactElement {
   const classes = useStyles();
   const router: NextRouter = useRouter();
 
+  const { signedState } = useAuthContext();
+
   const [searchText, setSearchText] = useState(router.query.text || '');
-  const [signedState, setSignedState] = useState(SignedState.NotAuthenticated);
-
-  const checkSignedState = async () => {
-    try {
-      const { signInUserSession } = await Auth.currentAuthenticatedUser();
-      if (isSeller(signInUserSession)) {
-        setSignedState(SignedState.Seller);
-      } else {
-        setSignedState(SignedState.Customer);
-      }
-    } catch {
-      setSignedState(SignedState.NotAuthenticated);
-    }
-  };
-
-  React.useEffect(() => {
-    checkSignedState();
-  }, []);
 
   const handleSearchEnter = async (
     event: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>,

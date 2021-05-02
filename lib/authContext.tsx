@@ -1,17 +1,18 @@
 import React, { createContext, useContext, useState } from 'react';
 
 import { AuthState } from '@aws-amplify/ui-components';
-import Auth from '@aws-amplify/auth';
-import { useRouter } from 'next/router';
-import { getHomeLink } from './links';
+import { SignedState } from 'interfaces/login';
+import { UserInfo } from 'interfaces/users/users';
+import { Auth } from 'aws-amplify';
 
 interface AuthContextProps {
-  readonly authState: AuthState,
-  readonly username: string | undefined,
-  // eslint-disable-next-line no-unused-vars
+  authState: AuthState,
+  userInfo: UserInfo,
+  signedState: SignedState,
+
   setAuthState: (newAuthState: AuthState) => void,
-  // eslint-disable-next-line no-unused-vars
-  setUsername: (newUsername: string | undefined) => void
+  setUserInfo: (userInfo: UserInfo) => void,
+  setSignedState: (signedState: SignedState) => void
 }
 
 export const AuthContext = createContext<Partial<AuthContextProps>>({});
@@ -20,16 +21,34 @@ interface Props {
   children: React.ReactElement;
 }
 
-export function AuthContextProvider({ children }: Props) {
+function AuthContextProvider({ children }: Props) {
   const [authState, setAuthState] = useState<AuthState>();
-  const [username, setUsername] = useState<string | undefined>();
+  const [signedState, setSignedState] = useState<SignedState>(SignedState.NotAuthenticated);
+  const [userInfo, setUserInfo] = useState<UserInfo>({});
+
+  const checkSignedState = async () => {
+    const { signInUserSession, attributes } = await Auth.currentAuthenticatedUser();
+
+    setSignedState(getSignedState(signInUserSession));
+    setUserInfo({
+      name: attributes[CognitoCustomAttributes.name],
+      surname: attributes[CognitoCustomAttributes.surname],
+      email: attributes.email,
+    });
+  };
+
+  React.useEffect(() => {
+    checkSignedState();
+  }, []);
 
   return (
     <AuthContext.Provider value={{
       authState,
       setAuthState,
-      username,
-      setUsername,
+      signedState,
+      setSignedState,
+      userInfo,
+      setUserInfo,
     }}
     >
       {children}
@@ -41,6 +60,29 @@ export function useAuthContext() {
   return useContext(AuthContext);
 }
 
-export function isSeller(signInUserSession): boolean {
-  return signInUserSession.accessToken.payload['cognito:groups'][0] === 'sellers';
+export enum CognitoCustomAttributes {
+  name = 'custom:firstName',
+  surname = 'custom:lastName',
 }
+
+export function getSignedState(userSession) : SignedState {
+  let signedState;
+
+  function isSeller(signInUserSession): boolean {
+    return signInUserSession.accessToken.payload['cognito:groups'][0] === 'sellers';
+  }
+
+  try {
+    if (isSeller(userSession)) {
+      signedState = SignedState.Seller;
+    } else {
+      signedState = SignedState.Customer;
+    }
+  } catch {
+    signedState = SignedState.NotAuthenticated;
+  }
+
+  return signedState;
+}
+
+export default AuthContextProvider;

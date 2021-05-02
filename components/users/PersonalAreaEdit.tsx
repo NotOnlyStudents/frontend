@@ -1,13 +1,24 @@
-import { Auth } from 'aws-amplify';
+import { Box, Button } from '@material-ui/core';
+import HighlightOffIcon from '@material-ui/icons/HighlightOff';
+import CheckIcon from '@material-ui/icons/Check';
 import TextFieldValidation from 'components/validation/TextFieldValidation';
-import { PersonalAreaInformations } from 'interfaces/users/users';
+import { UserInfo } from 'interfaces/users/users';
+import { CognitoCustomAttributes, useAuthContext } from 'lib/authContext';
 import React from 'react';
+import { NextRouter, useRouter } from 'next/router';
+import { Auth } from 'aws-amplify';
+import { getPersonalAreaLink } from 'lib/links';
+import { SignedState } from 'interfaces/login';
 
 function PersonalAreaEdit() {
-  const [info, setInfo] = React.useState<PersonalAreaInformations>({
+  const { userInfo, setUserInfo, signedState } = useAuthContext();
+  const router: NextRouter = useRouter();
+
+  const [info, setInfo] = React.useState<UserInfo>({
     name: '',
     surname: '',
     email: '',
+    oldPassword: '',
     password: '',
     confirmPassword: '',
   });
@@ -20,20 +31,20 @@ function PersonalAreaEdit() {
     confirmPassword: false,
   });
 
-  const getPersonalInformation = async () => {
-    const { attributes } = await Auth.currentAuthenticatedUser();
-
+  React.useEffect(() => {
     setInfo({
       ...info,
-      name: attributes['custom:firstName'],
-      surname: attributes['custom:lastName'],
-      email: attributes.email,
+      name: userInfo.name,
+      surname: userInfo.surname,
+      email: userInfo.email,
     });
-  };
-
-  React.useEffect(() => {
-    getPersonalInformation();
-  }, []);
+    setValidation({
+      ...validation,
+      name: false,
+      surname: false,
+      email: false,
+    });
+  }, [userInfo]);
 
   const setError = (id: string, error: boolean) => {
     const newValidaiton = validation;
@@ -53,6 +64,10 @@ function PersonalAreaEdit() {
 
   const handleChangeEmail = (email: string) => {
     setInfo({ ...info, email });
+  };
+
+  const handleChangeOldPassword = (oldPassword: string) => {
+    setInfo({ ...info, oldPassword });
   };
 
   const handleChangePassword = (password: string) => {
@@ -76,6 +91,63 @@ function PersonalAreaEdit() {
 
     if (samePassword ^ validation.confirmPassword) {
       setError('confirmPassword', samePassword);
+    }
+  };
+
+  const checkValidation = () => (Object.values(validation).every((val: boolean) => !val));
+
+  const handleClickCancel = () => {
+    router.back();
+  };
+
+  const handleClickSave = async () => {
+    if (checkValidation) {
+      const newAttributes: object = {};
+      const newUserInfo: UserInfo = {};
+
+      if (info.name !== userInfo.name) {
+        newAttributes[CognitoCustomAttributes.name] = info.name;
+        newUserInfo.name = info.name;
+      }
+
+      if (info.surname !== userInfo.surname) {
+        newAttributes[CognitoCustomAttributes.surname] = info.surname;
+        newUserInfo.surname = info.surname;
+      }
+
+      if (info.email !== userInfo.email) {
+        newAttributes.email = info.email;
+        newUserInfo.email = info.email;
+      }
+
+      if (newAttributes) {
+        try {
+          const user = await Auth.currentAuthenticatedUser();
+
+          await Auth.updateUserAttributes(user, newAttributes);
+        } catch (error) {
+          console.error(error);
+        }
+      }
+
+      if (info.oldPassword) {
+        try {
+          const user = await Auth.currentAuthenticatedUser();
+
+          await Auth.changePassword(user, info.oldPassword, info.password);
+        } catch (error) {
+          console.error(error);
+        }
+      }
+
+      setUserInfo({
+        ...userInfo,
+        ...newUserInfo,
+      });
+
+      router.push(getPersonalAreaLink(signedState === SignedState.Seller));
+    } else {
+      // TODO Doing snackbar
     }
   };
 
@@ -124,9 +196,20 @@ function PersonalAreaEdit() {
       />
 
       <TextFieldValidation
+        id="oldPassword"
+        label="Old password"
+        placeholder="Insert your old password to change it or keep it empty if you don't want to do it"
+        helperText=""
+        value={info.oldPassword}
+        fullWidth
+        margin="normal"
+        handleChange={handleChangeOldPassword}
+      />
+
+      <TextFieldValidation
         id="password"
         label="Password"
-        placeholder="Insert your new password or keep it empty if you don't want to change it"
+        placeholder="Insert your new password"
         helperText=""
         value={info.password}
         fullWidth
@@ -146,6 +229,17 @@ function PersonalAreaEdit() {
         handleChange={handleChangeConfirmPassword}
         error={validation.confirmPassword}
       />
+
+      <Box display="flex" justifyContent="space-between">
+        <Button variant="contained" color="secondary" onClick={handleClickCancel}>
+          <HighlightOffIcon />
+          Cancel
+        </Button>
+        <Button variant="contained" color="primary" onClick={handleClickSave}>
+          <CheckIcon />
+          Save
+        </Button>
+      </Box>
     </>
   );
 }

@@ -51,6 +51,8 @@ function TextFieldValidation(
   };
 
   React.useEffect(() => {
+    console.log(value);
+
     handleCallSetError(value);
   }, []);
 

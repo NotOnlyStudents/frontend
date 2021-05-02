@@ -1,7 +1,7 @@
-import { Order, OrderFilter } from 'interfaces/orders/orders';
+import { Order, OrderFilter, OrderPaginator } from 'interfaces/orders/orders';
 
 interface OrderService {
-  getAllOrder(params?: OrderFilter): Promise<Order[]>;
+  getAllOrder(params?: OrderFilter): Promise<OrderPaginator>;
   getOrderById(id: string): Promise<Order>;
 }
 

@@ -1,6 +1,7 @@
 import React from 'react';
 import OrderService from 'services/order-service';
-import { Order, OrderFilter } from 'interfaces/orders/orders';
+import { Order, OrderFilter, OrderPaginator } from 'interfaces/orders/orders';
+// import PLPFilter from 'components/plp/PLPFilter';
 import EMLPagination from 'components/pagination/EMLPagination';
 import OrdersList from 'components/orders/OrdersList';
 import Head from 'next/head';
@@ -81,7 +82,7 @@ class OrderCustomer extends React.Component<Props, State> {
         <EMLPagination
           totalElements={totalOrders}
           limit={OrderCustomer.limit}
-          page={filters.offset}
+          page={filters.offset + 1}
           handleChangePagination={this.handleChangePagination}
         />
       </>
@@ -92,17 +93,24 @@ class OrderCustomer extends React.Component<Props, State> {
 export async function getServerSideProps({ query }) {
   const filters: OrderFilter = query;
 
-  let orders = [];
+  let paginator: OrderPaginator;
+  let error = false;
+
   try {
-    orders = await (new OrderService()).getAllOrder(filters);
+    paginator = await (new OrderService()).getAllOrder(filters);
   } catch (error) {
-    console.log();
+    paginator = {
+      orders: [],
+      total: 0,
+    };
+    error = true;
   }
   return {
     props: {
       filters,
-      orders,
-      totalProducts: 50,
+      orders: paginator.orders,
+      total: paginator.total,
+      error,
     },
   };
 }

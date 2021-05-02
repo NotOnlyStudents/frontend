@@ -54,7 +54,6 @@ const useStyles = makeStyles({
   },
 });
 
-// TODO Colore in base allo stato dell'ordine
 function OrderProduct({ order }: Props) {
   const classes = useStyles();
 

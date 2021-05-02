@@ -1,13 +1,13 @@
 import faker from 'faker';
 import {
-  Order, OrderFilter,
+  Order, OrderFilter, OrderPaginator,
 } from 'interfaces/orders/orders';
 import { PLPProductItem } from 'interfaces/products/product';
 import OrderService from './OrderService';
 
 class OrderServiceMock implements OrderService {
-  getAllOrder = async (params?: OrderFilter): Promise<Order[]> => (
-    (new Array(10)).fill(0)).map(
+  getAllOrder = async (params?: OrderFilter): Promise<OrderPaginator> => ({
+    orders: (new Array(10)).fill(0).map(
     (): Order => ({
       id: faker.datatype.uuid(),
       customerEmail: faker.internet.email(),
@@ -30,9 +30,9 @@ class OrderServiceMock implements OrderService {
       additionalInfo: faker.datatype.string(),
       date: faker.datatype.datetime().toISOString(),
       status: faker.datatype.string(),
-    }
-    ),
-  );
+    })),
+    total: 5,
+  });
 
   getOrderById = async (id: string): Promise<Order> => ({
     id: faker.datatype.uuid(),

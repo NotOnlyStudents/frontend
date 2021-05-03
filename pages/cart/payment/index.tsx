@@ -14,10 +14,17 @@ import {
 import CartService from 'services/cart-service';
 import CartList from 'components/cart/cartList';
 import { ExpandLess, ExpandMore } from '@material-ui/icons';
+import { withSSRContext } from 'aws-amplify';
+import { CognitoUser } from '@aws-amplify/auth';
+import { AuthState } from '@aws-amplify/ui-components';
+import { AmplifySignOut } from '@aws-amplify/ui-react';
+import CheckoutButton from 'components/button/CheckoutButton';
 
 interface Props {
   cart: Cart,
   addresses: Address[];
+  authState?: AuthState,
+  username?: string | undefined,
 }
 
 interface State {
@@ -85,6 +92,7 @@ class PaymentPage extends React.Component<Props, State> {
     const {
       addresses, selectedAddress, cart, expanded,
     } = this.state;
+    const { _authState, _username } = this.props;
     return (
       <>
         <Head>
@@ -117,23 +125,29 @@ class PaymentPage extends React.Component<Props, State> {
           margin="normal"
         />
         <Box width="100%" display="flex" justifyContent="flex-end">
-          <Button
-            variant="contained"
-            color="primary"
-            href="/"
-          >
-            Checkout
-          </Button>
-
+          {_authState === AuthState.SignIn && _username ? (
+            <>
+              <CheckoutButton cartID={_username} />
+            </>
+          ) : (
+            <>
+              <Button href="/users/authenticator" component={Link} size="small" color="primary">
+                Login to checkout
+              </Button>
+            </>
+          )}
         </Box>
       </>
     );
   }
 }
 
-export async function getServerSideProps() {
+export async function getServerSideProps(context) {
   let addresses = [];
   let products = [];
+  let state: AuthState;
+  let username: string = null;
+  const { Auth } = withSSRContext(context);
   try {
     addresses = await (new AddressService()).getAllAddress();
   } catch (error) {
@@ -144,12 +158,21 @@ export async function getServerSideProps() {
   } catch (error) {
     console.log(error);
   }
+  try {
+    const user: CognitoUser = await Auth.currentAuthenticatedUser();
+    username = user.getUsername();
+    state = AuthState.SignIn;
+  } catch (error) {
+    state = AuthState.SignedOut;
+  }
   return {
     props: {
       addresses,
       cart: {
         products,
       },
+      _authState: state,
+      _username: username,
     },
   };
 }

@@ -7,12 +7,13 @@ import CheckIcon from '@material-ui/icons/Check';
 import TextFieldValidation from 'components/validation/TextFieldValidation';
 import { Category, CategoryValidation } from 'interfaces/categories/category';
 import CategoryService from 'services/category-service';
+import CategoryServiceType from 'services/category-service/CategoryService';
 
 interface Props {
   category?: Category;
   creation?: boolean;
-  handleChangeCategory?: (editCategory: Category) => void,
-  handleAddCategory?: (newCategory: Category) => void,
+  handleChangeCategory?: () => void,
+  handleAddCategory?: () => void,
   handleCloseDialog: () => void
 }
 
@@ -26,7 +27,7 @@ class CategoryEdit extends React.Component<Props, State> {
     super(props);
 
     this.state = {
-      category: props.category || '',
+      category: props.category || { name: '' },
       error: {
         name: false,
       },
@@ -43,11 +44,11 @@ class CategoryEdit extends React.Component<Props, State> {
     });
   };
 
-  handleChangeCategory = (category: Category) => {
+  handleChangeCategoryName = (name: string) => {
     this.setState((state: State) => {
       const newState = state;
 
-      newState.category = category;
+      newState.category.name = name;
 
       return newState;
     });
@@ -58,20 +59,16 @@ class CategoryEdit extends React.Component<Props, State> {
   handleClickSave = async () => {
     if (this.checkValidation()) {
       const { category } = this.state;
+      const { creation } = this.props;
 
-      const ps = new CategoryService();
+      const cs: CategoryServiceType = new CategoryService();
 
-      // if (category.id) {
-      //   newCategory = await ps.editAddress(address.id, address);
-      // } else {
-      //   newCategory = await ps.createAddress(address);
-      // }
-      const newCategory = category;
-
-      if (this.props.creation) {
-        this.props.handleAddCategory(newCategory);
+      if (creation) {
+        await cs.addCategory(category);
+        this.props.handleAddCategory();
       } else {
-        this.props.handleChangeCategory(newCategory);
+        await cs.editCategory(category.id, category);
+        this.props.handleChangeCategory();
       }
     }
   };
@@ -88,9 +85,9 @@ class CategoryEdit extends React.Component<Props, State> {
             label="Category name"
             placeholder="Insert category name"
             margin="normal"
-            handleChange={this.handleChangeCategory}
+            handleChange={this.handleChangeCategoryName}
             rules="required"
-            value={category}
+            value={category.name}
             error={error.name}
             setError={this.setError}
             helperText="Category name is required"

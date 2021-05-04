@@ -7,8 +7,8 @@ class HTTPRequest implements HTTPRequest {
 
   readonly url: string;
 
-  constructor(serviceName: string) {
-    this.url = `${process.env.NEXT_PUBLIC_BASE_URL}/${serviceName}`;
+  constructor(baseURL: string, serviceName: string) {
+    this.url = `${baseURL}/${serviceName}`;
   }
 
   async get<T>(params: string = '', headers: HeadersInit = {}): Promise<T> { // Request data

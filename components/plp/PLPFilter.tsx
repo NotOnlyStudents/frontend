@@ -65,11 +65,13 @@ function PLPFilter({ filter, seller, handleChangeFilter }: Props) {
     )
     : <></>);
 
+  const selectedCategories = filter.categories.map((name): Category => ({ name }));
+
   return (
     <Box p={2}>
       <Box display="flex">
         <AutocompleteCategories
-          selectedCategories={filter.categories}
+          selectedCategories={selectedCategories}
           handleChangeCategories={handleChangeCategories}
         />
         { renderCheckboxEvidenceIfSeller() }

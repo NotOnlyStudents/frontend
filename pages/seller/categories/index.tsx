@@ -12,10 +12,11 @@ import { Category } from 'interfaces/categories/category';
 import CategoryService from 'services/category-service';
 
 interface Props {
-  categories: Category[]
+  categories: Category[],
+  searchName: string
 }
 
-function CategoriesPage({ categories }: Props) {
+function CategoriesPage({ categories, searchName }: Props) {
   const breadcrumbPaths:BreadcrumbPath[] = [
     { name: 'Home', href: getHomeLink(true), icon: HomeIcon },
     { name: 'Categories' },
@@ -30,16 +31,20 @@ function CategoriesPage({ categories }: Props) {
       <Typography variant="h4" component="h2">
         Categories
       </Typography>
-      <CategoriesList categories={categories} />
+      <CategoriesList
+        categories={categories}
+        searchName={searchName}
+      />
     </>
   );
 }
 
 export async function getServerSideProps({ query }) {
   let categories: Category[] = [];
+  const searchName = query.text || '';
 
   try {
-    categories = await (new CategoryService()).getCategories(query.text || '');
+    categories = await (new CategoryService()).getCategories(searchName);
   } catch (error) {
     console.error(error);
   }
@@ -47,6 +52,7 @@ export async function getServerSideProps({ query }) {
   return {
     props: {
       categories,
+      searchName,
     },
   };
 }

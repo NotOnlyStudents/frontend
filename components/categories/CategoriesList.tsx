@@ -1,17 +1,25 @@
 import React from 'react';
 import CategoryView from 'components/categories/CategoryView';
 import { Category } from 'interfaces/categories/category';
-import { Box, Button, Dialog } from '@material-ui/core';
+import {
+  Box, Button, Dialog, TextField,
+} from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
+import TextFieldValidation from 'components/validation/TextFieldValidation';
+import CategoryService from 'services/category-service';
+import { NextRouter, withRouter } from 'next/router';
 import CategoryEdit from './CategoryEdit';
 
 interface Props {
-  categories: Category[]
+  router: NextRouter,
+  categories: Category[],
+  searchName: string
 }
 
 interface State{
   categories: Category[],
-  openNew: boolean
+  openNew: boolean,
+  searchName: string
 }
 
 class CategoriesList extends React.Component<Props, State> {
@@ -20,28 +28,17 @@ class CategoriesList extends React.Component<Props, State> {
     this.state = {
       categories: props.categories,
       openNew: false,
+      searchName: props.searchName,
     };
   }
 
-  handleAddCategory = (newCategory: Category) => {
-    this.setState((state: State) => {
-      const newState = state;
-
-      newState.categories.push(newCategory);
-      newState.openNew = false;
-
-      return newState;
-    });
+  handleAddCategory = () => {
+    this.fetchAllCategories();
+    this.handleCloseNewCategoryDialog();
   };
 
-  handleChangeCategory = (editCategory: Category, index: number) => {
-    this.setState((state: State) => {
-      const newState = state;
-
-      newState.categories[index] = editCategory;
-
-      return newState;
-    });
+  handleChangeCategory = () => {
+    this.fetchAllCategories();
   };
 
   handleRemoveCategory = (index: number) => {
@@ -62,10 +59,32 @@ class CategoriesList extends React.Component<Props, State> {
     this.setState({ openNew: false });
   };
 
+  handleChangeSearch = (searchName: string) => {
+    const { router } = this.props;
+
+    this.setState({ searchName });
+
+    router.push({
+      pathname: '',
+      query: {
+        text: searchName,
+      },
+    });
+
+    this.fetchAllCategories();
+  };
+
+  fetchAllCategories = async () => {
+    const { searchName } = this.state;
+    const categories = await (new CategoryService()).getCategories(searchName);
+
+    this.setState({ categories });
+  };
+
   renderItems = (): React.ReactElement[] => this.state.categories.map(
-    (category: string, index: number): React.ReactElement => (
+    (category: Category, index: number): React.ReactElement => (
       <CategoryView
-        key={category}
+        key={category.id}
         category={category}
         index={index}
         handleRemoveCategory={this.handleRemoveCategory}
@@ -75,7 +94,7 @@ class CategoriesList extends React.Component<Props, State> {
   );
 
   render(): React.ReactElement {
-    const { openNew } = this.state;
+    const { openNew, searchName } = this.state;
 
     return (
       <>
@@ -88,6 +107,17 @@ class CategoriesList extends React.Component<Props, State> {
             <AddIcon />
             Add a new category
           </Button>
+        </Box>
+        <Box display="flex" justifyContent="center">
+          <TextFieldValidation
+            id="search"
+            label="Search category"
+            placeholder="Insert category name to search"
+            margin="normal"
+            fullWidth
+            handleChange={this.handleChangeSearch}
+            value={searchName}
+          />
         </Box>
         {this.renderItems()}
         <Dialog open={openNew} onClose={this.handleCloseNewCategoryDialog}>
@@ -102,4 +132,4 @@ class CategoriesList extends React.Component<Props, State> {
   }
 }
 
-export default CategoriesList;
+export default withRouter(CategoriesList);

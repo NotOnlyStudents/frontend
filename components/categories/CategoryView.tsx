@@ -10,9 +10,9 @@ import CategoryRemove from './CategoryRemove';
 import CategoryEdit from './CategoryEdit';
 
 interface Props {
-  category: string,
+  category: Category,
   index?: number,
-  handleChangeCategory?: (category: string, index?: number) => void,
+  handleChangeCategory?: (category: Category, index?: number) => void,
   handleRemoveCategory?: (index: number) => void,
 }
 
@@ -41,13 +41,13 @@ function CategoryView({
   return (
     <Box width="100%" display="flex" justifyContent="space-between">
       <Typography>
-        { category }
+        { category.name }
       </Typography>
       <Box>
         <IconButton color="primary" onClick={handleClickEditButton}>
           <Edit />
         </IconButton>
-        <CategoryRemove id={index.toString()} onRemove={() => handleRemoveCategory(index)} />
+        <CategoryRemove id={category.id} onRemove={() => handleRemoveCategory(index)} />
       </Box>
       <Dialog open={edit} onClose={handleCloseEdit}>
         <CategoryEdit

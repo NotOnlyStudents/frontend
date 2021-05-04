@@ -3,6 +3,7 @@ import {
   Button, Dialog, DialogActions, DialogTitle, IconButton,
 } from '@material-ui/core';
 import { Delete } from '@material-ui/icons';
+import CategoryService from 'services/category-service';
 
 interface Props {
   id: string,
@@ -12,7 +13,12 @@ interface Props {
 function CategoryRemove({ id, onRemove }: Props) {
   const [openModal, setOpenModal] = React.useState(false);
 
-  const handleClickRemove = () => {
+  const handleClickRemove = async () => {
+    try {
+      await (new CategoryService()).removeCategory(id);
+    } catch (error) {
+      console.error(error);
+    }
     onRemove();
   };
 

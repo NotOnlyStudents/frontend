@@ -18,7 +18,7 @@ interface Props {
 function PLPFilter({ filter, seller, handleChangeFilter }: Props) {
   const handleChangeCategories = (categories: Category[]) => {
     const filterCategories: ProductFilter = { ...filter };
-    filterCategories.categories = categories;
+    filterCategories.categories = categories.map((cat) => (cat.name));
     handleChangeFilter(filterCategories);
   };
 

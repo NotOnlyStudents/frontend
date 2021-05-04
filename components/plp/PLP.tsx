@@ -61,7 +61,7 @@ class PLP extends React.Component<Props, State> {
     };
 
     if (filters.categories) {
-      query.categories = filters.categories.map((c) => c.name);
+      query.categories = filters.categories;
     }
 
     if (filters.available) {

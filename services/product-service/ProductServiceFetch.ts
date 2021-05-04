@@ -13,9 +13,7 @@ import ProductService from './ProductService';
 class ProductServiceFetch implements ProductService {
   getAllProduct = async (params?: ProductFilter): Promise<ProductPaginator> => {
     const req: HTTPRequest = new HTTPRequest(process.env.NEXT_PUBLIC_PRODUCTS_CATEGORIES_SERVICE_URL, 'products');
-    let query: string = queryString.stringify(params);
-
-    if (query) { query = `?${query}`; }
+    const query: string = queryString.stringify(params);
 
     const res: GetAllProductsRequest = await req.get<GetAllProductsRequest>(query);
 

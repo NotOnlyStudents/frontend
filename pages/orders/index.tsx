@@ -9,12 +9,15 @@ import { NextRouter, withRouter } from 'next/router';
 import EMLBreadcrumb from 'components/breadcrumb/EMLBreadcrumb';
 import HomeIcon from '@material-ui/icons/Home';
 import { BreadcrumbPath } from 'interfaces/breadcrumb';
+import { getHomeLink } from 'lib/links';
+import { Typography } from '@material-ui/core';
 
 interface Props {
   router: NextRouter,
   filters: OrderFilter,
   orders: Order[],
-  totalOrders: number
+  totalOrders: number,
+  error: boolean
 }
 
 interface State {
@@ -27,7 +30,7 @@ class OrderCustomer extends React.Component<Props, State> {
   private static limit = 5;
 
   breadcrumbPaths: BreadcrumbPath[] = [
-    { name: 'Home', href: '/', icon: HomeIcon },
+    { name: 'Home', href: getHomeLink(), icon: HomeIcon },
     { name: 'Orders List Page' },
   ];
 
@@ -35,24 +38,10 @@ class OrderCustomer extends React.Component<Props, State> {
     super(props);
 
     this.state = {
-      filters: { offset: 1 },
-      orders: [],
-      totalOrders: 0,
+      filters: props.filters,
+      orders: props.orders,
+      totalOrders: props.totalOrders,
     };
-  }
-
-  componentDidMount() {
-    this.setState((state: State) => {
-      const { filters, orders, totalOrders } = this.props;
-
-      const newState: State = {
-        filters: { ...state.filters, ...filters },
-        orders: [...state.orders, ...orders],
-        totalOrders,
-      };
-
-      return newState;
-    });
   }
 
   handleChangeFilters = (filters: OrderFilter) => {
@@ -78,6 +67,9 @@ class OrderCustomer extends React.Component<Props, State> {
           <title>Orders List Page | EmporioLambda</title>
         </Head>
         <EMLBreadcrumb paths={this.breadcrumbPaths} />
+        <Typography variant="h4" component="h2">
+          Your orders
+        </Typography>
         <OrdersList orders={orders} />
         <EMLPagination
           totalElements={totalOrders}
@@ -98,7 +90,7 @@ export async function getServerSideProps({ query }) {
 
   try {
     paginator = await (new OrderService()).getAllOrder(filters);
-  } catch (error) {
+  } catch (e) {
     paginator = {
       orders: [],
       total: 0,

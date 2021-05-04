@@ -1,25 +1,26 @@
 import React from 'react';
 import { Order } from 'interfaces/orders/orders';
 import OrderProduct from 'components/orders/OrderProduct';
-import { Grid } from '@material-ui/core';
+import { Box } from '@material-ui/core';
 
 interface Props {
-  orders: Order[];
+  orders: Order[],
+  seller?: boolean
 }
 
-function OrdersList({ orders }: Props) : React.ReactElement {
+function OrdersList({ orders, seller }: Props) : React.ReactElement {
   const renderAllOrders = (): React.ReactElement[] => orders.map(
     (item: Order): React.ReactElement => (
-      <Grid key={item.id} item xs={12} sm={12} md={12} lg={12}>
-        <OrderProduct order={item} />
-      </Grid>
+      <Box key={item.id} marginBottom="4em">
+        <OrderProduct order={item} seller={seller} />
+      </Box>
     ),
   );
 
   return (
-    <Grid container spacing={4} justify="center" alignItems="center">
-      {renderAllOrders()}
-    </Grid>
+    <Box>
+      { renderAllOrders() }
+    </Box>
   );
 }
 

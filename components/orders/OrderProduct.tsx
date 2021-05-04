@@ -5,10 +5,12 @@ import {
   Button, Grid, CardMedia, Typography, Link,
 } from '@material-ui/core';
 import { PLPProductItem } from 'interfaces/products/product';
+import { getViewProductLink } from 'lib/links';
 // import { OrderItem } from 'interfaces/products/product';
 
 interface Props {
-  order: Order
+  order: Order,
+  seller?: boolean
 }
 
 const useStyles = makeStyles({
@@ -40,7 +42,7 @@ const useStyles = makeStyles({
   },
   description: {
     paddingLeft: 1,
-    direction: 'column',
+    flexDirection: 'column',
     // borderRight: 'solid 1px black',
   },
   product: {
@@ -51,10 +53,11 @@ const useStyles = makeStyles({
   },
   textHeader: {
     fontSize: '1.2em',
+    fontWeight: 'bold',
   },
 });
 
-function OrderProduct({ order }: Props) {
+function OrderProduct({ order, seller }: Props) {
   const classes = useStyles();
 
   const calculateTotalPrice = (): number => (
@@ -84,7 +87,7 @@ function OrderProduct({ order }: Props) {
               </Typography>
               <Typography variant="body2">
                 <Button
-                  href={`/pdp/${item.id}`}
+                  href={getViewProductLink(item.id, seller)}
                   component={Link}
                   size="small"
                   color="primary"
@@ -122,23 +125,29 @@ function OrderProduct({ order }: Props) {
 
   return (
     <Grid container className={classes.root}>
-      <Grid item className={classes.header} container>
+      <Grid
+        item
+        className={classes.header}
+        container
+      >
         <Grid item container justify="space-between">
           <Grid item>
             <Typography>
-              <strong className={classes.textHeader}>Date:</strong>
+              <span className={classes.textHeader}>Date:</span>
               {' '}
               { order.date.substring(0, 10) }
               {' '}
               -
               {' '}
-              <strong className={classes.textHeader}>Address:</strong>
+              <span className={classes.textHeader}>Address:</span>
+              {' '}
               { renderAddress() }
             </Typography>
           </Grid>
           <Grid item>
             <Typography>
-              <strong className={classes.textHeader}>Order Id:</strong>
+              <span className={classes.textHeader}>Order Id:</span>
+              {' '}
               { order.id }
             </Typography>
           </Grid>
@@ -146,13 +155,14 @@ function OrderProduct({ order }: Props) {
         <Grid item container justify="space-between">
           <Grid item>
             <Typography>
-              <strong className={classes.textHeader}>Status:</strong>
+              <span className={classes.textHeader}>Status:</span>
+              {' '}
               { order.status }
             </Typography>
           </Grid>
           <Grid item>
             <Typography>
-              <strong className={classes.textHeader}>Order price:</strong>
+              <span className={classes.textHeader}>Order price:</span>
               {' '}
               { calculateTotalPrice() }
               €

@@ -1,4 +1,3 @@
-
 import { ErrorMessage } from 'interfaces/errors';
 
 class HTTPRequest implements HTTPRequest {
@@ -13,10 +12,11 @@ class HTTPRequest implements HTTPRequest {
   }
 
   async get<T>(params: string = '', headers: HeadersInit = {}): Promise<T> { // Request data
+    if (params) { params = `?${params}`; }
+
     const req: Response = await fetch(this.url + params, {
       headers: {
         ...this.baseHeaders,
-        'Access-Control-Allow-Origin': '*',
         ...headers,
       },
     });
@@ -30,7 +30,6 @@ class HTTPRequest implements HTTPRequest {
       throw new Error(errorRes.message);
     }
 
-
     return res;
   }
 
@@ -40,7 +39,6 @@ class HTTPRequest implements HTTPRequest {
         ...this.baseHeaders,
         ...headers,
       },
-
 
       method: 'POST',
       body: data,
@@ -54,7 +52,6 @@ class HTTPRequest implements HTTPRequest {
       const errorRes: ErrorMessage = await req.json();
       throw new Error(errorRes.message);
     }
-
 
     return res;
   }
@@ -126,4 +123,3 @@ class HTTPRequest implements HTTPRequest {
 }
 
 export default HTTPRequest;
-

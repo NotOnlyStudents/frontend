@@ -1,7 +1,8 @@
 import { Category } from 'interfaces/categories/category';
+import CategoryService from './CategoryService';
 
-class CategoryServiceMock {
-  getCategories = async (): Promise<Category[]> => (['a', 'b', 'c']);
+class CategoryServiceMock implements CategoryService {
+  getCategories = async (text: string): Promise<Category[]> => (['a', 'b', 'c']);
 }
 
 export default CategoryServiceMock;

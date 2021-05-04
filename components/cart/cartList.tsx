@@ -1,11 +1,14 @@
 import React from 'react';
-import { CartProduct, Product } from 'interfaces/products/product';
-import { Box, Button, Typography } from '@material-ui/core';
+import { CartProduct } from 'interfaces/products/product';
+import {
+  Box, Button, Link, Typography,
+} from '@material-ui/core';
 import ShopIcon from '@material-ui/icons/Shop';
 import CartItem from './cartItem';
 
 interface Props {
   items: CartProduct[];
+  payment?: boolean;
 }
 
 interface State{
@@ -63,11 +66,13 @@ class CartList extends React.Component<Props, State> {
           index={index}
           handleChangeQuantity={this.handleChangeQuantity}
           handleRemoveProduct={this.handleRemoveProduct}
+          payments={this.props.payment}
         />
       ),
     ));
 
   render() {
+    const { payment } = this.props;
     return (
       <Box>
         <Box
@@ -86,13 +91,9 @@ class CartList extends React.Component<Props, State> {
               {`${this.calculateTotalPrice()}€`}
             </Typography>
           </Box>
-          <Button
-            variant="contained"
-            color="primary"
-            startIcon={<ShopIcon />}
-          >
-            Buy
-          </Button>
+          {
+          (!payment) ? <Button component={Link} variant="contained" color="primary" href="/cart/payment" startIcon={<ShopIcon />}> Buy </Button> : <></>
+          }
         </Box>
         {this.renderAllItems()}
       </Box>

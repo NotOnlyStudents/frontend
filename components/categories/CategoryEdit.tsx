@@ -6,16 +6,18 @@ import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import CheckIcon from '@material-ui/icons/Check';
 import TextFieldValidation from 'components/validation/TextFieldValidation';
 import { Address, AddressValidation } from 'interfaces/address/address';
+import { Category } from 'interfaces/categories/category';
 
 interface Props {
-  category: string;
+  category: Category;
   creation?: boolean;
   handleChangeAddresses?: (addresses?: Address) => void,
   handleAddAddress?: (add?: Address) => void,
 }
 
 interface State {
-  category: string;
+  category: Category;
+  error: [key: string]: boolean
 }
 
 class CategoryEdit extends React.Component<Props, State> {
@@ -24,16 +26,23 @@ class CategoryEdit extends React.Component<Props, State> {
 
     this.state = {
       category: props.category,
+      error: {
+        category: false,
+      },
     };
   }
 
+  setError = (id: string, error: boolean) => {
+    this.setState((state: State) => {
+      const newState = state;
 
+      newState.error[id] = error;
 
+      return newState;
+    });
+  };
 
-
-
-
-  handleChangeCategory = (category: string) => {
+  handleChangeCategory = (category: Category) => {
     this.setState((state: State) => {
       const newState = state;
 
@@ -42,11 +51,6 @@ class CategoryEdit extends React.Component<Props, State> {
       return newState;
     });
   };
-
-
-
-
-/*
 
   handleClickSave = async () => {
     if (this.checkValidation()) {
@@ -67,13 +71,11 @@ class CategoryEdit extends React.Component<Props, State> {
       } else {
         this.props.handleChangeAddresses(newAddress);
       }
-    } else {
-      this.setState({ alert: { [addressNotValidId]: true } });
     }
-  };*/
+  };
 
   render() {
-    const { category } = this.state;
+    const { category, error } = this.state;
     const { creation } = this.props;
     return (
       <Card>
@@ -81,21 +83,39 @@ class CategoryEdit extends React.Component<Props, State> {
         <CardContent>
           <TextFieldValidation
             id="category"
-            label="category"
+            label="Category"
             placeholder="Insert category"
             margin="normal"
             handleChange={this.handleChangeCategory}
             rules="required"
-            helperText="Address is required"
+            value={category}
+            error={error.category}
+            helperText="Category name is required"
           />
         </CardContent>
-
+        <CardActions>
+          <Button
+            variant="contained"
+            color="secondary"
+            onClick={this.handleClickCancel}
+          >
+            <HighlightOffIcon />
+            Cancel
+          </Button>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={this.handleClickSave}
+          >
+            <CheckIcon />
+            Save
+          </Button>
+        </CardActions>
       </Card>
     );
   }
 }
 export default CategoryEdit;
-
 
 /*        <CardActions>
           <Button
@@ -118,4 +138,4 @@ export default CategoryEdit;
         <SnackbarAddressNotValid
           open={alert[addressNotValidId]}
           handleClose={this.handleCloseAlert}
-        />*/
+        /> */

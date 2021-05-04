@@ -1,7 +1,7 @@
 import { Category } from 'interfaces/categories/category';
 
 interface CategoryService {
-  getCategories() : Promise<Category[]>
+  getCategories(text: string) : Promise<Category[]>
 }
 
 export default CategoryService;

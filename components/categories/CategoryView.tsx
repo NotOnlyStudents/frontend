@@ -1,7 +1,7 @@
 import React from 'react';
 import {
   Box,
-  Dialog, FormControlLabel, IconButton, Radio,
+  Dialog, FormControlLabel, IconButton, Radio, Typography,
 } from '@material-ui/core';
 import { Edit } from '@material-ui/icons';
 import CategoryService from 'services/category-service/CategoryService';
@@ -37,11 +37,9 @@ function CategoryView({
 
   return (
     <Box width="100%" display="flex" justifyContent="space-between">
-      <FormControlLabel
-        value={index}
-        control={<Radio />}
-        label={category}
-      />
+      <Typography>
+        { category }
+      </Typography>
       <Box>
         <IconButton color="primary" onClick={handleClickEditButton}>
           <Edit />

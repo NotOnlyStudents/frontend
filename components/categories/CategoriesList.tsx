@@ -1,55 +1,65 @@
 import React from 'react';
 import CategoryView from 'components/categories/CategoryView';
+import { Category } from 'interfaces/categories/category';
+import { Box, Button, Dialog } from '@material-ui/core';
+import AddIcon from '@material-ui/icons/Add';
+import CategoryEdit from './CategoryEdit';
 
 interface Props {
-  categories:string[]
+  categories: Category[]
 }
 
 interface State{
-  categories?:string[],
-  newCategoryName?: string,
-  categoryNewName?: string
+  categories: Category[],
+  openNew: boolean
 }
 
 class CategoriesList extends React.Component<Props, State> {
   constructor(props) {
     super(props);
     this.state = {
-      categories: this.props.categories,
-      newCategoryName: '',
-      categoryNewName: '',
+      categories: props.categories,
+      openNew: false,
     };
   }
 
-  handleChange = (event) => {
-    const nam = event.target.name;
-    const val = event.target.value;
-    this.setState({ [nam]: val });
+  handleAddCategory = (newCategory: Category) => {
+    this.setState((state: State) => {
+      const newState = state;
+
+      newState.categories.push(newCategory);
+      newState.openNew = false;
+
+      return newState;
+    });
   };
 
-  handleAdd = (event) => {
-    const newCategories = this.state.categories;
-    newCategories.push(this.state.newCategoryName);
-    this.setState({ categories: newCategories, selectedCategory: newCategories[0], newCategoryName: '' });
-    alert('Category added with success!');
+  handleChangeCategory = (editCategory: Category, index: number) => {
+    this.setState((state: State) => {
+      const newState = state;
+
+      newState.categories[index] = editCategory;
+
+      return newState;
+    });
   };
 
-  renameCategory = (event) => {
-    event.preventDefault;
-    const { categories } = this.state;
-    const index = categories.indexOf(this.state.selectedCategory);
-    categories[index] = this.state.categoryNewName;
-    const voidString = '';
-    this.setState({ categories, selectedCategory: categories[0], categoryNewName: '' });
-    alert('Category renamed with success!');
+  handleRemoveCategory = (index: number) => {
+    this.setState((state: State) => {
+      const newState = state;
+
+      newState.categories.splice(index, 1);
+
+      return newState;
+    });
   };
 
-  deleteCategory = (event) => {
-    if (this.state.categories.length != 1) {
-      const cat = this.state.categories;
-      const filtered = cat.filter((value, index, cat) => value != toRemove);
-      this.setState({ categories: filtered, selectedCategory: filtered[0] });
-    }
+  handleClickNewCategory = () => {
+    this.setState({ openNew: true });
+  };
+
+  handleCloseNewCategoryDialog = () => {
+    this.setState({ openNew: false });
   };
 
   renderItems = (): React.ReactElement[] => this.state.categories.map(
@@ -58,14 +68,35 @@ class CategoriesList extends React.Component<Props, State> {
         key={category}
         category={category}
         index={index}
+        handleRemoveCategory={this.handleRemoveCategory}
+        handleChangeCategory={this.handleChangeCategory}
       />
     ),
   );
 
   render(): React.ReactElement {
+    const { openNew } = this.state;
+
     return (
       <>
+        <Box display="flex" justifyContent="flex-end">
+          <Button
+            onClick={this.handleClickNewCategory}
+            variant="contained"
+            color="primary"
+          >
+            <AddIcon />
+            Add a new category
+          </Button>
+        </Box>
         {this.renderItems()}
+        <Dialog open={openNew} onClose={this.handleCloseNewCategoryDialog}>
+          <CategoryEdit
+            handleAddCategory={this.handleAddCategory}
+            handleCloseDialog={this.handleCloseNewCategoryDialog}
+            creation
+          />
+        </Dialog>
       </>
     );
   }

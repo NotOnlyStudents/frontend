@@ -9,7 +9,6 @@ import ProductService from 'services/product-service';
 import Head from 'next/head';
 import PLPList from 'components/plp/PLPList';
 import { getPLPLink } from 'lib/links';
-import HomeSwitch from 'components/home/homeSwitch';
 
 interface Props {
   products: PLPProductItem[];
@@ -40,9 +39,23 @@ const useStyles = makeStyles({
   },
 });
 
-function Home({ products }: Props) : React.ReactElement {
+function HomeCustomer({ products }: Props) : React.ReactElement {
   const classes = useStyles();
 
+  const renderFeaturedProductsIfPresent = () => (products.length
+    ? (
+      <>
+        <Typography
+          className={classes.evidenceTitle}
+          variant="h4"
+          component="h2"
+        >
+          Featured products
+        </Typography>
+        <PLPList products={products} />
+      </>
+    )
+    : <></>);
 
   return (
     <>
@@ -70,7 +83,7 @@ function Home({ products }: Props) : React.ReactElement {
           </Link>
         </Typography>
       </div>
-      <HomeSwitch products={products} classes={classes}/>
+      { renderFeaturedProductsIfPresent() }
     </>
   );
 }
@@ -93,4 +106,4 @@ export async function getServerSideProps() {
   };
 }
 
-export default Home;
+export default HomeCustomer;

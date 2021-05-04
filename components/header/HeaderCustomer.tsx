@@ -1,50 +1,59 @@
 import React from 'react';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
-import { Button, IconButton, Link } from '@material-ui/core';
-import { makeStyles } from '@material-ui/styles';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
-import HeaderMenuMobile from './HeaderMenuMobile';
 
+import { getCartLink, getHomeLink, getPersonalAreaLink } from 'lib/links';
+import { useRouter } from 'next/router';
 import { Auth } from 'aws-amplify';
+import { useAuthContext } from 'lib/authContext';
+import { SignedState } from 'interfaces/login';
+import HeaderMenuMobile from './HeaderMenuMobile';
+import HeaderMobileLink from './links/HeaderMobileLink';
+import HeaderDesktopLink from './links/HeaderDesktopLink';
 
-const useStyles = makeStyles({
-  desktopIcon: {
-    color: 'white',
-  },
-});
+function HeaderCustomer() : React.ReactElement {
+  const router = useRouter();
+  const { setSignedState } = useAuthContext();
 
+  const handleSignOut = async () => {
+    try {
+      await Auth.signOut();
+      await router.push(getHomeLink());
 
+      setSignedState(SignedState.NotAuthenticated);
+    } catch (error) {
+      console.log('error signing out: ', error);
+    }
+  };
 
-function HeaderCustomer({signOut}) : React.ReactElement {
-  const classes = useStyles();
   return (
     <>
       <HeaderMenuMobile
         desktopMenu={[
-          <IconButton href="/cart" className={classes.desktopIcon}>
+          <HeaderDesktopLink href={getCartLink()}>
             <ShoppingCartIcon />
-          </IconButton>,
-          <IconButton className={classes.desktopIcon} href="/users/personalArea">
+          </HeaderDesktopLink>,
+          <HeaderDesktopLink href={getPersonalAreaLink()}>
             <AccountCircleIcon aria-label="Your personal area" />
-          </IconButton>,
-          <IconButton onClick={signOut} className={classes.desktopIcon}>
+          </HeaderDesktopLink>,
+          <HeaderDesktopLink onClick={handleSignOut}>
             <ExitToAppIcon aria-label="logout" />
-          </IconButton>,
+          </HeaderDesktopLink>,
         ]}
         mobileMenu={[
-          <Link href="/cart">
+          <HeaderMobileLink href="/cart">
             <ShoppingCartIcon />
             Cart
-          </Link>,
-          <Button href="/users/personalArea" disableRipple>
+          </HeaderMobileLink>,
+          <HeaderMobileLink href={getPersonalAreaLink()}>
             <AccountCircleIcon aria-label="Your personal area" />
             Your personal area
-          </Button>,
-          <Button onClick={signOut}>
+          </HeaderMobileLink>,
+          <HeaderMobileLink onClick={handleSignOut}>
             <ExitToAppIcon aria-label="logout" />
             Logout
-          </Button>,
+          </HeaderMobileLink>,
         ]}
       />
     </>

@@ -58,7 +58,6 @@ function ImagesUploader({
             ? renderErrorMessage()
             : renderUploadedImages()
         }
-        {}
       </Box>
       <Box display="flex" justifyContent="flex-end">
         <label htmlFor="images-picker">

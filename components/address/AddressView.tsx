@@ -48,7 +48,7 @@ function AddressView({
         <IconButton color="primary" onClick={handleClickEditButton}>
           <Edit />
         </IconButton>
-        <AddressRemove id={address.id} onRemove={() => handleRemoveAddress(index)} />
+        <AddressRemove id={address.id} token={token} onRemove={() => handleRemoveAddress(index)} />
       </Box>
       <Dialog open={edit} onClose={handleCloseEdit}>
         <AddressEdit address={address} handleChangeAddresses={handleCloseDialog} token={token} />

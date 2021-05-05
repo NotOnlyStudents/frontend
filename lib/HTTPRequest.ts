@@ -23,7 +23,7 @@ class HTTPRequest implements HTTPRequest {
 
     let res: T;
 
-    if (req.status === 200) {
+    if (req.status >= 200 && req.status <= 300) {
       res = await req.json();
     } else {
       const errorRes: ErrorMessage = await req.json();
@@ -46,7 +46,7 @@ class HTTPRequest implements HTTPRequest {
 
     let res: T;
 
-    if (req.status === 200) {
+    if (req.status >= 200 && req.status <= 300) {
       res = await req.json();
     } else {
       const errorRes: ErrorMessage = await req.json();
@@ -69,7 +69,7 @@ class HTTPRequest implements HTTPRequest {
 
     let res: T;
 
-    if (req.status === 200) {
+    if (req.status >= 200 && req.status <= 300) {
       res = await req.json();
     } else {
       const errorRes: ErrorMessage = await req.json();
@@ -111,7 +111,7 @@ class HTTPRequest implements HTTPRequest {
 
     let res: T;
 
-    if (req.status === 200) {
+    if (req.status >= 200 && req.status <= 300) {
       res = await req.json();
     } else {
       const errorRes: ErrorMessage = await req.json();

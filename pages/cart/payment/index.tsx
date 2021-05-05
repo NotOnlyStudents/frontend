@@ -46,21 +46,22 @@ class PaymentPage extends React.Component<Props, State> {
     super(props);
     this.state = {
       cart: props.cart,
-      addresses: [],
+      addresses: props.addresses,
       selectedAddress: 0,
       expandend: false,
     };
   }
 
   componentDidMount = async () => {
-    const token: string = 'eyJraWQiOiJtSk5lNytEQkZET1R3QXNSdEVMSUtHM3psaDdVUFwvUDhycGFwNDZYVW9DUT0iLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJkYzllNGY3OC0wMmMyLTRmZTYtODMzZC1iYTg5YWQ0NTJkYzQiLCJhdWQiOiI1ZWw5Y3NoaTVpbmxkaG1uZW52NTNybmRtcyIsImNvZ25pdG86Z3JvdXBzIjpbImJ1eWVycyJdLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsImV2ZW50X2lkIjoiOWNlZTdjMjUtNzk0OS00NGI5LTk3OTEtOGRkMDI1ZjNhYzYyIiwidG9rZW5fdXNlIjoiaWQiLCJhdXRoX3RpbWUiOjE2MjAyMTAyOTUsImlzcyI6Imh0dHBzOlwvXC9jb2duaXRvLWlkcC5ldS13ZXN0LTEuYW1hem9uYXdzLmNvbVwvZXUtd2VzdC0xX2k3WU5vdXBPUyIsImNvZ25pdG8';
+    /* const token: string = 'eyJraWQiOiJtSk5lNytEQkZET1R3QXNSdEVMSUtHM3psaDdVUFwvUDhycGFwNDZYVW9DUT0iLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJkYzllNGY3OC0wMmMyLTRmZTYtODMzZC1iYTg5YWQ0NTJkYzQiLCJhdWQiOiI1ZWw5Y3NoaTVpbmxkaG1uZW52NTNybmRtcyIsImNvZ25pdG86Z3JvdXBzIjpbImJ1eWVycyJdLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsImV2ZW50X2lkIjoiOGM0NTQ2OTQtMTY5YS00Y2JhLWI2MDItYzdkMjVlNmI0MDkxIiwidG9rZW5fdXNlIjoiaWQiLCJhdXRoX3RpbWUiOjE2MjAyMTcyMTYsImlzcyI6Imh0dHBzOlwvXC9jb2duaXRvLWlkcC5ldS13ZXN0LTEuYW1hem9uYXdzLmNvbVwvZXUtd2VzdC0xX2k3WU5vdXBPUyIsImNvZ25pdG86dXNlcm5hbWUiOiJkYzllNGY3OC0wMmMyLTRmZTYtODMzZC1iYTg5YWQ0NTJkYzQiLCJleHAiOjE2MjAyMjA4MTYsImlhdCI6MTYyMDIxNzIxNiwiZW1haWwiOiJsZW9uYXJkby50cmVkZXNlQHN0dWRlbnRpLnVuaXBkLml0In0.1TNI1bPwtG4-Kmv8XLSi_yGlwJB0mLXry9G707zvjKs2hf52qjU0zFvAznmrt7kXgBwFXKuDnBQQ7tgmEkt7XOHqIlc7tfMsuHlzxffce9cqHkxrBEtvV175X1fXqinqye-Zu7XLEksexPjoN-LZxNGcMeubiO0osmU2WWmtXhtY-U7lmEsQlBHTNMPf4qHlM9uYKN3guseEL810pW24fqfOoDm5TjlforiG_DlsjULJY6eGHVuT1_kRv4ttFIH3LyArsGjqP_Tev91jjEjbS1JVKQKUVuuqzC7xENh2Z3bsLX4I71RxQjApYeNBnAUJmehmlGy79hxd1-9LFlp2Dw';
     let addresses: Address[] = [];
     try {
       addresses = await (new AddressService()).getAllAddress(token);
       this.setState({ addresses });
+      console.log(JSON.stringify(addresses));
     } catch (e) {
       console.error(e);
-    }
+    } */
   };
 
   handleRemoveAddress = (index: number) => {
@@ -104,7 +105,7 @@ class PaymentPage extends React.Component<Props, State> {
       addresses, selectedAddress, cart, expanded,
     } = this.state;
     const {
-      authstate,
+      authstate, token,
     } = this.props;
     return (
       <>
@@ -121,17 +122,17 @@ class PaymentPage extends React.Component<Props, State> {
         <Collapse in={expanded} timeout="auto" unmountOnExit>
           <CartList items={cart.products} payment />
         </Collapse>
-        { authstate === AuthState.SignIn
-          ? (
-            <AddressList
-              addresses={addresses}
-              selectedAddress={selectedAddress}
-              handleChangeIndex={this.handleChangeAddress}
-              handleAddNewAddress={this.handleAddAddress}
-              handleRemoveOneAddress={this.handleRemoveAddress}
-              token={this.props.token}
-            />
-          ) : (
+        { /* authstate === AuthState.SignIn
+          ? ( */
+          <AddressList
+            addresses={addresses}
+            selectedAddress={selectedAddress}
+            handleChangeIndex={this.handleChangeAddress}
+            handleAddNewAddress={this.handleAddAddress}
+            handleRemoveOneAddress={this.handleRemoveAddress}
+            token={token}
+          />
+          /* ) : (
             <Button
               component={Link}
               color="primary"
@@ -139,7 +140,7 @@ class PaymentPage extends React.Component<Props, State> {
             >
               Login to see your address
             </Button>
-          )}
+          ) */ }
         <TextField
           id="description"
           label="Additional informations"
@@ -165,8 +166,23 @@ class PaymentPage extends React.Component<Props, State> {
 
 PaymentPage.contextType = AuthContext;
 
-export async function getServerSideProps() {
+export async function getServerSideProps(context) {
   let products = [];
+  let addresses = [];
+  let token: string = null;
+  const { Auth } = withSSRContext(context);
+  try {
+    const user = await Auth.currentAuthenticatedUser();
+    token = user.signInUserSession.idToken.jwtToken;
+    try {
+      addresses = await (new AddressService()).getAllAddress(token);
+    } catch (error) {
+      console.error(error);
+      console.log(error);
+    }
+  } catch (e) {
+    console.error(e);
+  }
   try {
     products = await (new CartService()).getCartProducts();
   } catch (error) {
@@ -174,9 +190,11 @@ export async function getServerSideProps() {
   }
   return {
     props: {
+      addresses,
       cart: {
         products,
       },
+      token,
     },
   };
 }

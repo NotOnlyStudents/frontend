@@ -85,7 +85,12 @@ function AddressList({
         Add new address
       </Button>
       <Dialog open={open} onClose={handleClose}>
-        <AddressEdit address={newAddress} handleAddAddress={handleCloseDialog} creation token={token} />
+        <AddressEdit
+          address={newAddress}
+          handleAddAddress={handleCloseDialog}
+          creation
+          token={token}
+        />
       </Dialog>
     </Box>
   );

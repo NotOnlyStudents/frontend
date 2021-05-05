@@ -6,7 +6,6 @@ import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import CheckIcon from '@material-ui/icons/Check';
 import TextFieldValidation from 'components/validation/TextFieldValidation';
 import AddressService from 'services/address-service';
-import AddressServiceType from 'services/address-service/AddressService';
 import SnackbarAddressNotValid, { addressNotValidId } from 'components/snackbar/address/SnackbarAddressNotValid';
 import { Address, AddressValidation } from 'interfaces/address/address';
 
@@ -68,7 +67,7 @@ class AddressEdit extends React.Component<Props, State> {
     this.setState((state: State) => {
       const newState = state;
 
-      newState.address.cap = cap;
+      newState.address.cap = parseInt(cap);
 
       return newState;
     });
@@ -126,12 +125,11 @@ class AddressEdit extends React.Component<Props, State> {
 
       let newAddress: Address;
 
-      const ps: AddressServiceType = new AddressService();
-
       if (address.id) {
-        newAddress = await ps.editAddress(this.props.token, address.id, address);
+        newAddress = await (
+          new AddressService()).editAddress(this.props.token, address.id, address);
       } else {
-        newAddress = await ps.createAddress(this.props.token, address);
+        newAddress = await (new AddressService()).createAddress(this.props.token, address);
       }
 
       if (this.props.creation) {

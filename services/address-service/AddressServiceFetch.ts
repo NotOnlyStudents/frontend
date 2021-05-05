@@ -14,7 +14,6 @@ class AddressServiceFetch implements AddressService {
     const req: HTTPRequest = new HTTPRequest(process.env.NEXT_PUBLIC_ADDRESSES_SERVICE_URL, 'addresses');
     const headers = {
       Authorization: `Bearer ${token}`,
-      'Content-type': 'application/json',
     };
 
     const res: AddressesGETRequest = await req.get<AddressesGETRequest>('', headers);
@@ -25,7 +24,6 @@ class AddressServiceFetch implements AddressService {
     const req: HTTPRequest = new HTTPRequest(process.env.NEXT_PUBLIC_ADDRESSES_SERVICE_URL, `addresses/${id}`);
     const headers = {
       Authorization: `Bearer ${token}`,
-      'Content-type': 'application/json',
     };
 
     const res: AddressGETRequest = await req.get<AddressGETRequest>('', headers);

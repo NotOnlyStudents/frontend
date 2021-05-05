@@ -9,7 +9,11 @@ class HTTPRequest implements HTTPRequest {
   readonly url: string;
 
   constructor(serviceName: string) {
+    if(serviceName=="cart")
     this.url = `https://n4u3xypkqk.execute-api.eu-west-1.amazonaws.com/test/${serviceName}`;
+    else
+    {
+    this.url = `https://9dkck2efda.execute-api.eu-west-1.amazonaws.com/test/${serviceName}`;}
   }
 
   async get<T>(params: string = '', headers: HeadersInit = {}): Promise<T> { // Request data

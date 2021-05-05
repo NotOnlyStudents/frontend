@@ -6,7 +6,6 @@ import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import CheckIcon from '@material-ui/icons/Check';
 import TextFieldValidation from 'components/validation/TextFieldValidation';
 import AddressService from 'services/address-service';
-import AddressServiceType from 'services/address-service/AddressService';
 import SnackbarAddressNotValid, { addressNotValidId } from 'components/snackbar/address/SnackbarAddressNotValid';
 import { Address, AddressValidation } from 'interfaces/address/address';
 
@@ -15,10 +14,12 @@ interface AlertState {
 }
 
 interface Props {
-  address: Address;
-  creation?: boolean;
-  handleChangeAddresses?: (addresses?: Address) => void,
-  handleAddAddress?: (add?: Address) => void,
+  address?: Address,
+  creation?: boolean,
+  index?: number,
+  handleChangeAddress: (address: Address, index: number) => void,
+  handleCloseDialog: () => void,
+  token: string
 }
 
 interface State {
@@ -31,8 +32,16 @@ class AddressEdit extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
 
+    const emptyAddress: Address = {
+      id: '',
+      nation: '',
+      city: '',
+      address: '',
+      cap: 0,
+    };
+
     this.state = {
-      address: props.address,
+      address: props.address || emptyAddress,
       validation: {
         nation: false,
         city: false,
@@ -67,7 +76,7 @@ class AddressEdit extends React.Component<Props, State> {
     this.setState((state: State) => {
       const newState = state;
 
-      newState.address.cap = cap;
+      newState.address.cap = parseInt(cap);
 
       return newState;
     });
@@ -112,32 +121,25 @@ class AddressEdit extends React.Component<Props, State> {
   };
 
   handleClickCancel = () => {
-    if (this.props.creation) {
-      this.props.handleAddAddress();
-    } else {
-      this.props.handleChangeAddresses();
-    }
+    this.props.handleCloseDialog();
   };
 
   handleClickSave = async () => {
     if (this.checkValidation()) {
       const { address } = this.state;
+      const { token, index, creation } = this.props;
 
       let newAddress: Address;
 
-      const ps: AddressServiceType = new AddressService();
-
-      if (address.id) {
-        newAddress = await ps.editAddress(address.id, address);
+      if (creation) {
+        newAddress = await (new AddressService()).createAddress(token, address);
       } else {
-        newAddress = await ps.createAddress(address);
+        newAddress = await (
+          new AddressService()).editAddress(token, address.id, address);
       }
 
-      if (this.props.creation) {
-        this.props.handleAddAddress(newAddress);
-      } else {
-        this.props.handleChangeAddresses(newAddress);
-      }
+      this.props.handleChangeAddress(newAddress, index !== undefined ? index : -1);
+      this.props.handleCloseDialog();
     } else {
       this.setState({ alert: { [addressNotValidId]: true } });
     }

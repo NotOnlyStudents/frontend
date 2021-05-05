@@ -3,26 +3,22 @@ import { ErrorMessage } from 'interfaces/errors';
 
 class HTTPRequest implements HTTPRequest {
   readonly baseHeaders: HeadersInit = {
-    'Content-Type': 'application/json',
   };
 
   readonly url: string;
 
   constructor(serviceName: string) {
-    this.url = `${process.env.NEXT_PUBLIC_BASE_URL}/${serviceName}`;
+    this.url = `https://n4u3xypkqk.execute-api.eu-west-1.amazonaws.com/test/${serviceName}`;
   }
 
   async get<T>(params: string = '', headers: HeadersInit = {}): Promise<T> { // Request data
     const req: Response = await fetch(this.url + params, {
       headers: {
-        ...this.baseHeaders,
-        'Access-Control-Allow-Origin': '*',
         ...headers,
       },
     });
 
     let res: T;
-
     if (req.status === 200) {
       res = await req.json();
     } else {
@@ -37,11 +33,8 @@ class HTTPRequest implements HTTPRequest {
   async post<T>(data: string = '', headers: HeadersInit = {}): Promise<T> { // Send data to create a resource
     const req: Response = await fetch(this.url, {
       headers: {
-        ...this.baseHeaders,
         ...headers,
       },
-
-
       method: 'POST',
       body: data,
     });

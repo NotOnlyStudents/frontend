@@ -8,3 +8,7 @@ export interface CartPostRequest{
   data: CartProduct[];
 }
 
+export interface CartPatchRequest{
+  quantity: number;
+}
+

@@ -22,9 +22,10 @@ function cartPage({ cart }: Props) {
     { name: 'Cart' },
   ];
 
-  const renderCartList = () => (cart.products.length !== 0
+  const renderCartList = () =>{return (cart.products.length != 0
     ? <CartList items={cart.products} />
     : <NoProductInCart />);
+  }
 
   return (
     <>
@@ -48,13 +49,15 @@ export async function getServerSideProps(context) {
     const user = await Auth.currentAuthenticatedUser();
     const token = user.signInUserSession.idToken.jwtToken;
     try {
-      products = await (new CartService()).getCartProducts(token);
+    //products = await new CartService().getCartProducts(token);
+    new CartService().postCartProducts(token);
+    //  new CartService().patchCartProducts(token);
       console.log(products);
     } catch (error) {
-      console.log(error);
+      //console.log(error);
     }
   } 
-  catch{console.log("There was a problem with server");}
+  catch{console.log("There was a problem with serverss");}
 
 
   return {

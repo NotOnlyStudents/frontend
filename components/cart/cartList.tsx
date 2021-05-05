@@ -19,6 +19,7 @@ class CartList extends React.Component<Props, State> {
   constructor(props) {
     super(props);
     this.state = { items: props.items };
+    console.log(this.state.items);
   }
 
   handleChangeQuantity = (quantity: number, index: number): void => {
@@ -91,14 +92,13 @@ class CartList extends React.Component<Props, State> {
               {`${this.calculateTotalPrice()}€`}
             </Typography>
           </Box>
-          {
-          (!payment) ? <Button component={Link} variant="contained" color="primary" href="/cart/payment" startIcon={<ShopIcon />}> Buy </Button> : <></>
-          }
         </Box>
         {this.renderAllItems()}
       </Box>
     );
   }
 }
-
+/*          {
+          (!payment) ? <Button component={Link} variant="contained" color="primary" href="/cart/payment" startIcon={<ShopIcon />}> Buy </Button> : <></>
+          }*/
 export default CartList;

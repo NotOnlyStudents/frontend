@@ -9,7 +9,6 @@ import ProductService from 'services/product-service';
 import Head from 'next/head';
 import PLPList from 'components/plp/PLPList';
 import { getPLPLink } from 'lib/links';
-import HomeSwitch from 'components/home/homeSwitch';
 
 interface Props {
   products: PLPProductItem[];
@@ -43,6 +42,21 @@ const useStyles = makeStyles({
 function HomeCustomer({ products }: Props) : React.ReactElement {
   const classes = useStyles();
 
+  const renderFeaturedProductsIfPresent = () => (products.length
+    ? (
+      <>
+        <Typography
+          className={classes.evidenceTitle}
+          variant="h4"
+          component="h2"
+        >
+          Featured products
+        </Typography>
+        <PLPList products={products} />
+      </>
+    )
+    : <></>);
+
   return (
     <>
       <Head>
@@ -69,14 +83,7 @@ function HomeCustomer({ products }: Props) : React.ReactElement {
           </Link>
         </Typography>
       </div>
-      <Typography
-        className={classes.evidenceTitle}
-        variant="h4"
-        component="h2"
-      >
-        Featured products
-      </Typography>
-      <PLPList products={products} />
+      { renderFeaturedProductsIfPresent() }
     </>
   );
 }
@@ -90,6 +97,9 @@ export async function getServerSideProps() {
     paginator = await (new ProductService()).getAllProduct(filters);
   } catch (error) {
     console.log(error);
+    paginator = {
+      products: [],
+    };
   }
 
   return {

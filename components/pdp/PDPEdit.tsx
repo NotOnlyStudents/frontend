@@ -103,7 +103,7 @@ class PDPEdit extends React.Component<Props, State> {
   handleChangeCategories = (categories: Category[]) => {
     this.setState((state: State) => {
       const newState = state;
-      newState.product.categories = categories;
+      newState.product.categories = categories.map((cat) => cat.name);
       return newState;
     });
   };
@@ -240,6 +240,8 @@ class PDPEdit extends React.Component<Props, State> {
         ) : <></>
     );
 
+    const selectedCategories = product.categories.map((name) => ({ name }));
+
     return (
       <Box>
         <Head>
@@ -276,7 +278,7 @@ class PDPEdit extends React.Component<Props, State> {
           onChange={this.handleChangeDescription}
         />
         <AutocompleteCategories
-          selectedCategories={product.categories}
+          selectedCategories={selectedCategories}
           handleChangeCategories={this.handleChangeCategories}
         />
         <Box display="flex" justifyContent="space-between">

@@ -5,26 +5,29 @@ import {
 } from '@material-ui/core';
 import { Edit } from '@material-ui/icons';
 import CategoryService from 'services/category-service/CategoryService';
+import { Category } from 'interfaces/categories/category';
 import CategoryRemove from './CategoryRemove';
 import CategoryEdit from './CategoryEdit';
 
 interface Props {
-  category: string,
+  category: Category,
   index?: number,
-  handleAddNewCategory?: (category: string, index?: number) => void,
+  handleChangeCategory?: (category: Category, index?: number) => void,
   handleRemoveCategory?: (index: number) => void,
 }
 
 function CategoryView({
-  category, handleAddNewCategory, index, handleRemoveCategory,
+  category, handleChangeCategory, index, handleRemoveCategory,
 }: Props) {
   const [edit, setEdit] = React.useState(false);
 
-  const handleCloseDialog = (add?: string) => {
-    if (add) {
-      handleAddNewCategory(add, index);
-    }
+  const handleCloseDialog = () => {
     setEdit(false);
+  };
+
+  const onChangeCategory = (editCategory: Category) => {
+    handleChangeCategory(editCategory, index);
+    handleCloseDialog();
   };
 
   const handleClickEditButton = () => {
@@ -38,16 +41,20 @@ function CategoryView({
   return (
     <Box width="100%" display="flex" justifyContent="space-between">
       <Typography>
-        { category }
+        { category.name }
       </Typography>
       <Box>
         <IconButton color="primary" onClick={handleClickEditButton}>
           <Edit />
         </IconButton>
-        <CategoryRemove id={index.toString()} onRemove={() => handleRemoveCategory(index)} />
+        <CategoryRemove id={category.id} onRemove={() => handleRemoveCategory(index)} />
       </Box>
       <Dialog open={edit} onClose={handleCloseEdit}>
-        <CategoryEdit category={category} />
+        <CategoryEdit
+          category={category}
+          handleChangeCategory={onChangeCategory}
+          handleCloseDialog={handleCloseDialog}
+        />
       </Dialog>
     </Box>
   );

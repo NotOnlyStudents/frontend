@@ -3,7 +3,7 @@ import {
   Button, Dialog, DialogActions, DialogTitle, IconButton,
 } from '@material-ui/core';
 import { Delete } from '@material-ui/icons';
-
+import CategoryService from 'services/category-service';
 
 interface Props {
   id: string,
@@ -13,6 +13,14 @@ interface Props {
 function CategoryRemove({ id, onRemove }: Props) {
   const [openModal, setOpenModal] = React.useState(false);
 
+  const handleClickRemove = async () => {
+    try {
+      await (new CategoryService()).removeCategory(id);
+    } catch (error) {
+      console.error(error);
+    }
+    onRemove();
+  };
 
   return (
     <>
@@ -20,12 +28,16 @@ function CategoryRemove({ id, onRemove }: Props) {
         open={openModal}
         aria-labelledby="alert-dialog-title"
       >
-        <DialogTitle id="alert-dialog-title">Are you sure to delete this address?</DialogTitle>
+        <DialogTitle id="alert-dialog-title">Are you sure to delete this category?</DialogTitle>
         <DialogActions>
           <Button onClick={() => { setOpenModal(false); }} color="primary">
             NO
           </Button>
-          <Button color="primary" autoFocus>
+          <Button
+            color="primary"
+            autoFocus
+            onClick={handleClickRemove}
+          >
             YES
           </Button>
         </DialogActions>

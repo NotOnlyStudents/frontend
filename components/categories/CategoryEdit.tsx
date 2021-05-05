@@ -5,19 +5,21 @@ import {
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import CheckIcon from '@material-ui/icons/Check';
 import TextFieldValidation from 'components/validation/TextFieldValidation';
-import { Address, AddressValidation } from 'interfaces/address/address';
-import { Category } from 'interfaces/categories/category';
+import { Category, CategoryValidation } from 'interfaces/categories/category';
+import CategoryService from 'services/category-service';
+import CategoryServiceType from 'services/category-service/CategoryService';
 
 interface Props {
-  category: Category;
+  category?: Category;
   creation?: boolean;
-  handleChangeAddresses?: (addresses?: Address) => void,
-  handleAddAddress?: (add?: Address) => void,
+  handleChangeCategory?: () => void,
+  handleAddCategory?: () => void,
+  handleCloseDialog: () => void
 }
 
 interface State {
   category: Category;
-  error: [key: string]: boolean
+  error: CategoryValidation
 }
 
 class CategoryEdit extends React.Component<Props, State> {
@@ -25,9 +27,9 @@ class CategoryEdit extends React.Component<Props, State> {
     super(props);
 
     this.state = {
-      category: props.category,
+      category: props.category || { name: '' },
       error: {
-        category: false,
+        name: false,
       },
     };
   }
@@ -42,54 +44,52 @@ class CategoryEdit extends React.Component<Props, State> {
     });
   };
 
-  handleChangeCategory = (category: Category) => {
+  handleChangeCategoryName = (name: string) => {
     this.setState((state: State) => {
       const newState = state;
 
-      newState.category = category;
+      newState.category.name = name;
 
       return newState;
     });
   };
 
+  checkValidation = () => Object.values(this.state.error).every((val) => !val);
+
   handleClickSave = async () => {
     if (this.checkValidation()) {
-      const { address } = this.state;
+      const { category } = this.state;
+      const { creation } = this.props;
 
-      let newAddress: Address;
+      const cs: CategoryServiceType = new CategoryService();
 
-      const ps: AddressServiceType = new AddressService();
-
-      if (address.id) {
-        newAddress = await ps.editAddress(address.id, address);
+      if (creation) {
+        await cs.addCategory(category);
+        this.props.handleAddCategory();
       } else {
-        newAddress = await ps.createAddress(address);
-      }
-
-      if (this.props.creation) {
-        this.props.handleAddAddress(newAddress);
-      } else {
-        this.props.handleChangeAddresses(newAddress);
+        await cs.editCategory(category.id, category);
+        this.props.handleChangeCategory();
       }
     }
   };
 
   render() {
     const { category, error } = this.state;
-    const { creation } = this.props;
+    const { creation, handleCloseDialog } = this.props;
     return (
       <Card>
         <CardHeader title={(creation) ? 'Add new category' : 'Edit your category'} />
         <CardContent>
           <TextFieldValidation
-            id="category"
-            label="Category"
-            placeholder="Insert category"
+            id="name"
+            label="Category name"
+            placeholder="Insert category name"
             margin="normal"
-            handleChange={this.handleChangeCategory}
+            handleChange={this.handleChangeCategoryName}
             rules="required"
-            value={category}
-            error={error.category}
+            value={category.name}
+            error={error.name}
+            setError={this.setError}
             helperText="Category name is required"
           />
         </CardContent>
@@ -97,7 +97,7 @@ class CategoryEdit extends React.Component<Props, State> {
           <Button
             variant="contained"
             color="secondary"
-            onClick={this.handleClickCancel}
+            onClick={handleCloseDialog}
           >
             <HighlightOffIcon />
             Cancel
@@ -115,27 +115,5 @@ class CategoryEdit extends React.Component<Props, State> {
     );
   }
 }
-export default CategoryEdit;
 
-/*        <CardActions>
-          <Button
-            variant="contained"
-            color="secondary"
-            onClick={this.handleClickCancel}
-          >
-            <HighlightOffIcon />
-            Cancel
-          </Button>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={this.handleClickSave}
-          >
-            <CheckIcon />
-            Save
-          </Button>
-        </CardActions>
-        <SnackbarAddressNotValid
-          open={alert[addressNotValidId]}
-          handleClose={this.handleCloseAlert}
-        /> */
+export default CategoryEdit;

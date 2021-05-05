@@ -1,5 +1,3 @@
-import { Category } from '../categories/category';
-
 export interface Product {
   id?: string;
   name?: string;
@@ -9,7 +7,7 @@ export interface Product {
   price?: number;
   evidence?: boolean;
   discount?: number;
-  categories?: Category[];
+  categories?: string[];
 }
 
 export interface PLPProductItem {
@@ -39,7 +37,7 @@ export enum SortType {
 
 export interface ProductFilter {
   text?: string,
-  categories?: Category[],
+  categories?: string[],
   priceMax?: number,
   priceMin?: number,
   available?: boolean,

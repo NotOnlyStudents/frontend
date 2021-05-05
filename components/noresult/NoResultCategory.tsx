@@ -2,7 +2,7 @@ import React from 'react';
 import { makeStyles } from '@material-ui/styles';
 import grey from '@material-ui/core/colors/grey';
 import {
-  Box, Link, Theme, Typography,
+  Box, Theme, Typography,
 } from '@material-ui/core';
 import NotInterestedIcon from '@material-ui/icons/NotInterested';
 
@@ -61,17 +61,7 @@ function NoResultCategory() {
           className={classes.icon}
         />
         <Typography className={classes.text}>
-          No category found,
-          <br />
-          return to
-          {' '}
-          <Link
-            href="/"
-            className={classes.link}
-            underline="always"
-          >
-            home
-          </Link>
+          No category found
         </Typography>
       </Box>
     </Box>

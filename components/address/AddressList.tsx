@@ -28,6 +28,7 @@ function AddressList({
   const [open, setOpen] = React.useState(false);
 
   const newAddress: Address = {
+    id: '',
     nation: '',
     city: '',
     address: '',

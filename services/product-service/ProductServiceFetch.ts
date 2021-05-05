@@ -12,10 +12,8 @@ import ProductService from './ProductService';
 
 class ProductServiceFetch implements ProductService {
   getAllProduct = async (params?: ProductFilter): Promise<ProductPaginator> => {
-    const req: HTTPRequest = new HTTPRequest('products');
-    let query: string = queryString.stringify(params);
-
-    if (query) { query = `?${query}`; }
+    const req: HTTPRequest = new HTTPRequest(process.env.NEXT_PUBLIC_PRODUCTS_CATEGORIES_SERVICE_URL, 'products');
+    const query: string = queryString.stringify(params);
 
     const res: GetAllProductsRequest = await req.get<GetAllProductsRequest>(query);
 
@@ -28,7 +26,7 @@ class ProductServiceFetch implements ProductService {
   };
 
   getProductById = async (id: string): Promise<Product> => {
-    const req: HTTPRequest = new HTTPRequest(`products/${id}`);
+    const req: HTTPRequest = new HTTPRequest(process.env.NEXT_PUBLIC_PRODUCTS_CATEGORIES_SERVICE_URL, `products/${id}`);
 
     const res: GetOneProductRequest = await req.get<GetOneProductRequest>();
 
@@ -36,7 +34,7 @@ class ProductServiceFetch implements ProductService {
   };
 
   createProduct = async (product: Product): Promise<Product> => {
-    const req: HTTPRequest = new HTTPRequest('products');
+    const req: HTTPRequest = new HTTPRequest(process.env.NEXT_PUBLIC_PRODUCTS_CATEGORIES_SERVICE_URL, 'products');
 
     const body: string = JSON.stringify(product);
 
@@ -46,7 +44,7 @@ class ProductServiceFetch implements ProductService {
   };
 
   editProduct = async (id: string, product: Product): Promise<Product> => {
-    const req: HTTPRequest = new HTTPRequest(`products/${id}`);
+    const req: HTTPRequest = new HTTPRequest(process.env.NEXT_PUBLIC_PRODUCTS_CATEGORIES_SERVICE_URL, `products/${id}`);
 
     const body: string = JSON.stringify(product);
 
@@ -60,13 +58,13 @@ class ProductServiceFetch implements ProductService {
   };
 
   deleteProduct = async (id: string) : Promise<void> => {
-    const req: HTTPRequest = new HTTPRequest(`products/${id}`);
+    const req: HTTPRequest = new HTTPRequest(process.env.NEXT_PUBLIC_PRODUCTS_CATEGORIES_SERVICE_URL, `products/${id}`);
 
     await req.delete<DeleteProductRequest>();
   };
 
   addToEvidence = async (id: string): Promise<void> => {
-    const req: HTTPRequest = new HTTPRequest(`products/${id}`);
+    const req: HTTPRequest = new HTTPRequest(process.env.NEXT_PUBLIC_PRODUCTS_CATEGORIES_SERVICE_URL, `products/${id}`);
 
     const body: string = JSON.stringify({ evidence: true });
 
@@ -74,7 +72,7 @@ class ProductServiceFetch implements ProductService {
   };
 
   removeFromEvidence = async (id: string): Promise<void> => {
-    const req: HTTPRequest = new HTTPRequest(`products/${id}`);
+    const req: HTTPRequest = new HTTPRequest(process.env.NEXT_PUBLIC_PRODUCTS_CATEGORIES_SERVICE_URL, `products/${id}`);
 
     const body: string = JSON.stringify({ evidence: false });
 

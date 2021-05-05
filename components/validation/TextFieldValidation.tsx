@@ -9,12 +9,12 @@ interface Props {
   placeholder?: string,
   helperText?: string,
   error?: boolean,
-  value?: unknown,
+  value: unknown,
   fullWidth?: boolean,
   type?: string,
   multiline?: boolean,
   margin?: 'none' | 'dense' | 'normal',
-  handleChange?: (value: unknown) => void;
+  handleChange: (value: unknown) => void;
   setError?: (id: string, error: boolean) => void;
   rules?: string,
   InputProps?: unknown,
@@ -28,19 +28,29 @@ function TextFieldValidation(
   }: Props,
 ) : React.ReactElement {
   const validate = (v: unknown) => {
-    const vRules = { v: rules };
+    if (rules) {
+      const vRules = { v: rules };
 
-    const validation = new Validator({ v }, vRules);
+      const validation = new Validator({ v }, vRules);
 
-    return validation.passes();
+      return validation.passes();
+    }
+
+    return true;
+  };
+
+  const handleCallSetError = (v: unknown) => {
+    if (setError) {
+      if (validate(v)) {
+        if (error) { setError(id, false); }
+      } else if (!error) {
+        setError(id, true);
+      }
+    }
   };
 
   React.useEffect(() => {
-    if (validate(value)) {
-      if (error) { setError(id, true); }
-    } else if (!error) {
-      setError(id, true);
-    }
+    handleCallSetError(value);
   }, []);
 
   return (
@@ -57,11 +67,7 @@ function TextFieldValidation(
       type={type}
       onChange={
         (event: React.ChangeEvent<HTMLInputElement>) => {
-          if (validate(event.target.value)) {
-            if (error) { setError(id, false); }
-          } else if (!error) {
-            setError(id, true);
-          }
+          handleCallSetError(event.target.value);
           handleChange(event.target.value);
         }
       }
@@ -76,6 +82,7 @@ function TextFieldValidation(
 
 TextFieldValidation.defaultProps = {
   margin: 'none',
+  rules: '',
 };
 
 export default TextFieldValidation;

@@ -11,8 +11,8 @@ import EMLBreadcrumb from 'components/breadcrumb/EMLBreadcrumb';
 function changePassowrd() {
   const breadcrumbPaths:BreadcrumbPath[] = [
     { name: 'Home', href: '/', icon: HomeIcon },
-    { name: 'Personal Area', href:'/users/personalArea' },
-    { name: 'Change Password'}
+    { name: 'Personal Area', href: '/users/personalArea' },
+    { name: 'Change Password' },
   ];
   return (
     <>

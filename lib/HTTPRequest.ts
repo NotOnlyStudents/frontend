@@ -1,4 +1,3 @@
-
 import { ErrorMessage } from 'interfaces/errors';
 
 class HTTPRequest implements HTTPRequest {
@@ -8,12 +7,8 @@ class HTTPRequest implements HTTPRequest {
 
   readonly url: string;
 
-  constructor(serviceName: string) {
-    if(serviceName=="cart")
-    this.url = `https://n4u3xypkqk.execute-api.eu-west-1.amazonaws.com/test/${serviceName}`;
-    else
-    {
-    this.url = `https://9dkck2efda.execute-api.eu-west-1.amazonaws.com/test/${serviceName}`;}
+  constructor(baseURL: string, serviceName: string) {
+    this.url = `${baseURL}/${serviceName}`;
   }
 
   async get<T>(params: string = '', headers: HeadersInit = {}): Promise<T> { // Request data
@@ -74,7 +69,7 @@ class HTTPRequest implements HTTPRequest {
 
     let res: T;
 
-    if (req.status === 204) {
+    if (req.status === 200) {
       res = await req.json();
     } else {
       const errorRes: ErrorMessage = await req.json();

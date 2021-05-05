@@ -50,7 +50,7 @@ function AutocompleteCategories({
       onChange={(event, v: Category[]) => {
         handleChangeCategories(v);
       }}
-      getOptionLabel={(option) => option}
+      getOptionLabel={(option) => option.name}
       fullWidth
       value={selectedCategories}
       renderInput={(params) => (

@@ -1,38 +1,29 @@
-import {
-  IconButton, makeStyles,
-} from '@material-ui/core';
 import LoginIcon from 'components/icons/LoginIcon';
 import React from 'react';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
+import { getCartLink, getLoginLink } from 'lib/links';
 import HeaderMenuMobile from './HeaderMenuMobile';
-import HeaderMobileLink from './HeaderMobileLink';
-
-const useStyles = makeStyles({
-  desktopIcon: {
-    color: 'white',
-  },
-});
+import HeaderMobileLink from './links/HeaderMobileLink';
+import HeaderDesktopLink from './links/HeaderDesktopLink';
 
 function HeaderNotAuthenticated(): React.ReactElement {
-  const classes = useStyles();
-
   return (
     <>
       <HeaderMenuMobile
         desktopMenu={[
-          <IconButton href="/cart" className={classes.desktopIcon}>
+          <HeaderDesktopLink href={getCartLink()}>
             <ShoppingCartIcon />
-          </IconButton>,
-          <IconButton href="/users/authenticator" className={classes.desktopIcon}>
+          </HeaderDesktopLink>,
+          <HeaderDesktopLink href={getLoginLink()}>
             <LoginIcon />
-          </IconButton>,
+          </HeaderDesktopLink>,
         ]}
         mobileMenu={[
-          <HeaderMobileLink href="/cart">
+          <HeaderMobileLink href={getCartLink()}>
             <ShoppingCartIcon />
             Cart
           </HeaderMobileLink>,
-          <HeaderMobileLink href="/users/authenticator">
+          <HeaderMobileLink href={getLoginLink()}>
             <LoginIcon />
             Login
           </HeaderMobileLink>,

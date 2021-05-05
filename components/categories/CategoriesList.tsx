@@ -8,9 +8,9 @@ import AddIcon from '@material-ui/icons/Add';
 import TextFieldValidation from 'components/validation/TextFieldValidation';
 import CategoryService from 'services/category-service';
 import { NextRouter, withRouter } from 'next/router';
-import CategoryEdit from './CategoryEdit';
 import NoResultCategory from 'components/noresult/NoResultCategory';
 import { ParsedUrlQueryInput } from 'querystring';
+import CategoryEdit from './CategoryEdit';
 
 interface Props {
   router: NextRouter,
@@ -66,9 +66,9 @@ class CategoriesList extends React.Component<Props, State> {
 
     this.setState({ searchName });
 
-    const query: ParsedUrlQueryInput = { }
+    const query: ParsedUrlQueryInput = { };
 
-    if(searchName) {
+    if (searchName) {
       query.text = searchName;
     }
 
@@ -99,9 +99,9 @@ class CategoriesList extends React.Component<Props, State> {
   );
 
   renderItemsIfPresent = (): React.ReactElement => (
-    this.state.categories.length 
-    ? <>{ this.renderItems() }</>
-    : <NoResultCategory />)
+    this.state.categories.length
+      ? <>{ this.renderItems() }</>
+      : <NoResultCategory />);
 
   render(): React.ReactElement {
     const { openNew, searchName } = this.state;

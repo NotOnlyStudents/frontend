@@ -1,5 +1,4 @@
 import { TextField } from '@material-ui/core';
-import { FlashOffRounded } from '@material-ui/icons';
 import React from 'react';
 import Validator from 'validatorjs';
 

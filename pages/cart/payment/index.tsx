@@ -19,6 +19,7 @@ import { CognitoUser } from '@aws-amplify/auth';
 import { AuthState } from '@aws-amplify/ui-components';
 import { AmplifySignOut } from '@aws-amplify/ui-react';
 import CheckoutButton from 'components/button/CheckoutButton';
+import { getLoginLink } from 'lib/links';
 
 interface Props {
   cart: Cart,
@@ -93,6 +94,7 @@ class PaymentPage extends React.Component<Props, State> {
       addresses, selectedAddress, cart, expanded,
     } = this.state;
     const { authState, username } = this.props;
+
     return (
       <>
         <Head>
@@ -131,7 +133,11 @@ class PaymentPage extends React.Component<Props, State> {
             </>
           ) : (
             <>
-              <Button href="/users/authenticator" component={Link} size="small" color="primary">
+              <Button
+                href={getLoginLink()}
+                color="primary"
+                variant="contained"
+              >
                 Login to checkout
               </Button>
             </>
@@ -171,8 +177,8 @@ export async function getServerSideProps(context) {
       cart: {
         products,
       },
-      _authState: state,
-      _username: username,
+      authState: state,
+      username,
     },
   };
 }

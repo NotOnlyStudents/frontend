@@ -1,10 +1,10 @@
 import { Button } from '@material-ui/core';
-import { loadStripe } from "@stripe/stripe-js";
+import { loadStripe } from '@stripe/stripe-js';
 import React from 'react';
 
 const stripePromise = loadStripe('pk_test_51IHqhuEKthtArr3S4MYSAYFEPiFlioccyA4SjUNArmmdSmK7B05UnMdsNKIu0TCRXADZLVmjEUlqKRIR4D2SWtJ700PVmechEl');
 
-export default function CheckoutButton({ cartID }: {cartID: string}) {
+export default function CheckoutButton({ cartID }: { cartID: string }) {
   const handleClick = async () => {
     // Get Stripe.js instance
     const stripe = await stripePromise;
@@ -12,7 +12,18 @@ export default function CheckoutButton({ cartID }: {cartID: string}) {
     console.log(stripe);
     // Call your backend to create the Checkout Session
     // const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/create-checkout-session/${cartID}`, { method: 'POST' });
-    const response = await fetch('http://localhost:3000/dev/orders', { method: 'POST'});
+
+    try {
+      const user: CognitoUser = await Auth.currentAuthenticatedUser();
+      username = user.getUsername();
+      state = AuthState.SignIn;
+    } catch (error) {
+      state = AuthState.SignedOut;
+    }
+
+    const response = await fetch('https://swxc430sgd.execute-api.eu-west-1.amazonaws.com/test/orders', {
+      method: 'POST',
+    });
     console.log(response);
     const session = await response.json();
 
@@ -37,6 +48,7 @@ export default function CheckoutButton({ cartID }: {cartID: string}) {
   return (
     <Button
       color="primary"
+      variant="contained"
       onClick={handleClick}
     >
       Checkout

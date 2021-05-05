@@ -37,7 +37,7 @@ export default function CheckoutButton({ cartID }: { cartID: string }) {
 
     // Show error if there is one
     if (session.message) {
-      alert(session.message);
+      console.log(session.message);
     } else {
       // When the customer clicks on the button, redirect them to Checkout.
       const result = await stripe.redirectToCheckout({
@@ -48,7 +48,7 @@ export default function CheckoutButton({ cartID }: { cartID: string }) {
         // If `redirectToCheckout` fails due to a browser or network
         // error, display the localized error message to your customer
         // using `result.error.message`.
-        alert(result.error.message);
+        console.log(result.error.message);
       }
     }
   };

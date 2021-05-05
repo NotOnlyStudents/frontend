@@ -27,14 +27,18 @@ function AuthContextProvider({ children }: Props) {
   const [userInfo, setUserInfo] = useState<UserInfo>({});
 
   const checkSignedState = async () => {
-    const { signInUserSession, attributes } = await Auth.currentAuthenticatedUser();
+    try {
+      const { signInUserSession, attributes } = await Auth.currentAuthenticatedUser();
 
-    setSignedState(getSignedState(signInUserSession));
-    setUserInfo({
-      name: attributes[CognitoCustomAttributes.name],
-      surname: attributes[CognitoCustomAttributes.surname],
-      email: attributes.email,
-    });
+      setSignedState(getSignedState(signInUserSession));
+      setUserInfo({
+        name: attributes[CognitoCustomAttributes.name],
+        surname: attributes[CognitoCustomAttributes.surname],
+        email: attributes.email,
+      });
+    } catch (e) {
+      setSignedState(SignedState.NotAuthenticated);
+    }
   };
 
   React.useEffect(() => {

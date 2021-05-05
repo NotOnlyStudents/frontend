@@ -40,7 +40,7 @@ class PDPEdit extends React.Component<Props, State> {
       product: props.product,
       validation: {
         name: false,
-        images: false,
+        images: props.product.images.length === 0,
         quantity: false,
         price: false,
         discount: false,

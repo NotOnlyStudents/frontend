@@ -27,16 +27,22 @@ function EMLBreadcrumb({ paths } : Props) {
     },
   };
 
+  const renderIconIfPresent = (icon) => {
+    let Icon;
+
+    if (icon) {
+      Icon = withStyles(iconTheme)(icon);
+    } else {
+      Icon = () => <></>;
+    }
+
+    return Icon;
+  };
+
   const renderOthersPaths = () => paths
     .slice(0, paths.length - 1)
     .map((path: BreadcrumbPath) => {
-      let Icon;
-
-      if (path.icon) {
-        Icon = withStyles(iconTheme)(path.icon);
-      } else {
-        Icon = () => <></>;
-      }
+      const Icon = renderIconIfPresent(path.icon);
 
       return (
         <Link key={path.href} className={classes.link} href={path.href}>
@@ -46,7 +52,16 @@ function EMLBreadcrumb({ paths } : Props) {
       );
     });
 
-  const renderLastPath = (path: BreadcrumbPath) => <Typography color="textPrimary">{ path.name }</Typography>;
+  const renderLastPath = (path: BreadcrumbPath) => {
+    const Icon = renderIconIfPresent(path.icon);
+
+    return (
+      <Box display="flex">
+        <Icon />
+        <Typography color="textPrimary">{ path.name }</Typography>
+      </Box>
+    );
+  };
 
   return (
     <Box m={2}>

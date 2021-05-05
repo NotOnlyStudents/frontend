@@ -1,3 +1,4 @@
+import { Auth } from 'aws-amplify';
 import { Button } from '@material-ui/core';
 import { loadStripe } from '@stripe/stripe-js';
 import React from 'react';
@@ -11,20 +12,27 @@ export default function CheckoutButton({ cartID }: { cartID: string }) {
     console.log(cartID);
     console.log(stripe);
     // Call your backend to create the Checkout Session
-    // const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/create-checkout-session/${cartID}`, { method: 'POST' });
+    // const response =
+    // await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/create-checkout-session/${cartID}`, { method: 'POST' });
+
+    let token: string;
 
     try {
-      const user: CognitoUser = await Auth.currentAuthenticatedUser();
-      username = user.getUsername();
-      state = AuthState.SignIn;
+      const user = await Auth.currentAuthenticatedUser();
+      token = user.signInUserSession.idToken.jwtToken;
     } catch (error) {
-      state = AuthState.SignedOut;
+      token = '';
     }
 
-    const response = await fetch('https://swxc430sgd.execute-api.eu-west-1.amazonaws.com/test/orders', {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_ORDERS_SERVICE_URL}/stripe-hook`, {
       method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     });
+
     console.log(response);
+
     const session = await response.json();
 
     // Show error if there is one

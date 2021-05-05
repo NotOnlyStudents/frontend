@@ -7,7 +7,11 @@ export function getLoginLink() {
 }
 
 export function getCartLink() {
-  return 'cart';
+  return '/cart';
+}
+
+export function getPaymentLink() {
+  return '/cart/payment';
 }
 
 export function getPersonalAreaLink(seller: boolean = false) {

@@ -4,6 +4,9 @@ import {
   Box, Button, Link, Typography,
 } from '@material-ui/core';
 import ShopIcon from '@material-ui/icons/Shop';
+import { AuthContext } from 'lib/authContext';
+import { SignedState } from 'interfaces/login';
+import { getLoginLink, getPaymentLink } from 'lib/links';
 import CartItem from './cartItem';
 
 interface Props {
@@ -57,6 +60,43 @@ class CartList extends React.Component<Props, State> {
       )
   );
 
+  renderPaymentButtonIfLogged = () => {
+    const { signedState } = this.context;
+    const { payment } = this.props;
+
+    const button = signedState === SignedState.Customer
+      ? (
+        <Button
+          variant="contained"
+          color="primary"
+          href={getPaymentLink()}
+          startIcon={<ShopIcon />}
+        >
+          Buy
+        </Button>
+      )
+      : (
+        <Button
+          variant="contained"
+          color="primary"
+          href={getLoginLink()}
+          startIcon={<ShopIcon />}
+        >
+          Login to buy it
+        </Button>
+      );
+
+    return (
+      !payment
+        ? (
+          <>
+            {button}
+          </>
+        )
+        : <></>
+    );
+  };
+
   renderAllItems = (): React.ReactElement[] => (
     this.state.items.map(
       (item: CartProduct, index: number): React.ReactElement => (
@@ -91,14 +131,14 @@ class CartList extends React.Component<Props, State> {
               {`${this.calculateTotalPrice()}€`}
             </Typography>
           </Box>
-          {
-          (!payment) ? <Button component={Link} variant="contained" color="primary" href="/cart/payment" startIcon={<ShopIcon />}> Buy </Button> : <></>
-          }
+          { this.renderPaymentButtonIfLogged() }
         </Box>
         {this.renderAllItems()}
       </Box>
     );
   }
 }
+
+CartList.contextType = AuthContext;
 
 export default CartList;

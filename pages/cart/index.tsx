@@ -8,15 +8,17 @@ import Head from 'next/head';
 import { Typography } from '@material-ui/core';
 import NoProductInCart from 'components/noresult/NoProductsInCart';
 import { Cart } from 'interfaces/cart/cart';
+import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
+import { getHomeLink } from 'lib/links';
 
 interface Props {
   cart: Cart;
 }
 
 function cartPage({ cart }: Props) {
-  const breadcrumbPaths:BreadcrumbPath[] = [
-    { name: 'Home', href: '/', icon: HomeIcon },
-    { name: 'Cart' },
+  const breadcrumbPaths: BreadcrumbPath[] = [
+    { name: 'Home', href: getHomeLink(), icon: HomeIcon },
+    { name: 'Cart', icon: ShoppingCartIcon },
   ];
 
   const renderCartList = () => (cart.products.length !== 0

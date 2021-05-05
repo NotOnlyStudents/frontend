@@ -13,10 +13,11 @@ import AddressService from 'services/address-service';
 
 interface Props {
   id: string,
+  token: string,
   onRemove: () => void,
 }
 
-function AddressRemove({ id, onRemove }: Props) {
+function AddressRemove({ id, token, onRemove }: Props) {
   const [openModal, setOpenModal] = React.useState(false);
 
   const [alert, setAlert] = React.useState({
@@ -41,7 +42,7 @@ function AddressRemove({ id, onRemove }: Props) {
 
   const handleRemoveProduct = async () => {
     try {
-      await (new AddressService()).deleteAddress(id);
+      await (new AddressService()).deleteAddress(token, id);
 
       openAlert(addressDeleteSuccess);
       onRemove();

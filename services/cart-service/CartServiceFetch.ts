@@ -9,7 +9,7 @@ import { createHmac } from 'crypto';
 
 class CartServiceFetch implements CartService {
   getCartProducts = async (token): Promise<CartProduct[]> => {
-    const req: HTTPRequest = new HTTPRequest('https://n4u3xypkqk.execute-api.eu-west-1.amazonaws.com/test','cart');
+    const req: HTTPRequest = new HTTPRequest(process.env.NEXT_PUBLIC_CART_SERVICE_URL,'cart');
     const headers = {
       "Authorization": "Bearer " + token
       }
@@ -18,8 +18,18 @@ class CartServiceFetch implements CartService {
     return res.data['token']['data']['products'];
   }
 
+  getCartToken = async (token): Promise<object> => {
+    const req: HTTPRequest = new HTTPRequest(process.env.NEXT_PUBLIC_CART_SERVICE_URL,'cart');
+    const headers = {
+      "Authorization": "Bearer " + token
+      }
+    const res = await req.get<CartGETRequest>('',headers);
+   // res.data['token']['data']['products']['images'][0];
+    return res.data['token'];
+  }
+
   postCartProducts = async (token,product:Product): Promise<void> => {
-    const req: HTTPRequest = new HTTPRequest('https://n4u3xypkqk.execute-api.eu-west-1.amazonaws.com/test','cart');
+    const req: HTTPRequest = new HTTPRequest(process.env.NEXT_PUBLIC_CART_SERVICE_URL,'cart');
 
     const timeout = new Date();
     timeout.setMinutes(timeout.getMinutes() + 5);
@@ -72,7 +82,7 @@ class CartServiceFetch implements CartService {
   }
 
   deleteCartProducts = async (token, productId): Promise<void> => {
-    const req: HTTPRequest = new HTTPRequest('https://n4u3xypkqk.execute-api.eu-west-1.amazonaws.com/test/','cart/' + productId);
+    const req: HTTPRequest = new HTTPRequest(process.env.NEXT_PUBLIC_CART_SERVICE_URL,'cart/' + productId);
     const headers = {
       "Accept": "application/json",
       "Authorization": "Bearer " + token
@@ -81,7 +91,7 @@ class CartServiceFetch implements CartService {
   }
 
   patchCartProducts = async (token,productId,quantity): Promise<void> => {
-    const req: HTTPRequest = new HTTPRequest('https://n4u3xypkqk.execute-api.eu-west-1.amazonaws.com/test/','cart/' + productId);
+    const req: HTTPRequest = new HTTPRequest(process.env.NEXT_PUBLIC_CART_SERVICE_URL,'cart/' + productId);
     const body = {quantity};
     const bodyString = JSON.stringify(body);
     const headers = {

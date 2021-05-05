@@ -1,17 +1,107 @@
 import HTTPRequest from 'lib/HTTPRequest';
 import {
-  CartProduct,
+  CartProduct, Product,
 } from 'interfaces/products/product';
-import { CartGETRequest } from 'interfaces/cart/cart-request';
+import { CartGETRequest, CartPatchRequest, CartPostRequest } from 'interfaces/cart/cart-request';
 import CartService from './CartService';
+import { createHmac } from 'crypto';
+
 
 class CartServiceFetch implements CartService {
-  getCartProducts = async (): Promise<CartProduct[]> => {
-    const req: HTTPRequest = new HTTPRequest('cart');
-    const res: CartGETRequest = await req.get<CartGETRequest>();
+  getCartProducts = async (token): Promise<CartProduct[]> => {
+    const req: HTTPRequest = new HTTPRequest(process.env.NEXT_PUBLIC_CART_SERVICE_URL,'cart');
+    const headers = {
+      "Authorization": "Bearer " + token
+      }
+    const res = await req.get<CartGETRequest>('',headers);
+   // res.data['token']['data']['products']['images'][0];
+    return res.data['token']['data']['products'];
+  }
 
-    return res.data;
+  getCartToken = async (token): Promise<object> => {
+    const req: HTTPRequest = new HTTPRequest(process.env.NEXT_PUBLIC_CART_SERVICE_URL,'cart');
+    const headers = {
+      "Authorization": "Bearer " + token
+      }
+    const res = await req.get<CartGETRequest>('',headers);
+   // res.data['token']['data']['products']['images'][0];
+    return res.data['token'];
+  }
+
+  postCartProducts = async (token,product:Product): Promise<void> => {
+    const req: HTTPRequest = new HTTPRequest(process.env.NEXT_PUBLIC_CART_SERVICE_URL,'cart');
+
+    const timeout = new Date();
+    timeout.setMinutes(timeout.getMinutes() + 5);
+    const date = {"token" : {
+      "data":{
+        "id": product.id,
+        "name": product.name,
+        "description": product.description,
+        "images": product.images,
+        "quantity" :product.quantity,
+        "price" : product.price,
+        "evidence": product.evidence,
+        "category" :product.categories,
+        },
+        "timeout": timeout,
+      },
+    };
+    const hmac= createHmac('sha256','password').update(JSON.stringify(date)).digest('base64');
+
+    const dateComplete = {"token" : {
+      "data":{
+        "id": product.id,
+        "name": product.name,
+        "description": product.description,
+        "images": product.images,
+        "quantity" :product.quantity,
+        "price" : product.price,
+        "evidence": product.evidence,
+        "category" :product.categories,
+        },
+        "timeout": timeout,
+      },
+      "hmac": hmac,
+    }
+
+
+    const body = JSON.stringify(dateComplete);
+    const headers = {
+      "Content-type": "application/json",
+      "Accept": "application/json",
+      "Authorization" : "Bearer " + token
+    };
+
+    try{
+      const res = await req.post<Product>(body,headers);
+      //console.log(res);
+    }catch(error){
+      console.log(error);
+    }
+  }
+
+  deleteCartProducts = async (token, productId): Promise<void> => {
+    const req: HTTPRequest = new HTTPRequest(process.env.NEXT_PUBLIC_CART_SERVICE_URL,'cart/' + productId);
+    const headers = {
+      "Accept": "application/json",
+      "Authorization": "Bearer " + token
+    }
+    const res = await req.delete<CartPatchRequest>('', headers);
+  }
+
+  patchCartProducts = async (token,productId,quantity): Promise<void> => {
+    const req: HTTPRequest = new HTTPRequest(process.env.NEXT_PUBLIC_CART_SERVICE_URL,'cart/' + productId);
+    const body = {quantity};
+    const bodyString = JSON.stringify(body);
+    const headers = {
+      "Accept": "application/json",
+      "Authorization": "Bearer " + token
+      }
+    await req.patch<CartPatchRequest>(bodyString,headers);
   };
 }
+
+
 
 export default CartServiceFetch;

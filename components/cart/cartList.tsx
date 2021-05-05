@@ -7,6 +7,8 @@ import ShopIcon from '@material-ui/icons/Shop';
 import { AuthContext } from 'lib/authContext';
 import { SignedState } from 'interfaces/login';
 import { getLoginLink, getPaymentLink } from 'lib/links';
+import CartService from 'services/cart-service/CartServiceFetch';
+import { Auth } from 'aws-amplify';
 import CartItem from './cartItem';
 
 interface Props {
@@ -22,26 +24,39 @@ class CartList extends React.Component<Props, State> {
   constructor(props) {
     super(props);
     this.state = { items: props.items };
+    // console.log(this.state.items);
   }
 
-  handleChangeQuantity = (quantity: number, index: number): void => {
-    this.setState((state: State) => {
-      const newState: State = state;
+  handleChangeQuantity = async (quantity: number, index: number): Promise<void> => {
+    try {
+      const user = await Auth.currentAuthenticatedUser();
+      const token = user.signInUserSession.idToken.jwtToken;
+      await new CartService().patchCartProducts(token, this.state.items[index].id, quantity);
+      this.setState((state: State) => {
+        const newState: State = state;
 
-      newState.items[index].quantity = quantity;
-
-      return newState;
-    });
+        newState.items[index].quantity = quantity;
+        return newState;
+      });
+    } catch (error) { console.log(error); }
   };
 
-  handleRemoveProduct = (index: number): void => {
-    this.setState((state: State) => {
-      const newState: State = state;
+  handleRemoveProduct = async (index: number): Promise<void> => {
+    try {
+      const user = await Auth.currentAuthenticatedUser();
+      const token = user.signInUserSession.idToken.jwtToken;
+      console.log(index);
+      await new CartService().deleteCartProducts(token, this.state.items[index].id);
+      this.setState((state: State) => {
+        const newState: State = state;
 
-      newState.items.splice(index, 1);
+        newState.items.splice(index, 1);
 
-      return newState;
-    });
+        return newState;
+      });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   handleSubmit = (): void => {

@@ -68,7 +68,6 @@ function CartItem({
 
     handleRemoveProduct(index);
   };
-
   return (
     <Box
       width="100%"
@@ -80,7 +79,7 @@ function CartItem({
       <Box display="flex">
         <CardMedia
           className={classes.image}
-          image={item.image}
+          image={item['images'][0]}
         />
         <Box
           display="flex"

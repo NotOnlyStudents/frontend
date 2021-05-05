@@ -1,5 +1,4 @@
 import CartServiceFetch from './CartServiceFetch';
 import CartServiceMock from './CartServiceMock';
 
-//export default process.env.NODE_ENV === 'development' ? CartServiceMock : CartServiceFetch;
-export default CartServiceFetch;
+export default process.env.NEXT_PUBLIC_SERVICE_METHOD === 'mock' ? CartServiceMock : CartServiceFetch;

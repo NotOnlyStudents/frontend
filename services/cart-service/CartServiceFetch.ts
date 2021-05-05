@@ -1,6 +1,6 @@
 import HTTPRequest from 'lib/HTTPRequest';
 import {
-  CartProduct,
+  CartProduct, Product,
 } from 'interfaces/products/product';
 import { CartGETRequest, CartPatchRequest, CartPostRequest } from 'interfaces/cart/cart-request';
 import CartService from './CartService';
@@ -14,76 +14,61 @@ class CartServiceFetch implements CartService {
       "Authorization": "Bearer " + token
       }
     const res = await req.get<CartGETRequest>('',headers);
-    console.log(res.data['token']['data']);
+   // res.data['token']['data']['products']['images'][0];
     return res.data['token']['data']['products'];
   }
 
-  postCartProducts = async (token): Promise<void> => {
+  postCartProducts = async (token,product:Product): Promise<void> => {
+    const req: HTTPRequest = new HTTPRequest('https://n4u3xypkqk.execute-api.eu-west-1.amazonaws.com/test','cart');
 
-
-    //const req: HTTPRequest = new HTTPRequest('cart');
-  /*  const products:CartProduct[] = [{
-        id: 'prova',
-        name: 'prova'
-    }];
-    const cart:Cart = {products : products};
-*/
-    
-  /*
-
-  const timeout = new Date();
-  timeout.setMinutes(timeout.getMinutes() + 5);
-
-  const dato = {"token" :{
-    "data":{
-      "id":"Provolone",
-      "name":"Mozzarella",
-      "description":"Mozzarella di Bufala",
-      "images":["spugne"],
-      "quantity" : 3,
-      "price" : 14 ,
-      "available":true,
-      "evidence":true,
-      "category" : ["spugne"]
+    const timeout = new Date();
+    timeout.setMinutes(timeout.getMinutes() + 5);
+    const date = {"token" : {
+      "data":{
+        "id": product.id,
+        "name": product.name,
+        "description": product.description,
+        "images": product.images,
+        "quantity" :product.quantity,
+        "price" : product.price,
+        "evidence": product.evidence,
+        "category" :product.categories,
+        },
+        "timeout": timeout,
       },
-      "timeout": timeout
-    },
-  };
-  console.log(timeout);
-  //"hmac" : "Kro7OhBUR6u2kQnUt8NTv0qHorh3DcEYHvBKvd5X3ao=" 
-  const hmac = createHmac('sha256','password').update(JSON.stringify(dato)).digest('base64');
+    };
+    const hmac= createHmac('sha256','password').update(JSON.stringify(date)).digest('base64');
 
-  const datoss = {"token" :{
-    "data":{
-      "id":"Provolone",
-      "name":"Mozzarella",
-      "description":"Mozzarella di Bufala",
-      "images":["spugne"],
-      "quantity" : 3,
-      "price" : 14 ,
-      "available": true,
-      "evidence": true,
-      "category" : ["spugne"]
+    const dateComplete = {"token" : {
+      "data":{
+        "id": product.id,
+        "name": product.name,
+        "description": product.description,
+        "images": product.images,
+        "quantity" :product.quantity,
+        "price" : product.price,
+        "evidence": product.evidence,
+        "category" :product.categories,
+        },
+        "timeout": timeout,
       },
-      "timeout": timeout
-    },
-    "hmac": hmac
-  }
+      "hmac": hmac,
+    }
 
-  const body = JSON.stringify(datoss);
 
-  const headers = {
-    "Content-type": "application/json",
-    "Accept": "application/json",
-    "Authorization": "Bearer " + token
+    const body = JSON.stringify(dateComplete);
+    const headers = {
+      "Content-type": "application/json",
+      "Accept": "application/json",
+      "Authorization" : "Bearer " + token
     };
 
-  /*
-  console.log(headers);
-  console.log(body);
-  try{
-    const res = await req.post<CartPostRequest>(body,headers);
-    }catch(error){console.log(error);}*/
+    try{
+      const res = await req.post<Product>(body,headers);
+      //console.log(res);
+    }catch(error){
+      console.log(error);
+    }
   }
 
   patchCartProducts = async (token,productId,quantity): Promise<void> => {

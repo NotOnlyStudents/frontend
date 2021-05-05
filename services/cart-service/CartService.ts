@@ -1,8 +1,8 @@
-import { CartProduct } from 'interfaces/products/product';
+import { CartProduct, Product } from 'interfaces/products/product';
 
 interface CartService{
   getCartProducts(token): Promise<CartProduct[]>;
-  postCartProducts(token): Promise<void>;
+  postCartProducts(token,product:Product): Promise<void>;
   patchCartProducts(token,productId,quantity): Promise<void>;
 }
 

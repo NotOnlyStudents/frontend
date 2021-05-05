@@ -65,16 +65,16 @@ function PLPProduct({ product, seller }: Props) {
 
   const handleAddToCart = async () => {
     const productToCart = await new ProductService().getProductById(product.id);
-    console.log(productToCart);
-    /*try {
+    try {
       const user = await Auth.currentAuthenticatedUser();
       const token = user.signInUserSession.idToken.jwtToken;
-      new CartService().postCartProducts(token,product);
+      await new CartService().postCartProducts(token,productToCart);
       openAlert(addToCartSuccessId);
     } 
     catch(error){
-      console.log(error);*/
+      console.log(error);
   };
+}
 
   const showNotAvailableBanner = () : React.ReactElement | void => {
     if (product.quantity <= 0) {

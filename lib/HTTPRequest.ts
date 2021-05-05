@@ -9,7 +9,6 @@ class HTTPRequest implements HTTPRequest {
 
   constructor(baseURL: string, serviceName: string) {
     this.url = `${baseURL}/${serviceName}`;
-    console.log(this.url);
   }
 
   async get<T>(params: string = '', headers: HeadersInit = {}): Promise<T> { // Request data

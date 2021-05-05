@@ -13,10 +13,11 @@ interface Props {
   index: number,
   handleAddNewAddress: (address: Address, index?: number) => void,
   handleRemoveAddress: (index: number) => void,
+  token: string,
 }
 
 function AddressView({
-  address, handleAddNewAddress, index, handleRemoveAddress,
+  address, handleAddNewAddress, index, handleRemoveAddress, token,
 }: Props) {
   const [edit, setEdit] = React.useState(false);
 
@@ -50,7 +51,7 @@ function AddressView({
         <AddressRemove id={address.id} onRemove={() => handleRemoveAddress(index)} />
       </Box>
       <Dialog open={edit} onClose={handleCloseEdit}>
-        <AddressEdit address={address} handleChangeAddresses={handleCloseDialog} />
+        <AddressEdit address={address} handleChangeAddresses={handleCloseDialog} token={token} />
       </Dialog>
     </Box>
   );

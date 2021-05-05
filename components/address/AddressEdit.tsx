@@ -19,6 +19,7 @@ interface Props {
   creation?: boolean;
   handleChangeAddresses?: (addresses?: Address) => void,
   handleAddAddress?: (add?: Address) => void,
+  token: string,
 }
 
 interface State {
@@ -128,9 +129,9 @@ class AddressEdit extends React.Component<Props, State> {
       const ps: AddressServiceType = new AddressService();
 
       if (address.id) {
-        newAddress = await ps.editAddress(address.id, address);
+        newAddress = await ps.editAddress(this.props.token, address.id, address);
       } else {
-        newAddress = await ps.createAddress(address);
+        newAddress = await ps.createAddress(this.props.token, address);
       }
 
       if (this.props.creation) {

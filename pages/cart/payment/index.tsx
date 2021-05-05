@@ -13,11 +13,17 @@ import {
 } from '@material-ui/core';
 import CartService from 'services/cart-service';
 import CartList from 'components/cart/cartList';
-import { ExpandLess, ExpandMore } from '@material-ui/icons';
+import { ExpandLess, ExpandMore, LensTwoTone } from '@material-ui/icons';
+import { withSSRContext } from 'aws-amplify';
+import { AuthState } from '@aws-amplify/ui-components';
+import AuthContextProvider, { AuthContext, useAuthContext } from 'lib/authContext';
 
 interface Props {
   cart: Cart,
-  addresses: Address[];
+  addresses?: Address[];
+  authstate?: AuthState;
+  username?: string;
+  token?: string;
 }
 
 interface State {
@@ -34,16 +40,28 @@ class PaymentPage extends React.Component<Props, State> {
     { name: 'Payment' },
   ];
 
+  context: React.ContextType<typeof AuthContext>;
+
   constructor(props: Props) {
     super(props);
-
     this.state = {
       cart: props.cart,
-      addresses: props.addresses,
+      addresses: [],
       selectedAddress: 0,
       expandend: false,
     };
   }
+
+  componentDidMount = async () => {
+    const token: string = 'eyJraWQiOiJtSk5lNytEQkZET1R3QXNSdEVMSUtHM3psaDdVUFwvUDhycGFwNDZYVW9DUT0iLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJkYzllNGY3OC0wMmMyLTRmZTYtODMzZC1iYTg5YWQ0NTJkYzQiLCJhdWQiOiI1ZWw5Y3NoaTVpbmxkaG1uZW52NTNybmRtcyIsImNvZ25pdG86Z3JvdXBzIjpbImJ1eWVycyJdLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsImV2ZW50X2lkIjoiOWNlZTdjMjUtNzk0OS00NGI5LTk3OTEtOGRkMDI1ZjNhYzYyIiwidG9rZW5fdXNlIjoiaWQiLCJhdXRoX3RpbWUiOjE2MjAyMTAyOTUsImlzcyI6Imh0dHBzOlwvXC9jb2duaXRvLWlkcC5ldS13ZXN0LTEuYW1hem9uYXdzLmNvbVwvZXUtd2VzdC0xX2k3WU5vdXBPUyIsImNvZ25pdG8';
+    let addresses: Address[] = [];
+    try {
+      addresses = await (new AddressService()).getAllAddress(token);
+      this.setState({ addresses });
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
   handleRemoveAddress = (index: number) => {
     this.setState((state: State) => {
@@ -85,6 +103,9 @@ class PaymentPage extends React.Component<Props, State> {
     const {
       addresses, selectedAddress, cart, expanded,
     } = this.state;
+    const {
+      authstate,
+    } = this.props;
     return (
       <>
         <Head>
@@ -100,13 +121,25 @@ class PaymentPage extends React.Component<Props, State> {
         <Collapse in={expanded} timeout="auto" unmountOnExit>
           <CartList items={cart.products} payment />
         </Collapse>
-        <AddressList
-          addresses={addresses}
-          selectedAddress={selectedAddress}
-          handleChangeIndex={this.handleChangeAddress}
-          handleAddNewAddress={this.handleAddAddress}
-          handleRemoveOneAddress={this.handleRemoveAddress}
-        />
+        { authstate === AuthState.SignIn
+          ? (
+            <AddressList
+              addresses={addresses}
+              selectedAddress={selectedAddress}
+              handleChangeIndex={this.handleChangeAddress}
+              handleAddNewAddress={this.handleAddAddress}
+              handleRemoveOneAddress={this.handleRemoveAddress}
+              token={this.props.token}
+            />
+          ) : (
+            <Button
+              component={Link}
+              color="primary"
+              href="/login"
+            >
+              Login to see your address
+            </Button>
+          )}
         <TextField
           id="description"
           label="Additional informations"
@@ -124,21 +157,16 @@ class PaymentPage extends React.Component<Props, State> {
           >
             Checkout
           </Button>
-
         </Box>
       </>
     );
   }
 }
 
+PaymentPage.contextType = AuthContext;
+
 export async function getServerSideProps() {
-  let addresses = [];
   let products = [];
-  try {
-    addresses = await (new AddressService()).getAllAddress();
-  } catch (error) {
-    console.error(error);
-  }
   try {
     products = await (new CartService()).getCartProducts();
   } catch (error) {
@@ -146,7 +174,6 @@ export async function getServerSideProps() {
   }
   return {
     props: {
-      addresses,
       cart: {
         products,
       },

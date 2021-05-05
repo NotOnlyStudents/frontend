@@ -4,7 +4,7 @@ import {
   Box,
   Button,
   Dialog,
-  FormControl, FormLabel, Grid, RadioGroup,
+  FormControl, FormLabel, RadioGroup,
 } from '@material-ui/core';
 // import { Cart } from 'interfaces/cart/cart';
 import AddressEdit from './AddressEdit';
@@ -16,6 +16,7 @@ interface Props {
   handleAddNewAddress: (address: Address, index?: number) => void,
   selectedAddress: number,
   handleRemoveOneAddress: (index: number) => void,
+  token: string,
 }
 
 function AddressList({
@@ -24,6 +25,7 @@ function AddressList({
   handleChangeIndex,
   selectedAddress,
   handleRemoveOneAddress,
+  token,
 }: Props) : React.ReactElement {
   const [open, setOpen] = React.useState(false);
 
@@ -62,6 +64,7 @@ function AddressList({
         handleAddNewAddress={handleCloseDialog}
         index={index}
         handleRemoveAddress={handleRemoveOneAddress}
+        token={token}
       />
     ),
   );
@@ -82,7 +85,7 @@ function AddressList({
         Add new address
       </Button>
       <Dialog open={open} onClose={handleClose}>
-        <AddressEdit address={newAddress} handleAddAddress={handleCloseDialog} creation />
+        <AddressEdit address={newAddress} handleAddAddress={handleCloseDialog} creation token={token} />
       </Dialog>
     </Box>
   );

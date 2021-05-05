@@ -75,7 +75,7 @@ function CartItem({
       <Box display="flex">
         <CardMedia
           className={classes.image}
-          image={item['images'][0]}
+          image={item.images[0]}
         />
         <Box
           display="flex"
@@ -102,7 +102,12 @@ function CartItem({
           <Box flexGrow={1} />
           {
             (!payments)
-              ? <QuantityManager counter={item.quantity} handleCounterChange={handleCounterChange} />
+              ? (
+                <QuantityManager
+                  counter={item.quantity}
+                  handleCounterChange={handleCounterChange}
+                />
+              )
               : (
                 <p>
                   Quantity:

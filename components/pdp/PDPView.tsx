@@ -4,7 +4,7 @@ import {
 import { makeStyles } from '@material-ui/styles';
 import QuantityManager from 'components/quantity/QuantityManager';
 import { Category } from 'interfaces/categories/category';
-import { Product } from 'interfaces/products/product';
+import { CartProduct, Product } from 'interfaces/products/product';
 import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart';
 
 import React from 'react';
@@ -21,6 +21,8 @@ import SnackbarAddToCartSuccess, { addToCartSuccessId } from 'components/snackba
 import SnackbarAddToCartError, { addToCartErrorId } from 'components/snackbar/cart/SnackbarAddToCartError';
 import ProductService from 'services/product-service';
 import { getEditProductLink } from 'lib/links';
+import { Auth } from 'aws-amplify';
+import CartService from 'services/cart-service';
 import PDPRemove from './PDPRemove';
 import PDPEvidence from './PDPEvidence';
 
@@ -65,6 +67,28 @@ function PDPView({ product, edit }: Props) : React.ReactElement {
     [addToCartErrorId]: false,
   });
 
+  const checkQuantityProductInCart = async () => {
+    try {
+      const user = await Auth.currentAuthenticatedUser();
+      const token = user.signInUserSession.idToken.jwtToken;
+      const products: CartProduct[] = await (new CartService()).getCartProducts(token);
+
+      const addedQuantity = products
+        .filter((p: CartProduct) => p.id === product.id)
+        .map((p: CartProduct) => (p.quantity));
+
+      if (addedQuantity.length) {
+        setCounter(addedQuantity[0]);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  React.useEffect(() => {
+    checkQuantityProductInCart();
+  }, []);
+
   const changeAlert = (id: string, show: boolean) => {
     const newAlert = { ...alert };
 
@@ -101,7 +125,15 @@ function PDPView({ product, edit }: Props) : React.ReactElement {
   };
 
   const handleAddToCart = async () => {
-    openAlert(addToCartSuccessId);
+    const productToCart = await new ProductService().getProductById(product.id);
+    try {
+      const user = await Auth.currentAuthenticatedUser();
+      const token = user.signInUserSession.idToken.jwtToken;
+      await new CartService().postCartProducts(token, { ...productToCart, quantity: counter });
+      openAlert(addToCartSuccessId);
+    } catch (error) {
+      openAlert(addToCartErrorId);
+    }
   };
 
   const renderEditOptionsIfSeller = () => (edit ? (

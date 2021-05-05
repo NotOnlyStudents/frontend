@@ -11,4 +11,3 @@ export interface CartPostRequest{
 export interface CartPatchRequest{
   data: number;
 }
-

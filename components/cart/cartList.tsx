@@ -31,14 +31,15 @@ class CartList extends React.Component<Props, State> {
     try {
       const user = await Auth.currentAuthenticatedUser();
       const token = user.signInUserSession.idToken.jwtToken;
-      await new CartService().patchCartProducts(token, this.state.items[index].id, quantity);
+      await (new CartService()).patchCartProducts(token, this.state.items[index].id, quantity);
+
       this.setState((state: State) => {
         const newState: State = state;
 
         newState.items[index].quantity = quantity;
         return newState;
       });
-    } catch (error) { console.log(error); }
+    } catch (error) { console.error(error); }
   };
 
   handleRemoveProduct = async (index: number): Promise<void> => {

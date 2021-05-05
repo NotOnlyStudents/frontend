@@ -20,8 +20,6 @@ import AuthContextProvider, { AuthContext, useAuthContext } from 'lib/authContex
 import { getCartLink, getHomeLink, getLoginLink } from 'lib/links';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import CheckoutButton from 'components/button/CheckoutButton';
-import { CognitoUser } from '@aws-amplify/auth';
-import { SignedState } from 'interfaces/login';
 
 interface Props {
   cart: Cart,
@@ -52,7 +50,7 @@ class PaymentPage extends React.Component<Props, State> {
       cart: props.cart,
       addresses: props.addresses,
       selectedAddress: 0,
-      expanded: false,
+      expanded: true,
     };
   }
 
@@ -175,7 +173,7 @@ export async function getServerSideProps(context) {
     username = '';
   }
   try {
-    products = await (new CartService()).getCartProducts();
+    products = await (new CartService()).getCartProducts(token);
   } catch (error) {
     console.log(error);
   }

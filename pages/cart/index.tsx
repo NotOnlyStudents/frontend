@@ -11,8 +11,6 @@ import { Cart } from 'interfaces/cart/cart';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import { getHomeLink } from 'lib/links';
 import { withSSRContext } from 'aws-amplify';
-import { CognitoUser } from '@aws-amplify/auth';
-import { AuthState } from '@aws-amplify/ui-components';
 
 interface Props {
   cart: Cart;
@@ -21,10 +19,10 @@ interface Props {
 function cartPage({ cart }: Props) {
   const breadcrumbPaths: BreadcrumbPath[] = [
     { name: 'Home', href: getHomeLink(), icon: HomeIcon },
-    { name: 'Cart', icon: ShoppingCartIcon },
+    { name: 'Cart' },
   ];
 
-  const renderCartList = () => (cart.products.length != 0
+  const renderCartList = () => (cart.products.length !== 0
     ? <CartList items={cart.products} />
     : <NoProductInCart />);
 

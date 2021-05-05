@@ -92,6 +92,8 @@ function Header(): React.ReactElement {
         query: router.query,
       };
 
+      console.log(newPage);
+
       if (searchText) {
         newPage.query.text = searchText;
       } else {

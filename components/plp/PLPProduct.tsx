@@ -4,7 +4,7 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
 import CartService from 'services/cart-service/CartServiceFetch';
-import { PLPProductItem } from 'interfaces/products/product';
+import { CartProduct, PLPProductItem } from 'interfaces/products/product';
 import StarIcon from '@material-ui/icons/Star';
 import { makeStyles } from '@material-ui/core/styles';
 import {
@@ -63,20 +63,41 @@ function PLPProduct({ product, seller }: Props) {
     changeAlert(id, true);
   };
 
+  const checkQuantityProductInCart = async () => {
+    try {
+      const user = await Auth.currentAuthenticatedUser();
+      const token = user.signInUserSession.idToken.jwtToken;
+      const products: CartProduct[] = await new CartService().getCartProducts(token);
+
+      const addedQuantity = products
+        .filter((p: CartProduct) => p.id === product.id)
+        .map((p: CartProduct) => (p.quantity));
+
+      if (addedQuantity.length) {
+        setCounter(addedQuantity[0]);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  React.useEffect(() => {
+    checkQuantityProductInCart();
+  }, []);
+
   const handleAddToCart = async () => {
     const productToCart = await new ProductService().getProductById(product.id);
     try {
       const user = await Auth.currentAuthenticatedUser();
       const token = user.signInUserSession.idToken.jwtToken;
-      await new CartService().postCartProducts(token,productToCart);
+      await new CartService().postCartProducts(token, { ...productToCart, quantity: counter });
       openAlert(addToCartSuccessId);
-    } 
-    catch(error){
-      console.log(error);
+    } catch (error) {
+      openAlert(addToCartErrorId);
+    }
   };
-}
 
-  const showNotAvailableBanner = () : React.ReactElement | void => {
+  const showNotAvailableBanner = () : React.ReactElement => {
     if (product.quantity <= 0) {
       return (
         <Typography className={classes.notAvailableText} color="error">
@@ -84,6 +105,8 @@ function PLPProduct({ product, seller }: Props) {
         </Typography>
       );
     }
+
+    return <></>;
   };
 
   const showInEvidenceBanner = () : React.ReactElement => (product.evidence ? <StarIcon style={{ color: '#FFEB3B' }} fontSize="large" /> : <></>);

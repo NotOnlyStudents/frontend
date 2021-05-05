@@ -24,8 +24,10 @@ class HTTPRequest implements HTTPRequest {
 
     let res: T;
 
-    if (req.status === 200) {
-      res = await req.json();
+    if (req.status >= 200 && req.status < 300) {
+      if (req.status !== 204) {
+        res = await req.json();
+      }
     } else {
       const errorRes: ErrorMessage = await req.json();
       throw new Error(errorRes.message);
@@ -47,8 +49,10 @@ class HTTPRequest implements HTTPRequest {
 
     let res: T;
 
-    if (req.status === 200) {
-      res = await req.json();
+    if (req.status >= 200 && req.status < 300) {
+      if (req.status !== 204) {
+        res = await req.json();
+      }
     } else {
       const errorRes: ErrorMessage = await req.json();
       throw new Error(errorRes.message);
@@ -57,7 +61,7 @@ class HTTPRequest implements HTTPRequest {
     return res;
   }
 
-  async patch<T>(data: string = '', headers: HeadersInit = {}): Promise<void> { // Send data to partial update a resource
+  async patch<T>(data: string = '', headers: HeadersInit = {}): Promise<T> { // Send data to partial update a resource
     const req: Response = await fetch(this.url, {
       headers: {
         ...this.baseHeaders,
@@ -68,19 +72,20 @@ class HTTPRequest implements HTTPRequest {
       body: data,
     });
 
- /*
-    console.log(req);
-    if (req.status == 204) {
-     // await req.json();
-      //console.log(res);
+    let res: T;
+
+    if (req.status >= 200 && req.status < 300) {
+      if (req.status !== 204) {
+        res = await req.json();
+      }
     } else {
       const errorRes: ErrorMessage = await req.json();
       throw new Error(errorRes.message);
-    }*/
-  
+    }
+    return res;
   }
 
-  async delete<T>(data: string = '', headers: HeadersInit = {}): Promise<void> { // Delete a specified resource
+  async delete<T>(data: string = '', headers: HeadersInit = {}): Promise<T> { // Delete a specified resource
     const req: Response = await fetch(this.url, {
       headers: {
         ...this.baseHeaders,
@@ -90,15 +95,17 @@ class HTTPRequest implements HTTPRequest {
       body: data,
     });
 
-/*    let res: T;
+    let res: T;
 
-    if (req.status === 200) {
-      res = await req.json();
+    if (req.status >= 200 && req.status < 300) {
+      if (req.status !== 204) {
+        res = await req.json();
+      }
     } else {
       const errorRes: ErrorMessage = await req.json();
       throw new Error(errorRes.message);
     }
-    return res;*/
+    return res;
   }
 
   async put<T>(data: string = '', headers: HeadersInit = {}): Promise<T> { // Send data to update the entire resource
@@ -113,8 +120,10 @@ class HTTPRequest implements HTTPRequest {
 
     let res: T;
 
-    if (req.status === 200) {
-      res = await req.json();
+    if (req.status >= 200 && req.status < 300) {
+      if (req.status !== 204) {
+        res = await req.json();
+      }
     } else {
       const errorRes: ErrorMessage = await req.json();
       throw new Error(errorRes.message);

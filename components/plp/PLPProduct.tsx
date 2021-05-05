@@ -3,7 +3,7 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
-
+import CartService from 'services/cart-service/CartServiceFetch';
 import { PLPProductItem } from 'interfaces/products/product';
 import StarIcon from '@material-ui/icons/Star';
 import { makeStyles } from '@material-ui/core/styles';
@@ -11,12 +11,13 @@ import {
   Box, Button, CardActions, IconButton, Link,
 } from '@material-ui/core';
 import QuantityManager from 'components/quantity/QuantityManager';
-
+import ProductService from 'services/product-service/ProductServiceFetch';
 import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart';
 import PriceItem from 'components/price-item/PriceItem';
 import SnackbarAddToCartSuccess, { addToCartSuccessId } from 'components/snackbar/cart/SnackbarAddToCartSuccess';
 import SnackbarAddToCartError, { addToCartErrorId } from 'components/snackbar/cart/SnackbarAddToCartError';
 import { getViewProductLink } from 'lib/links';
+import { Auth } from 'aws-amplify';
 
 interface Props {
   product: PLPProductItem
@@ -62,9 +63,18 @@ function PLPProduct({ product, seller }: Props) {
     changeAlert(id, true);
   };
 
-  const handleAddToCart = () => {
-    openAlert(addToCartSuccessId);
+  const handleAddToCart = async () => {
+    const productToCart = await new ProductService().getProductById(product.id);
+    try {
+      const user = await Auth.currentAuthenticatedUser();
+      const token = user.signInUserSession.idToken.jwtToken;
+      await new CartService().postCartProducts(token,productToCart);
+      openAlert(addToCartSuccessId);
+    } 
+    catch(error){
+      console.log(error);
   };
+}
 
   const showNotAvailableBanner = () : React.ReactElement | void => {
     if (product.quantity <= 0) {

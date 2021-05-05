@@ -56,19 +56,14 @@ function CartItem({
   };
 
   const handleCounterChange = async (quantity: number) => {
-    // Chiamata a put/patch API TODO:
-
     openAlert(changeQuantitySuccessId);
     handleChangeQuantity(quantity, index);
   };
 
   const handleClickRemove = async () => {
     openAlert(productDeleteSuccess);
-    // Chiamata a put/patch API TODO:
-
     handleRemoveProduct(index);
   };
-
   return (
     <Box
       width="100%"
@@ -80,7 +75,7 @@ function CartItem({
       <Box display="flex">
         <CardMedia
           className={classes.image}
-          image={item.image}
+          image={item['images'][0]}
         />
         <Box
           display="flex"

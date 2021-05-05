@@ -16,7 +16,6 @@ class ProductServiceFetch implements ProductService {
     const query: string = queryString.stringify(params);
 
     const res: GetAllProductsRequest = await req.get<GetAllProductsRequest>(query);
-
     const paginator: ProductPaginator = {
       products: res.data.products.map((product) => productToPLPProductItem(product)),
       total: res.data.total,

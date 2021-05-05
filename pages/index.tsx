@@ -97,6 +97,9 @@ export async function getServerSideProps() {
     paginator = await (new ProductService()).getAllProduct(filters);
   } catch (error) {
     console.log(error);
+    paginator = {
+      products: [],
+    };
   }
 
   return {

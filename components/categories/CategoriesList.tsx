@@ -8,6 +8,8 @@ import AddIcon from '@material-ui/icons/Add';
 import TextFieldValidation from 'components/validation/TextFieldValidation';
 import CategoryService from 'services/category-service';
 import { NextRouter, withRouter } from 'next/router';
+import NoResultCategory from 'components/noresult/NoResultCategory';
+import { ParsedUrlQueryInput } from 'querystring';
 import CategoryEdit from './CategoryEdit';
 
 interface Props {
@@ -64,18 +66,21 @@ class CategoriesList extends React.Component<Props, State> {
 
     this.setState({ searchName });
 
+    const query: ParsedUrlQueryInput = { };
+
+    if (searchName) {
+      query.text = searchName;
+    }
+
     router.push({
       pathname: '',
-      query: {
-        text: searchName,
-      },
+      query,
     });
 
-    this.fetchAllCategories();
+    this.fetchAllCategories(searchName);
   };
 
-  fetchAllCategories = async () => {
-    const { searchName } = this.state;
+  fetchAllCategories = async (searchName: string) => {
     const categories = await (new CategoryService()).getCategories(searchName);
 
     this.setState({ categories });
@@ -92,6 +97,11 @@ class CategoriesList extends React.Component<Props, State> {
       />
     ),
   );
+
+  renderItemsIfPresent = (): React.ReactElement => (
+    this.state.categories.length
+      ? <>{ this.renderItems() }</>
+      : <NoResultCategory />);
 
   render(): React.ReactElement {
     const { openNew, searchName } = this.state;
@@ -119,7 +129,7 @@ class CategoriesList extends React.Component<Props, State> {
             value={searchName}
           />
         </Box>
-        {this.renderItems()}
+        { this.renderItemsIfPresent() }
         <Dialog open={openNew} onClose={this.handleCloseNewCategoryDialog}>
           <CategoryEdit
             handleAddCategory={this.handleAddCategory}

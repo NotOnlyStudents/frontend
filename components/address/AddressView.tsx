@@ -11,29 +11,26 @@ import AddressRemove from './AddressRemove';
 interface Props {
   address: Address,
   index: number,
-  handleAddNewAddress: (address: Address, index?: number) => void,
+  handleChangeAddress: (address: Address, index: number) => void,
   handleRemoveAddress: (index: number) => void,
   token: string,
 }
 
 function AddressView({
-  address, handleAddNewAddress, index, handleRemoveAddress, token,
+  address,
+  index,
+  handleChangeAddress,
+  handleRemoveAddress,
+  token,
 }: Props) {
   const [edit, setEdit] = React.useState(false);
 
-  const handleCloseDialog = (add?: Address) => {
-    if (add) {
-      handleAddNewAddress(add, index);
-    }
+  const handleCloseEdit = () => {
     setEdit(false);
   };
 
   const handleClickEditButton = () => {
     setEdit(true);
-  };
-
-  const handleCloseEdit = () => {
-    setEdit(false);
   };
 
   return (
@@ -48,10 +45,20 @@ function AddressView({
         <IconButton color="primary" onClick={handleClickEditButton}>
           <Edit />
         </IconButton>
-        <AddressRemove id={address.id} token={token} onRemove={() => handleRemoveAddress(index)} />
+        <AddressRemove
+          id={address.id}
+          token={token}
+          onRemove={() => handleRemoveAddress(index)}
+        />
       </Box>
       <Dialog open={edit} onClose={handleCloseEdit}>
-        <AddressEdit address={address} handleChangeAddresses={handleCloseDialog} token={token} />
+        <AddressEdit
+          address={address}
+          handleChangeAddress={handleChangeAddress}
+          handleCloseDialog={handleCloseEdit}
+          index={index}
+          token={token}
+        />
       </Dialog>
     </Box>
   );

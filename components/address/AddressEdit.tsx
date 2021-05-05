@@ -14,11 +14,12 @@ interface AlertState {
 }
 
 interface Props {
-  address: Address;
-  creation?: boolean;
-  handleChangeAddresses?: (addresses?: Address) => void,
-  handleAddAddress?: (add?: Address) => void,
-  token: string,
+  address?: Address,
+  creation?: boolean,
+  index?: number,
+  handleChangeAddress: (address: Address, index: number) => void,
+  handleCloseDialog: () => void,
+  token: string
 }
 
 interface State {
@@ -31,8 +32,16 @@ class AddressEdit extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
 
+    const emptyAddress: Address = {
+      id: '',
+      nation: '',
+      city: '',
+      address: '',
+      cap: 0,
+    };
+
     this.state = {
-      address: props.address,
+      address: props.address || emptyAddress,
       validation: {
         nation: false,
         city: false,
@@ -112,31 +121,25 @@ class AddressEdit extends React.Component<Props, State> {
   };
 
   handleClickCancel = () => {
-    if (this.props.creation) {
-      this.props.handleAddAddress();
-    } else {
-      this.props.handleChangeAddresses();
-    }
+    this.props.handleCloseDialog();
   };
 
   handleClickSave = async () => {
     if (this.checkValidation()) {
       const { address } = this.state;
+      const { token, index, creation } = this.props;
 
       let newAddress: Address;
 
-      if (address.id) {
-        newAddress = await (
-          new AddressService()).editAddress(this.props.token, address.id, address);
+      if (creation) {
+        newAddress = await (new AddressService()).createAddress(token, address);
       } else {
-        newAddress = await (new AddressService()).createAddress(this.props.token, address);
+        newAddress = await (
+          new AddressService()).editAddress(token, address.id, address);
       }
 
-      if (this.props.creation) {
-        this.props.handleAddAddress(newAddress);
-      } else {
-        this.props.handleChangeAddresses(newAddress);
-      }
+      this.props.handleChangeAddress(newAddress, index !== undefined ? index : -1);
+      this.props.handleCloseDialog();
     } else {
       this.setState({ alert: { [addressNotValidId]: true } });
     }

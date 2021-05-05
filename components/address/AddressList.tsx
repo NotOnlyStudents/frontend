@@ -12,43 +12,28 @@ import AddressView from './AddressView';
 
 interface Props {
   addresses: Address[];
-  handleChangeIndex: (value: number) => void,
-  handleAddNewAddress: (address: Address, index?: number) => void,
   selectedAddress: number,
+  handleChangeIndex: (value: number) => void,
+  handleChangeAddress: (address: Address, index: number) => void,
   handleRemoveOneAddress: (index: number) => void,
   token: string,
 }
 
 function AddressList({
   addresses,
-  handleAddNewAddress,
-  handleChangeIndex,
   selectedAddress,
+  handleChangeIndex,
+  handleChangeAddress,
   handleRemoveOneAddress,
   token,
 }: Props) : React.ReactElement {
   const [open, setOpen] = React.useState(false);
 
-  const newAddress: Address = {
-    id: '',
-    nation: '',
-    city: '',
-    address: '',
-    cap: 0,
-  };
-
-  const handleCloseDialog = (address?: Address) => {
-    if (address) {
-      handleAddNewAddress(address);
-    }
-    setOpen(false);
-  };
-
   const handleClickOpen = () => {
     setOpen(true);
   };
 
-  const handleClose = () => {
+  const handleCloseDialog = () => {
     setOpen(false);
   };
 
@@ -61,9 +46,9 @@ function AddressList({
       <AddressView
         key={address.id}
         address={address}
-        handleAddNewAddress={handleCloseDialog}
-        index={index}
+        handleChangeAddress={handleChangeAddress}
         handleRemoveAddress={handleRemoveOneAddress}
+        index={index}
         token={token}
       />
     ),
@@ -84,11 +69,11 @@ function AddressList({
       >
         Add new address
       </Button>
-      <Dialog open={open} onClose={handleClose}>
+      <Dialog open={open}>
         <AddressEdit
-          address={newAddress}
-          handleAddAddress={handleCloseDialog}
           creation
+          handleChangeAddress={handleChangeAddress}
+          handleCloseDialog={handleCloseDialog}
           token={token}
         />
       </Dialog>

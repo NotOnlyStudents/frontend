@@ -18,7 +18,7 @@ interface AuthContextProps {
 export const AuthContext = createContext<Partial<AuthContextProps>>({});
 
 interface Props {
-  children: React.ReactElement;
+  children: React.ReactElement[];
 }
 
 function AuthContextProvider({ children }: Props) {

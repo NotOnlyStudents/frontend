@@ -9,6 +9,7 @@ class HTTPRequest implements HTTPRequest {
 
   constructor(baseURL: string, serviceName: string) {
     this.url = `${baseURL}/${serviceName}`;
+    console.log(this.url);
   }
 
   async get<T>(params: string = '', headers: HeadersInit = {}): Promise<T> { // Request data
@@ -69,7 +70,7 @@ class HTTPRequest implements HTTPRequest {
 
     let res: T;
 
-    if (req.status === 200) {
+    if (req.status === 204) {
       res = await req.json();
     } else {
       const errorRes: ErrorMessage = await req.json();

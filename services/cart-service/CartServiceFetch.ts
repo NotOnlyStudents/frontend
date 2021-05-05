@@ -9,12 +9,12 @@ import { createHmac } from 'crypto';
 
 class CartServiceFetch implements CartService {
   getCartProducts = async (token): Promise<CartProduct[]> => {
-    const req: HTTPRequest = new HTTPRequest('cart');
+    const req: HTTPRequest = new HTTPRequest('https://n4u3xypkqk.execute-api.eu-west-1.amazonaws.com/test','cart');
     const headers = {
       "Authorization": "Bearer " + token
       }
     const res = await req.get<CartGETRequest>('',headers);
-   // console.log(res.data['token']['data']);
+    console.log(res.data['token']['data']);
     return res.data['token']['data']['products'];
   }
 
@@ -87,7 +87,7 @@ class CartServiceFetch implements CartService {
   }
 
   patchCartProducts = async (token,productId,quantity): Promise<void> => {
-    const req: HTTPRequest = new HTTPRequest('cart/' + productId);
+    const req: HTTPRequest = new HTTPRequest('https://n4u3xypkqk.execute-api.eu-west-1.amazonaws.com/test/','cart/' + productId);
     const body = {quantity};
     const bodyString = JSON.stringify(body);
     const headers = {
@@ -97,15 +97,6 @@ class CartServiceFetch implements CartService {
     const res = await req.patch<CartPatchRequest>(bodyString,headers);
   };
 }
-
-
-
-
-
-
-
-
-
 
 
 

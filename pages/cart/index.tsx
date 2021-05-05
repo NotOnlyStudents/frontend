@@ -54,10 +54,10 @@ export async function getServerSideProps(context) {
     //new CartService().postCartProducts(token);
       //console.log(products);
     } catch (error) {
-      //console.log(error);
+      console.log(error);
     }
   } 
-  catch{console.log("There was a problem with serverss");}
+  catch{console.log("There was a problem with servers");}
 
 
   return {

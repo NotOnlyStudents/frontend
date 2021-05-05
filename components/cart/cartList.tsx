@@ -5,6 +5,8 @@ import {
 } from '@material-ui/core';
 import ShopIcon from '@material-ui/icons/Shop';
 import CartItem from './cartItem';
+import CartService from 'services/cart-service/CartServiceFetch';
+import { Auth } from 'aws-amplify';
 
 interface Props {
   items: CartProduct[];
@@ -19,17 +21,23 @@ class CartList extends React.Component<Props, State> {
   constructor(props) {
     super(props);
     this.state = { items: props.items };
-    console.log(this.state.items);
+    //console.log(this.state.items);
   }
 
-  handleChangeQuantity = (quantity: number, index: number): void => {
-    this.setState((state: State) => {
-      const newState: State = state;
-
-      newState.items[index].quantity = quantity;
-
-      return newState;
-    });
+  handleChangeQuantity = async (quantity: number, index: number): Promise<void> => {
+    
+    try {
+      const user = await Auth.currentAuthenticatedUser();
+      const token = user.signInUserSession.idToken.jwtToken;
+      new CartService().patchCartProducts(token,this.state.items[index].id,quantity);
+      this.setState((state: State) => {
+        const newState: State = state;
+  
+        newState.items[index].quantity = quantity;
+        return newState;
+      });
+    }
+    catch{alert("There was a problem with the server");}
   };
 
   handleRemoveProduct = (index: number): void => {

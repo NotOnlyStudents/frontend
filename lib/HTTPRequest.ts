@@ -3,6 +3,7 @@ import { ErrorMessage } from 'interfaces/errors';
 
 class HTTPRequest implements HTTPRequest {
   readonly baseHeaders: HeadersInit = {
+    'Content-Type': 'application/json',
   };
 
   readonly url: string;
@@ -12,13 +13,17 @@ class HTTPRequest implements HTTPRequest {
   }
 
   async get<T>(params: string = '', headers: HeadersInit = {}): Promise<T> { // Request data
+    if (params) { params = `?${params}`; }
+
     const req: Response = await fetch(this.url + params, {
       headers: {
+        ...this.baseHeaders,
         ...headers,
       },
     });
 
     let res: T;
+
     if (req.status === 200) {
       res = await req.json();
     } else {
@@ -26,15 +31,16 @@ class HTTPRequest implements HTTPRequest {
       throw new Error(errorRes.message);
     }
 
-
     return res;
   }
 
   async post<T>(data: string = '', headers: HeadersInit = {}): Promise<T> { // Send data to create a resource
     const req: Response = await fetch(this.url, {
       headers: {
+        ...this.baseHeaders,
         ...headers,
       },
+
       method: 'POST',
       body: data,
     });
@@ -47,7 +53,6 @@ class HTTPRequest implements HTTPRequest {
       const errorRes: ErrorMessage = await req.json();
       throw new Error(errorRes.message);
     }
-
 
     return res;
   }
@@ -65,7 +70,7 @@ class HTTPRequest implements HTTPRequest {
 
     let res: T;
 
-    if (req.status === 200) {
+    if (req.status === 204) {
       res = await req.json();
     } else {
       const errorRes: ErrorMessage = await req.json();
@@ -119,4 +124,3 @@ class HTTPRequest implements HTTPRequest {
 }
 
 export default HTTPRequest;
-

@@ -49,10 +49,10 @@ export async function getServerSideProps(context) {
     const user = await Auth.currentAuthenticatedUser();
     const token = user.signInUserSession.idToken.jwtToken;
     try {
-    //products = await new CartService().getCartProducts(token);
-    new CartService().postCartProducts(token);
-    //  new CartService().patchCartProducts(token);
-      console.log(products);
+    products = await new CartService().getCartProducts(token);
+   // console.log(token);
+    //new CartService().postCartProducts(token);
+      //console.log(products);
     } catch (error) {
       //console.log(error);
     }

@@ -9,6 +9,6 @@ export interface CartPostRequest{
 }
 
 export interface CartPatchRequest{
-  quantity: number;
+  data: number;
 }
 

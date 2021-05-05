@@ -2,7 +2,7 @@ import HTTPRequest from 'lib/HTTPRequest';
 import {
   CartProduct,
 } from 'interfaces/products/product';
-import { CartGETRequest, CartPostRequest } from 'interfaces/cart/cart-request';
+import { CartGETRequest, CartPatchRequest, CartPostRequest } from 'interfaces/cart/cart-request';
 import CartService from './CartService';
 import { createHmac } from 'crypto';
 
@@ -11,29 +11,30 @@ class CartServiceFetch implements CartService {
   getCartProducts = async (token): Promise<CartProduct[]> => {
     const req: HTTPRequest = new HTTPRequest('cart');
     const headers = {
-      "Authorization": "Bearer " + token,
-      "Content-type": "application/json"
-  }
+      "Authorization": "Bearer " + token
+      }
     const res = await req.get<CartGETRequest>('',headers);
    // console.log(res.data['token']['data']);
     return res.data['token']['data']['products'];
   }
 
   postCartProducts = async (token): Promise<void> => {
-    const req: HTTPRequest = new HTTPRequest('cart');
-    /*const products:CartProduct[] = [{
+
+
+    //const req: HTTPRequest = new HTTPRequest('cart');
+  /*  const products:CartProduct[] = [{
         id: 'prova',
         name: 'prova'
     }];
-    const cart:Cart = {products : products};*/
-
+    const cart:Cart = {products : products};
+*/
     
-  
+  /*
 
   const timeout = new Date();
   timeout.setMinutes(timeout.getMinutes() + 5);
 
-  const body = {"token" :{
+  const dato = {"token" :{
     "data":{
       "id":"Provolone",
       "name":"Mozzarella",
@@ -48,49 +49,52 @@ class CartServiceFetch implements CartService {
       "timeout": timeout
     },
   };
+  console.log(timeout);
   //"hmac" : "Kro7OhBUR6u2kQnUt8NTv0qHorh3DcEYHvBKvd5X3ao=" 
-  const bodys = JSON.stringify(body);
-  const hmac = createHmac('sha256','password').update(JSON.stringify(body)).digest('base64');
+  const hmac = createHmac('sha256','password').update(JSON.stringify(dato)).digest('base64');
 
+  const datoss = {"token" :{
+    "data":{
+      "id":"Provolone",
+      "name":"Mozzarella",
+      "description":"Mozzarella di Bufala",
+      "images":["spugne"],
+      "quantity" : 3,
+      "price" : 14 ,
+      "available": true,
+      "evidence": true,
+      "category" : ["spugne"]
+      },
+      "timeout": timeout
+    },
+    "hmac": hmac
+  }
+
+  const body = JSON.stringify(datoss);
 
   const headers = {
     "Content-type": "application/json",
     "Accept": "application/json",
     "Authorization": "Bearer " + token
-}
+    };
 
-
-console.log(hmac);
-console.log(token);
-console.log("                       ");
-console.log(bodys);
-  //console.log(headers);
+  /*
+  console.log(headers);
+  console.log(body);
   try{
-    const res = await req.post<CartPostRequest>(bodys,headers);
-    console.log(res.data);
-    }catch(error){console.log(error);}
-  };
+    const res = await req.post<CartPostRequest>(body,headers);
+    }catch(error){console.log(error);}*/
+  }
 
-
-
-
-
-  patchCartProducts = async (token): Promise<void> => {
-    const req: HTTPRequest = new HTTPRequest('cart/{productId]');
-    const body = {"quantity" : 14};
-    const bodys = JSON.stringify(body);
-    console.log(bodys);
-
+  patchCartProducts = async (token,productId,quantity): Promise<void> => {
+    const req: HTTPRequest = new HTTPRequest('cart/' + productId);
+    const body = {quantity};
+    const bodyString = JSON.stringify(body);
     const headers = {
-      "Content-type": "application/json",
       "Accept": "application/json",
       "Authorization": "Bearer " + token
       }
-
-  try{
-    const res = await req.patch<CartPostRequest>(bodys,headers);
-    console.log(res.data);
-    }catch(error){console.log(error);}
+    const res = await req.patch<CartPatchRequest>(bodyString,headers);
   };
 }
 

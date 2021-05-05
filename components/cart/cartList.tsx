@@ -29,7 +29,7 @@ class CartList extends React.Component<Props, State> {
     try {
       const user = await Auth.currentAuthenticatedUser();
       const token = user.signInUserSession.idToken.jwtToken;
-      new CartService().patchCartProducts(token,this.state.items[index].id,quantity);
+      await new CartService().patchCartProducts(token,this.state.items[index].id,quantity);
       this.setState((state: State) => {
         const newState: State = state;
   
@@ -37,18 +37,28 @@ class CartList extends React.Component<Props, State> {
         return newState;
       });
     }
-    catch{alert("There was a problem with the server");}
+    catch(error){console.log(error);}
   };
 
-  handleRemoveProduct = (index: number): void => {
-    this.setState((state: State) => {
-      const newState: State = state;
-
-      newState.items.splice(index, 1);
-
-      return newState;
-    });
+  handleRemoveProduct = async (index: number): Promise<void> => {
+    try {
+      const user = await Auth.currentAuthenticatedUser();
+      const token = user.signInUserSession.idToken.jwtToken;
+      console.log(index);
+      await new CartService().deleteCartProducts(token, this.state.items[index].id);
+      this.setState((state: State) => {
+        const newState: State = state;
+  
+        newState.items.splice(index, 1);
+  
+        return newState;
+      });
+    } 
+    catch(error){
+       console.log(error);
+    }
   };
+
 
   handleSubmit = (): void => {
     console.log(this.state);

@@ -56,16 +56,12 @@ function CartItem({
   };
 
   const handleCounterChange = async (quantity: number) => {
-    // Chiamata a put/patch API TODO:
-
     openAlert(changeQuantitySuccessId);
     handleChangeQuantity(quantity, index);
   };
 
   const handleClickRemove = async () => {
     openAlert(productDeleteSuccess);
-    // Chiamata a put/patch API TODO:
-
     handleRemoveProduct(index);
   };
   return (

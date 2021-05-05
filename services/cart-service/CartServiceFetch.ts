@@ -71,6 +71,15 @@ class CartServiceFetch implements CartService {
     }
   }
 
+  deleteCartProducts = async (token, productId): Promise<void> => {
+    const req: HTTPRequest = new HTTPRequest('https://n4u3xypkqk.execute-api.eu-west-1.amazonaws.com/test/','cart/' + productId);
+    const headers = {
+      "Accept": "application/json",
+      "Authorization": "Bearer " + token
+    }
+    const res = await req.delete<CartPatchRequest>('', headers);
+  }
+
   patchCartProducts = async (token,productId,quantity): Promise<void> => {
     const req: HTTPRequest = new HTTPRequest('https://n4u3xypkqk.execute-api.eu-west-1.amazonaws.com/test/','cart/' + productId);
     const body = {quantity};
@@ -79,7 +88,7 @@ class CartServiceFetch implements CartService {
       "Accept": "application/json",
       "Authorization": "Bearer " + token
       }
-    const res = await req.patch<CartPatchRequest>(bodyString,headers);
+    await req.patch<CartPatchRequest>(bodyString,headers);
   };
 }
 

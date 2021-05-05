@@ -4,6 +4,7 @@ interface CartService{
   getCartProducts(token): Promise<CartProduct[]>;
   postCartProducts(token,product:Product): Promise<void>;
   patchCartProducts(token,productId,quantity): Promise<void>;
+  deleteCartProducts(token, productId): Promise<void>;
 }
 
 export default CartService;

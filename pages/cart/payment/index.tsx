@@ -48,7 +48,7 @@ class PaymentPage extends React.Component<Props, State> {
       cart: props.cart,
       addresses: props.addresses,
       selectedAddress: 0,
-      expandend: false,
+      expanded: false,
     };
   }
 
@@ -92,7 +92,7 @@ class PaymentPage extends React.Component<Props, State> {
     const {
       addresses, selectedAddress, cart, expanded,
     } = this.state;
-    const { _authState, _username } = this.props;
+    const { authState, username } = this.props;
     return (
       <>
         <Head>
@@ -125,9 +125,9 @@ class PaymentPage extends React.Component<Props, State> {
           margin="normal"
         />
         <Box width="100%" display="flex" justifyContent="flex-end">
-          {_authState === AuthState.SignIn && _username ? (
+          {authState === AuthState.SignIn && username ? (
             <>
-              <CheckoutButton cartID={_username} />
+              <CheckoutButton cartID={username} />
             </>
           ) : (
             <>

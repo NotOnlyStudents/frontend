@@ -62,13 +62,15 @@ function AddressList({
           {renderAllAddress()}
         </RadioGroup>
       </FormControl>
-      <Button
-        color="primary"
-        variant="text"
-        onClick={handleClickOpen}
-      >
-        Add new address
-      </Button>
+      <Box display="flex" justifyContent="flex-end">
+        <Button
+          color="primary"
+          variant="contained"
+          onClick={handleClickOpen}
+        >
+          Add new address
+        </Button>
+      </Box>
       <Dialog open={open}>
         <AddressEdit
           creation

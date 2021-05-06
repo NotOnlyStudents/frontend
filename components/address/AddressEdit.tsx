@@ -33,7 +33,6 @@ class AddressEdit extends React.Component<Props, State> {
     super(props);
 
     const emptyAddress: Address = {
-      id: '',
       nation: '',
       city: '',
       address: '',
@@ -72,11 +71,11 @@ class AddressEdit extends React.Component<Props, State> {
     });
   };
 
-  handleChangeCap = (cap: number) => {
+  handleChangeCap = (cap: string) => {
     this.setState((state: State) => {
       const newState = state;
 
-      newState.address.cap = cap;
+      newState.address.cap = parseInt(cap);
 
       return newState;
     });
@@ -132,6 +131,7 @@ class AddressEdit extends React.Component<Props, State> {
       let newAddress: Address;
 
       if (creation) {
+        delete address.id;
         newAddress = await (new AddressService()).createAddress(token, address);
       } else {
         newAddress = await (

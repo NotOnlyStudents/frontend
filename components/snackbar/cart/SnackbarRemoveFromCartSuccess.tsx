@@ -1,7 +1,7 @@
 import React from 'react';
 import EMLSnackbar, { CustomSnackbarProps } from '../EMLSnackbar';
 
-export const addToCartSuccessId = 'add_to_cart_success';
+export const removedFromCartSuccessId = 'removed_from_cart_success';
 
 function SnackbarChangeEvidenceError({
   open,
@@ -9,12 +9,12 @@ function SnackbarChangeEvidenceError({
 }: CustomSnackbarProps) {
   return (
     <EMLSnackbar
-      id={addToCartSuccessId}
+      id={removedFromCartSuccessId}
       open={open}
       severity="success"
       handleClose={handleClose}
     >
-      Product added to cart
+      Product removed from cart
     </EMLSnackbar>
   );
 }

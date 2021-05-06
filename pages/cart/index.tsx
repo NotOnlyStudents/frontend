@@ -22,10 +22,6 @@ function cartPage({ cart }: Props) {
     { name: 'Cart' },
   ];
 
-  const renderCartList = () => (cart.products.length !== 0
-    ? <CartList items={cart.products} />
-    : <NoProductInCart />);
-
   return (
     <>
       <Head>
@@ -35,7 +31,7 @@ function cartPage({ cart }: Props) {
       <Typography variant="h4" component="h2">
         Your cart
       </Typography>
-      { renderCartList() }
+      <CartList products={cart.products} />
     </>
   );
 }
@@ -47,11 +43,9 @@ export async function getServerSideProps(context) {
   try {
     const user = await Auth.currentAuthenticatedUser();
     const token = user.signInUserSession.idToken.jwtToken;
+
     try {
       products = await new CartService().getCartProducts(token);
-      // console.log(token);
-      // new CartService().postCartProducts(token);
-      // console.log(products);
     } catch (error) {
       console.log(error);
     }

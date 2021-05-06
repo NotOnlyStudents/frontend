@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  Button, Card, CardActions, CardContent, CardHeader,
+  Button, Card, CardActions, CardContent, CardHeader, SnackbarContent,
 } from '@material-ui/core';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import CheckIcon from '@material-ui/icons/Check';
@@ -8,6 +8,7 @@ import TextFieldValidation from 'components/validation/TextFieldValidation';
 import AddressService from 'services/address-service';
 import SnackbarAddressNotValid, { addressNotValidId } from 'components/snackbar/address/SnackbarAddressNotValid';
 import { Address, AddressValidation } from 'interfaces/address/address';
+import { Snackbars } from 'lib/SnackbarContext';
 
 interface AlertState {
   [key: string]: boolean
@@ -141,7 +142,7 @@ class AddressEdit extends React.Component<Props, State> {
       this.props.handleChangeAddress(newAddress, index !== undefined ? index : -1);
       this.props.handleCloseDialog();
     } else {
-      this.setState({ alert: { [addressNotValidId]: true } });
+      this.context.openSnackbar(Snackbars.addressNotValidId);
     }
   };
 
@@ -220,12 +221,11 @@ class AddressEdit extends React.Component<Props, State> {
             Save
           </Button>
         </CardActions>
-        <SnackbarAddressNotValid
-          open={alert[addressNotValidId]}
-          handleClose={this.handleCloseAlert}
-        />
       </Card>
     );
   }
 }
+
+AddressEdit.contextType = SnackbarContent;
+
 export default AddressEdit;

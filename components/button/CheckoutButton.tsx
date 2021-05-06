@@ -3,6 +3,8 @@ import { Button } from '@material-ui/core';
 import { loadStripe } from '@stripe/stripe-js';
 import React from 'react';
 import CartService from 'services/cart-service';
+import CartServiceType from 'services/cart-service/CartService';
+import { CartToken } from 'interfaces/cart/cart-request';
 
 const stripePromise = loadStripe('pk_test_51IHqhuEKthtArr3S4MYSAYFEPiFlioccyA4SjUNArmmdSmK7B05UnMdsNKIu0TCRXADZLVmjEUlqKRIR4D2SWtJ700PVmechEl');
 
@@ -24,9 +26,7 @@ export default function CheckoutButton({ cartID }: { cartID: string }) {
       token = '';
     }
 
-    const cartToken = await (new CartService()).getCartToken(token);
-
-    console.log(cartToken);
+    const cartToken: CartToken = await (new CartService()).getCartToken(token);
 
     const obj = {
       address: {
@@ -51,6 +51,12 @@ export default function CheckoutButton({ cartID }: { cartID: string }) {
         Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(obj),
+    });
+
+    const cartService: CartServiceType = new CartService();
+
+    cartToken.token.data.products.map(async (product) => {
+      await cartService.deleteCartProducts(token, product.id);
     });
 
     const res = await response.json();

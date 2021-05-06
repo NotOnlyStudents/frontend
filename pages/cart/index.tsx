@@ -50,7 +50,7 @@ export async function getServerSideProps(context) {
     try {
       products = await new CartService().getCartProducts(token);
       // console.log(token);
-    // new CartService().postCartProducts(token);
+      // new CartService().postCartProducts(token);
       // console.log(products);
     } catch (error) {
       console.log(error);

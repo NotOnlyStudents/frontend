@@ -86,7 +86,7 @@ function PLPProduct({ product, seller }: Props) {
   }, []);
 
   const handleAddToCart = async () => {
-    const productToCart = await new ProductService().getProductById(product.id);
+    const productToCart = await (new ProductService()).getProductById(product.id);
     try {
       const user = await Auth.currentAuthenticatedUser();
       const token = user.signInUserSession.idToken.jwtToken;

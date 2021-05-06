@@ -2,10 +2,11 @@ import {
   CartProduct, Product,
 } from 'interfaces/products/product';
 import faker from 'faker';
+import { CartToken } from 'interfaces/cart/cart-request';
 import CartService from './CartService';
 
 export default class CartServiceMock implements CartService {
-  getCartToken(token: any): Promise<object> {
+  getCartToken(token: any): Promise<CartToken> {
     throw new Error('Method not implemented.');
   }
 

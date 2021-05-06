@@ -22,7 +22,7 @@ export function productToCartProduct(
     name: product.name,
     price: product.price,
     image: product.images[0],
-    discount: product.discount,
+    discount: 0,
     quantity: product.quantity as number,
   };
 }

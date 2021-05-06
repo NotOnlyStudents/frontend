@@ -2,7 +2,9 @@ import HTTPRequest from 'lib/HTTPRequest';
 import {
   CartProduct, Product,
 } from 'interfaces/products/product';
-import { CartGETRequest, CartPatchRequest, CartPostRequest } from 'interfaces/cart/cart-request';
+import {
+  CartGETRequest, CartPatchRequest, CartPostRequest, CartToken,
+} from 'interfaces/cart/cart-request';
 import { createHmac } from 'crypto';
 import { productToCartProduct } from 'interfaces/products/product-converter';
 import CartService from './CartService';
@@ -15,10 +17,11 @@ class CartServiceFetch implements CartService {
     };
     const res = await req.get<CartGETRequest>('', headers);
     // res.data['token']['data']['products']['images'][0];
+
     return res.data.token.data.products.map(productToCartProduct);
   };
 
-  getCartToken = async (token): Promise<object> => {
+  getCartToken = async (token): Promise<CartToken> => {
     const req: HTTPRequest = new HTTPRequest(process.env.NEXT_PUBLIC_CART_SERVICE_URL, 'cart');
     const headers = {
       Authorization: `Bearer ${token}`,

@@ -4,6 +4,7 @@ import {
 } from 'interfaces/products/product';
 import { CartGETRequest, CartPatchRequest, CartPostRequest } from 'interfaces/cart/cart-request';
 import { createHmac } from 'crypto';
+import { productToCartProduct } from 'interfaces/products/product-converter';
 import CartService from './CartService';
 
 class CartServiceFetch implements CartService {
@@ -14,7 +15,7 @@ class CartServiceFetch implements CartService {
     };
     const res = await req.get<CartGETRequest>('', headers);
     // res.data['token']['data']['products']['images'][0];
-    return res.data.token.data.products;
+    return res.data.token.data.products.map(productToCartProduct);
   };
 
   getCartToken = async (token): Promise<object> => {

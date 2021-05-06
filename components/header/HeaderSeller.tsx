@@ -34,16 +34,18 @@ function HeaderSeller() : React.ReactElement {
     <>
       <HeaderMenuMobile
         desktopMenu={[
-          <HeaderDesktopLink href={getNewProductLink()}>
+          <HeaderDesktopLink onClick={() => { document.location.href = getNewProductLink(); }}>
             <AddProductIcon aria-label="Add product" />
           </HeaderDesktopLink>,
-          <HeaderDesktopLink href={getPLPLink(true)}>
+          <HeaderDesktopLink onClick={() => { document.location.href = getPLPLink(true); }}>
             <PLPIcon aria-label="Product list page" />
           </HeaderDesktopLink>,
-          <HeaderDesktopLink href={getCategoriesLink()}>
+          <HeaderDesktopLink onClick={() => { document.location.href = getCategoriesLink(); }}>
             <ListAltIcon aria-label="Categories" />
           </HeaderDesktopLink>,
-          <HeaderDesktopLink href={getPersonalAreaLink(true)}>
+          <HeaderDesktopLink
+            onClick={() => { document.location.href = getPersonalAreaLink(true); }}
+          >
             <AccountCircleIcon aria-label="Your personal area" />
           </HeaderDesktopLink>,
           <HeaderDesktopLink onClick={handleSignOut}>

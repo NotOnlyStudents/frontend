@@ -33,9 +33,9 @@ class AddressServiceMock implements AddressService {
     ...address,
   });
 
-  deleteAddress = (token, id: string): Promise<void> => ({
+  deleteAddress = async (token, id: string): Promise<void> => {
 
-  });
+  };
 }
 
 export default AddressServiceMock;

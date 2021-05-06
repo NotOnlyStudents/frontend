@@ -11,10 +11,10 @@ function HeaderNotAuthenticated(): React.ReactElement {
     <>
       <HeaderMenuMobile
         desktopMenu={[
-          <HeaderDesktopLink href={getCartLink()}>
+          <HeaderDesktopLink onClick={() => { document.location.href = getCartLink(); }}>
             <ShoppingCartIcon />
           </HeaderDesktopLink>,
-          <HeaderDesktopLink href={getLoginLink()}>
+          <HeaderDesktopLink onClick={() => { document.location.href = getLoginLink(); }}>
             <LoginIcon />
           </HeaderDesktopLink>,
         ]}

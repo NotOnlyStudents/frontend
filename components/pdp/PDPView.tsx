@@ -153,7 +153,7 @@ function PDPView({ product, edit }: Props) : React.ReactElement {
   ) : <></>);
 
   const renderCategories = () : React.ReactElement[] => product.categories.map(
-    (category: Category) : React.ReactElement => (
+    (category: string) : React.ReactElement => (
       <Chip
         key={category}
         className={classes.chip}

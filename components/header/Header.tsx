@@ -15,7 +15,7 @@ import LogoIcon from 'components/icons/LogoIcon';
 import { getHomeLink, getPLPLink } from 'lib/links';
 import { SignedState } from 'interfaces/login';
 import Auth from '@aws-amplify/auth';
-import { isSeller, useAuthContext } from 'lib/authContext';
+import { useAuthContext } from 'lib/authContext';
 import HeaderNotAuthenticated from './HeaderNotAuthenticated';
 import HeaderSeller from './HeaderSeller';
 import HeaderCustomer from './HeaderCustomer';

@@ -14,7 +14,7 @@ class CategoryServiceMock implements CategoryService {
     throw new Error('Method not implemented.');
   }
 
-  getCategories = async (text: string): Promise<Category[]> => (['a', 'b', 'c']);
+  getCategories = async (text: string): Promise<Category[]> => ([]);
 }
 
 export default CategoryServiceMock;

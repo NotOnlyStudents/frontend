@@ -1,7 +1,15 @@
 import { CartProduct } from 'interfaces/products/product';
 
 export interface CartGETRequest {
-  data: CartProduct[];
+  data: {
+    token: {
+      data: {
+        products: CartProduct[]
+      }
+    },
+    hmac: string
+  },
+  timeout: string
 }
 
 export interface CartPostRequest{

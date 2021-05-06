@@ -12,7 +12,7 @@ import CategoryEdit from './CategoryEdit';
 interface Props {
   category: Category,
   index?: number,
-  handleChangeCategory?: (category: Category, index?: number) => void,
+  handleChangeCategory?: () => void,
   handleRemoveCategory?: (index: number) => void,
 }
 
@@ -25,8 +25,8 @@ function CategoryView({
     setEdit(false);
   };
 
-  const onChangeCategory = (editCategory: Category) => {
-    handleChangeCategory(editCategory, index);
+  const onChangeCategory = () => {
+    handleChangeCategory();
     handleCloseDialog();
   };
 

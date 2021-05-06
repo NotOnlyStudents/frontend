@@ -35,12 +35,12 @@ class CategoriesList extends React.Component<Props, State> {
   }
 
   handleAddCategory = () => {
-    this.fetchAllCategories();
+    this.fetchAllCategories(this.state.searchName);
     this.handleCloseNewCategoryDialog();
   };
 
   handleChangeCategory = () => {
-    this.fetchAllCategories();
+    this.fetchAllCategories(this.state.searchName);
   };
 
   handleRemoveCategory = (index: number) => {

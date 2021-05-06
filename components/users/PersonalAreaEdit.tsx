@@ -76,7 +76,9 @@ function PersonalAreaEdit() {
     if (password) {
       const samePassword = password !== info.confirmPassword;
 
-      if (samePassword ^ validation.confirmPassword) {
+      const equals = (samePassword ? 1 : 0) ^ (validation.confirmPassword ? 1 : 0);
+
+      if (equals) {
         setError('confirmPassword', samePassword);
       }
     } else {
@@ -89,7 +91,9 @@ function PersonalAreaEdit() {
 
     const samePassword = confirmPassword !== info.password;
 
-    if (samePassword ^ validation.confirmPassword) {
+    const equals = (samePassword ? 1 : 0) ^ (validation.confirmPassword ? 1 : 0);
+
+    if (equals) {
       setError('confirmPassword', samePassword);
     }
   };
@@ -102,7 +106,7 @@ function PersonalAreaEdit() {
 
   const handleClickSave = async () => {
     if (checkValidation) {
-      const newAttributes: object = {};
+      const newAttributes: { [key: string]: string } = { };
       const newUserInfo: UserInfo = {};
 
       if (info.name !== userInfo.name) {

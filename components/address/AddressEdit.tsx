@@ -76,7 +76,7 @@ class AddressEdit extends React.Component<Props, State> {
     this.setState((state: State) => {
       const newState = state;
 
-      newState.address.cap = parseInt(cap);
+      newState.address.cap = cap;
 
       return newState;
     });

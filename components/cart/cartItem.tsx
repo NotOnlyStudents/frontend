@@ -75,7 +75,7 @@ function CartItem({
       <Box display="flex">
         <CardMedia
           className={classes.image}
-          image={item.images[0]}
+          image={item.image}
         />
         <Box
           display="flex"

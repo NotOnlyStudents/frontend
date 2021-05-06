@@ -17,7 +17,7 @@ function Login() {
   const { setAuthState, setUserInfo, setSignedState } = useAuthContext();
   const router = useRouter();
 
-  useEffect(() => onAuthUIStateChange(async (nextAuthState: AuthState, authData: object) => {
+  useEffect(() => onAuthUIStateChange(async (nextAuthState: AuthState, authData: any) => {
     if (nextAuthState === AuthState.SignedIn) {
       const { attributes, signInUserSession } = authData;
 

@@ -2,7 +2,7 @@ import HTTPRequest from 'lib/HTTPRequest';
 import { Category } from 'interfaces/categories/category';
 import queryString from 'query-string';
 import {
-  CategoriesGETRequest, CreateCategoryRequest, EditCategoryRequest, RemoveCategoryRequest,
+  GetAllCategoriesRequest, CreateCategoryRequest, EditCategoryRequest, RemoveCategoryRequest,
 } from 'interfaces/categories/category-request';
 import CategoryService from './CategoryService';
 
@@ -13,7 +13,7 @@ class CategoryServiceFetch implements CategoryService {
     );
     const query: string = queryString.stringify({ text });
 
-    const res: CategoriesGETRequest = await req.get<CategoriesGETRequest>(query);
+    const res: GetAllCategoriesRequest = await req.get<GetAllCategoriesRequest>(query);
 
     return res.data;
   };

@@ -31,10 +31,10 @@ function HeaderCustomer() : React.ReactElement {
     <>
       <HeaderMenuMobile
         desktopMenu={[
-          <HeaderDesktopLink href={getCartLink()}>
+          <HeaderDesktopLink onClick={() => { document.location.href = getCartLink(); }}>
             <ShoppingCartIcon />
           </HeaderDesktopLink>,
-          <HeaderDesktopLink href={getPersonalAreaLink()}>
+          <HeaderDesktopLink onClick={() => { document.location.href = getPersonalAreaLink(); }}>
             <AccountCircleIcon aria-label="Your personal area" />
           </HeaderDesktopLink>,
           <HeaderDesktopLink onClick={handleSignOut}>
@@ -42,7 +42,7 @@ function HeaderCustomer() : React.ReactElement {
           </HeaderDesktopLink>,
         ]}
         mobileMenu={[
-          <HeaderMobileLink href="/cart">
+          <HeaderMobileLink href={getCartLink()}>
             <ShoppingCartIcon />
             Cart
           </HeaderMobileLink>,

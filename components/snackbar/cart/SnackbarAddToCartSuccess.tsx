@@ -3,7 +3,7 @@ import EMLSnackbar, { CustomSnackbarProps } from '../EMLSnackbar';
 
 export const addToCartSuccessId = 'add_to_cart_success';
 
-function SnackbarChangeEvidenceError({
+function SnackbarAddToCartSuccess({
   open,
   handleClose,
 }: CustomSnackbarProps) {
@@ -19,4 +19,4 @@ function SnackbarChangeEvidenceError({
   );
 }
 
-export default SnackbarChangeEvidenceError;
+export default SnackbarAddToCartSuccess;

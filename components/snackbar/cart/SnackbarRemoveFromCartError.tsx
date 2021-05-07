@@ -3,7 +3,7 @@ import EMLSnackbar, { CustomSnackbarProps } from '../EMLSnackbar';
 
 export const removedFromCartErrorId = 'removed_from_cart_error';
 
-function SnackbarAddToCartError({
+function SnackbarRemoveFromCartError({
   open,
   handleClose,
 }: CustomSnackbarProps) {
@@ -19,4 +19,4 @@ function SnackbarAddToCartError({
   );
 }
 
-export default SnackbarAddToCartError;
+export default SnackbarRemoveFromCartError;

@@ -16,6 +16,7 @@ import { Category } from 'interfaces/categories/category';
 import SnackbarProductNotValid, { productNotValidId } from 'components/snackbar/product/SnackbarProductNotValid';
 import { AlertState } from 'interfaces/alert';
 import { getViewProductLink } from 'lib/links';
+import { SnackbarContext, Snackbars } from 'lib/SnackbarContext';
 import PDPEvidence from './PDPEvidence';
 
 interface Props {
@@ -171,6 +172,12 @@ class PDPEdit extends React.Component<Props, State> {
     );
   };
 
+  goToViewProductPage = (newProduct: Product) => {
+    this.props.router.push({
+      pathname: getViewProductLink(newProduct.id, true),
+    });
+  };
+
   handleCloseAlert = (id: string) => {
     this.setState((state: State) => {
       const newState: State = state;
@@ -188,8 +195,10 @@ class PDPEdit extends React.Component<Props, State> {
   };
 
   handleClickSave = async () => {
+    const { openSnackbar } = this.context;
+
     if (this.checkValidation()) {
-      const { router, creation } = this.props;
+      const { creation } = this.props;
       const { product } = this.state;
 
       let newProduct: Product;
@@ -197,16 +206,23 @@ class PDPEdit extends React.Component<Props, State> {
       const ps: ProductServiceType = new ProductService();
 
       if (!creation) {
-        newProduct = await ps.editProduct(product.id, product);
+        try {
+          newProduct = await ps.editProduct(product.id, product);
+          openSnackbar(Snackbars.productEditSuccessId);
+          this.goToViewProductPage(newProduct);
+        } catch (e) {
+          openSnackbar(Snackbars.productEditErrorId);
+        }
       } else {
-        newProduct = await ps.createProduct(product);
+        try {
+          newProduct = await ps.createProduct(product);
+          this.goToViewProductPage(newProduct);
+        } catch (e) {
+          openSnackbar(Snackbars.productCreateErrorId);
+        }
       }
-
-      router.push({
-        pathname: getViewProductLink(newProduct.id, true),
-      });
     } else {
-      this.setState({ alert: { [productNotValidId]: true } });
+      openSnackbar(Snackbars.productNotValidId);
     }
   };
 
@@ -343,13 +359,11 @@ class PDPEdit extends React.Component<Props, State> {
             Save
           </Button>
         </Box>
-        <SnackbarProductNotValid
-          open={alert[productNotValidId]}
-          handleClose={this.handleCloseAlert}
-        />
       </Box>
     );
   }
 }
+
+PDPEdit.contextType = SnackbarContext;
 
 export default withRouter(PDPEdit);

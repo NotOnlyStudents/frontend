@@ -15,6 +15,7 @@ import SnackbarCreateCategorySuccess, { categoryCreateSuccessId } from 'componen
 import SnackbarDeleteCategoryError, { categoryDeleteErrorId } from 'components/snackbar/categories/SnackbarDeleteCategoryError';
 import SnackbarDeleteCategorySuccess, { categoryDeleteSuccessId } from 'components/snackbar/categories/SnackbarDeleteCategorySuccess';
 import SnackbarEditCategoryError, { categoryEditErrorId } from 'components/snackbar/categories/SnackbarEditCategoryError';
+import SnackbarEditCategorySuccess, { categoryEditSuccessId } from 'components/snackbar/categories/SnackbarEditCategorySuccess';
 import SnackbarErrorRetrievingData, { errorRetrievingDataId } from 'components/snackbar/common-snackbar/SnackbarErrorRetrievingData';
 import SnackbarChangeEvidenceError, { changeEvidenceErrorId } from 'components/snackbar/evidence/SnackbarChangeEvidenceError';
 import { changeEvidenceSuccessId } from 'components/snackbar/evidence/SnackbarChangeEvidenceSuccess';
@@ -166,8 +167,6 @@ function SnackbarContextProvider({ children }: Props) {
         handleClose={closeSnackbar}
       />
 
-      {/*  */}
-
       <SnackbarCategoryNotValid
         open={alert[categoryNotValidId]}
         handleClose={closeSnackbar}
@@ -202,8 +201,6 @@ function SnackbarContextProvider({ children }: Props) {
         open={alert[categoryEditErrorId]}
         handleClose={closeSnackbar}
       />
-
-      {/*  */}
 
       <SnackbarChangeEvidenceSuccess
         open={alert[changeEvidenceSuccessId]}

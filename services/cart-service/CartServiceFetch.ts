@@ -3,7 +3,7 @@ import {
   CartProduct, Product,
 } from 'interfaces/products/product';
 import {
-  CartGETRequest, CartPatchRequest, CartPostRequest, CartToken,
+  CartGETRequest, CartPatchRequest, CartToken,
 } from 'interfaces/cart/cart-request';
 import { createHmac } from 'crypto';
 import { productToCartProduct } from 'interfaces/products/product-converter';
@@ -77,12 +77,7 @@ class CartServiceFetch implements CartService {
       Authorization: `Bearer ${token}`,
     };
 
-    try {
-      await req.post<Product>(body, headers);
-      // console.log(res);
-    } catch (error) {
-      console.log(error);
-    }
+    await req.post<Product>(body, headers);
   };
 
   deleteCartProducts = async (token, productId): Promise<void> => {
@@ -91,7 +86,7 @@ class CartServiceFetch implements CartService {
       Accept: 'application/json',
       Authorization: `Bearer ${token}`,
     };
-    const res = await req.delete<CartPatchRequest>('', headers);
+    await req.delete<CartPatchRequest>('', headers);
   };
 
   patchCartProducts = async (token, productId, quantity): Promise<void> => {

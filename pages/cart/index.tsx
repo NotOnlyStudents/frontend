@@ -47,7 +47,7 @@ export async function getServerSideProps(context) {
     try {
       products = await new CartService().getCartProducts(token);
     } catch (error) {
-      console.log(error);
+      products = [];
     }
   } catch { console.log('There was a problem with servers'); }
 

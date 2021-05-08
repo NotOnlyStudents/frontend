@@ -197,6 +197,7 @@ function PDPView({ product, edit }: Props) : React.ReactElement {
               <PriceItem
                 price={product.price}
                 discount={product.discount}
+                discountedPrice={product.discountedPrice}
               />
               <Box display="flex" flexGrow={1} />
               { renderQuantity() }

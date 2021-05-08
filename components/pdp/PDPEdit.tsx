@@ -135,19 +135,22 @@ class PDPEdit extends React.Component<Props, State> {
     if (!this.reachedImageLimit()) {
       const reader = new FileReader();
       const file = event.target.files[0];
-      reader.readAsDataURL(file);
 
-      reader.onloadend = () => {
-        this.setState((state: State) => {
-          const newState = state;
+      if (file) {
+        reader.readAsDataURL(file);
 
-          newState.product.images.push(reader.result as string);
+        reader.onloadend = () => {
+          this.setState((state: State) => {
+            const newState = state;
 
-          newState.validation.images = newState.product.images.length === 0;
+            newState.product.images.push(reader.result as string);
 
-          return newState;
-        });
-      };
+            newState.validation.images = newState.product.images.length === 0;
+
+            return newState;
+          });
+        };
+      }
     }
   };
 

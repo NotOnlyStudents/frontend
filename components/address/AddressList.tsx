@@ -6,7 +6,7 @@ import {
   Dialog,
   FormControl, FormLabel, RadioGroup, Typography,
 } from '@material-ui/core';
-// import { Cart } from 'interfaces/cart/cart';
+import AddIcon from '@material-ui/icons/Add';
 import AddressEdit from './AddressEdit';
 import AddressView from './AddressView';
 
@@ -65,7 +65,7 @@ function AddressList({
     )
     : (
       <Typography color="secondary">
-        Must select one address
+        Must insert one address
       </Typography>
     )
   );
@@ -78,6 +78,7 @@ function AddressList({
           color="primary"
           variant="contained"
           onClick={handleClickOpen}
+          startIcon={<AddIcon />}
         >
           Add new address
         </Button>

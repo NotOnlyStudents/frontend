@@ -11,6 +11,7 @@ import CartService from 'services/cart-service/CartServiceFetch';
 import { Auth } from 'aws-amplify';
 import NoProductInCart from 'components/noresult/NoProductsInCart';
 import { Snackbars, useSnackbarContext } from 'lib/SnackbarContext';
+import LoginIcon from 'components/icons/LoginIcon';
 import CartItem from './cartItem';
 
 interface Props {
@@ -88,7 +89,7 @@ function CartList({ products, payment }: Props) {
           variant="contained"
           color="primary"
           href={getLoginLink()}
-          startIcon={<ShopIcon />}
+          startIcon={<LoginIcon />}
         >
           Login to buy it
         </Button>
@@ -125,7 +126,8 @@ function CartList({ products, payment }: Props) {
               marginRight={2}
             >
               <Typography>
-                Total price: &nbsp;
+                Total price:
+                {' '}
               </Typography>
               <Typography variant="button">
                 {`${calculateTotalPrice()}€`}

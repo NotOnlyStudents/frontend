@@ -49,19 +49,19 @@ function App({ Component, pageProps }: AppProps) {
   }, []);
 
   return (
-    <SnackbarContextProvider>
-      <AuthContextProvider>
-        <Head>
-          <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
-        </Head>
-        <ThemeProvider theme={theme}>
+    <ThemeProvider theme={theme}>
+      <SnackbarContextProvider>
+        <AuthContextProvider>
+          <Head>
+            <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
+          </Head>
           <CssBaseline />
           <Layout>
             <Component {...pageProps} />
           </Layout>
-        </ThemeProvider>
-      </AuthContextProvider>
-    </SnackbarContextProvider>
+        </AuthContextProvider>
+      </SnackbarContextProvider>
+    </ThemeProvider>
   );
 }
 

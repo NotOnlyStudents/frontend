@@ -18,7 +18,7 @@ import SnackbarEditCategoryError, { categoryEditErrorId } from 'components/snack
 import SnackbarEditCategorySuccess, { categoryEditSuccessId } from 'components/snackbar/categories/SnackbarEditCategorySuccess';
 import SnackbarErrorRetrievingData, { errorRetrievingDataId } from 'components/snackbar/common-snackbar/SnackbarErrorRetrievingData';
 import SnackbarChangeEvidenceError, { changeEvidenceErrorId } from 'components/snackbar/evidence/SnackbarChangeEvidenceError';
-import { changeEvidenceSuccessId } from 'components/snackbar/evidence/SnackbarChangeEvidenceSuccess';
+import SnackbarChangeEvidenceSuccess, { changeEvidenceSuccessId } from 'components/snackbar/evidence/SnackbarChangeEvidenceSuccess';
 import SnackbarCreateProductError, { productCreateErrorId } from 'components/snackbar/product/SnackbarCreateProductError';
 import SnackbarDeleteProductError, { productDeleteErrorId } from 'components/snackbar/product/SnackbarDeleteProductError';
 import SnackbarDeleteProductSuccess, { productDeleteSuccessId } from 'components/snackbar/product/SnackbarDeleteProductSuccess';
@@ -26,8 +26,9 @@ import SnackbarEditProductError, { productEditErrorId } from 'components/snackba
 import SnackbarEditProductSuccess, { productEditSuccessId } from 'components/snackbar/product/SnackbarEditProductSuccess';
 import SnackbarProductNotValid, { productNotValidId } from 'components/snackbar/product/SnackbarProductNotValid';
 import SnackbarChangeQuantityError, { changeQuantityErrorId } from 'components/snackbar/quantity/SnackbarChangeQuantityError';
-import SnackbarChangeEvidenceSuccess from 'components/snackbar/quantity/SnackbarChangeQuantitySuccess';
 import SnackbarChangeQuantitySuccess, { changeQuantitySuccessId } from 'components/snackbar/quantity/SnackbarChangeQuantitySuccess';
+import SnackbarDeleteUserError, { userDeleteErrorId } from 'components/snackbar/user/SnackbarDeleteUserError';
+import SnackbarDeleteUserSuccess, { userDeleteSuccessId } from 'components/snackbar/user/SnackbarDeleteUserSuccess';
 import React, { createContext, useContext } from 'react';
 
 interface SnackbarContextProps {
@@ -65,6 +66,8 @@ export const Snackbars = {
   productDeleteSuccessId,
   productDeleteErrorId,
   productNotValidId,
+  userDeleteSuccessId,
+  userDeleteErrorId,
   errorRetrievingDataId,
 };
 
@@ -239,6 +242,16 @@ function SnackbarContextProvider({ children }: Props) {
 
       <SnackbarProductNotValid
         open={alert[productNotValidId]}
+        handleClose={closeSnackbar}
+      />
+
+      <SnackbarDeleteUserError
+        open={alert[userDeleteErrorId]}
+        handleClose={closeSnackbar}
+      />
+
+      <SnackbarDeleteUserSuccess
+        open={alert[userDeleteSuccessId]}
         handleClose={closeSnackbar}
       />
 

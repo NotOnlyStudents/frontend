@@ -18,7 +18,7 @@ import { addToCartSuccessId } from 'components/snackbar/cart/SnackbarAddToCartSu
 import { addToCartErrorId } from 'components/snackbar/cart/SnackbarAddToCartError';
 import { getViewProductLink } from 'lib/links';
 import { Auth } from 'aws-amplify';
-import { useSnackbarContext } from 'lib/SnackbarContext';
+import { Snackbars, useSnackbarContext } from 'lib/SnackbarContext';
 
 interface Props {
   product: PLPProductItem
@@ -74,9 +74,9 @@ function PLPProduct({ product, seller }: Props) {
       const user = await Auth.currentAuthenticatedUser();
       const token = user.signInUserSession.idToken.jwtToken;
       await new CartService().postCartProducts(token, { ...productToCart, quantity });
-      openSnackbar(addToCartSuccessId);
+      openSnackbar(Snackbars.addToCartSuccessId);
     } catch (error) {
-      openSnackbar(addToCartErrorId);
+      openSnackbar(Snackbars.addToCartErrorId);
     }
   };
 
@@ -129,6 +129,7 @@ function PLPProduct({ product, seller }: Props) {
             <PriceItem
               price={product.price}
               discount={product.discount}
+              discountedPrice={product.discountedPrice}
             />
           </Box>
         </CardContent>

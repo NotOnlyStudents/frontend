@@ -7,6 +7,7 @@ import {
 } from '@material-ui/core';
 import QuantityManager from 'components/quantity/QuantityManager';
 import PriceItem from 'components/price-item/PriceItem';
+import { getViewProductLink } from 'lib/links';
 
 interface Props {
   item: CartProduct
@@ -35,6 +36,40 @@ function CartItem({
   const handleClickRemove = async () => {
     handleRemoveProduct(index);
   };
+
+  const renderRemoveProductIfInCart = () => (
+    (!payments)
+      ? (
+        <div>
+          <Button
+            color="primary"
+            variant="contained"
+            onClick={handleClickRemove}
+          >
+            Remove product
+          </Button>
+        </div>
+      )
+      : <></>
+  );
+
+  const renderEditQuantityIfInCart = () => (
+    (!payments)
+      ? (
+        <QuantityManager
+          counter={item.quantity}
+          handleCounterChange={handleCounterChange}
+        />
+      )
+      : (
+        <Typography>
+          Quantity:
+          {' '}
+          {item.quantity}
+        </Typography>
+      )
+  );
+
   return (
     <Box
       width="100%"
@@ -58,34 +93,17 @@ function CartItem({
             { item.name }
           </Typography>
           <Box>
-            {
-            (!payments) ? <Button color="primary" variant="text" onClick={handleClickRemove}> Remove product </Button> : <></>
-            }
+            { renderRemoveProductIfInCart() }
             <Button
-              href={`/pdp/${item.id}`}
-              component={Link}
-              size="small"
+              href={getViewProductLink(item.id)}
               color="primary"
+              variant="text"
             >
               See more details
             </Button>
           </Box>
           <Box flexGrow={1} />
-          {
-            (!payments)
-              ? (
-                <QuantityManager
-                  counter={item.quantity}
-                  handleCounterChange={handleCounterChange}
-                />
-              )
-              : (
-                <p>
-                  Quantity:
-                  {item.quantity}
-                </p>
-              )
-          }
+          { renderEditQuantityIfInCart() }
         </Box>
         <Box
           display="flex"
@@ -103,6 +121,7 @@ function CartItem({
             price={item.price}
             discount={item.discount}
             quantity={item.quantity}
+            discountedPrice={item.discountedPrice}
           />
         </Box>
       </Box>

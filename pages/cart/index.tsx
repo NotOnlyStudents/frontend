@@ -1,5 +1,5 @@
 import CartList from 'components/cart/cartList';
-import CartService from 'services/cart-service/CartServiceFetch';
+import CartService from 'services/cart-service';
 import { BreadcrumbPath } from 'interfaces/breadcrumb';
 import EMLBreadcrumb from 'components/breadcrumb/EMLBreadcrumb';
 import HomeIcon from '@material-ui/icons/Home';
@@ -49,13 +49,14 @@ export async function getServerSideProps(context) {
     const token = user.signInUserSession.idToken.jwtToken;
     try {
       products = await new CartService().getCartProducts(token);
-      // console.log(token);
-      // new CartService().postCartProducts(token);
-      // console.log(products);
     } catch (error) {
       console.log(error);
     }
-  } catch { console.log('There was a problem with servers'); }
+  } catch { try {
+    products = await new CartService().getCartProducts('');
+  } catch (error) {
+    console.log(error);
+  }; }
 
   return {
     props: {

@@ -1,4 +1,18 @@
+import { Auth } from 'aws-amplify';
+import { SignedState } from 'interfaces/login';
+import { getSignedState } from 'lib/authContext';
 import CartServiceFetch from './CartServiceFetch';
 import CartServiceMock from './CartServiceMock';
 
-export default process.env.NEXT_PUBLIC_SERVICE_METHOD === 'mock' ? CartServiceMock : CartServiceFetch;
+function auth()
+{   
+    try{
+        const val = getSignedState(Auth.currentAuthenticatedUser());
+        console.log(val);
+        return val;
+    }
+    catch {return false;}
+}
+
+
+export default auth()===SignedState.Customer? CartServiceMock : CartServiceMock;

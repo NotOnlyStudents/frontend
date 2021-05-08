@@ -22,7 +22,7 @@ export default class CartServiceMock implements CartService {
     throw new Error('Method not implemented.');
   }
 
-  getCartProducts = async (): Promise<CartProduct[]> => new Array(10).fill(0).map(() => ({
+  getCartProducts = async (token): Promise<CartProduct[]> => new Array(10).fill(0).map(() => ({
     id: faker.datatype.uuid(),
     name: faker.random.word(),
     image: faker.random.image(),

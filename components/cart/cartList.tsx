@@ -7,7 +7,7 @@ import ShopIcon from '@material-ui/icons/Shop';
 import { AuthContext } from 'lib/authContext';
 import { SignedState } from 'interfaces/login';
 import { getLoginLink, getPaymentLink } from 'lib/links';
-import CartService from 'services/cart-service/CartServiceFetch';
+import CartService from 'services/cart-service';
 import { Auth } from 'aws-amplify';
 import CartItem from './cartItem';
 

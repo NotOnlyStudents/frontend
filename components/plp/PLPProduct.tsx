@@ -3,7 +3,7 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
-import CartService from 'services/cart-service/CartServiceFetch';
+import CartService from 'services/cart-service';
 import { CartProduct, PLPProductItem } from 'interfaces/products/product';
 import StarIcon from '@material-ui/icons/Star';
 import { makeStyles } from '@material-ui/core/styles';

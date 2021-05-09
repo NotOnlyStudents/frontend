@@ -88,7 +88,7 @@ function HomeCustomer({ products }: Props) : React.ReactElement {
   );
 }
 
-export async function getServerSideProps() {
+export async function getStaticProps() {
   const filters: ProductFilter = { evidence: true };
 
   let paginator;

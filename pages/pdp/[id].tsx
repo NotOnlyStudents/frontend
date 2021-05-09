@@ -1,5 +1,5 @@
 import PDPView from 'components/pdp/PDPView';
-import { Product } from 'interfaces/products/product';
+import { PLPProductItem, Product, ProductPaginator } from 'interfaces/products/product';
 import Head from 'next/head';
 import React from 'react';
 import ProductService from 'services/product-service';
@@ -31,11 +31,27 @@ function PDPPage({ product }: Props) {
   );
 }
 
-export async function getServerSideProps({ query }) {
+export async function getStaticPaths() {
+  let products: ProductPaginator;
+  try {
+    products = await (new ProductService()).getAllProduct();
+  } catch (error) {
+    console.log(error);
+  }
+  const productsWithoutTotal: PLPProductItem[] = products.products;
+
+  const paths = productsWithoutTotal.map((singleProduct) => ({
+    params: { id: singleProduct.id },
+  }));
+
+  return { paths, fallback: false };
+}
+
+export async function getStaticProps({ params }) {
   let product;
 
   try {
-    product = await (new ProductService()).getProductById(query.id);
+    product = await (new ProductService()).getProductById(params.id);
   } catch (error) {
     console.log(error);
   }

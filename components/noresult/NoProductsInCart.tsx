@@ -1,7 +1,5 @@
 import React from 'react';
-import {
-  Link, Typography,
-} from '@material-ui/core';
+import { Link } from '@material-ui/core';
 import RemoveShoppingCartIcon from '@material-ui/icons/RemoveShoppingCart';
 import NoResult, { noResultStyle } from './NoResult';
 

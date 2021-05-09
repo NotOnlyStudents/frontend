@@ -1,72 +1,68 @@
 import React from 'react';
 import { CartProduct } from 'interfaces/products/product';
 import {
-  Box, Button, Link, Typography,
+  Box, Button, Typography,
 } from '@material-ui/core';
 import ShopIcon from '@material-ui/icons/Shop';
-import { AuthContext } from 'lib/authContext';
+import { useAuthContext } from 'lib/authContext';
 import { SignedState } from 'interfaces/login';
 import { getLoginLink, getPaymentLink } from 'lib/links';
 import CartService from 'services/cart-service/CartServiceFetch';
 import { Auth } from 'aws-amplify';
+import NoProductInCart from 'components/noresult/NoProductsInCart';
+import { Snackbars, useSnackbarContext } from 'lib/SnackbarContext';
+import LoginIcon from 'components/icons/LoginIcon';
 import CartItem from './cartItem';
 
 interface Props {
-  items: CartProduct[];
+  products: CartProduct[];
   payment?: boolean;
 }
 
-interface State{
-  items: CartProduct[];
-}
+function CartList({ products, payment }: Props) {
+  const { openSnackbar } = useSnackbarContext();
+  const { signedState } = useAuthContext();
 
-class CartList extends React.Component<Props, State> {
-  constructor(props) {
-    super(props);
-    this.state = { items: props.items };
-    // console.log(this.state.items);
-  }
+  const [cartProducts, setCartProducts] = React.useState(products);
 
-  handleChangeQuantity = async (quantity: number, index: number): Promise<void> => {
+  const handleChangeQuantity = async (quantity: number, index: number): Promise<void> => {
     try {
       const user = await Auth.currentAuthenticatedUser();
       const token = user.signInUserSession.idToken.jwtToken;
-      await (new CartService()).patchCartProducts(token, this.state.items[index].id, quantity);
+      await (new CartService()).patchCartProducts(token, cartProducts[index].id, quantity);
 
-      this.setState((state: State) => {
-        const newState: State = state;
+      const newCartProducts = [...cartProducts];
 
-        newState.items[index].quantity = quantity;
-        return newState;
-      });
-    } catch (error) { console.error(error); }
-  };
+      newCartProducts[index].quantity = quantity;
 
-  handleRemoveProduct = async (index: number): Promise<void> => {
-    try {
-      const user = await Auth.currentAuthenticatedUser();
-      const token = user.signInUserSession.idToken.jwtToken;
-      console.log(index);
-      await new CartService().deleteCartProducts(token, this.state.items[index].id);
-      this.setState((state: State) => {
-        const newState: State = state;
+      setCartProducts(newCartProducts);
 
-        newState.items.splice(index, 1);
-
-        return newState;
-      });
+      openSnackbar(Snackbars.changeQuantitySuccessId);
     } catch (error) {
-      console.log(error);
+      openSnackbar(Snackbars.changeQuantityErrorId);
     }
   };
 
-  handleSubmit = (): void => {
-    console.log(this.state);
-    // Si prosegue con checkout API TODO:
+  const handleRemoveProduct = async (index: number): Promise<void> => {
+    try {
+      const user = await Auth.currentAuthenticatedUser();
+      const token = user.signInUserSession.idToken.jwtToken;
+
+      await new CartService().deleteCartProducts(token, cartProducts[index].id);
+
+      const newCartProducts = [...cartProducts];
+
+      newCartProducts.splice(index, 1);
+
+      setCartProducts(newCartProducts);
+      openSnackbar(Snackbars.removedFromCartSuccessId);
+    } catch (error) {
+      openSnackbar(Snackbars.removedFromCartErrorId);
+    }
   };
 
-  calculateTotalPrice = (): number => (
-    this.state.items
+  const calculateTotalPrice = (): number => (
+    cartProducts
       .map((item: CartProduct) => (item.quantity * item.price))
       .reduce(
         (totalPrice, price): number => (
@@ -76,10 +72,7 @@ class CartList extends React.Component<Props, State> {
       )
   );
 
-  renderPaymentButtonIfLogged = () => {
-    const { signedState } = this.context;
-    const { payment } = this.props;
-
+  const renderPaymentButtonIfLogged = () => {
     const button = signedState === SignedState.Customer
       ? (
         <Button
@@ -96,65 +89,59 @@ class CartList extends React.Component<Props, State> {
           variant="contained"
           color="primary"
           href={getLoginLink()}
-          startIcon={<ShopIcon />}
+          startIcon={<LoginIcon />}
         >
           Login to buy it
         </Button>
       );
 
-    return (
-      !payment
-        ? (
-          <>
-            {button}
-          </>
-        )
-        : <></>
-    );
+    return !payment ? button : <></>;
   };
 
-  renderAllItems = (): React.ReactElement[] => (
-    this.state.items.map(
+  const renderAllItems = (): React.ReactElement[] => (
+    cartProducts.map(
       (item: CartProduct, index: number): React.ReactElement => (
         <CartItem
           key={item.id}
           item={item}
           index={index}
-          handleChangeQuantity={this.handleChangeQuantity}
-          handleRemoveProduct={this.handleRemoveProduct}
-          payments={this.props.payment}
+          handleChangeQuantity={handleChangeQuantity}
+          handleRemoveProduct={handleRemoveProduct}
+          payments={payment}
         />
       ),
     ));
 
-  render() {
-    const { payment } = this.props;
-    return (
-      <Box>
-        <Box
-          display="flex"
-          alignItems="center"
-          justifyContent="flex-end"
-        >
+  const renderPageIfProductsArePresent = () => (
+    cartProducts.length !== 0
+      ? (
+        <Box>
           <Box
             display="flex"
-            marginRight={2}
+            alignItems="center"
+            justifyContent="flex-end"
           >
-            <Typography>
-              Total price: &nbsp;
-            </Typography>
-            <Typography variant="button">
-              {`${this.calculateTotalPrice()}€`}
-            </Typography>
+            <Box
+              display="flex"
+              marginRight={2}
+            >
+              <Typography>
+                Total price:
+                {' '}
+              </Typography>
+              <Typography variant="button">
+                {`${calculateTotalPrice()}€`}
+              </Typography>
+            </Box>
+            { renderPaymentButtonIfLogged() }
           </Box>
-          { this.renderPaymentButtonIfLogged() }
+          {renderAllItems()}
         </Box>
-        {this.renderAllItems()}
-      </Box>
-    );
-  }
-}
+      )
+      : <NoProductInCart />
+  );
 
-CartList.contextType = AuthContext;
+  return renderPageIfProductsArePresent();
+}
 
 export default CartList;

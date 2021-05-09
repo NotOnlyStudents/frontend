@@ -4,9 +4,9 @@ import {
   Box,
   Button,
   Dialog,
-  FormControl, FormLabel, RadioGroup,
+  FormControl, FormLabel, RadioGroup, Typography,
 } from '@material-ui/core';
-// import { Cart } from 'interfaces/cart/cart';
+import AddIcon from '@material-ui/icons/Add';
 import AddressEdit from './AddressEdit';
 import AddressView from './AddressView';
 
@@ -54,19 +54,31 @@ function AddressList({
     ),
   );
 
-  return (
-    <Box>
+  const renderAddressesIfPresent = (): React.ReactElement => (addresses.length
+    ? (
       <FormControl component="fieldset" fullWidth>
         <FormLabel component="legend">Addresses</FormLabel>
         <RadioGroup aria-label="address" name="address" value={selectedAddress} onChange={handleChange}>
           {renderAllAddress()}
         </RadioGroup>
       </FormControl>
+    )
+    : (
+      <Typography color="secondary">
+        Must insert one address
+      </Typography>
+    )
+  );
+
+  return (
+    <Box>
+      { renderAddressesIfPresent() }
       <Box display="flex" justifyContent="flex-end">
         <Button
           color="primary"
           variant="contained"
           onClick={handleClickOpen}
+          startIcon={<AddIcon />}
         >
           Add new address
         </Button>

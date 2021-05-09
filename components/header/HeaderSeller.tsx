@@ -22,7 +22,7 @@ function HeaderSeller() : React.ReactElement {
   const handleSignOut = async () => {
     try {
       await Auth.signOut();
-      await router.push(getHomeLink(true));
+      await router.push(getHomeLink());
 
       setSignedState(SignedState.NotAuthenticated);
     } catch (error) {

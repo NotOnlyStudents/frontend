@@ -9,6 +9,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 
 import 'styles/global.scss';
 import { Amplify } from 'aws-amplify';
+import SnackbarContextProvider from 'lib/SnackbarContext';
 
 Amplify.configure({
   Auth: {
@@ -48,17 +49,19 @@ function App({ Component, pageProps }: AppProps) {
   }, []);
 
   return (
-    <AuthContextProvider>
-      <Head>
-        <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
-      </Head>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <Layout>
-          <Component {...pageProps} />
-        </Layout>
-      </ThemeProvider>
-    </AuthContextProvider>
+    <ThemeProvider theme={theme}>
+      <SnackbarContextProvider>
+        <AuthContextProvider>
+          <Head>
+            <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
+          </Head>
+          <CssBaseline />
+          <Layout>
+            <Component {...pageProps} />
+          </Layout>
+        </AuthContextProvider>
+      </SnackbarContextProvider>
+    </ThemeProvider>
   );
 }
 

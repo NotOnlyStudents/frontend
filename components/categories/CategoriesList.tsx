@@ -2,7 +2,7 @@ import React from 'react';
 import CategoryView from 'components/categories/CategoryView';
 import { Category } from 'interfaces/categories/category';
 import {
-  Box, Button, Dialog, TextField,
+  Box, Button, Dialog,
 } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import TextFieldValidation from 'components/validation/TextFieldValidation';
@@ -113,8 +113,8 @@ class CategoriesList extends React.Component<Props, State> {
             onClick={this.handleClickNewCategory}
             variant="contained"
             color="primary"
+            startIcon={<AddIcon />}
           >
-            <AddIcon />
             Add a new category
           </Button>
         </Box>

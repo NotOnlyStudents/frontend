@@ -1,4 +1,4 @@
-import { Product, ProductPaginator } from './product';
+import { Product } from './product';
 
 export interface GetAllProductsRequest {
   data: {

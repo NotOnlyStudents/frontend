@@ -6,12 +6,12 @@ import {
   AmplifyForgotPassword,
 } from '@aws-amplify/ui-react';
 import { AuthState, onAuthUIStateChange } from '@aws-amplify/ui-components';
-import { CognitoUser } from '@aws-amplify/auth';
 
 import { CognitoCustomAttributes, getSignedState, useAuthContext } from 'lib/authContext';
 import { useRouter } from 'next/router';
 import { getHomeLink } from 'lib/links';
 import Head from 'next/head';
+import { SignedState } from 'interfaces/login';
 
 function Login() {
   const { setAuthState, setUserInfo, setSignedState } = useAuthContext();
@@ -27,9 +27,12 @@ function Login() {
         surname: attributes[CognitoCustomAttributes.surname],
         email: attributes.email,
       });
-      setSignedState(getSignedState(signInUserSession));
 
-      router.push(getHomeLink());
+      const signedState: SignedState = getSignedState(signInUserSession);
+
+      setSignedState(signedState);
+
+      router.push(getHomeLink(signedState === SignedState.Seller));
     }
   }), []);
 
@@ -50,7 +53,7 @@ function Login() {
           ]}
         />
         <AmplifySignIn slot="sign-in" usernameAlias="email" />
-        <AmplifyForgotPassword />
+        <AmplifyForgotPassword slot="forgot-password" />
       </AmplifyAuthenticator>
     </>
   );

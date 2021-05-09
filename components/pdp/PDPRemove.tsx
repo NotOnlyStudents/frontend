@@ -7,47 +7,31 @@ import SnackbarDeleteProductSuccess, { productDeleteSuccess } from 'components/s
 import SnackbarDeleteProductError, { productDeleteError } from 'components/snackbar/product/SnackbarDeleteProductError';
 import ProductService from 'services/product-service';
 import { useRouter } from 'next/router';
+import { Snackbars, useSnackbarContext } from 'lib/SnackbarContext';
+import { getPLPLink } from 'lib/links';
 
 interface Props {
   id: string,
-  productName: string
 }
 
-function PDPRemove({ id, productName }: Props) {
+function PDPRemove({ id }: Props) {
   const [openModal, setOpenModal] = React.useState(false);
 
   const router = useRouter();
 
-  const [alert, setAlert] = React.useState({
-    [productDeleteSuccess]: false,
-    [productDeleteError]: false,
-  });
-
-  const changeAlert = (alertId: string, show: boolean) => {
-    const newAlert = { ...alert };
-
-    newAlert[alertId] = show;
-
-    setAlert(newAlert);
-  };
-
-  const openAlert = (alertId: string) => {
-    changeAlert(alertId, true);
-  };
-  const closeAlert = (alertId: string) => {
-    changeAlert(alertId, false);
-  };
+  const { openSnackbar } = useSnackbarContext();
 
   const handleRemoveProduct = async () => {
     try {
       await (new ProductService()).deleteProduct(id);
 
-      openAlert(productDeleteSuccess);
-      setOpenModal(false);
+      openSnackbar(Snackbars.productDeleteSuccessId);
 
-      router.push('/seller/plp');
+      router.push(getPLPLink(true));
     } catch (error) {
-
+      openSnackbar(Snackbars.productDeleteErrorId);
+    } finally {
+      setOpenModal(false);
     }
   };
 
@@ -71,18 +55,6 @@ function PDPRemove({ id, productName }: Props) {
       <IconButton color="primary" onClick={() => { setOpenModal(true); }}>
         <Delete />
       </IconButton>
-
-      <SnackbarDeleteProductSuccess
-        productName={productName}
-        open={alert[productDeleteSuccess]}
-        handleClose={closeAlert}
-      />
-
-      <SnackbarDeleteProductError
-        productName={productName}
-        open={alert[productDeleteError]}
-        handleClose={closeAlert}
-      />
     </>
   );
 }

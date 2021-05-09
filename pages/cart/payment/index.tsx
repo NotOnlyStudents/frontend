@@ -42,8 +42,6 @@ class PaymentPage extends React.Component<Props, State> {
     { name: 'Payment' },
   ];
 
-  // context: React.ContextType<typeof AuthContext>;
-
   constructor(props: Props) {
     super(props);
     this.state = {
@@ -70,6 +68,11 @@ class PaymentPage extends React.Component<Props, State> {
       }
       return newState;
     });
+  };
+
+  disableCheckoutButton = () => {
+    const { addresses } = this.state;
+    return addresses.length === 0;
   };
 
   handleExpandClick = () => {
@@ -120,7 +123,7 @@ class PaymentPage extends React.Component<Props, State> {
           </IconButton>
         </Box>
         <Collapse in={expanded} timeout="auto" unmountOnExit>
-          <CartList items={cart.products} payment />
+          <CartList products={cart.products} payment />
         </Collapse>
         <AddressList
           addresses={addresses}
@@ -140,7 +143,7 @@ class PaymentPage extends React.Component<Props, State> {
           margin="normal"
         />
         <Box width="100%" display="flex" justifyContent="flex-end">
-          <CheckoutButton cartID={username} />
+          <CheckoutButton cartID={username} disable={this.disableCheckoutButton()} />
         </Box>
       </>
     );

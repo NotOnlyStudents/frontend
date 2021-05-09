@@ -14,10 +14,11 @@ import QuantityManager from 'components/quantity/QuantityManager';
 import ProductService from 'services/product-service/ProductServiceFetch';
 import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart';
 import PriceItem from 'components/price-item/PriceItem';
-import SnackbarAddToCartSuccess, { addToCartSuccessId } from 'components/snackbar/cart/SnackbarAddToCartSuccess';
-import SnackbarAddToCartError, { addToCartErrorId } from 'components/snackbar/cart/SnackbarAddToCartError';
+import { addToCartSuccessId } from 'components/snackbar/cart/SnackbarAddToCartSuccess';
+import { addToCartErrorId } from 'components/snackbar/cart/SnackbarAddToCartError';
 import { getViewProductLink } from 'lib/links';
 import { Auth } from 'aws-amplify';
+import { Snackbars, useSnackbarContext } from 'lib/SnackbarContext';
 
 interface Props {
   product: PLPProductItem
@@ -39,29 +40,11 @@ const useStyles = makeStyles({
 });
 
 function PLPProduct({ product, seller }: Props) {
-  const [counter, setCounter] = React.useState(1);
-  const [alert, setAlert] = React.useState({
-    [addToCartSuccessId]: false,
-    [addToCartErrorId]: false,
-  });
+  const { openSnackbar } = useSnackbarContext();
+
+  const [quantity, setQuantity] = React.useState(1);
 
   const classes = useStyles();
-
-  const changeAlert = (id: string, show: boolean) => {
-    const newAlert = { ...alert };
-
-    newAlert[id] = show;
-
-    setAlert(newAlert);
-  };
-
-  const closeAlert = (id: string) => {
-    changeAlert(id, false);
-  };
-
-  const openAlert = (id: string) => {
-    changeAlert(id, true);
-  };
 
   const checkQuantityProductInCart = async () => {
     try {
@@ -74,7 +57,7 @@ function PLPProduct({ product, seller }: Props) {
         .map((p: CartProduct) => (p.quantity));
 
       if (addedQuantity.length) {
-        setCounter(addedQuantity[0]);
+        setQuantity(addedQuantity[0]);
       }
     } catch (error) {
       console.error(error);
@@ -90,10 +73,10 @@ function PLPProduct({ product, seller }: Props) {
     try {
       const user = await Auth.currentAuthenticatedUser();
       const token = user.signInUserSession.idToken.jwtToken;
-      await new CartService().postCartProducts(token, { ...productToCart, quantity: counter });
-      openAlert(addToCartSuccessId);
+      await new CartService().postCartProducts(token, { ...productToCart, quantity });
+      openSnackbar(Snackbars.addToCartSuccessId);
     } catch (error) {
-      openAlert(addToCartErrorId);
+      openSnackbar(Snackbars.addToCartErrorId);
     }
   };
 
@@ -120,7 +103,7 @@ function PLPProduct({ product, seller }: Props) {
     : <></>);
 
   const renderQuantityManagerIfCustomer = () => (!seller
-    ? <QuantityManager counter={counter} handleCounterChange={setCounter} />
+    ? <QuantityManager counter={quantity} handleCounterChange={setQuantity} />
     : <></>
   );
 
@@ -146,6 +129,7 @@ function PLPProduct({ product, seller }: Props) {
             <PriceItem
               price={product.price}
               discount={product.discount}
+              discountedPrice={product.discountedPrice}
             />
           </Box>
         </CardContent>
@@ -163,17 +147,6 @@ function PLPProduct({ product, seller }: Props) {
           </Box>
         </CardActions>
       </Card>
-      <SnackbarAddToCartSuccess
-        productName={product.name}
-        open={alert[addToCartSuccessId]}
-        handleClose={closeAlert}
-      />
-
-      <SnackbarAddToCartError
-        productName={product.name}
-        open={alert[addToCartErrorId]}
-        handleClose={closeAlert}
-      />
     </>
   );
 }

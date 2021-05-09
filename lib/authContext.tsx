@@ -89,4 +89,11 @@ export function getSignedState(userSession) : SignedState {
   return signedState;
 }
 
+export async function getAuthToken() {
+  const user = await Auth.currentAuthenticatedUser();
+  const token = user.signInUserSession.idToken.jwtToken;
+
+  return token;
+}
+
 export default AuthContextProvider;

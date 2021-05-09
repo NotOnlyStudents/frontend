@@ -1,21 +1,22 @@
 import React from 'react';
 import EMLSnackbar, { CustomSnackbarProps } from '../EMLSnackbar';
 
-export const addressDeleteSuccessId = 'address_delete_success';
+export const removedFromCartSuccessId = 'removed_from_cart_success';
 
-function SnackbarDeleteAddressSuccess({
-  open, handleClose,
+function SnackbarRemoveFromCartSuccess({
+  open,
+  handleClose,
 }: CustomSnackbarProps) {
   return (
     <EMLSnackbar
-      id={addressDeleteSuccessId}
+      id={removedFromCartSuccessId}
       open={open}
       severity="success"
       handleClose={handleClose}
     >
-      Address successfully deleted
+      Product removed from cart
     </EMLSnackbar>
   );
 }
 
-export default SnackbarDeleteAddressSuccess;
+export default SnackbarRemoveFromCartSuccess;

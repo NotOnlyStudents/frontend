@@ -6,11 +6,8 @@ import {
   Box, Button, Link, makeStyles,
 } from '@material-ui/core';
 import QuantityManager from 'components/quantity/QuantityManager';
-import SnackbarChangeQuantitySuccess, { changeQuantitySuccessId } from 'components/snackbar/quantity/SnackbarChangeQuantitySuccess';
-import SnackbarChangeQuantityError, { changeQuantityErrorId } from 'components/snackbar/quantity/SnackbarChangeQuantityError';
-import SnackbarDeleteProductSuccess, { productDeleteSuccess } from 'components/snackbar/product/SnackbarDeleteProductSuccess';
-import SnackbarDeleteProductError, { productDeleteError } from 'components/snackbar/product/SnackbarDeleteProductError';
 import PriceItem from 'components/price-item/PriceItem';
+import { getViewProductLink } from 'lib/links';
 
 interface Props {
   item: CartProduct
@@ -32,38 +29,47 @@ function CartItem({
 }: Props) {
   const classes = useStyles();
 
-  const [alert, setAlert] = React.useState({
-    [changeQuantitySuccessId]: false,
-    [changeQuantityErrorId]: false,
-
-    [productDeleteSuccess]: false,
-    [productDeleteError]: false,
-  });
-
-  const changeAlert = (id: string, show: boolean) => {
-    const newAlert = { ...alert };
-
-    newAlert[id] = show;
-
-    setAlert(newAlert);
-  };
-
-  const openAlert = (id: string) => {
-    changeAlert(id, true);
-  };
-  const closeAlert = (id: string) => {
-    changeAlert(id, false);
-  };
-
-  const handleCounterChange = async (quantity: number) => {
-    openAlert(changeQuantitySuccessId);
+  const handleCounterChange = (quantity: number) => {
     handleChangeQuantity(quantity, index);
   };
 
   const handleClickRemove = async () => {
-    openAlert(productDeleteSuccess);
     handleRemoveProduct(index);
   };
+
+  const renderRemoveProductIfInCart = () => (
+    (!payments)
+      ? (
+        <div>
+          <Button
+            color="primary"
+            variant="contained"
+            onClick={handleClickRemove}
+          >
+            Remove product
+          </Button>
+        </div>
+      )
+      : <></>
+  );
+
+  const renderEditQuantityIfInCart = () => (
+    (!payments)
+      ? (
+        <QuantityManager
+          counter={item.quantity}
+          handleCounterChange={handleCounterChange}
+        />
+      )
+      : (
+        <Typography>
+          Quantity:
+          {' '}
+          {item.quantity}
+        </Typography>
+      )
+  );
+
   return (
     <Box
       width="100%"
@@ -87,34 +93,17 @@ function CartItem({
             { item.name }
           </Typography>
           <Box>
-            {
-            (!payments) ? <Button color="primary" variant="text" onClick={handleClickRemove}> Remove product </Button> : <></>
-            }
+            { renderRemoveProductIfInCart() }
             <Button
-              href={`/pdp/${item.id}`}
-              component={Link}
-              size="small"
+              href={getViewProductLink(item.id)}
               color="primary"
+              variant="text"
             >
               See more details
             </Button>
           </Box>
           <Box flexGrow={1} />
-          {
-            (!payments)
-              ? (
-                <QuantityManager
-                  counter={item.quantity}
-                  handleCounterChange={handleCounterChange}
-                />
-              )
-              : (
-                <p>
-                  Quantity:
-                  {item.quantity}
-                </p>
-              )
-          }
+          { renderEditQuantityIfInCart() }
         </Box>
         <Box
           display="flex"
@@ -132,31 +121,10 @@ function CartItem({
             price={item.price}
             discount={item.discount}
             quantity={item.quantity}
+            discountedPrice={item.discountedPrice}
           />
         </Box>
       </Box>
-
-      <SnackbarChangeQuantitySuccess
-        open={alert[changeQuantitySuccessId]}
-        handleClose={closeAlert}
-      />
-
-      <SnackbarChangeQuantityError
-        open={alert[changeQuantityErrorId]}
-        handleClose={closeAlert}
-      />
-
-      <SnackbarDeleteProductSuccess
-        productName={item.name}
-        open={alert[productDeleteSuccess]}
-        handleClose={closeAlert}
-      />
-
-      <SnackbarDeleteProductError
-        productName={item.name}
-        open={alert[productDeleteError]}
-        handleClose={closeAlert}
-      />
     </Box>
   );
 }

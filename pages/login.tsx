@@ -53,7 +53,7 @@ function Login() {
           ]}
         />
         <AmplifySignIn slot="sign-in" usernameAlias="email" />
-        <AmplifyForgotPassword />
+        <AmplifyForgotPassword slot="forgot-password" />
       </AmplifyAuthenticator>
     </>
   );

@@ -11,6 +11,14 @@ import 'styles/global.scss';
 import { Amplify } from 'aws-amplify';
 import SnackbarContextProvider from 'lib/SnackbarContext';
 
+import Router from 'next/router';
+import NProgress from 'nprogress';
+import 'nprogress/nprogress.css';
+
+Router.events.on('routeChangeStart', () => NProgress.start());
+Router.events.on('routeChangeComplete', () => NProgress.done());
+Router.events.on('routeChangeError', () => NProgress.done());
+
 Amplify.configure({
   Auth: {
     region: process.env.USER_POOL_REGION,

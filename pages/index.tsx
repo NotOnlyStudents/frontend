@@ -8,7 +8,10 @@ import { PLPProductItem, ProductFilter } from 'interfaces/products/product';
 import ProductService from 'services/product-service';
 import Head from 'next/head';
 import PLPList from 'components/plp/PLPList';
-import { getPLPLink } from 'lib/links';
+import { getHomeLink, getPLPLink } from 'lib/links';
+import { getSignedState } from 'lib/authContext';
+import { SignedState } from 'interfaces/login';
+import { withSSRContext } from 'aws-amplify';
 
 interface Props {
   products: PLPProductItem[];
@@ -88,7 +91,21 @@ function HomeCustomer({ products }: Props) : React.ReactElement {
   );
 }
 
-export async function getServerSideProps() {
+export async function getServerSideProps(context) {
+  const { Auth } = withSSRContext(context);
+  try {
+    const { signInUserSession } = await Auth.currentAuthenticatedUser();
+
+    if (await getSignedState(signInUserSession) === SignedState.Seller) {
+      return {
+        redirect: {
+          destination: getHomeLink(true),
+          permanent: false,
+        },
+      };
+    }
+  } catch (error) { }
+
   const filters: ProductFilter = { evidence: true };
 
   let paginator;
@@ -96,7 +113,6 @@ export async function getServerSideProps() {
   try {
     paginator = await (new ProductService()).getAllProduct(filters);
   } catch (error) {
-    console.log(error);
     paginator = {
       products: [],
     };

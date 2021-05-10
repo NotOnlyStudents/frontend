@@ -12,10 +12,18 @@ import { useRouter } from 'next/router';
 import { getHomeLink } from 'lib/links';
 import Head from 'next/head';
 import { SignedState } from 'interfaces/login';
+import HomeIcon from '@material-ui/icons/Home';
+import { BreadcrumbPath } from 'interfaces/breadcrumb';
+import EMLBreadcrumb from 'components/breadcrumb/EMLBreadcrumb';
 
 function Login() {
   const { setAuthState, setUserInfo, setSignedState } = useAuthContext();
   const router = useRouter();
+
+  const breadcrumbPaths: BreadcrumbPath[] = [
+    { name: 'Home', href: getHomeLink(), icon: HomeIcon },
+    { name: 'Authentication' },
+  ];
 
   useEffect(() => onAuthUIStateChange(async (nextAuthState: AuthState, authData: any) => {
     if (nextAuthState === AuthState.SignedIn) {
@@ -28,7 +36,7 @@ function Login() {
         email: attributes.email,
       });
 
-      const signedState: SignedState = getSignedState(signInUserSession);
+      const signedState: SignedState = await getSignedState(signInUserSession);
 
       setSignedState(signedState);
 
@@ -41,6 +49,7 @@ function Login() {
       <Head>
         <title>Authentication | EmporioLambda</title>
       </Head>
+      <EMLBreadcrumb paths={breadcrumbPaths} />
       <AmplifyAuthenticator usernameAlias="email">
         <AmplifySignUp
           slot="sign-up"

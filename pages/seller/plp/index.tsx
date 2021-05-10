@@ -7,7 +7,7 @@ import EMLBreadcrumb from 'components/breadcrumb/EMLBreadcrumb';
 import HomeIcon from '@material-ui/icons/Home';
 import { BreadcrumbPath } from 'interfaces/breadcrumb';
 import PLP from 'components/plp/PLP';
-import NoResultProduct from 'components/noresult/NoResultProduct';
+import { getHomeLink } from 'lib/links';
 
 interface Props {
   filters: ProductFilter,
@@ -20,7 +20,7 @@ function PLPSellerPage({
   filters, products, total, error,
 }: Props) {
   const breadcrumbPaths: BreadcrumbPath[] = [
-    { name: 'Home', href: '/', icon: HomeIcon },
+    { name: 'Home', href: getHomeLink(true), icon: HomeIcon },
     { name: 'Product List Page' },
   ];
 

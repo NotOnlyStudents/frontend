@@ -6,6 +6,7 @@ import ProductService from 'services/product-service';
 import HomeIcon from '@material-ui/icons/Home';
 import EMLBreadcrumb from 'components/breadcrumb/EMLBreadcrumb';
 import { BreadcrumbPath } from 'interfaces/breadcrumb';
+import { getHomeLink, getPLPLink } from 'lib/links';
 
 interface Props {
   product: Product
@@ -13,8 +14,8 @@ interface Props {
 
 function PDPPage({ product }: Props) {
   const breadcrumbPaths: BreadcrumbPath[] = [
-    { name: 'Home', href: '/', icon: HomeIcon },
-    { name: 'Product List Page', href: '/plp' },
+    { name: 'Home', href: getHomeLink(), icon: HomeIcon },
+    { name: 'Product List Page', href: getPLPLink() },
     { name: product.name },
   ];
 

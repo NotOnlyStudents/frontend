@@ -92,8 +92,6 @@ function Header(): React.ReactElement {
         query: router.query,
       };
 
-      console.log(newPage);
-
       if (searchText) {
         newPage.query.text = searchText;
       } else {
@@ -130,7 +128,7 @@ function Header(): React.ReactElement {
         <Typography variant="h6" component="h1">
           <Link
             className={classes.link}
-            href={getHomeLink(signedState === SignedState.Seller)}
+            onClick={() => { router.push(getHomeLink(signedState === SignedState.Seller)); }}
           >
             <LogoIcon />
             EmporioLambda

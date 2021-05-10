@@ -30,7 +30,7 @@ function AuthContextProvider({ children }: Props) {
     try {
       const { signInUserSession, attributes } = await Auth.currentAuthenticatedUser();
 
-      setSignedState(getSignedState(signInUserSession));
+      setSignedState(await getSignedState(signInUserSession));
       setUserInfo({
         name: attributes[CognitoCustomAttributes.name],
         surname: attributes[CognitoCustomAttributes.surname],
@@ -69,20 +69,33 @@ export enum CognitoCustomAttributes {
   surname = 'custom:lastName',
 }
 
-export function getSignedState(userSession) : SignedState {
-  let signedState;
+export async function getSignedState(userSession?) : Promise<SignedState> {
+  if (!userSession) {
+    try {
+      userSession = (await Auth.currentAuthenticatedUser()).signInUserSession;
+    } catch (error) {
+      console.log(error);
+      userSession = null;
+    }
+  }
+
+  let signedState: SignedState;
 
   function isSeller(signInUserSession): boolean {
     return signInUserSession.accessToken.payload['cognito:groups'][0] === 'sellers';
   }
 
-  try {
-    if (isSeller(userSession)) {
-      signedState = SignedState.Seller;
-    } else {
-      signedState = SignedState.Customer;
+  if (userSession) {
+    try {
+      if (isSeller(userSession)) {
+        signedState = SignedState.Seller;
+      } else {
+        signedState = SignedState.Customer;
+      }
+    } catch {
+      signedState = SignedState.NotAuthenticated;
     }
-  } catch {
+  } else {
     signedState = SignedState.NotAuthenticated;
   }
 

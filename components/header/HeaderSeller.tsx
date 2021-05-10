@@ -22,7 +22,7 @@ function HeaderSeller() : React.ReactElement {
   const handleSignOut = async () => {
     try {
       await Auth.signOut();
-      await router.push(getHomeLink());
+      router.push(getHomeLink());
 
       setSignedState(SignedState.NotAuthenticated);
     } catch (error) {
@@ -34,17 +34,17 @@ function HeaderSeller() : React.ReactElement {
     <>
       <HeaderMenuMobile
         desktopMenu={[
-          <HeaderDesktopLink onClick={() => { document.location.href = getNewProductLink(); }}>
+          <HeaderDesktopLink onClick={() => { router.push(getNewProductLink()); }}>
             <AddProductIcon aria-label="Add product" />
           </HeaderDesktopLink>,
-          <HeaderDesktopLink onClick={() => { document.location.href = getPLPLink(true); }}>
+          <HeaderDesktopLink onClick={() => { router.push(getPLPLink(true)); }}>
             <PLPIcon aria-label="Product list page" />
           </HeaderDesktopLink>,
-          <HeaderDesktopLink onClick={() => { document.location.href = getCategoriesLink(); }}>
+          <HeaderDesktopLink onClick={() => { router.push(getCategoriesLink()); }}>
             <ListAltIcon aria-label="Categories" />
           </HeaderDesktopLink>,
           <HeaderDesktopLink
-            onClick={() => { document.location.href = getPersonalAreaLink(true); }}
+            onClick={() => { router.push(getPersonalAreaLink(true)); }}
           >
             <AccountCircleIcon aria-label="Your personal area" />
           </HeaderDesktopLink>,
@@ -53,19 +53,19 @@ function HeaderSeller() : React.ReactElement {
           </HeaderDesktopLink>,
         ]}
         mobileMenu={[
-          <HeaderMobileLink href={getNewProductLink()}>
+          <HeaderMobileLink onClick={() => { router.push(getNewProductLink()); }}>
             <AddProductIcon />
             Add product
           </HeaderMobileLink>,
-          <HeaderMobileLink href={getPLPLink(true)}>
+          <HeaderMobileLink onClick={() => { router.push(getPLPLink(true)); }}>
             <PLPIcon />
             Product List Page
           </HeaderMobileLink>,
-          <HeaderMobileLink href={getCategoriesLink()}>
+          <HeaderMobileLink onClick={() => { router.push(getCategoriesLink()); }}>
             <ListAltIcon />
             Categories
           </HeaderMobileLink>,
-          <HeaderMobileLink href={getPersonalAreaLink(true)}>
+          <HeaderMobileLink onClick={() => { router.push(getPersonalAreaLink(true)); }}>
             <AccountCircleIcon aria-label="Your personal area" />
             Personal Area
           </HeaderMobileLink>,

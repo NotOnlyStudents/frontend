@@ -101,14 +101,15 @@ function CartList({ products, payment }: Props) {
   const renderAllItems = (): React.ReactElement[] => (
     cartProducts.map(
       (item: CartProduct, index: number): React.ReactElement => (
-        <CartItem
-          key={item.id}
-          item={item}
-          index={index}
-          handleChangeQuantity={handleChangeQuantity}
-          handleRemoveProduct={handleRemoveProduct}
-          payments={payment}
-        />
+        <Box key={item.id} marginBottom="4em">
+          <CartItem
+            item={item}
+            index={index}
+            handleChangeQuantity={handleChangeQuantity}
+            handleRemoveProduct={handleRemoveProduct}
+            payments={payment}
+          />
+        </Box>
       ),
     ));
 

@@ -15,6 +15,7 @@ import { SignedState } from 'interfaces/login';
 import HomeIcon from '@material-ui/icons/Home';
 import { BreadcrumbPath } from 'interfaces/breadcrumb';
 import EMLBreadcrumb from 'components/breadcrumb/EMLBreadcrumb';
+import { withSSRContext } from 'aws-amplify';
 
 function Login() {
   const { setAuthState, setUserInfo, setSignedState } = useAuthContext();
@@ -66,6 +67,24 @@ function Login() {
       </AmplifyAuthenticator>
     </>
   );
+}
+
+export async function getServerSideProps(context) {
+  const { Auth } = withSSRContext(context);
+  try {
+    const { signInUserSession } = await Auth.currentAuthenticatedUser();
+
+    const isSeller = await getSignedState(signInUserSession) === SignedState.Seller;
+
+    return {
+      redirect: {
+        destination: getHomeLink(isSeller),
+        permanent: false,
+      },
+    };
+  } catch (error) { }
+
+  return { props: { } };
 }
 
 export default Login;

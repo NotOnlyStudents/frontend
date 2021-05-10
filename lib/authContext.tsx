@@ -69,33 +69,20 @@ export enum CognitoCustomAttributes {
   surname = 'custom:lastName',
 }
 
-export async function getSignedState(userSession?) : Promise<SignedState> {
-  if (!userSession) {
-    try {
-      userSession = (await Auth.currentAuthenticatedUser()).signInUserSession;
-    } catch (error) {
-      console.log(error);
-      userSession = null;
-    }
-  }
-
+export async function getSignedState(userSession) : Promise<SignedState> {
   let signedState: SignedState;
 
   function isSeller(signInUserSession): boolean {
     return signInUserSession.accessToken.payload['cognito:groups'][0] === 'sellers';
   }
 
-  if (userSession) {
-    try {
-      if (isSeller(userSession)) {
-        signedState = SignedState.Seller;
-      } else {
-        signedState = SignedState.Customer;
-      }
-    } catch {
-      signedState = SignedState.NotAuthenticated;
+  try {
+    if (isSeller(userSession)) {
+      signedState = SignedState.Seller;
+    } else {
+      signedState = SignedState.Customer;
     }
-  } else {
+  } catch {
     signedState = SignedState.NotAuthenticated;
   }
 

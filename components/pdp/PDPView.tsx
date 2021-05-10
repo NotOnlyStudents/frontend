@@ -52,6 +52,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 function PDPView({ product, edit }: Props) : React.ReactElement {
   const classes = useStyles();
+  const router = useRouter();
 
   const { openSnackbar } = useSnackbarContext();
 
@@ -115,7 +116,10 @@ function PDPView({ product, edit }: Props) : React.ReactElement {
 
   const renderEditOptionsIfSeller = () => (edit ? (
     <Box display="flex">
-      <IconButton color="primary" href={getEditProductLink(product.id)}>
+      <IconButton
+        color="primary"
+        onClick={() => { router.push(getEditProductLink(product.id)); }}
+      >
         <Edit />
       </IconButton>
       <PDPEvidence

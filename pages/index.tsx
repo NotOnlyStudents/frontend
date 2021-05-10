@@ -12,6 +12,7 @@ import { getHomeLink, getPLPLink } from 'lib/links';
 import { getSignedState } from 'lib/authContext';
 import { SignedState } from 'interfaces/login';
 import { withSSRContext } from 'aws-amplify';
+import { useRouter } from 'next/router';
 
 interface Props {
   products: PLPProductItem[];
@@ -44,6 +45,7 @@ const useStyles = makeStyles({
 
 function HomeCustomer({ products }: Props) : React.ReactElement {
   const classes = useStyles();
+  const router = useRouter();
 
   const renderFeaturedProductsIfPresent = () => (products.length
     ? (
@@ -78,7 +80,7 @@ function HomeCustomer({ products }: Props) : React.ReactElement {
           <br />
           Start searching in our large library, or
           <Link
-            href={getPLPLink()}
+            onClick={() => { router.push(getPLPLink()); }}
             color="inherit"
             underline="always"
           >

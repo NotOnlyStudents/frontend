@@ -5,6 +5,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import { getEditPersonalAreaLink } from 'lib/links';
 import { Auth } from 'aws-amplify';
 import { useAuthContext } from 'lib/authContext';
+import { useRouter } from 'next/router';
 
 interface Props {
   seller?: boolean,
@@ -12,6 +13,7 @@ interface Props {
 
 function PersonalAreaView({ seller }: Props) {
   const { userInfo } = useAuthContext();
+  const router = useRouter();
 
   return (
     <>
@@ -19,7 +21,9 @@ function PersonalAreaView({ seller }: Props) {
         <Typography variant="h4" component="h2">
           Personal area
         </Typography>
-        <IconButton href={getEditPersonalAreaLink(seller)}>
+        <IconButton
+          onClick={() => { router.push(getEditPersonalAreaLink(seller)); }}
+        >
           <EditIcon />
         </IconButton>
       </Box>

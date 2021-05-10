@@ -56,6 +56,7 @@ function CartItem({
   item, index, payments, handleChangeQuantity, handleRemoveProduct,
 }: Props) {
   const classes = useStyles();
+  const router = useRouter();
 
   const handleCounterChange = (quantity: number) => {
     handleChangeQuantity(quantity, index);
@@ -115,7 +116,7 @@ function CartItem({
                 </Typography>
                 <Typography variant="body2">
                   <Button
-                    href={getViewProductLink(item.id)}
+                    onClick={() => { router.push(getViewProductLink(item.id)); }}
                     component={Link}
                     size="small"
                     color="primary"

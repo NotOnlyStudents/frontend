@@ -6,7 +6,12 @@ import ProductService from 'services/product-service';
 import HomeIcon from '@material-ui/icons/Home';
 import EMLBreadcrumb from 'components/breadcrumb/EMLBreadcrumb';
 import { BreadcrumbPath } from 'interfaces/breadcrumb';
-import { getHomeLink, getPLPLink } from 'lib/links';
+import {
+  getHomeLink, getLoginLink, getPLPLink, getViewProductLink,
+} from 'lib/links';
+import { withSSRContext } from 'aws-amplify';
+import { getSignedState } from 'lib/authContext';
+import { SignedState } from 'interfaces/login';
 
 interface Props {
   product: Product
@@ -32,7 +37,30 @@ function PDPPage({ product }: Props) {
   );
 }
 
-export async function getServerSideProps({ query }) {
+export async function getServerSideProps(context) {
+  const { Auth } = withSSRContext(context);
+  const { query } = context;
+
+  try {
+    const { signInUserSession } = await Auth.currentAuthenticatedUser();
+
+    if (await getSignedState(signInUserSession) === SignedState.Customer) {
+      return {
+        redirect: {
+          destination: getViewProductLink(query.id),
+          permanent: false,
+        },
+      };
+    }
+  } catch (error) {
+    return {
+      redirect: {
+        destination: getLoginLink(),
+        permanent: false,
+      },
+    };
+  }
+
   let product;
 
   try {

@@ -39,6 +39,7 @@ export async function getServerSideProps(context) {
       return {
         redirect: {
           destination: getEditPersonalAreaLink(),
+          permanent: false,
         },
       };
     }

@@ -1,5 +1,7 @@
 import PDPView from 'components/pdp/PDPView';
-import { PLPProductItem, Product, ProductPaginator } from 'interfaces/products/product';
+import {
+  PLPProductItem, Product, ProductFilter, ProductPaginator,
+} from 'interfaces/products/product';
 import Head from 'next/head';
 import React from 'react';
 import ProductService from 'services/product-service';

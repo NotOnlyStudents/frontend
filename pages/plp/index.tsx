@@ -39,7 +39,7 @@ function PLPCustomerPage({
   );
 }
 
-export async function getStaticProps({ query }) {
+export async function getServerSideProps({ query }) {
   const filters: ProductFilter = query;
   if (filters) {
     if (query.categories) {

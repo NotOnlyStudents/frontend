@@ -19,6 +19,7 @@ import { addToCartErrorId } from 'components/snackbar/cart/SnackbarAddToCartErro
 import { getViewProductLink } from 'lib/links';
 import { Auth } from 'aws-amplify';
 import { Snackbars, useSnackbarContext } from 'lib/SnackbarContext';
+import { useRouter } from 'next/router';
 
 interface Props {
   product: PLPProductItem
@@ -45,6 +46,7 @@ function PLPProduct({ product, seller }: Props) {
   const [quantity, setQuantity] = React.useState(1);
 
   const classes = useStyles();
+  const router = useRouter();
 
   const checkQuantityProductInCart = async () => {
     try {
@@ -139,7 +141,7 @@ function PLPProduct({ product, seller }: Props) {
               component={Link}
               size="small"
               color="primary"
-              href={getViewProductLink(product.id, seller)}
+              onClick={() => { router.push(getViewProductLink(product.id, seller)); }}
             >
               See more details
             </Button>

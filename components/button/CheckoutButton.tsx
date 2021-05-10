@@ -10,15 +10,13 @@ import PaymentIcon from '@material-ui/icons/Payment';
 const stripePromise = loadStripe('pk_test_51IHqhuEKthtArr3S4MYSAYFEPiFlioccyA4SjUNArmmdSmK7B05UnMdsNKIu0TCRXADZLVmjEUlqKRIR4D2SWtJ700PVmechEl');
 
 interface Props {
-  cartID: string,
   disable?: boolean
 }
 
-function CheckoutButton({ cartID, disable }: CheckoutButton) {
+function CheckoutButton({ disable }: Props) {
   const handleClick = async () => {
   // Get Stripe.js instance
     const stripe = await stripePromise;
-    console.log(cartID);
     console.log(stripe);
     // Call your backend to create the Checkout Session
     // const response =

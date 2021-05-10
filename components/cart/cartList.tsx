@@ -12,6 +12,7 @@ import { Auth } from 'aws-amplify';
 import NoProductInCart from 'components/noresult/NoProductsInCart';
 import { Snackbars, useSnackbarContext } from 'lib/SnackbarContext';
 import LoginIcon from 'components/icons/LoginIcon';
+import { useRouter } from 'next/router';
 import CartItem from './cartItem';
 
 interface Props {
@@ -22,6 +23,7 @@ interface Props {
 function CartList({ products, payment }: Props) {
   const { openSnackbar } = useSnackbarContext();
   const { signedState } = useAuthContext();
+  const router = useRouter();
 
   const [cartProducts, setCartProducts] = React.useState(products);
 
@@ -78,7 +80,7 @@ function CartList({ products, payment }: Props) {
         <Button
           variant="contained"
           color="primary"
-          href={getPaymentLink()}
+          onClick={() => { router.push(getPaymentLink()); }}
           startIcon={<ShopIcon />}
         >
           Buy
@@ -88,7 +90,7 @@ function CartList({ products, payment }: Props) {
         <Button
           variant="contained"
           color="primary"
-          href={getLoginLink()}
+          onClick={() => { router.push(getLoginLink()); }}
           startIcon={<LoginIcon />}
         >
           Login to buy it

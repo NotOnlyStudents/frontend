@@ -1,10 +1,14 @@
 import React from 'react';
 import { Link } from '@material-ui/core';
 import RemoveShoppingCartIcon from '@material-ui/icons/RemoveShoppingCart';
+import { useRouter } from 'next/router';
+import { getHomeLink } from 'lib/links';
 import NoResult, { noResultStyle } from './NoResult';
 
 function NoProductInCart() {
   const classes = noResultStyle();
+
+  const router = useRouter();
 
   return (
     <NoResult
@@ -15,7 +19,7 @@ function NoProductInCart() {
       return to
       {' '}
       <Link
-        href="/"
+        onClick={() => { router.push(getHomeLink()); }}
         className={classes.link}
         underline="always"
       >

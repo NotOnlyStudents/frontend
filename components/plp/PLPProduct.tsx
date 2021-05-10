@@ -3,7 +3,7 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
-import CartService from 'services/cart-service';
+import CartService from 'services/cart-service/CartServiceLocal';
 import { CartProduct, PLPProductItem } from 'interfaces/products/product';
 import StarIcon from '@material-ui/icons/Star';
 import { makeStyles } from '@material-ui/core/styles';
@@ -64,9 +64,14 @@ function PLPProduct({ product, seller }: Props) {
   };
 
   const checkQuantityProductInCart = async () => {
+    var token="";
     try {
       const user = await Auth.currentAuthenticatedUser();
       const token = user.signInUserSession.idToken.jwtToken;
+    } catch (error) {
+      console.log(error);
+    }
+    finally{
       const products: CartProduct[] = await new CartService().getCartProducts(token);
 
       const addedQuantity = products
@@ -76,8 +81,6 @@ function PLPProduct({ product, seller }: Props) {
       if (addedQuantity.length) {
         setCounter(addedQuantity[0]);
       }
-    } catch (error) {
-      console.error(error);
     }
   };
 
@@ -87,13 +90,16 @@ function PLPProduct({ product, seller }: Props) {
 
   const handleAddToCart = async () => {
     const productToCart = await (new ProductService()).getProductById(product.id);
+    var token="";
     try {
       const user = await Auth.currentAuthenticatedUser();
-      const token = user.signInUserSession.idToken.jwtToken;
+      token = user.signInUserSession.idToken.jwtToken;
+    } catch (error) {
+     // openAlert(addToCartErrorId);
+    }
+    finally{
       await new CartService().postCartProducts(token, { ...productToCart, quantity: counter });
       openAlert(addToCartSuccessId);
-    } catch (error) {
-      openAlert(addToCartErrorId);
     }
   };
 

@@ -18,6 +18,7 @@ class CartServiceFetch implements CartService {
     const res = await req.get<CartGETRequest>('', headers);
     // res.data['token']['data']['products']['images'][0];
 
+
     return res.data.token.data.products.map(productToCartProduct);
   };
 

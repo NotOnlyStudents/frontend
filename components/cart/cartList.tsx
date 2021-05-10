@@ -4,16 +4,18 @@ import {
   Box, Button, Link, Typography,
 } from '@material-ui/core';
 import ShopIcon from '@material-ui/icons/Shop';
-import { AuthContext } from 'lib/authContext';
+import { AuthContext, useAuthContext } from 'lib/authContext';
 import { SignedState } from 'interfaces/login';
 import { getLoginLink, getPaymentLink } from 'lib/links';
-import CartService from 'services/cart-service';
+import CartService from 'services/cart-service/CartServiceLocal';
 import { Auth } from 'aws-amplify';
 import CartItem from './cartItem';
+import { productToCartProduct } from 'interfaces/products/product-converter';
 
 interface Props {
   items: CartProduct[];
   payment?: boolean;
+  authenticated: boolean;
 }
 
 interface State{
@@ -26,20 +28,37 @@ class CartList extends React.Component<Props, State> {
     this.state = { items: props.items };
     // console.log(this.state.items);
   }
+/*      {
+        id:products.id,
+        name:products.name,
+        description:products.description.name,
+        price:products.price,
+        quantity:products.quantity,
+        available:products.available,
+        evidence:products.evidence,
+        categories: products.categories,
+        images: products.images
+      } */
+  componentDidMount()
+  {
+    //Allow a not authenticated user to access his local cart
+    var local = '[' + localStorage.getItem('item').slice(4).slice(0,-1) + ']';
+    const products=JSON.parse(local);
+    this.setState({items: products.map(productToCartProduct)});
+  }
 
   handleChangeQuantity = async (quantity: number, index: number): Promise<void> => {
     try {
       const user = await Auth.currentAuthenticatedUser();
       const token = user.signInUserSession.idToken.jwtToken;
       await (new CartService()).patchCartProducts(token, this.state.items[index].id, quantity);
-
+    } catch (error) { console.log(error); }
+    finally {      
       this.setState((state: State) => {
-        const newState: State = state;
-
-        newState.items[index].quantity = quantity;
-        return newState;
-      });
-    } catch (error) { console.error(error); }
+      const newState: State = state;
+      newState.items[index].quantity = quantity;
+      return newState;
+    });}
   };
 
   handleRemoveProduct = async (index: number): Promise<void> => {
@@ -113,19 +132,28 @@ class CartList extends React.Component<Props, State> {
     );
   };
 
-  renderAllItems = (): React.ReactElement[] => (
-    this.state.items.map(
-      (item: CartProduct, index: number): React.ReactElement => (
-        <CartItem
-          key={item.id}
-          item={item}
-          index={index}
-          handleChangeQuantity={this.handleChangeQuantity}
-          handleRemoveProduct={this.handleRemoveProduct}
-          payments={this.props.payment}
-        />
-      ),
-    ));
+  renderAllItems = (): React.ReactElement[] => {
+   // const { signedState } = useAuthContext();
+
+      //if authenticated
+      return (this.state.items.map(
+        (item: CartProduct, index: number): React.ReactElement => (
+          <CartItem
+            key={item.id}
+            item={item}
+            index={index}
+            handleChangeQuantity={this.handleChangeQuantity}
+            handleRemoveProduct={this.handleRemoveProduct}
+            payments={this.props.payment}
+          />
+        ),
+      ));
+    
+    /*    if (this.props.authenticated==true)
+    {else{
+      return null;
+    }*/
+  }
 
   render() {
     const { payment } = this.props;

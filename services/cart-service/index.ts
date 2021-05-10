@@ -3,7 +3,10 @@ import { SignedState } from 'interfaces/login';
 import { getSignedState } from 'lib/authContext';
 import CartServiceFetch from './CartServiceFetch';
 import CartServiceMock from './CartServiceMock';
+import CartServiceLocal from './CartServiceFetch';
 
+
+/*
 function auth()
 {   
     try{
@@ -13,6 +16,7 @@ function auth()
     }
     catch {return false;}
 }
+*/
 
-
-export default auth()===SignedState.Customer? CartServiceMock : CartServiceMock;
+//export default auth()===SignedState.Customer? CartServiceMock : CartServiceMock;
+export default CartServiceLocal;

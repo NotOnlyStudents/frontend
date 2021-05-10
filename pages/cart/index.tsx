@@ -1,5 +1,5 @@
 import CartList from 'components/cart/cartList';
-import CartService from 'services/cart-service';
+import CartService from 'services/cart-service/CartServiceLocal';
 import { BreadcrumbPath } from 'interfaces/breadcrumb';
 import EMLBreadcrumb from 'components/breadcrumb/EMLBreadcrumb';
 import HomeIcon from '@material-ui/icons/Home';
@@ -10,7 +10,9 @@ import NoProductInCart from 'components/noresult/NoProductsInCart';
 import { Cart } from 'interfaces/cart/cart';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import { getHomeLink } from 'lib/links';
-import { withSSRContext } from 'aws-amplify';
+import { Auth, withSSRContext } from 'aws-amplify';
+import { getSignedState, useAuthContext } from 'lib/authContext';
+import { SignedState } from 'interfaces/login';
 
 interface Props {
   cart: Cart;
@@ -22,9 +24,23 @@ function cartPage({ cart }: Props) {
     { name: 'Cart' },
   ];
 
-  const renderCartList = () => (cart.products.length !== 0
-    ? <CartList items={cart.products} />
-    : <NoProductInCart />);
+  const renderCartList = () =>{ 
+    const { signedState } = useAuthContext();
+    if (cart.products.length == 0)
+    {
+      if(signedState===SignedState.Customer)
+      {
+        return (<NoProductInCart />);
+      }
+      else
+      {
+        return (<CartList items={cart.products} authenticated={false}/>);
+      }
+    }
+    else {
+      return (<CartList items={cart.products} authenticated={true}/>);
+    }
+  }
 
   return (
     <>
@@ -43,20 +59,18 @@ function cartPage({ cart }: Props) {
 export async function getServerSideProps(context) {
   let products = [];
   const { Auth } = withSSRContext(context);
-
+  var token = '';
   try {
     const user = await Auth.currentAuthenticatedUser();
-    const token = user.signInUserSession.idToken.jwtToken;
-    try {
-      products = await new CartService().getCartProducts(token);
-    } catch (error) {
-      console.log(error);
-    }
-  } catch { try {
-    products = await new CartService().getCartProducts('');
-  } catch (error) {
-    console.log(error);
-  }; }
+    token = user.signInUserSession.idToken.jwtToken;
+  }
+  catch (error) {
+    console.log("User not authenticated");
+  }
+  finally{
+    products = await new CartService().getCartProducts(token);
+  }; 
+
 
   return {
     props: {

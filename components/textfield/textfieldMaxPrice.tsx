@@ -2,9 +2,6 @@ import React from 'react';
 import {
   InputAdornment, makeStyles, Snackbar, TextField,
 } from '@material-ui/core';
-// import EMLSnackbar from 'components/snackbar/EMLSnackbar';
-import { Alert } from '@material-ui/lab';
-import SnackbarMaxPriceLowerMinPrice, { maxPriceLowerMinPrice } from 'components/snackbar/filters/SnackbarMaxPriceLowerMinPrice';
 
 interface Props {
   selectedMaxPrice: number

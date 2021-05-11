@@ -8,6 +8,7 @@ import {
 import QuantityManager from 'components/quantity/QuantityManager';
 import PriceItem from 'components/price-item/PriceItem';
 import { getViewProductLink } from 'lib/links';
+import { useRouter } from 'next/router';
 
 interface Props {
   item: CartProduct

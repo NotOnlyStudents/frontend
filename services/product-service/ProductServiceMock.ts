@@ -13,6 +13,7 @@ class ProductServiceMock implements ProductService {
         price: parseFloat(faker.commerce.price()),
         image: faker.random.image(),
         discount: faker.datatype.number({ min: 0, max: 100 }),
+        discountedPrice: 0,
         evidence: faker.datatype.boolean(),
         quantity: faker.datatype.number({ min: 0 }),
       }),

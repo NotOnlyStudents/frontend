@@ -106,7 +106,7 @@ class PaymentPage extends React.Component<Props, State> {
       addresses, selectedAddress, cart, expanded,
     } = this.state;
 
-    const { token, username } = this.props;
+    const { token } = this.props;
 
     return (
       <>

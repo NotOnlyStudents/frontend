@@ -1,7 +1,8 @@
 import React from 'react';
 
 import Header from 'components/header/Header';
-import { makeStyles, Theme } from '@material-ui/styles';
+import { makeStyles } from '@material-ui/styles';
+import { Theme } from '@material-ui/core/styles';
 
 interface Props {
   children: React.ReactNode,

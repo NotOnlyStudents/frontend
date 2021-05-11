@@ -6,18 +6,11 @@ import Layout from 'components/Layout';
 import theme from 'styles/theme';
 import { ThemeProvider } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
-
-import 'styles/global.scss';
 import { Amplify } from 'aws-amplify';
 import SnackbarContextProvider from 'lib/SnackbarContext';
+import NextNprogress from 'nextjs-progressbar';
 
-import Router from 'next/router';
-import NProgress from 'nprogress';
-import 'nprogress/nprogress.css';
-
-Router.events.on('routeChangeStart', () => NProgress.start());
-Router.events.on('routeChangeComplete', () => NProgress.done());
-Router.events.on('routeChangeError', () => NProgress.done());
+import 'styles/global.scss';
 
 Amplify.configure({
   Auth: {
@@ -65,6 +58,11 @@ function App({ Component, pageProps }: AppProps) {
           </Head>
           <CssBaseline />
           <Layout>
+            <NextNprogress
+              color="#fff"
+              startPosition={0.3}
+              stopDelayMs={200}
+            />
             <Component {...pageProps} />
           </Layout>
         </AuthContextProvider>

@@ -1,16 +1,13 @@
 import React from 'react';
-import {
-  Typography,
-} from '@material-ui/core';
 import NotInterestedIcon from '@material-ui/icons/NotInterested';
-import NoResult, { noResultStyle } from './NoResult';
+import NoResult from './NoResult';
 
 function NoResultCategory() {
   return (
     <NoResult
       icon={NotInterestedIcon}
     >
-      No category found
+      No categories found
     </NoResult>
   );
 }

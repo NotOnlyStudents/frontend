@@ -24,6 +24,7 @@ import { getEditProductLink } from 'lib/links';
 import { Auth } from 'aws-amplify';
 import CartService from 'services/cart-service';
 import { Snackbars, useSnackbarContext } from 'lib/SnackbarContext';
+import { getAuthToken } from 'lib/authContext';
 import PDPRemove from './PDPRemove';
 import PDPEvidence from './PDPEvidence';
 
@@ -84,7 +85,9 @@ function PDPView({ product, edit }: Props) : React.ReactElement {
 
   const handleChangeEvidance = async (ev: boolean) => {
     try {
-      await (new ProductService()).editProduct(product.id, { ...product, evidence: ev });
+      const token: string = await getAuthToken();
+
+      await (new ProductService()).editProduct(token, product.id, { ...product, evidence: ev });
       setEvidence(ev);
       openSnackbar(Snackbars.changeEvidenceSuccessId);
     } catch (error) {
@@ -94,7 +97,9 @@ function PDPView({ product, edit }: Props) : React.ReactElement {
 
   const handleQuantityChange = async (q: number) => {
     try {
-      await (new ProductService()).editProduct(product.id, { ...product, quantity: q });
+      const token: string = await getAuthToken();
+
+      await (new ProductService()).editProduct(token, product.id, { ...product, quantity: q });
       setQuantity(q);
       openSnackbar(Snackbars.changeQuantitySuccessId);
     } catch (error) {

@@ -17,6 +17,7 @@ import SnackbarProductNotValid, { productNotValidId } from 'components/snackbar/
 import { AlertState } from 'interfaces/alert';
 import { getViewProductLink } from 'lib/links';
 import { SnackbarContext, Snackbars } from 'lib/SnackbarContext';
+import { getAuthToken } from 'lib/authContext';
 import PDPEvidence from './PDPEvidence';
 
 interface Props {
@@ -210,7 +211,9 @@ class PDPEdit extends React.Component<Props, State> {
 
       if (!creation) {
         try {
-          newProduct = await ps.editProduct(product.id, product);
+          const token: string = await getAuthToken();
+
+          newProduct = await ps.editProduct(token, product.id, product);
           openSnackbar(Snackbars.productEditSuccessId);
           this.goToViewProductPage(newProduct);
         } catch (e) {
@@ -218,7 +221,9 @@ class PDPEdit extends React.Component<Props, State> {
         }
       } else {
         try {
-          newProduct = await ps.createProduct(product);
+          const token: string = await getAuthToken();
+
+          newProduct = await ps.createProduct(token, product);
           this.goToViewProductPage(newProduct);
         } catch (e) {
           openSnackbar(Snackbars.productCreateErrorId);

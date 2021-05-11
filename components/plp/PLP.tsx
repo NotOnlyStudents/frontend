@@ -100,6 +100,8 @@ class PLP extends React.Component<Props, State> {
 
     delete query.offset;
 
+    filters.offset = 0;
+
     router.push({
       pathname: '',
       query,

@@ -9,6 +9,7 @@ import ProductService from 'services/product-service';
 import { useRouter } from 'next/router';
 import { Snackbars, useSnackbarContext } from 'lib/SnackbarContext';
 import { getPLPLink } from 'lib/links';
+import { getAuthToken } from 'lib/authContext';
 
 interface Props {
   id: string,
@@ -23,7 +24,9 @@ function PDPRemove({ id }: Props) {
 
   const handleRemoveProduct = async () => {
     try {
-      await (new ProductService()).deleteProduct(id);
+      const token: string = await getAuthToken();
+
+      await (new ProductService()).deleteProduct(token, id);
 
       openSnackbar(Snackbars.productDeleteSuccessId);
 

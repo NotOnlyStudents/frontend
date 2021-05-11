@@ -29,6 +29,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     alignItems: 'center',
     color: 'white',
+    cursor: 'pointer',
     '&:hover': {
       textDecoration: 'none',
     },

@@ -9,6 +9,7 @@ import { Category, CategoryValidation } from 'interfaces/categories/category';
 import CategoryService from 'services/category-service';
 import CategoryServiceType from 'services/category-service/CategoryService';
 import { SnackbarContext, Snackbars } from 'lib/SnackbarContext';
+import { getAuthToken } from 'lib/authContext';
 
 interface Props {
   category?: Category;
@@ -68,7 +69,9 @@ class CategoryEdit extends React.Component<Props, State> {
 
       if (creation) {
         try {
-          await cs.addCategory(category);
+          const token: string = await getAuthToken();
+
+          await cs.addCategory(token, category);
           openSnackbar(Snackbars.categoryCreateSuccessId);
           this.props.handleAddCategory();
         } catch (e) {
@@ -76,7 +79,9 @@ class CategoryEdit extends React.Component<Props, State> {
         }
       } else {
         try {
-          await cs.editCategory(category.id, category);
+          const token: string = await getAuthToken();
+
+          await cs.editCategory(token, category.id, category);
           openSnackbar(Snackbars.categoryEditSuccessId);
           this.props.handleChangeCategory();
         } catch (e) {

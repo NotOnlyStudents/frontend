@@ -26,7 +26,6 @@ class CartList extends React.Component<Props, State> {
   constructor(props) {
     super(props);
     this.state = { items: props.items };
-    // console.log(this.state.items);
   }
 /*      {
         id:products.id,
@@ -42,18 +41,27 @@ class CartList extends React.Component<Props, State> {
   componentDidMount()
   {
     //Allow a not authenticated user to access his local cart
-    var local = '[' + localStorage.getItem('item').slice(4).slice(0,-1) + ']';
-    const products=JSON.parse(local);
-    this.setState({items: products.map(productToCartProduct)});
+    if(localStorage.getItem('item')!=null)
+    {
+      var storage = localStorage.getItem('item');
+      if(storage[storage.length-1]==',')
+      {
+          storage = storage.slice(0,-1);
+      }
+      storage = '[' + storage + ']';
+      const products=JSON.parse(storage);
+      this.setState({items: products.map(productToCartProduct)});
+    }
   }
 
   handleChangeQuantity = async (quantity: number, index: number): Promise<void> => {
+    var token="";
     try {
       const user = await Auth.currentAuthenticatedUser();
-      const token = user.signInUserSession.idToken.jwtToken;
-      await (new CartService()).patchCartProducts(token, this.state.items[index].id, quantity);
+      token = user.signInUserSession.idToken.jwtToken;
     } catch (error) { console.log(error); }
     finally {      
+      await (new CartService()).patchCartProducts(token, this.state.items[index].id, quantity);
       this.setState((state: State) => {
       const newState: State = state;
       newState.items[index].quantity = quantity;
@@ -62,10 +70,15 @@ class CartList extends React.Component<Props, State> {
   };
 
   handleRemoveProduct = async (index: number): Promise<void> => {
+    var token="";
     try {
       const user = await Auth.currentAuthenticatedUser();
-      const token = user.signInUserSession.idToken.jwtToken;
+      token = user.signInUserSession.idToken.jwtToken;
       console.log(index);
+    } catch (error) {
+      console.log(error);
+    }
+    finally{
       await new CartService().deleteCartProducts(token, this.state.items[index].id);
       this.setState((state: State) => {
         const newState: State = state;
@@ -74,8 +87,6 @@ class CartList extends React.Component<Props, State> {
 
         return newState;
       });
-    } catch (error) {
-      console.log(error);
     }
   };
 

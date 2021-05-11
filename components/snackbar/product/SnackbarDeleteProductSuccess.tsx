@@ -1,19 +1,23 @@
 import React from 'react';
 import EMLSnackbar, { CustomSnackbarProps } from '../EMLSnackbar';
 
-export const productDeleteSuccessId = 'product_delete_success';
+export const productDeleteSuccess = 'product_delete_success';
+
+interface Props extends CustomSnackbarProps {
+  productName: string
+}
 
 function SnackbarDeleteProductSuccess({
-  open, handleClose,
-}: CustomSnackbarProps) {
+  productName, open, handleClose,
+}: Props) {
   return (
     <EMLSnackbar
-      id={productDeleteSuccessId}
+      id={productDeleteSuccess}
       open={open}
       severity="success"
       handleClose={handleClose}
     >
-      Product deleted
+      {`${productName} deleted`}
     </EMLSnackbar>
   );
 }

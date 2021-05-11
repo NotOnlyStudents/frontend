@@ -6,9 +6,12 @@ import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import CheckIcon from '@material-ui/icons/Check';
 import TextFieldValidation from 'components/validation/TextFieldValidation';
 import AddressService from 'services/address-service';
-import AddressServiceType from 'services/address-service/AddressService';
+import SnackbarAddressNotValid, { addressNotValidId } from 'components/snackbar/address/SnackbarAddressNotValid';
 import { Address, AddressValidation } from 'interfaces/address/address';
-import { SnackbarContext, Snackbars } from 'lib/SnackbarContext';
+
+interface AlertState {
+  [key: string]: boolean
+}
 
 interface Props {
   address?: Address,
@@ -22,6 +25,7 @@ interface Props {
 interface State {
   address: Address;
   validation: AddressValidation;
+  alert: AlertState;
 }
 
 class AddressEdit extends React.Component<Props, State> {
@@ -43,6 +47,7 @@ class AddressEdit extends React.Component<Props, State> {
         address: false,
         cap: false,
       },
+      alert: { [addressNotValidId]: false },
     };
   }
 
@@ -119,43 +124,29 @@ class AddressEdit extends React.Component<Props, State> {
   };
 
   handleClickSave = async () => {
-    const { openSnackbar } = this.context;
-
     if (this.checkValidation()) {
       const { address } = this.state;
       const { token, index, creation } = this.props;
 
       let newAddress: Address;
 
-      const addressService: AddressServiceType = new AddressService();
-
       if (creation) {
         delete address.id;
-        try {
-          newAddress = await addressService.createAddress(token, address);
-          this.props.handleChangeAddress(newAddress, -1);
-          openSnackbar(Snackbars.addressCreateSuccessId);
-        } catch (e) {
-          openSnackbar(Snackbars.addressCreateErrorId);
-        }
+        newAddress = await (new AddressService()).createAddress(token, address);
       } else {
-        try {
-          newAddress = await addressService.editAddress(token, address.id, address);
-          this.props.handleChangeAddress(newAddress, index);
-          openSnackbar(Snackbars.addressEditSuccessId);
-        } catch (e) {
-          openSnackbar(Snackbars.addressEditErrorId);
-        }
+        newAddress = await (
+          new AddressService()).editAddress(token, address.id, address);
       }
 
+      this.props.handleChangeAddress(newAddress, index !== undefined ? index : -1);
       this.props.handleCloseDialog();
     } else {
-      openSnackbar(Snackbars.addressNotValidId);
+      this.setState({ alert: { [addressNotValidId]: true } });
     }
   };
 
   render() {
-    const { address, validation } = this.state;
+    const { address, validation, alert } = this.state;
     const { creation } = this.props;
     return (
       <Card id={address.id}>
@@ -229,11 +220,12 @@ class AddressEdit extends React.Component<Props, State> {
             Save
           </Button>
         </CardActions>
+        <SnackbarAddressNotValid
+          open={alert[addressNotValidId]}
+          handleClose={this.handleCloseAlert}
+        />
       </Card>
     );
   }
 }
-
-AddressEdit.contextType = SnackbarContext;
-
 export default AddressEdit;

@@ -1,12 +1,17 @@
 import React from 'react';
 import EMLSnackbar, { CustomSnackbarProps } from '../EMLSnackbar';
 
+interface Props extends CustomSnackbarProps {
+  productName: string
+}
+
 export const addToCartSuccessId = 'add_to_cart_success';
 
-function SnackbarAddToCartSuccess({
+function SnackbarChangeEvidenceError({
+  productName,
   open,
   handleClose,
-}: CustomSnackbarProps) {
+}: Props) {
   return (
     <EMLSnackbar
       id={addToCartSuccessId}
@@ -14,9 +19,9 @@ function SnackbarAddToCartSuccess({
       severity="success"
       handleClose={handleClose}
     >
-      Product added to cart
+      { `${productName} added to cart` }
     </EMLSnackbar>
   );
 }
 
-export default SnackbarAddToCartSuccess;
+export default SnackbarChangeEvidenceError;

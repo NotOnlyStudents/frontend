@@ -30,7 +30,7 @@ function AuthContextProvider({ children }: Props) {
     try {
       const { signInUserSession, attributes } = await Auth.currentAuthenticatedUser();
 
-      setSignedState(await getSignedState(signInUserSession));
+      setSignedState(getSignedState(signInUserSession));
       setUserInfo({
         name: attributes[CognitoCustomAttributes.name],
         surname: attributes[CognitoCustomAttributes.surname],
@@ -69,8 +69,8 @@ export enum CognitoCustomAttributes {
   surname = 'custom:lastName',
 }
 
-export async function getSignedState(userSession) : Promise<SignedState> {
-  let signedState: SignedState;
+export function getSignedState(userSession) : SignedState {
+  let signedState;
 
   function isSeller(signInUserSession): boolean {
     return signInUserSession.accessToken.payload['cognito:groups'][0] === 'sellers';
@@ -87,13 +87,6 @@ export async function getSignedState(userSession) : Promise<SignedState> {
   }
 
   return signedState;
-}
-
-export async function getAuthToken() {
-  const user = await Auth.currentAuthenticatedUser();
-  const token = user.signInUserSession.idToken.jwtToken;
-
-  return token;
 }
 
 export default AuthContextProvider;

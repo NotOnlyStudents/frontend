@@ -8,8 +8,6 @@ import TextFieldValidation from 'components/validation/TextFieldValidation';
 import { Category, CategoryValidation } from 'interfaces/categories/category';
 import CategoryService from 'services/category-service';
 import CategoryServiceType from 'services/category-service/CategoryService';
-import { SnackbarContext, Snackbars } from 'lib/SnackbarContext';
-import { getAuthToken } from 'lib/authContext';
 
 interface Props {
   category?: Category;
@@ -59,8 +57,6 @@ class CategoryEdit extends React.Component<Props, State> {
   checkValidation = () => Object.values(this.state.error).every((val) => !val);
 
   handleClickSave = async () => {
-    const { openSnackbar } = this.context;
-
     if (this.checkValidation()) {
       const { category } = this.state;
       const { creation } = this.props;
@@ -68,28 +64,12 @@ class CategoryEdit extends React.Component<Props, State> {
       const cs: CategoryServiceType = new CategoryService();
 
       if (creation) {
-        try {
-          const token: string = await getAuthToken();
-
-          await cs.addCategory(token, category);
-          openSnackbar(Snackbars.categoryCreateSuccessId);
-          this.props.handleAddCategory();
-        } catch (e) {
-          openSnackbar(Snackbars.categoryCreateErrorId);
-        }
+        await cs.addCategory(category);
+        this.props.handleAddCategory();
       } else {
-        try {
-          const token: string = await getAuthToken();
-
-          await cs.editCategory(token, category.id, category);
-          openSnackbar(Snackbars.categoryEditSuccessId);
-          this.props.handleChangeCategory();
-        } catch (e) {
-          openSnackbar(Snackbars.categoryEditErrorId);
-        }
+        await cs.editCategory(category.id, category);
+        this.props.handleChangeCategory();
       }
-    } else {
-      openSnackbar(Snackbars.categoryNotValidId);
     }
   };
 
@@ -135,7 +115,5 @@ class CategoryEdit extends React.Component<Props, State> {
     );
   }
 }
-
-CategoryEdit.contextType = SnackbarContext;
 
 export default CategoryEdit;

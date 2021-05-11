@@ -9,7 +9,8 @@ import EMLPagination from 'components/pagination/EMLPagination';
 import PLPList from 'components/plp/PLPList';
 import { NextRouter, withRouter } from 'next/router';
 import NoResultProduct from 'components/noresult/NoResultProduct';
-import { SnackbarContext, Snackbars } from 'lib/SnackbarContext';
+import { AlertState } from 'interfaces/alert';
+import SnackbarErrorRetrievingData, { errorRetrievingDataId } from 'components/snackbar/common-snackbar/SnackbarErrorRetrievingData';
 
 interface Props {
   router: NextRouter,
@@ -24,6 +25,7 @@ interface State {
   filters: ProductFilter,
   products: PLPProductItem[],
   total: number,
+  alert: AlertState
 }
 
 class PLP extends React.Component<Props, State> {
@@ -45,16 +47,10 @@ class PLP extends React.Component<Props, State> {
       },
       products: props.products,
       total: props.total,
+      alert: {
+        [errorRetrievingDataId]: props.error,
+      },
     };
-  }
-
-  componentDidMount() {
-    const { openSnackbar } = this.context;
-    const { error } = this.props;
-
-    if (error) {
-      openSnackbar(Snackbars.errorRetrievingDataId);
-    }
   }
 
   handleChangeFilters = async (filters: ProductFilter) => {
@@ -100,8 +96,6 @@ class PLP extends React.Component<Props, State> {
 
     delete query.offset;
 
-    filters.offset = 0;
-
     router.push({
       pathname: '',
       query,
@@ -110,6 +104,8 @@ class PLP extends React.Component<Props, State> {
     this.setState({ filters });
 
     this.fetchAllProducts(query);
+
+    // setTimeout(() => { router.reload(); }, 1000);
   };
 
   handleChangePagination = (offset: number) => {
@@ -130,6 +126,8 @@ class PLP extends React.Component<Props, State> {
     });
 
     this.fetchAllProducts(query);
+
+    // setTimeout(() => { router.reload(); }, 1000);
   };
 
   fetchAllProducts = async (query) => {
@@ -142,13 +140,31 @@ class PLP extends React.Component<Props, State> {
         products: [],
         total: 0,
       };
-      this.context.openSnackbar(Snackbars.errorRetrievingDataId);
+      this.openAlert(errorRetrievingDataId);
     }
 
     this.setState({
       products: paginator.products,
       total: paginator.total,
     });
+  };
+
+  changeAlert = (id: string, error: boolean) => {
+    this.setState((state: State) => {
+      const newState = state;
+
+      newState.alert[id] = error;
+
+      return newState;
+    });
+  };
+
+  handleCloseAlert = (id: string) => {
+    this.changeAlert(id, false);
+  };
+
+  openAlert = (id: string) => {
+    this.changeAlert(id, true);
   };
 
   renderPLPListIfThereAreProducts = () => {
@@ -172,7 +188,7 @@ class PLP extends React.Component<Props, State> {
       seller,
     } = this.props;
     const {
-      filters, total,
+      filters, total, alert,
     } = this.state;
 
     return (
@@ -189,11 +205,13 @@ class PLP extends React.Component<Props, State> {
           page={filters.offset + 1}
           handleChangePagination={this.handleChangePagination}
         />
+        <SnackbarErrorRetrievingData
+          open={alert[errorRetrievingDataId]}
+          handleClose={this.handleCloseAlert}
+        />
       </>
     );
   }
 }
-
-PLP.contextType = SnackbarContext;
 
 export default withRouter(PLP);

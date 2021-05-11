@@ -19,7 +19,7 @@ function HeaderCustomer() : React.ReactElement {
   const handleSignOut = async () => {
     try {
       await Auth.signOut();
-      router.push(getHomeLink());
+      await router.push(getHomeLink());
 
       setSignedState(SignedState.NotAuthenticated);
     } catch (error) {
@@ -31,10 +31,10 @@ function HeaderCustomer() : React.ReactElement {
     <>
       <HeaderMenuMobile
         desktopMenu={[
-          <HeaderDesktopLink onClick={() => { router.push(getCartLink()); }}>
+          <HeaderDesktopLink onClick={() => { document.location.href = getCartLink(); }}>
             <ShoppingCartIcon />
           </HeaderDesktopLink>,
-          <HeaderDesktopLink onClick={() => { router.push(getPersonalAreaLink()); }}>
+          <HeaderDesktopLink onClick={() => { document.location.href = getPersonalAreaLink(); }}>
             <AccountCircleIcon aria-label="Your personal area" />
           </HeaderDesktopLink>,
           <HeaderDesktopLink onClick={handleSignOut}>
@@ -42,11 +42,11 @@ function HeaderCustomer() : React.ReactElement {
           </HeaderDesktopLink>,
         ]}
         mobileMenu={[
-          <HeaderMobileLink onClick={() => { router.push(getCartLink()); }}>
+          <HeaderMobileLink href={getCartLink()}>
             <ShoppingCartIcon />
             Cart
           </HeaderMobileLink>,
-          <HeaderMobileLink onClick={() => { router.push(getPersonalAreaLink()); }}>
+          <HeaderMobileLink href={getPersonalAreaLink()}>
             <AccountCircleIcon aria-label="Your personal area" />
             Your personal area
           </HeaderMobileLink>,

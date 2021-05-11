@@ -1,6 +1,7 @@
+import { LocalConvenienceStoreOutlined } from '@material-ui/icons';
 import { ErrorMessage } from 'interfaces/errors';
 
-class HTTPRequest {
+class HTTPRequest implements HTTPRequest {
   readonly baseHeaders: HeadersInit = {
     'Content-Type': 'application/json',
   };

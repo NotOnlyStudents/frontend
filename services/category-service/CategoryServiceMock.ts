@@ -2,15 +2,15 @@ import { Category } from 'interfaces/categories/category';
 import CategoryService from './CategoryService';
 
 class CategoryServiceMock implements CategoryService {
-  addCategory(token: string, category: Category): Promise<Category> {
+  addCategory(category: Category): Promise<Category> {
     throw new Error('Method not implemented.');
   }
 
-  editCategory(token: string, id: string, category: Category): Promise<Category> {
+  editCategory(id: string, category: Category): Promise<Category> {
     throw new Error('Method not implemented.');
   }
 
-  removeCategory(token: string, id: string): Promise<void> {
+  removeCategory(id: string): Promise<void> {
     throw new Error('Method not implemented.');
   }
 

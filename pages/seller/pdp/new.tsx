@@ -4,10 +4,7 @@ import React from 'react';
 import HomeIcon from '@material-ui/icons/Home';
 import EMLBreadcrumb from 'components/breadcrumb/EMLBreadcrumb';
 import { Product } from 'interfaces/products/product';
-import { getHomeLink, getLoginLink, getPLPLink } from 'lib/links';
-import { getSignedState } from 'lib/authContext';
-import { withSSRContext } from 'aws-amplify';
-import { SignedState } from 'interfaces/login';
+import { getHomeLink, getPLPLink } from 'lib/links';
 
 function PDPNewPage() {
   const breadcrumbPaths: BreadcrumbPath[] = [
@@ -39,34 +36,6 @@ function PDPNewPage() {
       />
     </>
   );
-}
-
-export async function getServerSideProps(context) {
-  const { Auth } = withSSRContext(context);
-
-  try {
-    const { signInUserSession } = await Auth.currentAuthenticatedUser();
-
-    if (await getSignedState(signInUserSession) === SignedState.Customer) {
-      return {
-        redirect: {
-          destination: getHomeLink(),
-          permanent: false,
-        },
-      };
-    }
-  } catch (error) {
-    return {
-      redirect: {
-        destination: getLoginLink(),
-        permanent: false,
-      },
-    };
-  }
-
-  return {
-    props: { },
-  };
 }
 
 export default PDPNewPage;

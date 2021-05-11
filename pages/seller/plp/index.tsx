@@ -7,10 +7,7 @@ import EMLBreadcrumb from 'components/breadcrumb/EMLBreadcrumb';
 import HomeIcon from '@material-ui/icons/Home';
 import { BreadcrumbPath } from 'interfaces/breadcrumb';
 import PLP from 'components/plp/PLP';
-import { getHomeLink, getLoginLink, getPLPLink } from 'lib/links';
-import { withSSRContext } from 'aws-amplify';
-import { getSignedState } from 'lib/authContext';
-import { SignedState } from 'interfaces/login';
+import NoResultProduct from 'components/noresult/NoResultProduct';
 
 interface Props {
   filters: ProductFilter,
@@ -23,7 +20,7 @@ function PLPSellerPage({
   filters, products, total, error,
 }: Props) {
   const breadcrumbPaths: BreadcrumbPath[] = [
-    { name: 'Home', href: getHomeLink(true), icon: HomeIcon },
+    { name: 'Home', href: '/', icon: HomeIcon },
     { name: 'Product List Page' },
   ];
 
@@ -44,29 +41,7 @@ function PLPSellerPage({
   );
 }
 
-export async function getServerSideProps(context) {
-  const { Auth } = withSSRContext(context);
-  try {
-    const { signInUserSession } = await Auth.currentAuthenticatedUser();
-
-    if (await getSignedState(signInUserSession) === SignedState.Customer) {
-      return {
-        redirect: {
-          destination: getPLPLink(),
-          permanent: false,
-        },
-      };
-    }
-  } catch (error) {
-    return {
-      redirect: {
-        destination: getLoginLink(),
-        permanent: false,
-      },
-    };
-  }
-
-  const { query } = context;
+export async function getServerSideProps({ query }) {
   const filters: ProductFilter = query;
 
   if (query.categories) {

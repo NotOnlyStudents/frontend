@@ -5,9 +5,11 @@ import {
 interface ProductService {
   getAllProduct(params?: ProductFilter): Promise<ProductPaginator>;
   getProductById(id: string): Promise<Product>;
-  createProduct(token: string, product: Product): Promise<Product>;
-  editProduct(token: string, id: string, product: Product): Promise<Product>;
-  deleteProduct(token: string, id: string): Promise<void>;
+  createProduct(product: Product): Promise<Product>;
+  editProduct(id: string, product: Product): Promise<Product>;
+  deleteProduct(id: string): Promise<void>;
+  addToEvidence(id: string): Promise<void>;
+  removeFromEvidence(id: string): Promise<void>;
 }
 
 export default ProductService;

@@ -3,8 +3,13 @@ import {
   Button, Dialog, DialogActions, DialogTitle, IconButton,
 } from '@material-ui/core';
 import { Delete } from '@material-ui/icons';
+import SnackbarDeleteAddressSuccess, {
+  addressDeleteSuccess,
+} from 'components/snackbar/address/SnackbarDeleteAddressSuccess';
+import SnackbarDeleteAddressError, {
+  addressDeleteError,
+} from 'components/snackbar/address/SnackbarDeleteAddressError';
 import AddressService from 'services/address-service';
-import { Snackbars, useSnackbarContext } from 'lib/SnackbarContext';
 
 interface Props {
   id: string,
@@ -13,18 +18,36 @@ interface Props {
 }
 
 function AddressRemove({ id, token, onRemove }: Props) {
-  const { openSnackbar } = useSnackbarContext();
-
   const [openModal, setOpenModal] = React.useState(false);
+
+  const [alert, setAlert] = React.useState({
+    [addressDeleteSuccess]: false,
+    [addressDeleteError]: false,
+  });
+
+  const changeAlert = (alertId: string, show: boolean) => {
+    const newAlert = { ...alert };
+
+    newAlert[alertId] = show;
+
+    setAlert(newAlert);
+  };
+
+  const openAlert = (alertId: string) => {
+    changeAlert(alertId, true);
+  };
+  const closeAlert = (alertId: string) => {
+    changeAlert(alertId, false);
+  };
 
   const handleRemoveProduct = async () => {
     try {
       await (new AddressService()).deleteAddress(token, id);
 
-      openSnackbar(Snackbars.addressDeleteSuccessId);
+      openAlert(addressDeleteSuccess);
       onRemove();
     } catch (error) {
-      openSnackbar(Snackbars.addressDeleteErrorId);
+      openAlert(addressDeleteError);
     } finally {
       setOpenModal(false);
     }
@@ -50,6 +73,16 @@ function AddressRemove({ id, token, onRemove }: Props) {
       <IconButton color="primary" onClick={() => { setOpenModal(true); }}>
         <Delete />
       </IconButton>
+
+      <SnackbarDeleteAddressSuccess
+        open={alert[addressDeleteSuccess]}
+        handleClose={closeAlert}
+      />
+
+      <SnackbarDeleteAddressError
+        open={alert[addressDeleteError]}
+        handleClose={closeAlert}
+      />
     </>
   );
 }

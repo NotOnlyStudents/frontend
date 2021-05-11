@@ -10,7 +10,6 @@ export function productToPLPProductItem(
     image: product.images[0],
     evidence: product.evidence,
     discount: product.discount,
-    discountedPrice: product.discountedPrice,
     quantity: product.quantity as number,
   };
 }
@@ -24,7 +23,6 @@ export function productToCartProduct(
     price: product.price,
     image: product.images[0],
     discount: 0,
-    discountedPrice: product.discountedPrice ? product.discountedPrice : 0,
     quantity: product.quantity as number,
   };
 }

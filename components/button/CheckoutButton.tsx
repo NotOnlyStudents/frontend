@@ -5,18 +5,14 @@ import React from 'react';
 import CartService from 'services/cart-service';
 import CartServiceType from 'services/cart-service/CartService';
 import { CartToken } from 'interfaces/cart/cart-request';
-import PaymentIcon from '@material-ui/icons/Payment';
 
 const stripePromise = loadStripe('pk_test_51IHqhuEKthtArr3S4MYSAYFEPiFlioccyA4SjUNArmmdSmK7B05UnMdsNKIu0TCRXADZLVmjEUlqKRIR4D2SWtJ700PVmechEl');
 
-interface Props {
-  disable?: boolean
-}
-
-function CheckoutButton({ disable }: Props) {
+export default function CheckoutButton({ cartID }: { cartID: string }) {
   const handleClick = async () => {
   // Get Stripe.js instance
     const stripe = await stripePromise;
+    console.log(cartID);
     console.log(stripe);
     // Call your backend to create the Checkout Session
     // const response =
@@ -84,16 +80,8 @@ function CheckoutButton({ disable }: Props) {
       color="primary"
       variant="contained"
       onClick={handleClick}
-      disabled={disable}
-      startIcon={<PaymentIcon />}
     >
       Checkout
     </Button>
   );
 }
-
-CheckoutButton.defaultProps = {
-  disable: false,
-};
-
-export default CheckoutButton;

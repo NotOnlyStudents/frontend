@@ -16,16 +16,16 @@ import CartList from 'components/cart/cartList';
 import { ExpandLess, ExpandMore, LensTwoTone } from '@material-ui/icons';
 import { withSSRContext } from 'aws-amplify';
 import { AuthState } from '@aws-amplify/ui-components';
-import AuthContextProvider, { AuthContext, getSignedState, useAuthContext } from 'lib/authContext';
+import AuthContextProvider, { AuthContext, useAuthContext } from 'lib/authContext';
 import { getCartLink, getHomeLink, getLoginLink } from 'lib/links';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import CheckoutButton from 'components/button/CheckoutButton';
-import { SignedState } from 'interfaces/login';
 
 interface Props {
   cart: Cart,
   addresses?: Address[],
-  token?: string
+  token?: string,
+  username: string
 }
 
 interface State {
@@ -41,6 +41,8 @@ class PaymentPage extends React.Component<Props, State> {
     { name: 'Cart', href: getCartLink(), icon: ShoppingCartIcon },
     { name: 'Payment' },
   ];
+
+  // context: React.ContextType<typeof AuthContext>;
 
   constructor(props: Props) {
     super(props);
@@ -68,11 +70,6 @@ class PaymentPage extends React.Component<Props, State> {
       }
       return newState;
     });
-  };
-
-  disableCheckoutButton = () => {
-    const { addresses } = this.state;
-    return addresses.length === 0;
   };
 
   handleExpandClick = () => {
@@ -123,7 +120,7 @@ class PaymentPage extends React.Component<Props, State> {
           </IconButton>
         </Box>
         <Collapse in={expanded} timeout="auto" unmountOnExit>
-          <CartList products={cart.products} payment />
+          <CartList items={cart.products} payment />
         </Collapse>
         <AddressList
           addresses={addresses}
@@ -143,7 +140,7 @@ class PaymentPage extends React.Component<Props, State> {
           margin="normal"
         />
         <Box width="100%" display="flex" justifyContent="flex-end">
-          <CheckoutButton disable={this.disableCheckoutButton()} />
+          <CheckoutButton cartID={username} />
         </Box>
       </>
     );
@@ -153,45 +150,32 @@ class PaymentPage extends React.Component<Props, State> {
 PaymentPage.contextType = AuthContext;
 
 export async function getServerSideProps(context) {
-  let products;
-  let addresses;
+  let products = [];
+  let addresses = [];
   let token: string = null;
   const { Auth } = withSSRContext(context);
+  let state;
+  let username;
 
   try {
-    const { signInUserSession } = await Auth.currentAuthenticatedUser();
-
-    const signedState = await getSignedState(signInUserSession);
-
-    if (signedState === SignedState.Seller) {
-      return {
-        redirect: {
-          destination: getHomeLink(true),
-          permanent: false,
-        },
-      };
-    }
-
-    token = signInUserSession.idToken.jwtToken;
-
+    const user = await Auth.currentAuthenticatedUser();
+    token = user.signInUserSession.idToken.jwtToken;
+    username = user.getUsername();
+    state = AuthState.SignIn;
     try {
       addresses = await (new AddressService()).getAllAddress(token);
     } catch (error) {
-      addresses = [];
-    }
-
-    try {
-      products = await (new CartService()).getCartProducts(token);
-    } catch (error) {
-      products = [];
+      console.error(error);
     }
   } catch (e) {
-    return {
-      redirect: {
-        destination: getLoginLink(),
-        permanent: false,
-      },
-    };
+    console.error(e);
+    state = AuthState.SignedOut;
+    username = '';
+  }
+  try {
+    products = await (new CartService()).getCartProducts(token);
+  } catch (error) {
+    console.log(error);
   }
 
   return {
@@ -200,6 +184,8 @@ export async function getServerSideProps(context) {
       cart: {
         products,
       },
+      authState: state,
+      username,
       token,
     },
   };

@@ -3,7 +3,6 @@ import {
 } from '@material-ui/core';
 import { createStyles, makeStyles, withStyles } from '@material-ui/styles';
 import { BreadcrumbPath } from 'interfaces/breadcrumb';
-import { useRouter } from 'next/router';
 import React from 'react';
 import theme from 'styles/theme';
 
@@ -15,14 +14,11 @@ const useStyles = makeStyles({
   link: {
     display: 'flex',
     color: 'inherit',
-    cursor: 'pointer',
   },
 });
 
 function EMLBreadcrumb({ paths } : Props) {
   const classes = useStyles();
-  const router = useRouter();
-
   const iconTheme = {
     root: {
       marginRight: theme.spacing(0.5),
@@ -49,11 +45,7 @@ function EMLBreadcrumb({ paths } : Props) {
       const Icon = renderIconIfPresent(path.icon);
 
       return (
-        <Link
-          key={path.href}
-          className={classes.link}
-          onClick={() => { router.push(path.href); }}
-        >
+        <Link key={path.href} className={classes.link} href={path.href}>
           <Icon />
           { path.name }
         </Link>

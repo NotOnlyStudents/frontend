@@ -18,48 +18,36 @@ class CategoryServiceFetch implements CategoryService {
     return res.data;
   };
 
-  addCategory = async (token: string, category: Category): Promise<Category> => {
+  addCategory = async (category: Category): Promise<Category> => {
     const req: HTTPRequest = new HTTPRequest(
       process.env.NEXT_PUBLIC_PRODUCTS_CATEGORIES_SERVICE_URL, 'categories',
     );
 
     const body: string = JSON.stringify(category);
 
-    const headers = {
-      Authorization: `Bearer ${token}`,
-    };
-
-    const res: CreateCategoryRequest = await req.post<CreateCategoryRequest>(body, headers);
+    const res: CreateCategoryRequest = await req.post<CreateCategoryRequest>(body);
 
     return res.data;
   };
 
-  editCategory = async (token: string, id: string, category: Category): Promise<Category> => {
+  editCategory = async (id: string, category: Category): Promise<Category> => {
     const req: HTTPRequest = new HTTPRequest(
       process.env.NEXT_PUBLIC_PRODUCTS_CATEGORIES_SERVICE_URL, `categories/${id}`,
     );
 
     const body: string = JSON.stringify(category);
 
-    const headers = {
-      Authorization: `Bearer ${token}`,
-    };
-
-    const res: EditCategoryRequest = await req.patch<EditCategoryRequest>(body, headers);
+    const res: EditCategoryRequest = await req.patch<EditCategoryRequest>(body);
 
     return res.data;
   };
 
-  removeCategory = async (token: string, id: string): Promise<void> => {
+  removeCategory = async (id: string): Promise<void> => {
     const req: HTTPRequest = new HTTPRequest(
       process.env.NEXT_PUBLIC_PRODUCTS_CATEGORIES_SERVICE_URL, `categories/${id}`,
     );
 
-    const headers = {
-      Authorization: `Bearer ${token}`,
-    };
-
-    await req.delete<RemoveCategoryRequest>('', headers);
+    await req.delete<RemoveCategoryRequest>();
   };
 }
 

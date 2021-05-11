@@ -6,6 +6,10 @@ import ProductService from 'services/product-service';
 import HomeIcon from '@material-ui/icons/Home';
 import EMLBreadcrumb from 'components/breadcrumb/EMLBreadcrumb';
 import { BreadcrumbPath } from 'interfaces/breadcrumb';
+import { getHomeLink, getPLPLink, getViewProductLink } from 'lib/links';
+import { withSSRContext } from 'aws-amplify';
+import { getSignedState } from 'lib/authContext';
+import { SignedState } from 'interfaces/login';
 
 interface Props {
   product: Product
@@ -13,8 +17,8 @@ interface Props {
 
 function PDPPage({ product }: Props) {
   const breadcrumbPaths: BreadcrumbPath[] = [
-    { name: 'Home', href: '/', icon: HomeIcon },
-    { name: 'Product List Page', href: '/plp' },
+    { name: 'Home', href: getHomeLink(), icon: HomeIcon },
+    { name: 'Product List Page', href: getPLPLink() },
     { name: product.name },
   ];
 
@@ -31,7 +35,24 @@ function PDPPage({ product }: Props) {
   );
 }
 
-export async function getServerSideProps({ query }) {
+export async function getServerSideProps(context) {
+  const { Auth } = withSSRContext(context);
+  const { query } = context;
+
+  try {
+    const { signInUserSession } = await Auth.currentAuthenticatedUser();
+    const signedState = await getSignedState(signInUserSession);
+
+    if (signedState === SignedState.Seller) {
+      return {
+        redirect: {
+          destination: getViewProductLink(query.id, true),
+          permanent: false,
+        },
+      };
+    }
+  } catch (e) { }
+
   let product;
 
   try {

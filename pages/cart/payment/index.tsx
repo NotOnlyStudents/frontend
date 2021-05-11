@@ -13,11 +13,19 @@ import {
 } from '@material-ui/core';
 import CartService from 'services/cart-service';
 import CartList from 'components/cart/cartList';
-import { ExpandLess, ExpandMore } from '@material-ui/icons';
+import { ExpandLess, ExpandMore, LensTwoTone } from '@material-ui/icons';
+import { withSSRContext } from 'aws-amplify';
+import { AuthState } from '@aws-amplify/ui-components';
+import AuthContextProvider, { AuthContext, getSignedState, useAuthContext } from 'lib/authContext';
+import { getCartLink, getHomeLink, getLoginLink } from 'lib/links';
+import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
+import CheckoutButton from 'components/button/CheckoutButton';
+import { SignedState } from 'interfaces/login';
 
 interface Props {
   cart: Cart,
-  addresses: Address[];
+  addresses?: Address[],
+  token?: string
 }
 
 interface State {
@@ -29,19 +37,18 @@ interface State {
 
 class PaymentPage extends React.Component<Props, State> {
   breadcrumbPaths: BreadcrumbPath[] = [
-    { name: 'Home', href: '/', icon: HomeIcon },
-    { name: 'Cart', href: '/cart' },
+    { name: 'Home', href: getHomeLink(), icon: HomeIcon },
+    { name: 'Cart', href: getCartLink(), icon: ShoppingCartIcon },
     { name: 'Payment' },
   ];
 
   constructor(props: Props) {
     super(props);
-
     this.state = {
       cart: props.cart,
       addresses: props.addresses,
       selectedAddress: 0,
-      expandend: false,
+      expanded: true,
     };
   }
 
@@ -63,19 +70,32 @@ class PaymentPage extends React.Component<Props, State> {
     });
   };
 
+  disableCheckoutButton = () => {
+    const { addresses } = this.state;
+    return addresses.length === 0;
+  };
+
   handleExpandClick = () => {
     this.setState({ expanded: !this.state.expanded });
   };
 
-  handleChangeAddress = (value: number) => {
+  handleChangeSelectedAddress = (value: number) => {
     this.setState({ selectedAddress: value });
   };
 
-  handleAddAddress = (address: Address) => {
+  handleChangeAddress = (address: Address, index: number = -1) => {
     this.setState((state: State) => {
       const newState: State = state;
 
-      newState.addresses.push(address);
+      if (index >= 0) {
+        newState.addresses[index] = address;
+      } else {
+        if (!newState.addresses.length) {
+          newState.selectedAddress = 0;
+        }
+
+        newState.addresses.push(address);
+      }
 
       return newState;
     });
@@ -85,27 +105,33 @@ class PaymentPage extends React.Component<Props, State> {
     const {
       addresses, selectedAddress, cart, expanded,
     } = this.state;
+
+    const { token } = this.props;
+
     return (
       <>
         <Head>
           <title>Payment | EmporioLambda</title>
         </Head>
         <EMLBreadcrumb paths={this.breadcrumbPaths} />
-        <Typography>
-          Cart Products
+        <Box display="flex" justifyContent="space-between" alignItems="center">
+          <Typography>
+            Cart Products
+          </Typography>
           <IconButton onClick={this.handleExpandClick} aria-expanded={expanded} aria-label="show more">
             {expanded ? <ExpandLess /> : <ExpandMore />}
           </IconButton>
-        </Typography>
+        </Box>
         <Collapse in={expanded} timeout="auto" unmountOnExit>
-          <CartList items={cart.products} payment />
+          <CartList products={cart.products} payment />
         </Collapse>
         <AddressList
           addresses={addresses}
           selectedAddress={selectedAddress}
-          handleChangeIndex={this.handleChangeAddress}
-          handleAddNewAddress={this.handleAddAddress}
+          handleChangeIndex={this.handleChangeSelectedAddress}
+          handleChangeAddress={this.handleChangeAddress}
           handleRemoveOneAddress={this.handleRemoveAddress}
+          token={token}
         />
         <TextField
           id="description"
@@ -117,39 +143,64 @@ class PaymentPage extends React.Component<Props, State> {
           margin="normal"
         />
         <Box width="100%" display="flex" justifyContent="flex-end">
-          <Button
-            variant="contained"
-            color="primary"
-            href="/"
-          >
-            Checkout
-          </Button>
-
+          <CheckoutButton disable={this.disableCheckoutButton()} />
         </Box>
       </>
     );
   }
 }
 
-export async function getServerSideProps() {
-  let addresses = [];
-  let products = [];
+PaymentPage.contextType = AuthContext;
+
+export async function getServerSideProps(context) {
+  let products;
+  let addresses;
+  let token: string = null;
+  const { Auth } = withSSRContext(context);
+
   try {
-    addresses = await (new AddressService()).getAllAddress();
-  } catch (error) {
-    console.error(error);
+    const { signInUserSession } = await Auth.currentAuthenticatedUser();
+
+    const signedState = await getSignedState(signInUserSession);
+
+    if (signedState === SignedState.Seller) {
+      return {
+        redirect: {
+          destination: getHomeLink(true),
+          permanent: false,
+        },
+      };
+    }
+
+    token = signInUserSession.idToken.jwtToken;
+
+    try {
+      addresses = await (new AddressService()).getAllAddress(token);
+    } catch (error) {
+      addresses = [];
+    }
+
+    try {
+      products = await (new CartService()).getCartProducts(token);
+    } catch (error) {
+      products = [];
+    }
+  } catch (e) {
+    return {
+      redirect: {
+        destination: getLoginLink(),
+        permanent: false,
+      },
+    };
   }
-  try {
-    products = await (new CartService()).getCartProducts();
-  } catch (error) {
-    console.log(error);
-  }
+
   return {
     props: {
       addresses,
       cart: {
         products,
       },
+      token,
     },
   };
 }

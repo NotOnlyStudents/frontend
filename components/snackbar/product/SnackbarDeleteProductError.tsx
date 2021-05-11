@@ -1,23 +1,19 @@
 import React from 'react';
 import EMLSnackbar, { CustomSnackbarProps } from '../EMLSnackbar';
 
-export const productDeleteError = 'product_delete_error';
-
-interface Props extends CustomSnackbarProps {
-  productName: string
-}
+export const productDeleteErrorId = 'product_delete_error';
 
 function SnackbarDeleteProductError({
-  productName, open, handleClose,
-}: Props) {
+  open, handleClose,
+}: CustomSnackbarProps) {
   return (
     <EMLSnackbar
-      id={productDeleteError}
+      id={productDeleteErrorId}
       open={open}
       severity="error"
       handleClose={handleClose}
     >
-      {`An error occured deleting ${productName}`}
+      An error occured deleting the selected product
     </EMLSnackbar>
   );
 }

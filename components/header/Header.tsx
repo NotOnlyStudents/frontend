@@ -13,15 +13,12 @@ import SearchIcon from '@material-ui/icons/Search';
 import Router, { NextRouter, useRouter } from 'next/router';
 import LogoIcon from 'components/icons/LogoIcon';
 import { getHomeLink, getPLPLink } from 'lib/links';
+import { SignedState } from 'interfaces/login';
+import Auth from '@aws-amplify/auth';
+import { useAuthContext } from 'lib/authContext';
 import HeaderNotAuthenticated from './HeaderNotAuthenticated';
 import HeaderSeller from './HeaderSeller';
 import HeaderCustomer from './HeaderCustomer';
-import HeaderSwitch from './HeaderSwitch';
-
-interface Props {
-  authState: AuthState;
-  username: string | undefined;
-}
 
 const useStyles = makeStyles((theme: Theme) => ({
   container: {
@@ -32,6 +29,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     alignItems: 'center',
     color: 'white',
+    cursor: 'pointer',
     '&:hover': {
       textDecoration: 'none',
     },
@@ -78,21 +76,20 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-function Header({ authState, username }: Props): React.ReactElement {
-  //const sellerUsername = 'seller';
+function Header(): React.ReactElement {
   const classes = useStyles();
   const router: NextRouter = useRouter();
 
+  const { signedState } = useAuthContext();
+
   const [searchText, setSearchText] = useState(router.query.text || '');
 
-
-
-  const handleSearchEnter = (
+  const handleSearchEnter = async (
     event: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     if (event.key === 'Enter') {
       const newPage = {
-        pathname: getPLPLink(),
+        pathname: getPLPLink(signedState === SignedState.Seller),
         query: router.query,
       };
 
@@ -104,9 +101,25 @@ function Header({ authState, username }: Props): React.ReactElement {
 
       delete newPage.query.offset;
 
-      router.push(newPage);
+      await router.push(newPage);
+      router.reload();
+    }
+  };
 
-      setTimeout(() => { router.reload(); }, 1000);
+  const renderHeaderIcons = () => {
+    switch (signedState) {
+      case SignedState.Seller: {
+        return <HeaderSeller />;
+      }
+      case SignedState.Customer: {
+        return <HeaderCustomer />;
+      }
+      case SignedState.NotAuthenticated: {
+        return <HeaderNotAuthenticated />;
+      }
+      default: {
+        return <></>;
+      }
     }
   };
 
@@ -114,7 +127,10 @@ function Header({ authState, username }: Props): React.ReactElement {
     <AppBar position="sticky">
       <Toolbar className={classes.container}>
         <Typography variant="h6" component="h1">
-          <Link className={classes.link} href={getHomeLink()}>
+          <Link
+            className={classes.link}
+            onClick={() => { router.push(getHomeLink(signedState === SignedState.Seller)); }}
+          >
             <LogoIcon />
             EmporioLambda
           </Link>
@@ -137,9 +153,7 @@ function Header({ authState, username }: Props): React.ReactElement {
             />
           </div>
         </div>
-        <div>
-          <HeaderSwitch />
-        </div>
+        { renderHeaderIcons() }
       </Toolbar>
     </AppBar>
   );

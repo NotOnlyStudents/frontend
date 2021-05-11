@@ -1,5 +1,5 @@
 import CartList from 'components/cart/cartList';
-import CartService from 'services/cart-service/CartServiceMock';
+import CartService from 'services/cart-service/CartServiceFetch';
 import { BreadcrumbPath } from 'interfaces/breadcrumb';
 import EMLBreadcrumb from 'components/breadcrumb/EMLBreadcrumb';
 import HomeIcon from '@material-ui/icons/Home';
@@ -8,20 +8,21 @@ import Head from 'next/head';
 import { Typography } from '@material-ui/core';
 import NoProductInCart from 'components/noresult/NoProductsInCart';
 import { Cart } from 'interfaces/cart/cart';
+import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
+import { getHomeLink } from 'lib/links';
+import { withSSRContext } from 'aws-amplify';
+import { getSignedState } from 'lib/authContext';
+import { SignedState } from 'interfaces/login';
 
 interface Props {
   cart: Cart;
 }
 
 function cartPage({ cart }: Props) {
-  const breadcrumbPaths:BreadcrumbPath[] = [
-    { name: 'Home', href: '/', icon: HomeIcon },
+  const breadcrumbPaths: BreadcrumbPath[] = [
+    { name: 'Home', href: getHomeLink(), icon: HomeIcon },
     { name: 'Cart' },
   ];
-
-  const renderCartList = () => (cart.products.length !== 0
-    ? <CartList items={cart.products} />
-    : <NoProductInCart />);
 
   return (
     <>
@@ -32,19 +33,36 @@ function cartPage({ cart }: Props) {
       <Typography variant="h4" component="h2">
         Your cart
       </Typography>
-      { renderCartList() }
+      <CartList products={cart.products} />
     </>
   );
 }
 
-export async function getServerSideProps() {
+export async function getServerSideProps(context) {
   let products = [];
+  const { Auth } = withSSRContext(context);
 
   try {
-    products = await (new CartService()).getCartProducts();
-  } catch (error) {
-    console.log(error);
-  }
+    const { signInUserSession } = await Auth.currentAuthenticatedUser();
+    const token = signInUserSession.idToken.jwtToken;
+
+    const signedState = await getSignedState(signInUserSession);
+
+    if (signedState === SignedState.Seller) {
+      return {
+        redirect: {
+          destination: getHomeLink(true),
+          permanent: false,
+        },
+      };
+    }
+
+    try {
+      products = await new CartService().getCartProducts(token);
+    } catch (error) {
+      products = [];
+    }
+  } catch { console.log('There was a problem with servers'); }
 
   return {
     props: {

@@ -3,7 +3,7 @@ import faker from 'faker';
 import AddressService from './AddressService';
 
 class AddressServiceMock implements AddressService {
-  getAllAddress = async (): Promise<Address[]> => (
+  getAllAddress = async (token): Promise<Address[]> => (
     (new Array(4)).fill(0)).map(
     (): Address => ({
       id: faker.datatype.uuid(),
@@ -15,7 +15,7 @@ class AddressServiceMock implements AddressService {
     ),
   );
 
-  getAddressById = async (id: string): Promise<Address> => ({
+  getAddressById = async (token, id: string): Promise<Address> => ({
     id: faker.datatype.uuid(),
     nation: faker.address.country(),
     city: faker.address.city(),
@@ -23,19 +23,19 @@ class AddressServiceMock implements AddressService {
     cap: parseFloat(faker.address.zipCode()),
   });
 
-  createAddress = async (address: Address): Promise<Address> => ({
+  createAddress = async (token, address: Address): Promise<Address> => ({
     id: faker.datatype.uuid(),
     ...address,
   });
 
-  editAddress = async (id: string, address: Address): Promise<Address> => ({
+  editAddress = async (token, id: string, address: Address): Promise<Address> => ({
     id,
     ...address,
   });
 
-  deleteAddress = (id: string): Promise<void> => ({
+  deleteAddress = async (token, id: string): Promise<void> => {
 
-  });
+  };
 }
 
 export default AddressServiceMock;

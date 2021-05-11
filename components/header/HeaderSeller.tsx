@@ -1,60 +1,75 @@
 import React from 'react';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
-import { Button, IconButton, makeStyles } from '@material-ui/core';
-import HeaderMenuMobile from './HeaderMenuMobile';
 import AddProductIcon from 'components/icons/AddProductIcon';
 import PLPIcon from 'components/icons/PLPIcon';
-import HeaderMobileLink from './HeaderMobileLink';
 import ListAltIcon from '@material-ui/icons/ListAlt';
+import {
+  getCategoriesLink, getHomeLink, getNewProductLink, getPersonalAreaLink, getPLPLink,
+} from 'lib/links';
+import { useRouter } from 'next/router';
+import { Auth } from 'aws-amplify';
+import { useAuthContext } from 'lib/authContext';
+import { SignedState } from 'interfaces/login';
+import HeaderMobileLink from './links/HeaderMobileLink';
+import HeaderMenuMobile from './HeaderMenuMobile';
+import HeaderDesktopLink from './links/HeaderDesktopLink';
 
-const useStyles = makeStyles({
-  desktopIcon: {
-    color: 'white',
-  },
-});
+function HeaderSeller() : React.ReactElement {
+  const router = useRouter();
+  const { setSignedState } = useAuthContext();
 
-function HeaderSeller({signOut}) : React.ReactElement {
-  const classes = useStyles();
+  const handleSignOut = async () => {
+    try {
+      await Auth.signOut();
+      router.push(getHomeLink());
+
+      setSignedState(SignedState.NotAuthenticated);
+    } catch (error) {
+      console.log('error signing out: ', error);
+    }
+  };
 
   return (
     <>
       <HeaderMenuMobile
         desktopMenu={[
-          <IconButton className={classes.desktopIcon} href='/seller/pdp/new'>
+          <HeaderDesktopLink onClick={() => { router.push(getNewProductLink()); }}>
             <AddProductIcon aria-label="Add product" />
-          </IconButton>,
-          <IconButton className={classes.desktopIcon} href="/seller/plp">
-            <PLPIcon aria-label="Plp" />
-          </IconButton>,
-          <IconButton className={classes.desktopIcon} href="/seller/categories">
+          </HeaderDesktopLink>,
+          <HeaderDesktopLink onClick={() => { router.push(getPLPLink(true)); }}>
+            <PLPIcon aria-label="Product list page" />
+          </HeaderDesktopLink>,
+          <HeaderDesktopLink onClick={() => { router.push(getCategoriesLink()); }}>
             <ListAltIcon aria-label="Categories" />
-          </IconButton>,
-          <IconButton className={classes.desktopIcon} href="/users/personalArea">
+          </HeaderDesktopLink>,
+          <HeaderDesktopLink
+            onClick={() => { router.push(getPersonalAreaLink(true)); }}
+          >
             <AccountCircleIcon aria-label="Your personal area" />
-          </IconButton>,
-          <IconButton onClick={signOut} className={classes.desktopIcon}>
+          </HeaderDesktopLink>,
+          <HeaderDesktopLink onClick={handleSignOut}>
             <ExitToAppIcon aria-label="logout" />
-          </IconButton>,
+          </HeaderDesktopLink>,
         ]}
         mobileMenu={[
-          <HeaderMobileLink href='/seller/pdp/new'>
+          <HeaderMobileLink onClick={() => { router.push(getNewProductLink()); }}>
             <AddProductIcon />
             Add product
           </HeaderMobileLink>,
-          <HeaderMobileLink href='/seller/plp'>
-          <PLPIcon />
-          Plp
-        </HeaderMobileLink>,
-         <HeaderMobileLink href='/seller/categories'>
-         <ListAltIcon />
-         Categories
-        </HeaderMobileLink>,
-          <HeaderMobileLink href="/users/personalArea">
+          <HeaderMobileLink onClick={() => { router.push(getPLPLink(true)); }}>
+            <PLPIcon />
+            Product List Page
+          </HeaderMobileLink>,
+          <HeaderMobileLink onClick={() => { router.push(getCategoriesLink()); }}>
+            <ListAltIcon />
+            Categories
+          </HeaderMobileLink>,
+          <HeaderMobileLink onClick={() => { router.push(getPersonalAreaLink(true)); }}>
             <AccountCircleIcon aria-label="Your personal area" />
             Personal Area
           </HeaderMobileLink>,
-          <HeaderMobileLink onClick={signOut}>
+          <HeaderMobileLink onClick={handleSignOut}>
             <ExitToAppIcon aria-label="logout" />
             Logout
           </HeaderMobileLink>,

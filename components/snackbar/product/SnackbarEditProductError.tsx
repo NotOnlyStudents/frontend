@@ -1,21 +1,21 @@
 import React from 'react';
 import EMLSnackbar, { CustomSnackbarProps } from '../EMLSnackbar';
 
-export const maxPriceLowerMinPrice = 'max_price_lower_min_price';
+export const productEditErrorId = 'product_edit_error';
 
-function SnackbarMaxPriceLowerMinPrice({
+function SnackbarEditProductError({
   open, handleClose,
 }: CustomSnackbarProps) {
   return (
     <EMLSnackbar
-      id={maxPriceLowerMinPrice}
+      id={productEditErrorId}
       open={open}
       severity="error"
       handleClose={handleClose}
     >
-      Max price cannot be lower than min price
+      An error occured editing the selected product
     </EMLSnackbar>
   );
 }
 
-export default SnackbarMaxPriceLowerMinPrice;
+export default SnackbarEditProductError;

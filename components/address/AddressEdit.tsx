@@ -7,39 +7,42 @@ import CheckIcon from '@material-ui/icons/Check';
 import TextFieldValidation from 'components/validation/TextFieldValidation';
 import AddressService from 'services/address-service';
 import AddressServiceType from 'services/address-service/AddressService';
-import SnackbarAddressNotValid, { addressNotValidId } from 'components/snackbar/address/SnackbarAddressNotValid';
 import { Address, AddressValidation } from 'interfaces/address/address';
-
-interface AlertState {
-  [key: string]: boolean
-}
+import { SnackbarContext, Snackbars } from 'lib/SnackbarContext';
 
 interface Props {
-  address: Address;
-  creation?: boolean;
-  handleChangeAddresses?: (addresses?: Address) => void,
-  handleAddAddress?: (add?: Address) => void,
+  address?: Address,
+  creation?: boolean,
+  index?: number,
+  handleChangeAddress: (address: Address, index: number) => void,
+  handleCloseDialog: () => void,
+  token: string
 }
 
 interface State {
   address: Address;
   validation: AddressValidation;
-  alert: AlertState;
 }
 
 class AddressEdit extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
 
+    const emptyAddress: Address = {
+      nation: '',
+      city: '',
+      address: '',
+      cap: 0,
+    };
+
     this.state = {
-      address: props.address,
+      address: props.address || emptyAddress,
       validation: {
         nation: false,
         city: false,
         address: false,
         cap: false,
       },
-      alert: { [addressNotValidId]: false },
     };
   }
 
@@ -63,11 +66,11 @@ class AddressEdit extends React.Component<Props, State> {
     });
   };
 
-  handleChangeCap = (cap: number) => {
+  handleChangeCap = (cap: string) => {
     this.setState((state: State) => {
       const newState = state;
 
-      newState.address.cap = cap;
+      newState.address.cap = parseInt(cap);
 
       return newState;
     });
@@ -101,50 +104,48 @@ class AddressEdit extends React.Component<Props, State> {
     );
   };
 
-  handleCloseAlert = (id: string) => {
-    this.setState((state: State) => {
-      const newState: State = state;
-
-      newState.alert[id] = false;
-
-      return newState;
-    });
-  };
-
   handleClickCancel = () => {
-    if (this.props.creation) {
-      this.props.handleAddAddress();
-    } else {
-      this.props.handleChangeAddresses();
-    }
+    this.props.handleCloseDialog();
   };
 
   handleClickSave = async () => {
+    const { openSnackbar } = this.context;
+
     if (this.checkValidation()) {
       const { address } = this.state;
+      const { token, index, creation } = this.props;
 
       let newAddress: Address;
 
-      const ps: AddressServiceType = new AddressService();
+      const addressService: AddressServiceType = new AddressService();
 
-      if (address.id) {
-        newAddress = await ps.editAddress(address.id, address);
+      if (creation) {
+        delete address.id;
+        try {
+          newAddress = await addressService.createAddress(token, address);
+          this.props.handleChangeAddress(newAddress, -1);
+          openSnackbar(Snackbars.addressCreateSuccessId);
+        } catch (e) {
+          openSnackbar(Snackbars.addressCreateErrorId);
+        }
       } else {
-        newAddress = await ps.createAddress(address);
+        try {
+          newAddress = await addressService.editAddress(token, address.id, address);
+          this.props.handleChangeAddress(newAddress, index);
+          openSnackbar(Snackbars.addressEditSuccessId);
+        } catch (e) {
+          openSnackbar(Snackbars.addressEditErrorId);
+        }
       }
 
-      if (this.props.creation) {
-        this.props.handleAddAddress(newAddress);
-      } else {
-        this.props.handleChangeAddresses(newAddress);
-      }
+      this.props.handleCloseDialog();
     } else {
-      this.setState({ alert: { [addressNotValidId]: true } });
+      openSnackbar(Snackbars.addressNotValidId);
     }
   };
 
   render() {
-    const { address, validation, alert } = this.state;
+    const { address, validation } = this.state;
     const { creation } = this.props;
     return (
       <Card id={address.id}>
@@ -218,12 +219,11 @@ class AddressEdit extends React.Component<Props, State> {
             Save
           </Button>
         </CardActions>
-        <SnackbarAddressNotValid
-          open={alert[addressNotValidId]}
-          handleClose={this.handleCloseAlert}
-        />
       </Card>
     );
   }
 }
+
+AddressEdit.contextType = SnackbarContext;
+
 export default AddressEdit;

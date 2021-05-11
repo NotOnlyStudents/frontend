@@ -1,4 +1,4 @@
-import { PLPProductItem, Product } from './product';
+import { CartProduct, PLPProductItem, Product } from './product';
 
 export function productToPLPProductItem(
   product: Product,
@@ -10,6 +10,21 @@ export function productToPLPProductItem(
     image: product.images[0],
     evidence: product.evidence,
     discount: product.discount,
-    quantity: product.quantity,
+    discountedPrice: product.discountedPrice,
+    quantity: product.quantity as number,
+  };
+}
+
+export function productToCartProduct(
+  product: Product,
+): CartProduct {
+  return {
+    id: product.id,
+    name: product.name,
+    price: product.price,
+    image: product.images[0],
+    discount: 0,
+    discountedPrice: product.discountedPrice ? product.discountedPrice : 0,
+    quantity: product.quantity as number,
   };
 }

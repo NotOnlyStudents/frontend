@@ -39,7 +39,7 @@ function ImagesUploader({
   );
 
   const renderErrorMessage = () : React.ReactElement => (
-    <Typography color="primary">
+    <Typography color="secondary">
       Must insert at least one pic
     </Typography>
   );
@@ -58,7 +58,6 @@ function ImagesUploader({
             ? renderErrorMessage()
             : renderUploadedImages()
         }
-        {}
       </Box>
       <Box display="flex" justifyContent="flex-end">
         <label htmlFor="images-picker">

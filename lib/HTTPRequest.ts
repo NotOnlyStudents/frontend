@@ -1,35 +1,36 @@
-
 import { ErrorMessage } from 'interfaces/errors';
 
-class HTTPRequest implements HTTPRequest {
+class HTTPRequest {
   readonly baseHeaders: HeadersInit = {
     'Content-Type': 'application/json',
   };
 
   readonly url: string;
 
-  constructor(serviceName: string) {
-    this.url = `${process.env.NEXT_PUBLIC_BASE_URL}/${serviceName}`;
+  constructor(baseURL: string, serviceName: string) {
+    this.url = `${baseURL}/${serviceName}`;
   }
 
   async get<T>(params: string = '', headers: HeadersInit = {}): Promise<T> { // Request data
+    if (params) { params = `?${params}`; }
+
     const req: Response = await fetch(this.url + params, {
       headers: {
         ...this.baseHeaders,
-        'Access-Control-Allow-Origin': '*',
         ...headers,
       },
     });
 
     let res: T;
 
-    if (req.status === 200) {
-      res = await req.json();
+    if (req.status >= 200 && req.status < 300) {
+      if (req.status !== 204) {
+        res = await req.json();
+      }
     } else {
       const errorRes: ErrorMessage = await req.json();
       throw new Error(errorRes.message);
     }
-
 
     return res;
   }
@@ -41,20 +42,20 @@ class HTTPRequest implements HTTPRequest {
         ...headers,
       },
 
-
       method: 'POST',
       body: data,
     });
 
     let res: T;
 
-    if (req.status === 200) {
-      res = await req.json();
+    if (req.status >= 200 && req.status < 300) {
+      if (req.status !== 204) {
+        res = await req.json();
+      }
     } else {
       const errorRes: ErrorMessage = await req.json();
       throw new Error(errorRes.message);
     }
-
 
     return res;
   }
@@ -72,8 +73,10 @@ class HTTPRequest implements HTTPRequest {
 
     let res: T;
 
-    if (req.status === 200) {
-      res = await req.json();
+    if (req.status >= 200 && req.status < 300) {
+      if (req.status !== 204) {
+        res = await req.json();
+      }
     } else {
       const errorRes: ErrorMessage = await req.json();
       throw new Error(errorRes.message);
@@ -93,8 +96,10 @@ class HTTPRequest implements HTTPRequest {
 
     let res: T;
 
-    if (req.status === 200) {
-      res = await req.json();
+    if (req.status >= 200 && req.status < 300) {
+      if (req.status !== 204) {
+        res = await req.json();
+      }
     } else {
       const errorRes: ErrorMessage = await req.json();
       throw new Error(errorRes.message);
@@ -114,8 +119,10 @@ class HTTPRequest implements HTTPRequest {
 
     let res: T;
 
-    if (req.status === 200) {
-      res = await req.json();
+    if (req.status >= 200 && req.status < 300) {
+      if (req.status !== 204) {
+        res = await req.json();
+      }
     } else {
       const errorRes: ErrorMessage = await req.json();
       throw new Error(errorRes.message);
@@ -126,4 +133,3 @@ class HTTPRequest implements HTTPRequest {
 }
 
 export default HTTPRequest;
-

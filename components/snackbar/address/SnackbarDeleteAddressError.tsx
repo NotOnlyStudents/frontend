@@ -1,14 +1,14 @@
 import React from 'react';
 import EMLSnackbar, { CustomSnackbarProps } from '../EMLSnackbar';
 
-export const addressDeleteError = 'address_delete_error';
+export const addressDeleteErrorId = 'address_delete_error';
 
 function SnackbarDeleteAddressError({
   open, handleClose,
 }: CustomSnackbarProps) {
   return (
     <EMLSnackbar
-      id={addressDeleteError}
+      id={addressDeleteErrorId}
       open={open}
       severity="error"
       handleClose={handleClose}

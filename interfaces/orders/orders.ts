@@ -8,7 +8,10 @@ export enum SortOrderType {
 export interface OrderFilter {
   id?: string,
   offset?: number,
-  sort?: SortOrderType
+  sort?: SortOrderType,
+  start?: string,
+  end?: string,
+  email?: string,
 }
 
 export interface Order {

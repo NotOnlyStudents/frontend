@@ -26,6 +26,10 @@ export function getPLPLink(seller: boolean = false) {
   return seller ? '/seller/plp' : '/plp';
 }
 
+export function getOrderLink(seller: boolean = false) {
+  return seller ? '/seller/orders' : '/orders';
+}
+
 export function getViewProductLink(id: string, seller: boolean = false) {
   return seller ? `/seller/pdp/${id}` : `/pdp/${id}`;
 }

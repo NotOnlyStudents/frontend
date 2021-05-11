@@ -1,16 +1,18 @@
 import React from 'react';
 import OrderService from 'services/order-service';
 import { Order, OrderFilter, OrderPaginator } from 'interfaces/orders/orders';
-// import PLPFilter from 'components/plp/PLPFilter';
 import EMLPagination from 'components/pagination/EMLPagination';
 import OrdersList from 'components/orders/OrdersList';
 import Head from 'next/head';
-import { NextRouter, withRouter } from 'next/router';
+import { getSignedState } from 'lib/authContext';
+import { NextRouter } from 'next/router';
 import EMLBreadcrumb from 'components/breadcrumb/EMLBreadcrumb';
 import HomeIcon from '@material-ui/icons/Home';
 import { BreadcrumbPath } from 'interfaces/breadcrumb';
-import { getHomeLink } from 'lib/links';
+import { getHomeLink, getOrderLink } from 'lib/links';
 import { Typography } from '@material-ui/core';
+import { withSSRContext } from 'aws-amplify';
+import { SignedState } from 'interfaces/login';
 
 interface Props {
   router: NextRouter,
@@ -82,21 +84,41 @@ class OrderCustomer extends React.Component<Props, State> {
   }
 }
 
-export async function getServerSideProps({ query }) {
-  const filters: OrderFilter = query;
+export async function getServerSideProps(context) {
+  const filters: OrderFilter = context.query;
 
   let paginator: OrderPaginator;
   let error = false;
+  let token: string;
+  const { Auth } = withSSRContext(context);
 
   try {
-    paginator = await (new OrderService()).getAllOrder(filters);
-  } catch (e) {
+    const { signInUserSession } = await Auth.currentAuthenticatedUser();
+    const signedState = await getSignedState(signInUserSession);
+    if (signedState === SignedState.Seller) {
+      return {
+        redirect: {
+          destination: getOrderLink(true),
+          permanent: false,
+        },
+      };
+    }
+
+    token = signInUserSession.idToken.jwtToken;
+    try {
+      paginator = await (new OrderService()).getAllOrder(token, filters);
+      console.log(paginator);
+    } catch (e) {
+      console.error(e);
+    }
+  } catch (err) {
     paginator = {
       orders: [],
       total: 0,
     };
     error = true;
   }
+  console.log(paginator);
   return {
     props: {
       filters,

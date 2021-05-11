@@ -1,18 +1,15 @@
 import HTTPRequest from 'lib/HTTPRequest';
 import {
-  OrderFilter, Order, OrdersGetRequest, OrderPaginator,
+  OrderFilter, Order, OrderPaginator,
 } from 'interfaces/orders/orders';
 import queryString from 'query-string';
-// import { CategoriesGETRequest, Category } from 'interfaces/products/category';
 import { GetAllOrdersRequest, GetOneOrderRequest } from 'interfaces/orders/order-request';
 import OrderService from './OrderService';
 
 class OrderServiceFetch implements OrderService {
-  getAllOrder = async (params?: OrderFilter): Promise<OrderPaginator> => {
-    const req: HTTPRequest = new HTTPRequest('orders');
-    let query: string = queryString.stringify(params);
-
-    if (query) { query = `?${query}`; }
+  getAllOrder = async (token: string, params?: OrderFilter): Promise<OrderPaginator> => {
+    const req: HTTPRequest = new HTTPRequest(process.env.NEXT_PUBLIC_ORDERS_SERVICE_URL, 'orders');
+    const query: string = queryString.stringify(params);
 
     const res: GetAllOrdersRequest = await req.get<GetAllOrdersRequest>(query);
 
@@ -24,27 +21,36 @@ class OrderServiceFetch implements OrderService {
     return paginator;
   };
 
-  getAllOrderCustomer = async (email: string, params?: OrderFilter): Promise<OrderPaginator> => {
-    const req: HTTPRequest = new HTTPRequest(`orders/${email}`);
-    let query: string = queryString.stringify(params);
-
-    if (query) { query = `?${query}`; }
-
-    const res: GetAllOrdersRequest = await req.get<GetAllOrdersRequest>(query);
-
-    const paginator: OrderPaginator = {
-      orders: res.data.orders.map((order) => order),
-      total: res.data.total,
-    };
-
-    return paginator;
-  };
-
-  getOrderById = async (id: string): Promise<Order> => {
-    const req: HTTPRequest = new HTTPRequest(`orders/${id}`);
+  getOrderById = async (token: string, id: string): Promise<Order> => {
+    const req: HTTPRequest = new HTTPRequest(process.env.NEXT_PUBLIC_ORDERS_SERVICE_URL, `orders/${id}`);
     const res: GetOneOrderRequest = await req.get<GetOneOrderRequest>();
 
     return res.data.token.data;
+  };
+
+  createOrder = async (token: string, order: Order): Promise<string> => {
+    const req: HTTPRequest = new HTTPRequest(process.env.NEXT_PUBLIC_ORDERS_SERVICE_URL, 'orders');
+    const body: string = JSON.stringify(order);
+
+    const headers = {
+      Authorization: `Bearer ${token}`,
+    };
+
+    const res: string = await req.post<string>(body, headers);
+
+    return res;
+  };
+
+  editOrder = async (token: string, id: string): Promise<void> => {
+    const req: HTTPRequest = new HTTPRequest(process.env.NEXT_PUBLIC_ORDERS_SERVICE_URL, `orders/${id}`);
+
+    const headers = {
+      Authorization: `Bearer ${token}`,
+    };
+
+    const res: void = await req.patch<void>('', headers);
+
+    return res;
   };
 }
 

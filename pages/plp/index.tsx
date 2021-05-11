@@ -7,6 +7,10 @@ import EMLBreadcrumb from 'components/breadcrumb/EMLBreadcrumb';
 import HomeIcon from '@material-ui/icons/Home';
 import { BreadcrumbPath } from 'interfaces/breadcrumb';
 import PLP from 'components/plp/PLP';
+import { getHomeLink, getPLPLink } from 'lib/links';
+import { getSignedState } from 'lib/authContext';
+import { withSSRContext } from 'aws-amplify';
+import { SignedState } from 'interfaces/login';
 
 interface Props {
   filters: ProductFilter,
@@ -19,7 +23,7 @@ function PLPCustomerPage({
   filters, products, total, error,
 }: Props) {
   const breadcrumbPaths: BreadcrumbPath[] = [
-    { name: 'Home', href: '/', icon: HomeIcon },
+    { name: 'Home', href: getHomeLink(), icon: HomeIcon },
     { name: 'Product List Page' },
   ];
 
@@ -39,7 +43,24 @@ function PLPCustomerPage({
   );
 }
 
-export async function getServerSideProps({ query }) {
+export async function getServerSideProps(context) {
+  const { Auth } = withSSRContext(context);
+
+  try {
+    const { signInUserSession } = await Auth.currentAuthenticatedUser();
+    const signedState = await getSignedState(signInUserSession);
+
+    if (signedState === SignedState.Seller) {
+      return {
+        redirect: {
+          destination: getPLPLink(true),
+          permanent: false,
+        },
+      };
+    }
+  } catch (e) { }
+
+  const { query } = context;
   const filters: ProductFilter = query;
 
   if (query.categories) {

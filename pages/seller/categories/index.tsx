@@ -2,7 +2,7 @@ import { BreadcrumbPath } from 'interfaces/breadcrumb';
 import HomeIcon from '@material-ui/icons/Home';
 import React from 'react';
 import EMLBreadcrumb from 'components/breadcrumb/EMLBreadcrumb';
-import { getHomeLink } from 'lib/links';
+import { getHomeLink, getLoginLink } from 'lib/links';
 import CategoriesList from 'components/categories/CategoriesList';
 import {
   Box, Dialog, IconButton, Typography,
@@ -10,6 +10,9 @@ import {
 import Head from 'next/head';
 import { Category } from 'interfaces/categories/category';
 import CategoryService from 'services/category-service';
+import { withSSRContext } from 'aws-amplify';
+import { getSignedState } from 'lib/authContext';
+import { SignedState } from 'interfaces/login';
 
 interface Props {
   categories: Category[],
@@ -39,7 +42,31 @@ function CategoriesPage({ categories, searchName }: Props) {
   );
 }
 
-export async function getServerSideProps({ query }) {
+export async function getServerSideProps(context) {
+  const { Auth } = withSSRContext(context);
+
+  try {
+    const { signInUserSession } = await Auth.currentAuthenticatedUser();
+
+    if (await getSignedState(signInUserSession) === SignedState.Customer) {
+      return {
+        redirect: {
+          destination: getHomeLink(),
+          permanent: false,
+        },
+      };
+    }
+  } catch (error) {
+    return {
+      redirect: {
+        destination: getLoginLink(),
+        permanent: false,
+      },
+    };
+  }
+
+  const { query } = context;
+
   let categories: Category[] = [];
   const searchName = query.text || '';
 

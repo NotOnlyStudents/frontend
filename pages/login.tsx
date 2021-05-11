@@ -6,16 +6,25 @@ import {
   AmplifyForgotPassword,
 } from '@aws-amplify/ui-react';
 import { AuthState, onAuthUIStateChange } from '@aws-amplify/ui-components';
-import { CognitoUser } from '@aws-amplify/auth';
 
 import { CognitoCustomAttributes, getSignedState, useAuthContext } from 'lib/authContext';
 import { useRouter } from 'next/router';
 import { getHomeLink } from 'lib/links';
 import Head from 'next/head';
+import { SignedState } from 'interfaces/login';
+import HomeIcon from '@material-ui/icons/Home';
+import { BreadcrumbPath } from 'interfaces/breadcrumb';
+import EMLBreadcrumb from 'components/breadcrumb/EMLBreadcrumb';
+import { withSSRContext } from 'aws-amplify';
 
 function Login() {
   const { setAuthState, setUserInfo, setSignedState } = useAuthContext();
   const router = useRouter();
+
+  const breadcrumbPaths: BreadcrumbPath[] = [
+    { name: 'Home', href: getHomeLink(), icon: HomeIcon },
+    { name: 'Authentication' },
+  ];
 
   useEffect(() => onAuthUIStateChange(async (nextAuthState: AuthState, authData: any) => {
     if (nextAuthState === AuthState.SignedIn) {
@@ -27,9 +36,12 @@ function Login() {
         surname: attributes[CognitoCustomAttributes.surname],
         email: attributes.email,
       });
-      setSignedState(getSignedState(signInUserSession));
 
-      router.push(getHomeLink());
+      const signedState: SignedState = await getSignedState(signInUserSession);
+
+      setSignedState(signedState);
+
+      router.push(getHomeLink(signedState === SignedState.Seller));
     }
   }), []);
 
@@ -38,6 +50,7 @@ function Login() {
       <Head>
         <title>Authentication | EmporioLambda</title>
       </Head>
+      <EMLBreadcrumb paths={breadcrumbPaths} />
       <AmplifyAuthenticator usernameAlias="email">
         <AmplifySignUp
           slot="sign-up"
@@ -50,10 +63,28 @@ function Login() {
           ]}
         />
         <AmplifySignIn slot="sign-in" usernameAlias="email" />
-        <AmplifyForgotPassword />
+        <AmplifyForgotPassword slot="forgot-password" />
       </AmplifyAuthenticator>
     </>
   );
+}
+
+export async function getServerSideProps(context) {
+  const { Auth } = withSSRContext(context);
+  try {
+    const { signInUserSession } = await Auth.currentAuthenticatedUser();
+
+    const isSeller = await getSignedState(signInUserSession) === SignedState.Seller;
+
+    return {
+      redirect: {
+        destination: getHomeLink(isSeller),
+        permanent: false,
+      },
+    };
+  } catch (error) { }
+
+  return { props: { } };
 }
 
 export default Login;

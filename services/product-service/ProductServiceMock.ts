@@ -32,25 +32,17 @@ class ProductServiceMock implements ProductService {
     categories: ['a', 'b'],
   });
 
-  createProduct = async (product: Product): Promise<Product> => ({
+  createProduct = async (token: string, product: Product): Promise<Product> => ({
     id: faker.datatype.uuid(),
     ...product,
   });
 
-  editProduct = async (id: string, product: Product): Promise<Product> => ({
+  editProduct = async (token: string, id: string, product: Product): Promise<Product> => ({
     id,
     ...product,
   });
 
-  deleteProduct = async (id: string): Promise<void> => {
-
-  };
-
-  addToEvidence = async (id: string): Promise<void> => {
-
-  };
-
-  removeFromEvidence = async (id: string): Promise<void> => {
+  deleteProduct = async (token: string, id: string): Promise<void> => {
 
   };
 }

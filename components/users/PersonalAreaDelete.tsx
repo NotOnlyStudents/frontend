@@ -6,18 +6,20 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import { Auth } from 'aws-amplify';
 import { useRouter } from 'next/router';
 import { getHomeLink } from 'lib/links';
+import { Snackbars, useSnackbarContext } from 'lib/SnackbarContext';
 
 function PersonalAreaDelete() {
   const [openModal, setOpenModal] = React.useState(false);
+  const { openSnackbar } = useSnackbarContext();
   const router = useRouter();
 
   const handleDeleteAccount = async () => {
     const user = await Auth.currentAuthenticatedUser();
     user.deleteUser((error) => {
       if (error) {
-        console.error(error);
+        openSnackbar(Snackbars.userDeleteErrorId);
       } else {
-        console.log('Success');
+        openSnackbar(Snackbars.userDeleteSuccessId);
         router.push(getHomeLink());
       }
     });

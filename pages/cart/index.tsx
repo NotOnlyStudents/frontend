@@ -24,7 +24,7 @@ function cartPage({ cart }: Props) {
     { name: 'Cart' },
   ];
 
-  const renderCartList = () =>{ 
+  const renderCartList = () =>{
     const { signedState } = useAuthContext();
     if (cart.products.length == 0)
     {
@@ -51,7 +51,7 @@ function cartPage({ cart }: Props) {
       <Typography variant="h4" component="h2">
         Your cart
       </Typography>
-      { renderCartList() }
+      <CartList products={cart.products} />
     </>
   );
 }
@@ -61,16 +61,26 @@ export async function getServerSideProps(context) {
   const { Auth } = withSSRContext(context);
   var token = '';
   try {
-    const user = await Auth.currentAuthenticatedUser();
-    token = user.signInUserSession.idToken.jwtToken;
-  }
-  catch (error) {
-    console.log("User not authenticated");
-  }
-  finally{
-    products = await new CartService().getCartProducts(token);
-  }; 
+    const { signInUserSession } = await Auth.currentAuthenticatedUser();
+    const token = signInUserSession.idToken.jwtToken;
 
+    const signedState = await getSignedState(signInUserSession);
+
+    if (signedState === SignedState.Seller) {
+      return {
+        redirect: {
+          destination: getHomeLink(true),
+          permanent: false,
+        },
+      };
+    }
+
+    try {
+      products = await new CartService().getCartProducts(token);
+    } catch (error) {
+      products = [];
+    }
+  } catch { console.log('There was a problem with servers'); }
 
   return {
     props: {

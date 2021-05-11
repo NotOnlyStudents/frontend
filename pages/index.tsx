@@ -8,7 +8,11 @@ import { PLPProductItem, ProductFilter } from 'interfaces/products/product';
 import ProductService from 'services/product-service';
 import Head from 'next/head';
 import PLPList from 'components/plp/PLPList';
-import { getPLPLink } from 'lib/links';
+import { getHomeLink, getPLPLink } from 'lib/links';
+import { getSignedState } from 'lib/authContext';
+import { SignedState } from 'interfaces/login';
+import { withSSRContext } from 'aws-amplify';
+import { useRouter } from 'next/router';
 
 interface Props {
   products: PLPProductItem[];
@@ -41,6 +45,7 @@ const useStyles = makeStyles({
 
 function HomeCustomer({ products }: Props) : React.ReactElement {
   const classes = useStyles();
+  const router = useRouter();
 
   const renderFeaturedProductsIfPresent = () => (products.length
     ? (
@@ -75,7 +80,7 @@ function HomeCustomer({ products }: Props) : React.ReactElement {
           <br />
           Start searching in our large library, or
           <Link
-            href={getPLPLink()}
+            onClick={() => { router.push(getPLPLink()); }}
             color="inherit"
             underline="always"
           >
@@ -88,7 +93,21 @@ function HomeCustomer({ products }: Props) : React.ReactElement {
   );
 }
 
-export async function getServerSideProps() {
+export async function getServerSideProps(context) {
+  const { Auth } = withSSRContext(context);
+  try {
+    const { signInUserSession } = await Auth.currentAuthenticatedUser();
+
+    if (await getSignedState(signInUserSession) === SignedState.Seller) {
+      return {
+        redirect: {
+          destination: getHomeLink(true),
+          permanent: false,
+        },
+      };
+    }
+  } catch (error) { }
+
   const filters: ProductFilter = { evidence: true };
 
   let paginator;
@@ -96,7 +115,6 @@ export async function getServerSideProps() {
   try {
     paginator = await (new ProductService()).getAllProduct(filters);
   } catch (error) {
-    console.log(error);
     paginator = {
       products: [],
     };

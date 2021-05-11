@@ -23,6 +23,8 @@ import ProductService from 'services/product-service';
 import { getEditProductLink } from 'lib/links';
 import { Auth } from 'aws-amplify';
 import CartService from 'services/cart-service';
+import { Snackbars, useSnackbarContext } from 'lib/SnackbarContext';
+import { getAuthToken } from 'lib/authContext';
 import PDPRemove from './PDPRemove';
 import PDPEvidence from './PDPEvidence';
 
@@ -51,21 +53,13 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 function PDPView({ product, edit }: Props) : React.ReactElement {
   const classes = useStyles();
-  const router: NextRouter = useRouter();
+  const router = useRouter();
+
+  const { openSnackbar } = useSnackbarContext();
 
   const [evidence, setEvidence] = React.useState(product.evidence);
   const [quantity, setQuantity] = React.useState(product.quantity);
   const [counter, setCounter] = React.useState(1);
-  const [alert, setAlert] = React.useState({
-    [changeQuantitySuccessId]: false,
-    [changeQuantityErrorId]: false,
-
-    [changeEvidenceSuccessId]: false,
-    [changeEvidenceErrorId]: false,
-
-    [addToCartSuccessId]: false,
-    [addToCartErrorId]: false,
-  });
 
   const checkQuantityProductInCart = async () => {
     try {
@@ -81,7 +75,7 @@ function PDPView({ product, edit }: Props) : React.ReactElement {
         setCounter(addedQuantity[0]);
       }
     } catch (error) {
-      console.error(error);
+      openSnackbar(Snackbars.errorRetrievingDataId);
     }
   };
 
@@ -89,38 +83,27 @@ function PDPView({ product, edit }: Props) : React.ReactElement {
     checkQuantityProductInCart();
   }, []);
 
-  const changeAlert = (id: string, show: boolean) => {
-    const newAlert = { ...alert };
-
-    newAlert[id] = show;
-
-    setAlert(newAlert);
-  };
-
-  const openAlert = (id: string) => {
-    changeAlert(id, true);
-  };
-  const closeAlert = (id: string) => {
-    changeAlert(id, false);
-  };
-
   const handleChangeEvidance = async (ev: boolean) => {
     try {
-      await (new ProductService()).editProduct(product.id, { ...product, evidence: ev });
+      const token: string = await getAuthToken();
+
+      await (new ProductService()).editProduct(token, product.id, { ...product, evidence: ev });
       setEvidence(ev);
-      openAlert(changeEvidenceSuccessId);
+      openSnackbar(Snackbars.changeEvidenceSuccessId);
     } catch (error) {
-      openAlert(changeEvidenceErrorId);
+      openSnackbar(Snackbars.changeEvidenceErrorId);
     }
   };
 
   const handleQuantityChange = async (q: number) => {
     try {
-      await (new ProductService()).editProduct(product.id, { ...product, quantity: q });
+      const token: string = await getAuthToken();
+
+      await (new ProductService()).editProduct(token, product.id, { ...product, quantity: q });
       setQuantity(q);
-      openAlert(changeQuantitySuccessId);
+      openSnackbar(Snackbars.changeQuantitySuccessId);
     } catch (error) {
-      openAlert(changeQuantityErrorId);
+      openSnackbar(Snackbars.changeQuantityErrorId);
     }
   };
 
@@ -130,15 +113,18 @@ function PDPView({ product, edit }: Props) : React.ReactElement {
       const user = await Auth.currentAuthenticatedUser();
       const token = user.signInUserSession.idToken.jwtToken;
       await new CartService().postCartProducts(token, { ...productToCart, quantity: counter });
-      openAlert(addToCartSuccessId);
+      openSnackbar(Snackbars.addToCartSuccessId);
     } catch (error) {
-      openAlert(addToCartErrorId);
+      openSnackbar(Snackbars.addToCartErrorId);
     }
   };
 
   const renderEditOptionsIfSeller = () => (edit ? (
     <Box display="flex">
-      <IconButton color="primary" href={getEditProductLink(product.id)}>
+      <IconButton
+        color="primary"
+        onClick={() => { router.push(getEditProductLink(product.id)); }}
+      >
         <Edit />
       </IconButton>
       <PDPEvidence
@@ -147,7 +133,6 @@ function PDPView({ product, edit }: Props) : React.ReactElement {
       />
       <PDPRemove
         id={product.id}
-        productName={product.name}
       />
     </Box>
   ) : <></>);
@@ -221,6 +206,7 @@ function PDPView({ product, edit }: Props) : React.ReactElement {
               <PriceItem
                 price={product.price}
                 discount={product.discount}
+                discountedPrice={product.discountedPrice}
               />
               <Box display="flex" flexGrow={1} />
               { renderQuantity() }
@@ -235,38 +221,6 @@ function PDPView({ product, edit }: Props) : React.ReactElement {
         </Box>
         { renderDescriptionIfExist() }
       </Box>
-
-      <SnackbarChangeQuantitySuccess
-        open={alert[changeQuantitySuccessId]}
-        handleClose={closeAlert}
-      />
-
-      <SnackbarChangeQuantityError
-        open={alert[changeQuantityErrorId]}
-        handleClose={closeAlert}
-      />
-
-      <SnackbarChangeEvidenceSuccess
-        open={alert[changeEvidenceSuccessId]}
-        handleClose={closeAlert}
-      />
-
-      <SnackbarChangeEvidenceError
-        open={alert[changeEvidenceErrorId]}
-        handleClose={closeAlert}
-      />
-
-      <SnackbarAddToCartSuccess
-        productName={product.name}
-        open={alert[addToCartSuccessId]}
-        handleClose={closeAlert}
-      />
-
-      <SnackbarAddToCartError
-        productName={product.name}
-        open={alert[addToCartErrorId]}
-        handleClose={closeAlert}
-      />
     </>
   );
 }

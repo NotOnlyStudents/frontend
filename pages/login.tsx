@@ -6,12 +6,37 @@ import {
   AmplifyForgotPassword,
 } from '@aws-amplify/ui-react';
 import { AuthState, onAuthUIStateChange } from '@aws-amplify/ui-components';
-import { CognitoUser } from '@aws-amplify/auth';
+import Auth, { CognitoUser } from '@aws-amplify/auth';
 
 import { CognitoCustomAttributes, getSignedState, useAuthContext } from 'lib/authContext';
 import { useRouter } from 'next/router';
 import { getHomeLink } from 'lib/links';
 import Head from 'next/head';
+import { withSSRContext } from 'aws-amplify';
+import CartService from 'services/cart-service';
+
+
+const handleLogin = async () => {
+  try {
+    const user = await Auth.currentAuthenticatedUser();
+    const token = user.signInUserSession.idToken.jwtToken;
+    let storage = localStorage.getItem('item');
+      if (localStorage != null) {
+        if (storage[storage.length - 1] === ',') {
+          storage = storage.slice(0, -1);
+        }
+        storage = `[${storage}]`;
+        const products = JSON.parse(storage);
+
+        for (let i = 0; i < products.length; i++) {
+          await new CartService().postCartProducts(token, products[i]);
+        }
+        localStorage.removeItem('item');
+      }
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 function Login() {
   const { setAuthState, setUserInfo, setSignedState } = useAuthContext();
@@ -33,6 +58,7 @@ function Login() {
     }
   }), []);
 
+
   return (
     <>
       <Head>
@@ -49,7 +75,7 @@ function Login() {
             { type: 'password' },
           ]}
         />
-        <AmplifySignIn slot="sign-in" usernameAlias="email" />
+        <AmplifySignIn handleAuthStateChange={handleLogin} slot="sign-in" usernameAlias="email" />
         <AmplifyForgotPassword />
       </AmplifyAuthenticator>
     </>

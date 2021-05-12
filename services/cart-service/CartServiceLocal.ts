@@ -16,6 +16,9 @@ import CartServiceFetch from './CartServiceFetch';
 import CartService from './CartService';
 
 class CartServiceLocal implements CartService {
+  patchCartProducts(token: any, productId: any, quantity: any): Promise<void> {
+      throw new Error('Method not implemented.');
+  }
   getCartProducts = async (token: string): Promise<CartProduct[]> => {
     const empty: [] = [];
     return empty;
@@ -32,7 +35,7 @@ class CartServiceLocal implements CartService {
     localStorage.setItem('item', newStorage);
   };
 
-  patchCartProducts = (token: string, productId: any, quantity: any): Promise<void> => {
+  /*patchCartProducts = (token: string, productId: any, quantity: any): Promise<void> => {
     if (localStorage != null) {
       let storage = localStorage.getItem('item');
       if (storage[storage.length - 1] === ',') {
@@ -48,7 +51,7 @@ class CartServiceLocal implements CartService {
       }
       localStorage.setItem('item', JSON.stringify(products).slice(0, -1).slice(1));
     }
-  };
+  };*/
 
   deleteCartProducts = async (token: any, productId: any): Promise<void> => {
     if (localStorage != null) {

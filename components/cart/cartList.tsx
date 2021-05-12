@@ -39,35 +39,25 @@ class CartList extends React.Component<Props, State> {
         categories: products.categories,
         images: products.images
       } */
-<<<<<<< HEAD
 
   componentDidMount() {
     // Allow a not authenticated user to access his local cart
-    if (localStorage.getItem('item') != null) {
-      let storage = localStorage.getItem('item');
-      if (storage[storage.length - 1] === ',') {
-        storage = storage.slice(0, -1);
-=======
-  componentDidMount()
-  {
-    //Allow a not authenticated user to access his local cart
-    //So... if not authenticated:
-    if(localStorage.getItem('item')!=null)
+    if(!this.props.authenticated)
     {
-      var storage = localStorage.getItem('item');
-      if(storage[storage.length-1]==',')
-      {
-          storage = storage.slice(0,-1);
->>>>>>> cart
+      if (localStorage.getItem('item') != null) {
+        let storage = localStorage.getItem('item');
+        if (storage[storage.length - 1] === ',') {
+          storage = storage.slice(0, -1);
+        }
+        storage = `[${storage}]`;
+        const products = JSON.parse(storage);
+        this.setState({ items: products.map(productToCartProduct) });
       }
-      storage = `[${storage}]`;
-      const products = JSON.parse(storage);
-      this.setState({ items: products.map(productToCartProduct) });
     }
   }
 
   handleChangeQuantity = async (quantity: number, index: number): Promise<void> => {
-    let token: string;
+    let token: string="";
     try {
       const user = await Auth.currentAuthenticatedUser();
       token = user.signInUserSession.idToken.jwtToken;
@@ -195,7 +185,5 @@ class CartList extends React.Component<Props, State> {
 CartList.contextType = AuthContext;
 
 export default CartList;
-function openSnackbar(changeQuantitySuccessId: any) {
-  throw new Error('Function not implemented.');
-}
+
 

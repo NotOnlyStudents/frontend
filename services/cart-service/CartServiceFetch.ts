@@ -42,56 +42,58 @@ class CartServiceFetch implements CartService {
       oldStorage !== null ? newStorage = `${oldStorage + JSON.stringify(product)},` : newStorage = `${JSON.stringify(product)},`;
       localStorage.setItem('item', newStorage);
     }
-    const req: HTTPRequest = new HTTPRequest(process.env.NEXT_PUBLIC_CART_SERVICE_URL, 'cart');
+    else{
+      const req: HTTPRequest = new HTTPRequest(process.env.NEXT_PUBLIC_CART_SERVICE_URL, 'cart');
 
-    const timeout = new Date();
-    timeout.setMinutes(timeout.getMinutes() + 5);
-    const date = {
-      token: {
-        data: {
-          id: product.id,
-          name: product.name,
-          description: product.description,
-          images: product.images,
-          quantity: product.quantity,
-          price: product.price,
-          evidence: product.evidence,
-          category: product.categories,
+      const timeout = new Date();
+      timeout.setMinutes(timeout.getMinutes() + 5);
+      const date = {
+        token: {
+          data: {
+            id: product.id,
+            name: product.name,
+            description: product.description,
+            images: product.images,
+            quantity: product.quantity,
+            price: product.price,
+            evidence: product.evidence,
+            category: product.categories,
+          },
+          timeout,
         },
-        timeout,
-      },
-    };
-    const hmac = createHmac('sha256', 'password').update(JSON.stringify(date)).digest('base64');
+      };
+      const hmac = createHmac('sha256', 'password').update(JSON.stringify(date)).digest('base64');
 
-    const dateComplete = {
-      token: {
-        data: {
-          id: product.id,
-          name: product.name,
-          description: product.description,
-          images: product.images,
-          quantity: product.quantity,
-          price: product.price,
-          evidence: product.evidence,
-          category: product.categories,
+      const dateComplete = {
+        token: {
+          data: {
+            id: product.id,
+            name: product.name,
+            description: product.description,
+            images: product.images,
+            quantity: product.quantity,
+            price: product.price,
+            evidence: product.evidence,
+            category: product.categories,
+          },
+          timeout,
         },
-        timeout,
-      },
-      hmac,
-    };
+        hmac,
+      };
 
-    const body = JSON.stringify(dateComplete);
-    const headers = {
-      'Content-type': 'application/json',
-      Accept: 'application/json',
-      Authorization: `Bearer ${token}`,
-    };
+      const body = JSON.stringify(dateComplete);
+      const headers = {
+        'Content-type': 'application/json',
+        Accept: 'application/json',
+        Authorization: `Bearer ${token}`,
+      };
 
-    try {
-      await req.post<Product>(body, headers);
-      // console.log(res);
-    } catch (error) {
-      console.log(error);
+      try {
+        await req.post<Product>(body, headers);
+        // console.log(res);
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
 
@@ -117,18 +119,19 @@ class CartServiceFetch implements CartService {
         }
       }
     }
+    else{
     const req: HTTPRequest = new HTTPRequest(process.env.NEXT_PUBLIC_CART_SERVICE_URL, `cart/${productId}`);
     const headers = {
       Accept: 'application/json',
       Authorization: `Bearer ${token}`,
     };
-    const res = await req.delete<CartPatchRequest>('', headers);
+    const res = await req.delete<CartPatchRequest>('', headers);}
   };
 
   patchCartProducts = async (token, productId, quantity): Promise<void> => {
     if (token === '') {
+      let storage = localStorage.getItem('item');
       if (localStorage != null) {
-        let storage = localStorage.getItem('item');
         if (storage[storage.length - 1] === ',') {
           storage = storage.slice(0, -1);
         }
@@ -143,13 +146,16 @@ class CartServiceFetch implements CartService {
         localStorage.setItem('item', JSON.stringify(products).slice(0, -1).slice(1));
       }
     }
-    const req: HTTPRequest = new HTTPRequest(process.env.NEXT_PUBLIC_CART_SERVICE_URL, `cart/${productId}`);
-    const bodyString = JSON.stringify({ quantity });
-    const headers = {
-      Authorization: `Bearer ${token}`,
-    };
-
-    await req.patch<CartPatchRequest>(bodyString, headers);
+    else
+    {
+      const req: HTTPRequest = new HTTPRequest(process.env.NEXT_PUBLIC_CART_SERVICE_URL, `cart/${productId}`);
+      const bodyString = JSON.stringify({ quantity });
+      const headers = {
+        Authorization: `Bearer ${token}`,
+      };
+  
+      await req.patch<CartPatchRequest>(bodyString, headers);
+    }
   };
 }
 

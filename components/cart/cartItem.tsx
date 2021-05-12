@@ -3,14 +3,12 @@ import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
 import { CartProduct } from 'interfaces/products/product';
 import {
-  Box, Button, Link, makeStyles,
+  Button, Grid, Link, makeStyles,
 } from '@material-ui/core';
 import QuantityManager from 'components/quantity/QuantityManager';
-import SnackbarChangeQuantitySuccess, { changeQuantitySuccessId } from 'components/snackbar/quantity/SnackbarChangeQuantitySuccess';
-import SnackbarChangeQuantityError, { changeQuantityErrorId } from 'components/snackbar/quantity/SnackbarChangeQuantityError';
-import SnackbarDeleteProductSuccess, { productDeleteSuccess } from 'components/snackbar/product/SnackbarDeleteProductSuccess';
-import SnackbarDeleteProductError, { productDeleteError } from 'components/snackbar/product/SnackbarDeleteProductError';
 import PriceItem from 'components/price-item/PriceItem';
+import { getViewProductLink } from 'lib/links';
+import { useRouter } from 'next/router';
 
 interface Props {
   item: CartProduct
@@ -21,9 +19,37 @@ interface Props {
 }
 
 const useStyles = makeStyles({
+  root: {
+    width: '100%',
+    position: 'relative',
+    display: 'flex',
+    flexDirection: 'column',
+    flexGrow: 1,
+  },
   image: {
-    height: '10em',
-    width: 200,
+    height: 128,
+    width: 128,
+    margin: 'auto',
+    display: 'block',
+    maxWidth: '100%',
+    maxHeight: '100%',
+  },
+  price: {
+    alignSelf: 'center',
+    paddingLeft: 10,
+    // borderBottom: 'solid 1px black',
+    // borderRight: 'solid 1px black',
+  },
+  description: {
+    paddingLeft: 7,
+    flexDirection: 'column',
+    // borderRight: 'solid 1px black',
+  },
+  text: {
+    fontWeight: 500,
+  },
+  buttonLikeLink: {
+    textAlign: 'left',
   },
 });
 
@@ -31,133 +57,100 @@ function CartItem({
   item, index, payments, handleChangeQuantity, handleRemoveProduct,
 }: Props) {
   const classes = useStyles();
+  const router = useRouter();
 
-  const [alert, setAlert] = React.useState({
-    [changeQuantitySuccessId]: false,
-    [changeQuantityErrorId]: false,
-
-    [productDeleteSuccess]: false,
-    [productDeleteError]: false,
-  });
-
-  const changeAlert = (id: string, show: boolean) => {
-    const newAlert = { ...alert };
-
-    newAlert[id] = show;
-
-    setAlert(newAlert);
-  };
-
-  const openAlert = (id: string) => {
-    changeAlert(id, true);
-  };
-  const closeAlert = (id: string) => {
-    changeAlert(id, false);
-  };
-
-  const handleCounterChange = async (quantity: number) => {
-    openAlert(changeQuantitySuccessId);
+  const handleCounterChange = (quantity: number) => {
     handleChangeQuantity(quantity, index);
   };
 
   const handleClickRemove = async () => {
-    openAlert(productDeleteSuccess);
     handleRemoveProduct(index);
   };
+
+  const renderRemoveProductIfInCart = () => (
+    (!payments)
+      ? (
+        <Typography>
+          <Button
+            color="primary"
+            variant="contained"
+            size="small"
+            onClick={handleClickRemove}
+          >
+            Remove product
+          </Button>
+        </Typography>
+      )
+      : <></>
+  );
+
+  const renderEditQuantityIfInCart = () => (
+    (!payments)
+      ? (
+        <QuantityManager
+          counter={item.quantity}
+          handleCounterChange={handleCounterChange}
+        />
+      )
+      : (
+        <Typography>
+          Quantity:
+          {' '}
+          {item.quantity}
+        </Typography>
+      )
+  );
+
   return (
-    <Box
-      width="100%"
-      height="10em"
-      borderBottom={1}
-      borderColor="primary"
-      marginBottom={3}
-    >
-      <Box display="flex">
+    <Grid container className={classes.root}>
+      <Grid item container>
         <CardMedia
           className={classes.image}
           image={item.image}
         />
-        <Box
-          display="flex"
-          flexGrow="1"
-          paddingLeft={2}
-          flexDirection="column"
-        >
-          <Typography variant="h6" component="div">
-            { item.name }
-          </Typography>
-          <Box>
-            {
-            (!payments) ? <Button color="primary" variant="text" onClick={handleClickRemove}> Remove product </Button> : <></>
-            }
-            <Button
-              href={`/pdp/${item.id}`}
-              component={Link}
-              size="small"
-              color="primary"
-            >
-              See more details
-            </Button>
-          </Box>
-          <Box flexGrow={1} />
-          {
-            (!payments)
-              ? (
-                <QuantityManager
-                  counter={item.quantity}
-                  handleCounterChange={handleCounterChange}
+        <Grid item xs={12} sm container>
+          <Grid item xs container className={classes.description}>
+            <Grid item container>
+              <Grid item>
+                <Typography variant="subtitle1" className={classes.text}>
+                  {item.name}
+                </Typography>
+                <Typography variant="body2">
+                  <Button
+                    onClick={() => { router.push(getViewProductLink(item.id)); }}
+                    component={Link}
+                    size="small"
+                    color="primary"
+                  >
+                    See more details
+                  </Button>
+                </Typography>
+                { renderRemoveProductIfInCart() }
+                { renderEditQuantityIfInCart() }
+                <Typography variant="body2" color="textSecondary">
+                  Unit price:
+                </Typography>
+                <PriceItem
+                  price={item.price}
+                  discount={item.discount}
+                  quantity={item.quantity}
+                  discountedPrice={item.discountedPrice}
                 />
-              )
-              : (
-                <p>
-                  Quantity:
-                  {item.quantity}
-                </p>
-              )
-          }
-        </Box>
-        <Box
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-          flexDirection="column"
-          width="20em"
-          borderLeft={1}
-          borderColor="primary"
-        >
-          <Typography variant="body1">
-            Product price:
-          </Typography>
-          <PriceItem
-            price={item.price}
-            discount={item.discount}
-            quantity={item.quantity}
-          />
-        </Box>
-      </Box>
-
-      <SnackbarChangeQuantitySuccess
-        open={alert[changeQuantitySuccessId]}
-        handleClose={closeAlert}
-      />
-
-      <SnackbarChangeQuantityError
-        open={alert[changeQuantityErrorId]}
-        handleClose={closeAlert}
-      />
-
-      <SnackbarDeleteProductSuccess
-        productName={item.name}
-        open={alert[productDeleteSuccess]}
-        handleClose={closeAlert}
-      />
-
-      <SnackbarDeleteProductError
-        productName={item.name}
-        open={alert[productDeleteError]}
-        handleClose={closeAlert}
-      />
-    </Box>
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid item className={classes.price}>
+            <Typography variant="subtitle1">
+              Price:
+              {' '}
+              {item.price * item.quantity}
+              €
+              {' '}
+            </Typography>
+          </Grid>
+        </Grid>
+      </Grid>
+    </Grid>
   );
 }
 

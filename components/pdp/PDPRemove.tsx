@@ -3,8 +3,6 @@ import {
   Button, Dialog, DialogActions, DialogTitle, IconButton,
 } from '@material-ui/core';
 import { Delete, Remove } from '@material-ui/icons';
-import SnackbarDeleteProductSuccess, { productDeleteSuccess } from 'components/snackbar/product/SnackbarDeleteProductSuccess';
-import SnackbarDeleteProductError, { productDeleteError } from 'components/snackbar/product/SnackbarDeleteProductError';
 import ProductService from 'services/product-service';
 import { useRouter } from 'next/router';
 

@@ -12,6 +12,7 @@ import { Auth } from 'aws-amplify';
 import { productToCartProduct } from 'interfaces/products/product-converter';
 import CartItem from './cartItem';
 
+
 interface Props {
   items: CartProduct[];
   payment?: boolean;
@@ -38,6 +39,7 @@ class CartList extends React.Component<Props, State> {
         categories: products.categories,
         images: products.images
       } */
+<<<<<<< HEAD
 
   componentDidMount() {
     // Allow a not authenticated user to access his local cart
@@ -45,6 +47,18 @@ class CartList extends React.Component<Props, State> {
       let storage = localStorage.getItem('item');
       if (storage[storage.length - 1] === ',') {
         storage = storage.slice(0, -1);
+=======
+  componentDidMount()
+  {
+    //Allow a not authenticated user to access his local cart
+    //So... if not authenticated:
+    if(localStorage.getItem('item')!=null)
+    {
+      var storage = localStorage.getItem('item');
+      if(storage[storage.length-1]==',')
+      {
+          storage = storage.slice(0,-1);
+>>>>>>> cart
       }
       storage = `[${storage}]`;
       const products = JSON.parse(storage);
@@ -87,11 +101,6 @@ class CartList extends React.Component<Props, State> {
     }
   };
 
-  handleSubmit = (): void => {
-    console.log(this.state);
-    // Si prosegue con checkout API TODO:
-  };
-
   calculateTotalPrice = (): number => (
     this.state.items
       .map((item: CartProduct) => (item.quantity * item.price))
@@ -129,15 +138,7 @@ class CartList extends React.Component<Props, State> {
         </Button>
       );
 
-    return (
-      !payment
-        ? (
-          <>
-            {button}
-          </>
-        )
-        : <></>
-    );
+    return !payment ? button : <></>;
   };
 
   renderAllItems = (): React.ReactElement[] =>
@@ -194,3 +195,7 @@ class CartList extends React.Component<Props, State> {
 CartList.contextType = AuthContext;
 
 export default CartList;
+function openSnackbar(changeQuantitySuccessId: any) {
+  throw new Error('Function not implemented.');
+}
+

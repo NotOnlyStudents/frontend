@@ -18,7 +18,7 @@ import NoProductInCart from 'components/noresult/NoProductsInCart';
 interface Props {
   items: CartProduct[];
   payment?: boolean;
-  authenticated: boolean;
+  authenticated?: boolean;
 }
 
 interface State{
@@ -98,7 +98,7 @@ class CartList extends React.Component<Props, State> {
 
   calculateTotalPrice = (): number => (
     this.state.items
-      .map((item: CartProduct) => (item.quantity * item.price))
+      .map((item: CartProduct) => (item.quantity * item.discountedPrice))
       .reduce(
         (totalPrice, price): number => (
           totalPrice + price
@@ -168,8 +168,6 @@ class CartList extends React.Component<Props, State> {
               <Typography>
                 Total price:
                 {' '}
-              </Typography>
-              <Typography variant="button">
                 {`${this.calculateTotalPrice()}€`}
               </Typography>
             </Box>

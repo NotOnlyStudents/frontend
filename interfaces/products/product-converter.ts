@@ -16,15 +16,15 @@ export function productToPLPProductItem(
 }
 
 export function productToCartProduct(
-  product: Product,
+  product: any,
 ): CartProduct {
   return {
     id: product.id,
     name: product.name,
     price: product.price,
     image: product.images[0],
-    discount: 0,
-    discountedPrice: product.discountedPrice ? product.discountedPrice : 0,
+    discount: product.discount || product.discountPercentage,
+    discountedPrice: product.discountedPrice || (Math.round((product.price - (product.price * product.discountPercentage) / (100)) * 100) / 100),
     quantity: product.quantity as number,
   };
 }

@@ -123,7 +123,7 @@ class PaymentPage extends React.Component<Props, State> {
           </IconButton>
         </Box>
         <Collapse in={expanded} timeout="auto" unmountOnExit>
-          <CartList products={cart.products} payment />
+          <CartList items={cart.products} payment />
         </Collapse>
         <AddressList
           addresses={addresses}

@@ -126,7 +126,6 @@ function CartItem({
                 <PriceItem
                   price={item.price}
                   discount={item.discount}
-                  quantity={item.quantity}
                   discountedPrice={item.discountedPrice}
                 />
               </Grid>
@@ -136,9 +135,8 @@ function CartItem({
             <Typography variant="subtitle1">
               Price:
               {' '}
-              {item.price * item.quantity}
+              {item.discountedPrice * item.quantity}
               €
-              {' '}
             </Typography>
           </Grid>
         </Grid>

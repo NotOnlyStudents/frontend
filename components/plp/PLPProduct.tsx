@@ -73,7 +73,7 @@ function PLPProduct({ product, seller }: Props) {
     let token = '';
     try {
       const user = await Auth.currentAuthenticatedUser();
-      const token = user.signInUserSession.idToken.jwtToken;
+      token = user.signInUserSession.idToken.jwtToken;
      // openSnackbar(Snackbars.addToCartSuccessId);
     } catch (error) {
       // openAlert(addToCartErrorId);

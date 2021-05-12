@@ -10,17 +10,27 @@ import { getHomeLink, getPLPLink, getViewProductLink } from 'lib/links';
 import { withSSRContext } from 'aws-amplify';
 import { getSignedState } from 'lib/authContext';
 import { SignedState } from 'interfaces/login';
+import { Snackbars, useSnackbarContext } from 'lib/SnackbarContext';
 
 interface Props {
-  product: Product
+  product: Product,
+  error: boolean
 }
 
-function PDPPage({ product }: Props) {
+function PDPPage({ product, error }: Props) {
+  const { openSnackbar } = useSnackbarContext();
   const breadcrumbPaths: BreadcrumbPath[] = [
     { name: 'Home', href: getHomeLink(), icon: HomeIcon },
     { name: 'Product List Page', href: getPLPLink() },
     { name: product.name },
   ];
+
+  React.useEffect(() => {
+    if(error)
+    {
+      openSnackbar(Snackbars.errorRetrievingDataId);
+    }
+  }, []);
 
   return (
     <>
@@ -53,17 +63,30 @@ export async function getServerSideProps(context) {
     }
   } catch (e) { }
 
-  let product;
+  let product: Product;
+  let error = false;
 
   try {
     product = await (new ProductService()).getProductById(query.id);
-  } catch (error) {
-    console.log(error);
+  } catch (e) {
+    error = true;
+    product = {
+      name: "Product name",
+      description: "",
+      images: [ "https://socialistmodernism.com/wp-content/uploads/2017/07/placeholder-image.png" ],
+      quantity: 1,
+      price: 1,
+      evidence: false,
+      discount: 0,
+      discountedPrice: 1,
+      categories: [],
+    }
   }
 
   return {
     props: {
       product,
+      error
     },
   };
 }

@@ -98,13 +98,15 @@ class PLP extends React.Component<Props, State> {
       delete query.sort;
     }
 
-    delete query.offset;
-
     filters.offset = 0;
+
+    query.offset = filters.offset.toString();
 
     router.push({
       pathname: '',
       query,
+    }, null, {
+      scroll: false
     });
 
     this.setState({ filters });
@@ -120,6 +122,8 @@ class PLP extends React.Component<Props, State> {
     router.push({
       pathname: '',
       query,
+    }, null, {
+      scroll: false
     });
     this.setState((state) => {
       const newState: State = state;

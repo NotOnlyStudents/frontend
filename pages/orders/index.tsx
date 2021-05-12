@@ -90,12 +90,11 @@ export async function getServerSideProps(context) {
   let paginator: OrderPaginator;
   let error = false;
   let token: string;
-
   const { Auth } = withSSRContext(context);
+  let signedState: SignedState;
   try {
     const { signInUserSession } = await Auth.currentAuthenticatedUser();
-    const signedState = await getSignedState(signInUserSession);
-
+    signedState = await getSignedState(signInUserSession);
     if (signedState === SignedState.Seller) {
       return {
         redirect: {
@@ -105,18 +104,17 @@ export async function getServerSideProps(context) {
       };
     }
     token = signInUserSession.idToken.jwtToken;
-  } catch(e) {
-    console.log();
-  }
-
-  try {
-    paginator = await (new OrderService()).getAllOrder(token, filters);
-    console.log(paginator);
-  }catch (err) {
+    try {
+      paginator = await (new OrderService()).getAllOrder(token, filters);
+      console.log(paginator);
+    } catch (e) {
+      console.error(e);
+    }
+  } catch (err) {
     paginator = {
       orders: [],
       total: 0,
-  };
+    };
     error = true;
   }
   console.log(paginator);
@@ -126,6 +124,7 @@ export async function getServerSideProps(context) {
       orders: paginator.orders,
       total: paginator.total,
       error,
+      signedState,
     },
   };
 }

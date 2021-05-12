@@ -4,9 +4,9 @@ import {
 } from '@material-ui/core';
 
 interface Props {
-  selectedMinPrice: number
-  selectedMaxPrice: number
-  handleChangeMinPrice: (minPrice: number) => void;
+  selectedStartDate: number
+  selectedEndDate: number
+  handleChangeStart: (start: number) => void;
 }
 
 const useStyles = makeStyles({
@@ -15,22 +15,23 @@ const useStyles = makeStyles({
   },
 });
 
-function TextfieldMinPrice({
-  selectedMinPrice, handleChangeMinPrice,
-  selectedMaxPrice,
+function TextfieldStartDate({
+  selectedStartDate, 
+  handleChangeStart,
+  selectedEndDate,
 }:Props) {
-  const [value, setValue] = React.useState<number>(selectedMinPrice);
+  const [value, setValue] = React.useState<number>(selectedStartDate);
   const classes = useStyles();
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (+event.target.value <= selectedMaxPrice) {
-      handleChangeMinPrice(+event.target.value);
+    if (+event.target.value <= selectedEndDate) {
+      handleChangeStart(+event.target.value);
     }
   };
 
   React.useEffect(() => {
-    setValue(selectedMinPrice);
-  }, [selectedMinPrice]);
+    setValue(selectedStartDate);
+  }, [selectedStartDate]);
 
   return (
     <>
@@ -52,4 +53,4 @@ function TextfieldMinPrice({
   );
 }
 
-export default TextfieldMinPrice;
+export default TextfieldStartDate;

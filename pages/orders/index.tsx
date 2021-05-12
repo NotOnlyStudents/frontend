@@ -13,13 +13,15 @@ import { getHomeLink, getOrderLink } from 'lib/links';
 import { Typography } from '@material-ui/core';
 import { withSSRContext } from 'aws-amplify';
 import { SignedState } from 'interfaces/login';
+import OrderFilters from 'components/orders/OrderFilters';
 
 interface Props {
   router: NextRouter,
   filters: OrderFilter,
   orders: Order[],
   totalOrders: number,
-  error: boolean
+  error: boolean,
+  signedState: SignedState,
 }
 
 interface State {
@@ -72,6 +74,11 @@ class OrderCustomer extends React.Component<Props, State> {
         <Typography variant="h4" component="h2">
           Your orders
         </Typography>
+        <OrderFilters
+          filter={filters}
+          handleChangeFilter={this.handleChangeFilters}
+          seller={!!(SignedState.Seller)}
+        />
         <OrdersList orders={orders} />
         <EMLPagination
           totalElements={totalOrders}
@@ -130,3 +137,4 @@ export async function getServerSideProps(context) {
 }
 
 export default OrderCustomer;
+

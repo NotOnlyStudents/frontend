@@ -36,7 +36,7 @@ function ComponentOrderFilter({ filter, seller, handleChangeFilter }: Props) {
     return (
       <Box p={2}>
           <Box display="flex">
-        <TextfieldMinPrice
+        <TextfieldStartDate
           selectedMinPrice={filter.priceMin}
           selectedMaxPrice={filter.priceMax}
           handleChangeMinPrice={handleChangeMinPrice}

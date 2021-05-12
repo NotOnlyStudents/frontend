@@ -25,6 +25,7 @@
         "nextjs-progressbar": "^0.0.9",
         "query-string": "^6.14.1",
         "react": "^17.0.2",
+        "react-dom": "^17.0.2",
         "sass": "^1.32.8",
         "validatorjs": "^3.22.1"
     },

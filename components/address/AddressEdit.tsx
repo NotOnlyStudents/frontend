@@ -109,16 +109,6 @@ class AddressEdit extends React.Component<Props, State> {
     );
   };
 
-  handleCloseAlert = (id: string) => {
-    this.setState((state: State) => {
-      const newState: State = state;
-
-      newState.alert[id] = false;
-
-      return newState;
-    });
-  };
-
   handleClickCancel = () => {
     this.props.handleCloseDialog();
   };

@@ -70,7 +70,7 @@ interface Props {
   handleChangeFilter: (filter: OrderFilter) => void;
 }
 
-function PLPFilter({ filter, seller, handleChangeFilter }: Props) {
+function OrderFilters({ filter, seller, handleChangeFilter }: Props) {
   const classes = useStyles();
   const router: NextRouter = useRouter();
   const { signedState } = useAuthContext();
@@ -140,4 +140,4 @@ function PLPFilter({ filter, seller, handleChangeFilter }: Props) {
   );
 }
 
-export default PLPFilter;
+export default OrderFilters;

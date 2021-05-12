@@ -13,13 +13,15 @@ import { getHomeLink, getOrderLink } from 'lib/links';
 import { Typography } from '@material-ui/core';
 import { withSSRContext } from 'aws-amplify';
 import { SignedState } from 'interfaces/login';
+import OrderFilters from 'components/orders/OrderFilters';
 
 interface Props {
   router: NextRouter,
   filters: OrderFilter,
   orders: Order[],
   totalOrders: number,
-  error: boolean
+  error: boolean,
+  signedState: SignedState,
 }
 
 interface State {
@@ -72,6 +74,11 @@ class OrderCustomer extends React.Component<Props, State> {
         <Typography variant="h4" component="h2">
           Your orders
         </Typography>
+        <OrderFilters
+          filter={filters}
+          handleChangeFilter={this.handleChangeFilters}
+          seller={!!(SignedState.Seller)}
+        />
         <OrdersList orders={orders} />
         <EMLPagination
           totalElements={totalOrders}
@@ -91,10 +98,10 @@ export async function getServerSideProps(context) {
   let error = false;
   let token: string;
   const { Auth } = withSSRContext(context);
-
+  let signedState: SignedState;
   try {
     const { signInUserSession } = await Auth.currentAuthenticatedUser();
-    const signedState = await getSignedState(signInUserSession);
+    signedState = await getSignedState(signInUserSession);
     if (signedState === SignedState.Seller) {
       return {
         redirect: {
@@ -103,7 +110,6 @@ export async function getServerSideProps(context) {
         },
       };
     }
-
     token = signInUserSession.idToken.jwtToken;
     try {
       paginator = await (new OrderService()).getAllOrder(token, filters);
@@ -125,6 +131,7 @@ export async function getServerSideProps(context) {
       orders: paginator.orders,
       total: paginator.total,
       error,
+      signedState,
     },
   };
 }

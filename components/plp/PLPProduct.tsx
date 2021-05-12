@@ -72,13 +72,16 @@ function PLPProduct({ product, seller }: Props) {
 
   const handleAddToCart = async () => {
     const productToCart = await (new ProductService()).getProductById(product.id);
+    let token = '';
     try {
       const user = await Auth.currentAuthenticatedUser();
       const token = user.signInUserSession.idToken.jwtToken;
+     // openSnackbar(Snackbars.addToCartSuccessId);
+    } catch (error) {
+      // openAlert(addToCartErrorId);
+    } finally {
       await new CartService().postCartProducts(token, { ...productToCart, quantity });
       openSnackbar(Snackbars.addToCartSuccessId);
-    } catch (error) {
-      openSnackbar(Snackbars.addToCartErrorId);
     }
   };
 

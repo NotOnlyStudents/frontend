@@ -27,23 +27,16 @@ const useStyles = makeStyles({
     flexGrow: 1,
   },
   image: {
-    height: 128,
     width: 128,
-    margin: 'auto',
     display: 'block',
-    maxWidth: '100%',
-    maxHeight: '100%',
   },
   price: {
     alignSelf: 'center',
     paddingLeft: 10,
-    // borderBottom: 'solid 1px black',
-    // borderRight: 'solid 1px black',
   },
   description: {
     paddingLeft: 7,
     flexDirection: 'column',
-    // borderRight: 'solid 1px black',
   },
   text: {
     fontWeight: 500,

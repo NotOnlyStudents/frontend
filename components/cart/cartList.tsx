@@ -108,10 +108,9 @@ class CartList extends React.Component<Props, State> {
   );
 
   renderPaymentButtonIfLogged = () => {
-    const { signedState } = this.context;
-    const { payment } = this.props;
+    const { payment, authenticated } = this.props;
 
-    const button = signedState === SignedState.Customer
+    const button = authenticated
       ? (
         <Button
           variant="contained"
@@ -153,7 +152,6 @@ class CartList extends React.Component<Props, State> {
   ;
 
   render() {
-    const { payment } = this.props;
     return (
       this.state.items.length !== 0
       ? (
@@ -185,6 +183,6 @@ class CartList extends React.Component<Props, State> {
   }
 }
 
-
 CartList.contextType = SnackbarContext;
+
 export default CartList;

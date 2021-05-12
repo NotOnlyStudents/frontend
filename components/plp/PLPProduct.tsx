@@ -14,8 +14,6 @@ import QuantityManager from 'components/quantity/QuantityManager';
 import ProductService from 'services/product-service/ProductServiceFetch';
 import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart';
 import PriceItem from 'components/price-item/PriceItem';
-import { addToCartSuccessId } from 'components/snackbar/cart/SnackbarAddToCartSuccess';
-import { addToCartErrorId } from 'components/snackbar/cart/SnackbarAddToCartError';
 import { getViewProductLink } from 'lib/links';
 import { Auth } from 'aws-amplify';
 import { Snackbars, useSnackbarContext } from 'lib/SnackbarContext';

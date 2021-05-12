@@ -7,20 +7,20 @@ import { OrderFilter, SortOrderType } from 'interfaces/orders/orders';
 import { FormControlLabel } from '@material-ui/core';
 
 interface Props {
-    filter: OrderFilter;
-    handleChangeFilter: (filter: OrderFilter) => void;
+  filter: OrderFilter;
+  handleChangeFilter: (filter: OrderFilter) => void;
 }
 
 function ComponentOrderFilter({ filter, handleChangeFilter }: Props) {
-    const handlChangeSort =  (sort: SortOrderType) => {
-        const filterSort: OrderFilter = { ...filter };
-        filterSort.sort = sort;
-        handleChangeFilter(filterSort);
-    };
+  const handlChangeSort = (sort: SortOrderType) => {
+    const filterSort: OrderFilter = { ...filter };
+    filterSort.sort = sort;
+    handleChangeFilter(filterSort);
+  };
 
-    const handleChangeMinData = (minData: string) => {
-        
-    };
+  const handleChangeMinData = (minData: string) => {
+
+  };
 }
 
 export default ComponentOrderFilter;

@@ -163,3 +163,6 @@ Temporary Items
 
 ### Serverless Next.js ###
 .serverless_nextjs
+
+# Local Netlify folder
+.netlify

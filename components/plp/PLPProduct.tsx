@@ -3,7 +3,7 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
-import CartService from 'services/cart-service/CartServiceLocal';
+import CartService from 'services/cart-service';
 import { CartProduct, PLPProductItem } from 'interfaces/products/product';
 import StarIcon from '@material-ui/icons/Star';
 import { makeStyles } from '@material-ui/core/styles';
@@ -64,14 +64,13 @@ function PLPProduct({ product, seller }: Props) {
   };
 
   const checkQuantityProductInCart = async () => {
-    var token="";
+    const token = '';
     try {
       const user = await Auth.currentAuthenticatedUser();
       const token = user.signInUserSession.idToken.jwtToken;
     } catch (error) {
       console.log(error);
-    }
-    finally{
+    } finally {
       const products: CartProduct[] = await new CartService().getCartProducts(token);
 
       const addedQuantity = products
@@ -90,14 +89,13 @@ function PLPProduct({ product, seller }: Props) {
 
   const handleAddToCart = async () => {
     const productToCart = await (new ProductService()).getProductById(product.id);
-    var token="";
+    let token = '';
     try {
       const user = await Auth.currentAuthenticatedUser();
       token = user.signInUserSession.idToken.jwtToken;
     } catch (error) {
-     // openAlert(addToCartErrorId);
-    }
-    finally{
+      // openAlert(addToCartErrorId);
+    } finally {
       await new CartService().postCartProducts(token, { ...productToCart, quantity: counter });
       openAlert(addToCartSuccessId);
     }

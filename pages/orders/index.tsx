@@ -113,11 +113,17 @@ export async function getServerSideProps(context) {
     token = signInUserSession.idToken.jwtToken;
     try {
       paginator = await (new OrderService()).getAllOrder(token, filters);
-      console.log(paginator);
     } catch (e) {
       console.error(e);
+      paginator = {
+        orders: [],
+        total: 0,
+      };
+      error = true;
     }
   } catch (err) {
+    console.log(err);
+    signedState = SignedState.NotAuthenticated;
     paginator = {
       orders: [],
       total: 0,

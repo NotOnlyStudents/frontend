@@ -12,6 +12,7 @@ import { Auth } from 'aws-amplify';
 import CartItem from './cartItem';
 import { productToCartProduct } from 'interfaces/products/product-converter';
 
+
 interface Props {
   items: CartProduct[];
   payment?: boolean;
@@ -41,6 +42,7 @@ class CartList extends React.Component<Props, State> {
   componentDidMount()
   {
     //Allow a not authenticated user to access his local cart
+    //So... if not authenticated:
     if(localStorage.getItem('item')!=null)
     {
       var storage = localStorage.getItem('item');
@@ -90,11 +92,6 @@ class CartList extends React.Component<Props, State> {
     }
   };
 
-  handleSubmit = (): void => {
-    console.log(this.state);
-    // Si prosegue con checkout API TODO:
-  };
-
   calculateTotalPrice = (): number => (
     this.state.items
       .map((item: CartProduct) => (item.quantity * item.price))
@@ -132,15 +129,7 @@ class CartList extends React.Component<Props, State> {
         </Button>
       );
 
-    return (
-      !payment
-        ? (
-          <>
-            {button}
-          </>
-        )
-        : <></>
-    );
+    return !payment ? button : <></>;
   };
 
   renderAllItems = (): React.ReactElement[] => {
@@ -197,3 +186,7 @@ class CartList extends React.Component<Props, State> {
 CartList.contextType = AuthContext;
 
 export default CartList;
+function openSnackbar(changeQuantitySuccessId: any) {
+  throw new Error('Function not implemented.');
+}
+

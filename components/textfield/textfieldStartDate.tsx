@@ -4,9 +4,9 @@ import {
 } from '@material-ui/core';
 
 interface Props {
-  selectedStartDate: number
-  selectedEndDate: number
-  handleChangeStart: (start: number) => void;
+  selectedStartDate: string
+  selectedEndDate: string
+  handleChangeStart: (start: string) => void;
 }
 
 const useStyles = makeStyles({
@@ -20,7 +20,7 @@ function TextfieldStartDate({
   handleChangeStart,
   selectedEndDate,
 }:Props) {
-  const [value, setValue] = React.useState<number>(selectedStartDate);
+  const [value, setValue] = React.useState<string>(selectedStartDate);
   const classes = useStyles();
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {

@@ -48,8 +48,8 @@ const BootstrapInput = withStyles((theme: Theme) => createStyles({
 }))(InputBase);
 
 interface Props {
-  sort: SortType;
-  handleChangeSort: (sort: SortType) => void
+  sort;
+  handleChangeSort: (sort) => void
 }
 
 function SortProducts({

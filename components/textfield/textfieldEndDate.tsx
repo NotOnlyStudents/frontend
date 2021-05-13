@@ -4,9 +4,9 @@ import {
 } from '@material-ui/core';
 
 interface Props {
-  selectedStartDate: number
-  selectedEndDate: number
-  handleChangeEnd: (fine: number) => void;
+  selectedStartDate: string
+  selectedEndDate: string
+  handleChangeEnd: (end: string) => void;
 }
 
 const useStyles = makeStyles({
@@ -20,11 +20,11 @@ function TextFieldEndDate({
   handleChangeEnd,
   selectedEndDate,
 }:Props) {
-  const [value, setValue] = React.useState<number>(selectedEndDate);
+  const [value, setValue] = React.useState<string>(selectedEndDate);
   const classes = useStyles();
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (+event.target.value <= selectedEndDate) {
+    if (+event.target.value > selectedEndDate) {
       handleChangeEnd(+event.target.value);
     }
   };

@@ -5,6 +5,9 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import Checkbox from '@material-ui/core/Checkbox';
 import { OrderFilter, SortOrderType } from 'interfaces/orders/orders';
 import { Box, FormControlLabel } from '@material-ui/core';
+import TextfieldStartDate from 'components/textfield/textfieldStartDate';
+import TextfieldMaxPrice from 'components/textfield/textfieldMaxPrice';
+import SortProducts from 'components/sort-products/SortProducts';
 
 interface Props {
     filter: OrderFilter;
@@ -13,7 +16,7 @@ interface Props {
 }
 
 function ComponentOrderFilter({ filter, seller, handleChangeFilter }: Props) {
-    const handlChangeSort =  (sort: SortOrderType) => {
+    const handleChangeSort =  (sort: SortOrderType) => {
         const filterSort: OrderFilter = { ...filter };
         filterSort.sort = sort;
         handleChangeFilter(filterSort);
@@ -36,22 +39,22 @@ function ComponentOrderFilter({ filter, seller, handleChangeFilter }: Props) {
     return (
       <Box p={2}>
           <Box display="flex">
-        <TextfieldStartDate
-          selectedMinPrice={filter.priceMin}
-          selectedMaxPrice={filter.priceMax}
-          handleChangeMinPrice={handleChangeMinPrice}
-        />
-        <TextfieldMaxPrice
-          selectedMaxPrice={filter.priceMax}
-          selectedMinPrice={filter.priceMin}
-          handleChangeMaxPrice={handleChangeMaxPrice}
-        />
-        <Box flexGrow={1} />
-        <SortProducts
-          sort={filter.sort}
-          handleChangeSort={handleChangeSort}
-        />
-      </Box>
+            <TextfieldStartDate
+              selectedStartDate={filter.start}
+              selectedEndDate={filter.end}
+              handleChangeStart={handleChangeStart}
+            />
+            <TextfieldMaxPrice
+              selectedEndDate={filter.end}
+              selectedEndDate={filter.start}
+              selectedEndDate={handleChangeEnd}
+            />
+            <Box flexGrow={1} />
+            <SortProducts
+              sort={filter.sort}
+              handleChangeSort={handleChangeSort}
+            />
+          </Box>
       </Box>  
     )
 }

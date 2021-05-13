@@ -37,10 +37,35 @@ class CartServiceFetch implements CartService {
 
   postCartProducts = async (token, product: Product): Promise<void> => {
     if (token === '') {
-      const oldStorage = localStorage.getItem('item');
-      let newStorage = '';
-      oldStorage !== null ? newStorage = `${oldStorage + JSON.stringify(product)},` : newStorage = `${JSON.stringify(product)},`;
-      localStorage.setItem('item', newStorage);
+      let storage = localStorage.getItem('item');
+        if(storage !== null){ 
+          const oldStorage=storage;
+          if (storage[storage.length - 1] === ',') {
+            storage = storage.slice(0, -1);
+          }
+          storage = `[${storage}]`;
+          const products = JSON.parse(storage);
+          let present=false;
+          for (let i = 0; i < products.length; i++) {
+            if (products[i].id === product.id) {
+              products[i].quantity = product.quantity;
+              present=true;
+            }
+          }
+            if(present)
+            { localStorage.setItem('item', JSON.stringify(products).slice(0, -1).slice(1))}
+            else{
+            let newStorage = `${JSON.stringify(product)},`
+            newStorage = `${oldStorage + JSON.stringify(product)},` ;
+            localStorage.setItem('item', newStorage);
+            }
+      }
+
+      else{ 
+        const newStorage = `${JSON.stringify(product)},`
+        localStorage.setItem('item', newStorage);
+      };
+
     }
     else{
       const req: HTTPRequest = new HTTPRequest(process.env.NEXT_PUBLIC_CART_SERVICE_URL, 'cart');
@@ -132,7 +157,7 @@ class CartServiceFetch implements CartService {
   patchCartProducts = async (token, productId, quantity): Promise<void> => {
     if (token === '') {
       let storage = localStorage.getItem('item');
-      if (localStorage != null) {
+      if (storage != null) {
         if (storage[storage.length - 1] === ',') {
           storage = storage.slice(0, -1);
         }
@@ -144,6 +169,7 @@ class CartServiceFetch implements CartService {
             products[i].quantity = quantity;
           }
         }
+
         localStorage.setItem('item', JSON.stringify(products).slice(0, -1).slice(1));
       }
     }

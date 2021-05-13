@@ -61,6 +61,20 @@ function PLPProduct({ product, seller }: Props) {
       }
     } catch (error) {
       console.error(error);
+      let storage = localStorage.getItem('item');
+      if(storage !== null){ 
+        const oldStorage=storage;
+        if (storage[storage.length - 1] === ',') {
+          storage = storage.slice(0, -1);
+        }
+        storage = `[${storage}]`;
+        const products = JSON.parse(storage);
+        for (let i = 0; i < products.length; i++) {
+          if (products[i].id === product.id) {
+            setQuantity(products[i].quantity);
+          }
+        }
+      }
     }
   };
 

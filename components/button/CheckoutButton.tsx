@@ -1,52 +1,36 @@
+import React from 'react';
 import { Auth } from 'aws-amplify';
 import { Button } from '@material-ui/core';
 import { loadStripe } from '@stripe/stripe-js';
-import React from 'react';
 import CartService from 'services/cart-service';
 import CartServiceType from 'services/cart-service/CartService';
 import { CartToken } from 'interfaces/cart/cart-request';
 import PaymentIcon from '@material-ui/icons/Payment';
+import { Address } from 'interfaces/address/address';
+import { getAuthToken } from 'lib/authContext';
 
-const stripePromise = loadStripe('pk_test_51IHqhuEKthtArr3S4MYSAYFEPiFlioccyA4SjUNArmmdSmK7B05UnMdsNKIu0TCRXADZLVmjEUlqKRIR4D2SWtJ700PVmechEl');
 
 interface Props {
+  address: Address,
+  additionalInfo: string
   disable?: boolean
 }
 
-function CheckoutButton({ disable }: Props) {
+function CheckoutButton({ address, additionalInfo, disable }: Props) {
   const handleClick = async () => {
-  // Get Stripe.js instance
-    const stripe = await stripePromise;
-    console.log(stripe);
-    // Call your backend to create the Checkout Session
-    // const response =
+    const stripe = await loadStripe(process.env.NEXT_PUBLIC_STRIPE);
 
-    let token: string;
-
-    try {
-      const user = await Auth.currentAuthenticatedUser();
-      token = user.signInUserSession.idToken.jwtToken;
-    } catch (error) {
-      token = '';
-    }
+    let token: string = await getAuthToken();
 
     const cartToken: CartToken = await (new CartService()).getCartToken(token);
 
     const obj = {
-      address: {
-        id: '1e1a9e37-73c5-4d88-a220-9940efa846bb',
-        nation: 'Italia',
-        city: 'Marcon',
-        address: 'Via Astori 7',
-        cap: 30020,
-      },
+      address,
       'cart-token': {
         ...cartToken,
       },
-      additionalInfo: 'Grazie Signore adesso pensiamo ad una soluzione',
+      additionalInfo,
     };
-
-    console.log(JSON.stringify(obj));
 
     const response = await fetch(`${process.env.NEXT_PUBLIC_ORDERS_SERVICE_URL}/orders`, {
       method: 'POST',
@@ -57,26 +41,17 @@ function CheckoutButton({ disable }: Props) {
       body: JSON.stringify(obj),
     });
 
-    const cartService: CartServiceType = new CartService();
+    // const cartService: CartServiceType = new CartService();
 
-    cartToken.token.data.products.map(async (product) => {
-      await cartService.deleteCartProducts(token, product.id);
-    });
+    // cartToken.token.data.products.map(async (product) => {
+    //   await cartService.deleteCartProducts(token, product.id);
+    // });
 
     const res = await response.json();
 
-    console.log(res);
-
-    const result = await stripe.redirectToCheckout({
+    await stripe.redirectToCheckout({
       sessionId: res.data.sessionId,
     });
-
-    if (result.error) {
-    // If `redirectToCheckout` fails due to a browser or network
-    // error, display the localized error message to your customer
-    // using `result.error.message`.
-      console.log(result.error.message);
-    }
   };
 
   return (

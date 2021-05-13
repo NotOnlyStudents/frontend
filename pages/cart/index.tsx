@@ -68,14 +68,7 @@ export async function getServerSideProps(context) {
         },
       };
     }
-  } catch (error) {
-    return {
-      redirect: {
-        destination: getHomeLink(),
-        permanent: false,
-      },
-    };
-  }
+  } catch (error) { }
 
   try {
     products = await new CartService().getCartProducts(token);

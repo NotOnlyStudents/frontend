@@ -95,7 +95,7 @@ class CartList extends React.Component<Props, State> {
     }
   };
 
-  calculateTotalPrice = (): number => (
+  calculateTotalPrice = (): string => (
     this.state.items
       .map((item: CartProduct) => (item.quantity * item.discountedPrice))
       .reduce(
@@ -103,7 +103,7 @@ class CartList extends React.Component<Props, State> {
           totalPrice + price
         ),
         0,
-      )
+      ).toFixed(2)
   );
 
   renderPaymentButtonIfLogged = () => {

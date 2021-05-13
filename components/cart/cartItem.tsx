@@ -28,6 +28,8 @@ const useStyles = makeStyles({
   },
   image: {
     width: 128,
+    height: '14em',
+    margin: 'auto',
     display: 'block',
   },
   price: {
@@ -59,6 +61,8 @@ function CartItem({
   const handleClickRemove = async () => {
     handleRemoveProduct(index);
   };
+
+  const renderPrice = () => (item.discountedPrice * item.quantity).toFixed(2)
 
   const renderRemoveProductIfInCart = () => (
     (!payments)
@@ -135,8 +139,7 @@ function CartItem({
             <Typography variant="subtitle1">
               Price:
               {' '}
-              {item.discountedPrice * item.quantity}
-              €
+              { `${renderPrice()}€` }
             </Typography>
           </Grid>
         </Grid>

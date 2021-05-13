@@ -4,7 +4,7 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
 import CartService from 'services/cart-service/CartServiceFetch';
-import { CartProduct, PLPProductItem } from 'interfaces/products/product';
+import { CartProduct, PLPProductItem, Product } from 'interfaces/products/product';
 import StarIcon from '@material-ui/icons/Star';
 import { makeStyles } from '@material-ui/core/styles';
 import {
@@ -69,7 +69,7 @@ function PLPProduct({ product, seller }: Props) {
   }, []);
 
   const handleAddToCart = async () => {
-    const productToCart = await (new ProductService()).getProductById(product.id);
+    const productToCart: Product = await (new ProductService()).getProductById(product.id);
     let token = '';
     try {
       const user = await Auth.currentAuthenticatedUser();
@@ -78,8 +78,12 @@ function PLPProduct({ product, seller }: Props) {
     } catch (error) {
       // openAlert(addToCartErrorId);
     } finally {
-      await new CartService().postCartProducts(token, { ...productToCart, quantity });
-      openSnackbar(Snackbars.addToCartSuccessId);
+      try {
+        await new CartService().postCartProducts(token, { ...productToCart, quantity });
+        openSnackbar(Snackbars.addToCartSuccessId);
+      } catch(e) {
+        openSnackbar(Snackbars.addToCartErrorId);
+      }
     }
   };
 

@@ -80,7 +80,6 @@ class CartList extends React.Component<Props, State> {
     try {
       const user = await Auth.currentAuthenticatedUser();
       token = user.signInUserSession.idToken.jwtToken;
-      console.log(index);
     } catch (error) {
       console.log(error);
     } finally {

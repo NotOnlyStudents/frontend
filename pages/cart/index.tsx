@@ -56,10 +56,25 @@ export async function getServerSideProps(context) {
   const { Auth } = withSSRContext(context);
   let token: string = '';
   try {
-    const user = await Auth.currentAuthenticatedUser();
-    token = user.signInUserSession.idToken.jwtToken;
+    const {signInUserSession} = await Auth.currentAuthenticatedUser();
+    const signedState = await getSignedState(signInUserSession);
+    token = signInUserSession.idToken.jwtToken;
+
+    if (signedState === SignedState.Seller) {
+      return {
+        redirect: {
+          destination: getHomeLink(true),
+          permanent: false,
+        },
+      };
+    }
   } catch (error) {
-    console.log(error);
+    return {
+      redirect: {
+        destination: getHomeLink(),
+        permanent: false,
+      },
+    };
   }
 
   try {

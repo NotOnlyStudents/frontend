@@ -55,6 +55,7 @@ class CartServiceFetch implements CartService {
             description: product.description,
             images: product.images,
             quantity: product.quantity,
+            discount: product.discount,
             price: product.price,
             evidence: product.evidence,
             category: product.categories,
@@ -72,6 +73,7 @@ class CartServiceFetch implements CartService {
             description: product.description,
             images: product.images,
             quantity: product.quantity,
+            discount: product.discount,
             price: product.price,
             evidence: product.evidence,
             category: product.categories,
@@ -90,7 +92,6 @@ class CartServiceFetch implements CartService {
 
       try {
         await req.post<Product>(body, headers);
-        // console.log(res);
       } catch (error) {
         console.log(error);
       }

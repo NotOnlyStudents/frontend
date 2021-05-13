@@ -23,8 +23,10 @@ export function productToCartProduct(
     name: product.name,
     price: product.price,
     image: product.images[0],
-    discount: product.discount || product.discountPercentage,
-    discountedPrice: product.discountedPrice || (Math.round((product.price - (product.price * product.discountPercentage) / (100)) * 100) / 100),
+    discount: product.discount,
+    discountedPrice: product.discountedPrice === undefined ? 
+      (Math.round((product.price - (product.price * product.discount) / (100)) * 100) / 100)
+      : product.discountedPrice,
     quantity: product.quantity as number,
   };
 }

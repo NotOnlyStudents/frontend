@@ -11,6 +11,8 @@ import {
 import { withSSRContext } from 'aws-amplify';
 import { getSignedState } from 'lib/authContext';
 import { SignedState } from 'interfaces/login';
+import { redirect } from 'next/dist/next-server/server/api-utils';
+import { GetServerSideProps } from 'next';
 
 interface Props {
   product: Product
@@ -78,7 +80,12 @@ export async function getServerSideProps(context) {
   try {
     product = await (new ProductService()).getProductById(query.id);
   } catch (error) {
-    console.log(error);
+    return {
+      redirect: {
+        destination: getHomeLink(true),
+        permanent: false
+      }
+    }
   }
 
   return {

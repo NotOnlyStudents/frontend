@@ -13,17 +13,27 @@ import CategoryService from 'services/category-service';
 import { withSSRContext } from 'aws-amplify';
 import { getSignedState } from 'lib/authContext';
 import { SignedState } from 'interfaces/login';
+import { Snackbars, useSnackbarContext } from 'lib/SnackbarContext';
 
 interface Props {
   categories: Category[],
-  searchName: string
+  searchName: string,
+  error: boolean
 }
 
-function CategoriesPage({ categories, searchName }: Props) {
+function CategoriesPage({ categories, searchName, error }: Props) {
+  const { openSnackbar } = useSnackbarContext();
   const breadcrumbPaths:BreadcrumbPath[] = [
     { name: 'Home', href: getHomeLink(true), icon: HomeIcon },
     { name: 'Categories' },
   ];
+
+  React.useEffect(() => {
+    if(error)
+    {
+      openSnackbar(Snackbars.errorRetrievingDataId);
+    }
+  }, []);
 
   return (
     <>
@@ -66,6 +76,7 @@ export async function getServerSideProps(context) {
   }
 
   const { query } = context;
+  let error = false;
 
   let categories: Category[] = [];
   const searchName = query.text || '';
@@ -73,13 +84,14 @@ export async function getServerSideProps(context) {
   try {
     categories = await (new CategoryService()).getCategories(searchName);
   } catch (error) {
-    console.error(error);
+    error = true;
   }
 
   return {
     props: {
       categories,
       searchName,
+      error
     },
   };
 }

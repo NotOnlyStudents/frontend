@@ -4,7 +4,7 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
 import CartService from 'services/cart-service/CartServiceFetch';
-import { CartProduct, PLPProductItem } from 'interfaces/products/product';
+import { CartProduct, PLPProductItem, Product } from 'interfaces/products/product';
 import StarIcon from '@material-ui/icons/Star';
 import { makeStyles } from '@material-ui/core/styles';
 import {
@@ -14,8 +14,6 @@ import QuantityManager from 'components/quantity/QuantityManager';
 import ProductService from 'services/product-service/ProductServiceFetch';
 import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart';
 import PriceItem from 'components/price-item/PriceItem';
-import { addToCartSuccessId } from 'components/snackbar/cart/SnackbarAddToCartSuccess';
-import { addToCartErrorId } from 'components/snackbar/cart/SnackbarAddToCartError';
 import { getViewProductLink } from 'lib/links';
 import { Auth } from 'aws-amplify';
 import { Snackbars, useSnackbarContext } from 'lib/SnackbarContext';
@@ -63,6 +61,20 @@ function PLPProduct({ product, seller }: Props) {
       }
     } catch (error) {
       console.error(error);
+      let storage = localStorage.getItem('item');
+      if(storage !== null){ 
+        const oldStorage=storage;
+        if (storage[storage.length - 1] === ',') {
+          storage = storage.slice(0, -1);
+        }
+        storage = `[${storage}]`;
+        const products = JSON.parse(storage);
+        for (let i = 0; i < products.length; i++) {
+          if (products[i].id === product.id) {
+            setQuantity(products[i].quantity);
+          }
+        }
+      }
     }
   };
 
@@ -71,14 +83,21 @@ function PLPProduct({ product, seller }: Props) {
   }, []);
 
   const handleAddToCart = async () => {
-    const productToCart = await (new ProductService()).getProductById(product.id);
+    const productToCart: Product = await (new ProductService()).getProductById(product.id);
+    let token = '';
     try {
       const user = await Auth.currentAuthenticatedUser();
-      const token = user.signInUserSession.idToken.jwtToken;
-      await new CartService().postCartProducts(token, { ...productToCart, quantity });
-      openSnackbar(Snackbars.addToCartSuccessId);
+      token = user.signInUserSession.idToken.jwtToken;
+     // openSnackbar(Snackbars.addToCartSuccessId);
     } catch (error) {
-      openSnackbar(Snackbars.addToCartErrorId);
+      // openAlert(addToCartErrorId);
+    } finally {
+      try {
+        await new CartService().postCartProducts(token, { ...productToCart, quantity });
+        openSnackbar(Snackbars.addToCartSuccessId);
+      } catch(e) {
+        openSnackbar(Snackbars.addToCartErrorId);
+      }
     }
   };
 

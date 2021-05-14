@@ -43,7 +43,7 @@ function PLPCustomerPage({
   );
 }
 
-export async function getStaticProps(context) {
+export async function getServerSideProps(context) {
   const { Auth } = withSSRContext(context);
 
   try {

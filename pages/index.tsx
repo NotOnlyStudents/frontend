@@ -11,7 +11,7 @@ import PLPList from 'components/plp/PLPList';
 import { getHomeLink, getPLPLink } from 'lib/links';
 import { getSignedState } from 'lib/authContext';
 import { SignedState } from 'interfaces/login';
-import { withSSRContext } from 'aws-amplify';
+import { Auth, withSSRContext } from 'aws-amplify';
 import { useRouter } from 'next/router';
 import { Snackbars, useSnackbarContext } from 'lib/SnackbarContext';
 
@@ -50,11 +50,20 @@ function HomeCustomer({ products, error }: Props) : React.ReactElement {
   const { openSnackbar } = useSnackbarContext();
   const router = useRouter();
 
-  React.useEffect(() => {
-    if (error) {
-      openSnackbar(Snackbars.errorRetrievingDataId);
+  const checkAuth = async () => {
+    const { signInUserSession } = await Auth.currentAuthenticatedUser();
+    const signedState = await getSignedState(signInUserSession);
+
+    switch(signedState)
+    {
+      case SignedState.Seller: {
+        router.push(getHomeLink(true));
+        break;
+      }
+      default:
+        break;
     }
-  }, []);
+  }
 
   const renderFeaturedProductsIfPresent = () => (products.length
     ? (
@@ -70,6 +79,13 @@ function HomeCustomer({ products, error }: Props) : React.ReactElement {
       </>
     )
     : <></>);
+
+  React.useEffect(() => {
+    checkAuth();
+    if (error) {
+      openSnackbar(Snackbars.errorRetrievingDataId);
+    }
+  }, []);
 
   return (
     <>
@@ -103,29 +119,15 @@ function HomeCustomer({ products, error }: Props) : React.ReactElement {
 }
 
 export async function getStaticProps(context) {
-  const { Auth } = withSSRContext(context);
-  try {
-    const { signInUserSession } = await Auth.currentAuthenticatedUser();
-
-    if (await getSignedState(signInUserSession) === SignedState.Seller) {
-      return {
-        redirect: {
-          destination: getHomeLink(true),
-          permanent: false,
-        },
-      };
-    }
-  } catch (error) { }
-
   const filters: ProductFilter = { evidence: true };
 
   let paginator: ProductPaginator;
-  let err = false;
+  let error = false;
 
   try {
     paginator = await (new ProductService()).getAllProduct(filters);
-  } catch (error) {
-    err = true;
+  } catch (e) {
+    error = true;
     paginator = {
       products: [],
       total: 0,
@@ -136,7 +138,7 @@ export async function getStaticProps(context) {
     props: {
       products: paginator.products,
       revalidate: 30,
-      err,
+      error,
     },
   };
 }

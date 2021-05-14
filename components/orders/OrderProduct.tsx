@@ -73,11 +73,11 @@ function OrderProduct({ order, seller }: Props) {
   const renderAddress = (): string => `${order.address.address}`;
 
   const renderAllOrderItems = (): React.ReactElement[] => order.products.map(
-    (item: PLPProductItem): React.ReactElement => (
-      <Grid item container>
+    (item: PLPProductItem, index:number): React.ReactElement => (
+      <Grid key={index} item container>
         <CardMedia
           className={classes.image}
-          image={item.image}
+          image={item['images'][0]}
         />
         <Grid item xs={12} sm container className={classes.product}>
           <Grid item xs container className={classes.description}>

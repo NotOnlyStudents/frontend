@@ -51,8 +51,7 @@ function HomeCustomer({ products, error }: Props) : React.ReactElement {
   const router = useRouter();
 
   React.useEffect(() => {
-    if(error)
-    {
+    if (error) {
       openSnackbar(Snackbars.errorRetrievingDataId);
     }
   }, []);
@@ -121,15 +120,15 @@ export async function getStaticProps(context) {
   const filters: ProductFilter = { evidence: true };
 
   let paginator: ProductPaginator;
-  let error = false;
+  let err = false;
 
   try {
     paginator = await (new ProductService()).getAllProduct(filters);
   } catch (error) {
-    error = true;
+    err = true;
     paginator = {
       products: [],
-      total: 0
+      total: 0,
     };
   }
 
@@ -137,8 +136,8 @@ export async function getStaticProps(context) {
     props: {
       products: paginator.products,
       revalidate: 30,
-      error
-    }
+      err,
+    },
   };
 }
 

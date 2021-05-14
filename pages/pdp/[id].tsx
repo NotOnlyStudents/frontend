@@ -28,8 +28,7 @@ function PDPPage({ product, error }: Props) {
   ];
 
   React.useEffect(() => {
-    if(error)
-    {
+    if (error) {
       openSnackbar(Snackbars.errorRetrievingDataId);
     }
   }, []);
@@ -60,12 +59,12 @@ export async function getStaticPaths() {
     params: { id: singleProduct.id },
   }));
 
-  return { paths, fallback: false };
+  return { paths, fallback: 'blocking' };
 }
 
 export async function getStaticProps(context) {
   const { Auth } = withSSRContext(context);
-  const { params } = context;
+  const { query } = context.params;
 
   try {
     const { signInUserSession } = await Auth.currentAuthenticatedUser();
@@ -74,7 +73,7 @@ export async function getStaticProps(context) {
     if (signedState === SignedState.Seller) {
       return {
         redirect: {
-          destination: getViewProductLink(params.id, true),
+          destination: getViewProductLink(query.id, true),
           permanent: false,
         },
       };
@@ -85,27 +84,27 @@ export async function getStaticProps(context) {
   let error = false;
 
   try {
-    product = await (new ProductService()).getProductById(params.id);
+    product = await (new ProductService()).getProductById(query.id);
   } catch (e) {
     error = true;
     product = {
-      name: "Product name",
-      description: "",
-      images: [ "https://socialistmodernism.com/wp-content/uploads/2017/07/placeholder-image.png" ],
+      name: 'Product name',
+      description: '',
+      images: ['https://socialistmodernism.com/wp-content/uploads/2017/07/placeholder-image.png'],
       quantity: 1,
       price: 1,
       evidence: false,
       discount: 0,
       discountedPrice: 1,
       categories: [],
-    }
+    };
   }
 
   return {
     props: {
       product,
       revalidate: 30,
-      error
+      error,
     },
   };
 }

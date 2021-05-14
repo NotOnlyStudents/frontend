@@ -43,7 +43,7 @@ function PLPCustomerPage({
   );
 }
 
-export async function getServerSideProps(context) {
+export async function getStaticProps(context) {
   const { Auth } = withSSRContext(context);
 
   try {
@@ -105,6 +105,7 @@ export async function getServerSideProps(context) {
       filters: (filters === undefined ? '' : filters),
       products: paginator.products,
       total: paginator.total,
+      revalidate: 30,
       error,
     },
   };

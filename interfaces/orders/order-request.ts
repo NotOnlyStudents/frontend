@@ -1,10 +1,7 @@
 import { Order } from './orders';
 
 export interface GetAllOrdersRequest {
-    data: {
-        total: number,
-        orders: Order[]
-    }
+    data: Order[]
 }
 
 export interface GetOneOrderRequest {

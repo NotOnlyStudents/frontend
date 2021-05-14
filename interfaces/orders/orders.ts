@@ -29,10 +29,6 @@ export enum OrderStatus {
   fulfilled = 'fulfilled',
 }
 
-export interface OrdersGetRequest {
-  orders: Order[];
-}
-
 export interface OrderPaginator {
   total: number,
   orders: Order[]

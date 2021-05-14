@@ -110,7 +110,7 @@ function OrderFilters({ filter, seller, handleChangeFilter }: Props) {
     handleChangeFilter(filterEndDate);
   };
 
-  const renderSearchForCustomerIfSeller = () => (seller
+  const renderSearchIfSeller = () => (seller
     ? (
       <InputBase
         placeholder="Search…"
@@ -130,7 +130,12 @@ function OrderFilters({ filter, seller, handleChangeFilter }: Props) {
   return (
     <Box p={2}>
       <Box display="flex">
-        { renderSearchForCustomerIfSeller() }
+        { (signedState === SignedState.Seller)
+          ? (
+            renderSearchIfSeller()
+          ) : (
+            <></>
+          )}
       </Box>
       <Box display="flex">
         { /* <TextFieldStartDate

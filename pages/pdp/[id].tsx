@@ -1,6 +1,6 @@
 import PDPView from 'components/pdp/PDPView';
 import {
-  PLPProductItem, Product, ProductFilter, ProductPaginator,
+  PLPProductItem, Product, ProductPaginator,
 } from 'interfaces/products/product';
 import Head from 'next/head';
 import React from 'react';
@@ -61,6 +61,7 @@ export async function getStaticProps({ params }) {
   return {
     props: {
       product,
+      revalidate: 30,
     },
   };
 }

@@ -105,6 +105,7 @@ export async function getStaticProps() {
   return {
     props: {
       products: paginator.products,
+      revalidate: 30,
     },
   };
 }

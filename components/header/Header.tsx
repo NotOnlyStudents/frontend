@@ -141,7 +141,7 @@ function Header(): React.ReactElement {
               <SearchIcon />
             </div>
             <InputBase
-              placeholder="Search…"
+              placeholder="Search for a product by name"
               value={searchText}
               classes={{
                 root: classes.inputRoot,

@@ -1,5 +1,5 @@
 import PDPView from 'components/pdp/PDPView';
-import { Product } from 'interfaces/products/product';
+import { PLPProductItem, Product, ProductPaginator } from 'interfaces/products/product';
 import Head from 'next/head';
 import React from 'react';
 import ProductService from 'services/product-service';
@@ -9,31 +9,43 @@ import { BreadcrumbPath } from 'interfaces/breadcrumb';
 import {
   getHomeLink, getLoginLink, getPLPLink, getViewProductLink,
 } from 'lib/links';
-import { withSSRContext } from 'aws-amplify';
-import { getSignedState } from 'lib/authContext';
+import { Auth } from 'aws-amplify';
+import { getSignedState, useAuthContext } from 'lib/authContext';
 import { SignedState } from 'interfaces/login';
-import { Snackbars, useSnackbarContext } from 'lib/SnackbarContext';
+import { useRouter } from 'next/router';
 
 interface Props {
   product: Product,
-  error: boolean
 }
 
-function PDPPage({ product, error }: Props) {
-  const { openSnackbar } = useSnackbarContext();
+function PDPPage({ product }: Props) {
+  const router = useRouter();
   const breadcrumbPaths: BreadcrumbPath[] = [
     { name: 'Home', href: getHomeLink(true), icon: HomeIcon },
     { name: 'Product List Page', href: getPLPLink(true) },
     { name: product.name },
   ];
 
-  React.useEffect(() => {
-    
-    if(error)
+  const checkAuth = async () => {
+    const { signInUserSession } = await Auth.currentAuthenticatedUser();
+    const signedState = await getSignedState(signInUserSession);
+
+    switch(signedState)
     {
-      openSnackbar(Snackbars.errorRetrievingDataId);
+      case SignedState.Customer: {
+        router.push(getViewProductLink(product.id));
+        break;
+      }
+      case SignedState.Customer: {
+        router.push(getLoginLink());
+        break;
+      }
+      default:
+        break;
     }
-  }, []);
+  }
+
+  React.useEffect(() => { checkAuth(); }, []);
 
   return (
     <>
@@ -48,54 +60,42 @@ function PDPPage({ product, error }: Props) {
   );
 }
 
-export async function getServerSideProps(context) {
-  const { Auth } = withSSRContext(context);
-  const { query } = context;
-
+export async function getStaticPaths() {
+  let paginator: ProductPaginator;
   try {
-    const { signInUserSession } = await Auth.currentAuthenticatedUser();
-
-    if (await getSignedState(signInUserSession) === SignedState.Customer) {
-      return {
-        redirect: {
-          destination: getViewProductLink(query.id),
-          permanent: false,
-        },
-      };
-    }
+    paginator = await (new ProductService()).getAllProduct();
   } catch (error) {
-    return {
-      redirect: {
-        destination: getLoginLink(),
-        permanent: false,
-      },
+    console.error(error);
+    paginator = {
+      products: [],
+      total: 0,
     };
   }
+  const productsWithoutTotal: PLPProductItem[] = paginator.products;
 
+  const paths = productsWithoutTotal.map((singleProduct) => ({
+    params: { id: singleProduct.id },
+  }));
+
+  return { paths, fallback: false };
+}
+
+export async function getStaticProps(context) {
   let product: Product;
-  let error = false;
+  const { params } = context;
 
   try {
-    product = await (new ProductService()).getProductById(query.id);
+    product = await (new ProductService()).getProductById(params.id);
   } catch (error) {
-    error = true;
-    product = {
-      name: "Product name",
-      description: "",
-      images: [ "https://socialistmodernism.com/wp-content/uploads/2017/07/placeholder-image.png" ],
-      quantity: 1,
-      price: 1,
-      evidence: false,
-      discount: 0,
-      discountedPrice: 1,
-      categories: [],
-    }
+    return {
+      notFound: true
+    };
   }
 
   return {
     props: {
       product,
-      error
+      revalidate: 30
     },
   };
 }

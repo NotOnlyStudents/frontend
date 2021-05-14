@@ -5,6 +5,14 @@ import React from 'react';
 import ProductService from 'services/product-service';
 import HomeIcon from '@material-ui/icons/Home';
 import EMLBreadcrumb from 'components/breadcrumb/EMLBreadcrumb';
+import {
+  getHomeLink, getLoginLink, getPLPLink, getViewProductLink,
+} from 'lib/links';
+import { withSSRContext } from 'aws-amplify';
+import { getSignedState } from 'lib/authContext';
+import { SignedState } from 'interfaces/login';
+import { redirect } from 'next/dist/next-server/server/api-utils';
+import { GetServerSideProps } from 'next';
 
 interface Props {
   product: Product
@@ -12,9 +20,9 @@ interface Props {
 
 function PDPEditPage({ product }: Props) {
   const breadcrumbPaths: BreadcrumbPath[] = [
-    { name: 'Home', href: '/', icon: HomeIcon },
-    { name: 'Product List Page', href: '/plp' },
-    { name: product.name, href: `/pdp/${product.id}` },
+    { name: 'Home', href: getHomeLink(true), icon: HomeIcon },
+    { name: 'Product List Page', href: getPLPLink(true) },
+    { name: product.name, href: getViewProductLink(product.id, true) },
     { name: 'Edit' },
   ];
 
@@ -43,13 +51,41 @@ function PDPEditPage({ product }: Props) {
   );
 }
 
-export async function getServerSideProps({ query }) {
+export async function getServerSideProps(context) {
+  const { Auth } = withSSRContext(context);
+
+  try {
+    const { signInUserSession } = await Auth.currentAuthenticatedUser();
+
+    if (await getSignedState(signInUserSession) === SignedState.Customer) {
+      return {
+        redirect: {
+          destination: getHomeLink(),
+          permanent: false,
+        },
+      };
+    }
+  } catch (error) {
+    return {
+      redirect: {
+        destination: getLoginLink(),
+        permanent: false,
+      },
+    };
+  }
+
+  const { query } = context;
   let product;
 
   try {
     product = await (new ProductService()).getProductById(query.id);
   } catch (error) {
-    console.log(error);
+    return {
+      redirect: {
+        destination: getHomeLink(true),
+        permanent: false
+      }
+    }
   }
 
   return {

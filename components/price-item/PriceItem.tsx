@@ -5,6 +5,7 @@ import React from 'react';
 
 interface Props {
   price: number,
+  discountedPrice: number,
   discount: number,
   quantity?: number
 }
@@ -23,10 +24,26 @@ const useStyles = makeStyles({
   },
 });
 
-function PriceItem({ price, quantity, discount } : Props) {
+function PriceItem({
+  price, quantity, discountedPrice, discount,
+} : Props) {
   const classes = useStyles();
 
-  const calculateDiscount = (Math.round((price - (price * discount) / (100)) * 100) / 100).toFixed(2);
+  const renderDiscountIfPresent = () => (
+    discount
+      ? (
+        <>
+          <Typography className={classes.discount}>
+            { discountedPrice }
+            €
+          </Typography>
+          <Typography className={classes.discount}>
+            {discount}
+            %
+          </Typography>
+        </>
+      ) : <></>
+  );
 
   return (
     <Box display="flex" className={classes.root}>
@@ -34,21 +51,7 @@ function PriceItem({ price, quantity, discount } : Props) {
         {price * quantity}
         €
       </Typography>
-      {
-        discount
-          ? (
-            <>
-              <Typography className={classes.discount}>
-                { calculateDiscount }
-                €
-              </Typography>
-              <Typography className={classes.discount}>
-                {discount}
-                %
-              </Typography>
-            </>
-          ) : <></>
-      }
+      { renderDiscountIfPresent() }
     </Box>
   );
 }

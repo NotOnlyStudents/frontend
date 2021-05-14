@@ -8,17 +8,31 @@ import ProductService from 'services/product-service';
 import HomeIcon from '@material-ui/icons/Home';
 import EMLBreadcrumb from 'components/breadcrumb/EMLBreadcrumb';
 import { BreadcrumbPath } from 'interfaces/breadcrumb';
+import { getHomeLink, getPLPLink, getViewProductLink } from 'lib/links';
+import { withSSRContext } from 'aws-amplify';
+import { getSignedState } from 'lib/authContext';
+import { SignedState } from 'interfaces/login';
+import { Snackbars, useSnackbarContext } from 'lib/SnackbarContext';
 
 interface Props {
-  product: Product
+  product: Product,
+  error: boolean
 }
 
-function PDPPage({ product }: Props) {
+function PDPPage({ product, error }: Props) {
+  const { openSnackbar } = useSnackbarContext();
   const breadcrumbPaths: BreadcrumbPath[] = [
-    { name: 'Home', href: '/', icon: HomeIcon },
-    { name: 'Product List Page', href: '/plp' },
+    { name: 'Home', href: getHomeLink(), icon: HomeIcon },
+    { name: 'Product List Page', href: getPLPLink() },
     { name: product.name },
   ];
+
+  React.useEffect(() => {
+    if(error)
+    {
+      openSnackbar(Snackbars.errorRetrievingDataId);
+    }
+  }, []);
 
   return (
     <>
@@ -49,19 +63,49 @@ export async function getStaticPaths() {
   return { paths, fallback: false };
 }
 
-export async function getStaticProps({ params }) {
-  let product;
+export async function getStaticProps(context) {
+  const { Auth } = withSSRContext(context);
+  const { params } = context;
+
+  try {
+    const { signInUserSession } = await Auth.currentAuthenticatedUser();
+    const signedState = await getSignedState(signInUserSession);
+
+    if (signedState === SignedState.Seller) {
+      return {
+        redirect: {
+          destination: getViewProductLink(params.id, true),
+          permanent: false,
+        },
+      };
+    }
+  } catch (e) { }
+
+  let product: Product;
+  let error = false;
 
   try {
     product = await (new ProductService()).getProductById(params.id);
-  } catch (error) {
-    console.log(error);
+  } catch (e) {
+    error = true;
+    product = {
+      name: "Product name",
+      description: "",
+      images: [ "https://socialistmodernism.com/wp-content/uploads/2017/07/placeholder-image.png" ],
+      quantity: 1,
+      price: 1,
+      evidence: false,
+      discount: 0,
+      discountedPrice: 1,
+      categories: [],
+    }
   }
 
   return {
     props: {
       product,
       revalidate: 30,
+      error
     },
   };
 }

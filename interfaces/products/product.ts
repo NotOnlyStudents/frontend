@@ -7,6 +7,7 @@ export interface Product {
   price?: number;
   evidence?: boolean;
   discount?: number;
+  discountedPrice?: number;
   categories?: string[];
 }
 
@@ -17,6 +18,7 @@ export interface PLPProductItem {
   image: string,
   evidence: boolean,
   discount: number,
+  discountedPrice: number;
   quantity: number,
 }
 
@@ -27,6 +29,7 @@ export interface CartProduct {
   quantity?: number;
   price?: number;
   discount?: number;
+  discountedPrice?: number;
 }
 
 export enum SortType {

@@ -1,6 +1,6 @@
 import HTTPRequest from 'lib/HTTPRequest';
 import {
-  PLPProductItem, Product, ProductFilter, ProductPaginator,
+  Product, ProductFilter, ProductPaginator,
 } from 'interfaces/products/product';
 import queryString from 'query-string';
 import {
@@ -32,50 +32,42 @@ class ProductServiceFetch implements ProductService {
     return res.data.token.data;
   };
 
-  createProduct = async (product: Product): Promise<Product> => {
+  createProduct = async (token: string, product: Product): Promise<Product> => {
     const req: HTTPRequest = new HTTPRequest(process.env.NEXT_PUBLIC_PRODUCTS_CATEGORIES_SERVICE_URL, 'products');
 
     const body: string = JSON.stringify(product);
 
-    const res: CreateProductRequest = await req.post<CreateProductRequest>(body);
+    const headers = {
+      Authorization: `Bearer ${token}`,
+    };
+
+    const res: CreateProductRequest = await req.post<CreateProductRequest>(body, headers);
 
     return res.data;
   };
 
-  editProduct = async (id: string, product: Product): Promise<Product> => {
+  editProduct = async (token: string, id: string, product: Product): Promise<Product> => {
     const req: HTTPRequest = new HTTPRequest(process.env.NEXT_PUBLIC_PRODUCTS_CATEGORIES_SERVICE_URL, `products/${id}`);
 
     const body: string = JSON.stringify(product);
 
-    console.log(product);
+    const headers = {
+      Authorization: `Bearer ${token}`,
+    };
 
-    const res: EditProductRequest = await req.patch<EditProductRequest>(body);
-
-    console.log(res);
+    const res: EditProductRequest = await req.patch<EditProductRequest>(body, headers);
 
     return res.data;
   };
 
-  deleteProduct = async (id: string) : Promise<void> => {
+  deleteProduct = async (token: string, id: string) : Promise<void> => {
     const req: HTTPRequest = new HTTPRequest(process.env.NEXT_PUBLIC_PRODUCTS_CATEGORIES_SERVICE_URL, `products/${id}`);
 
-    await req.delete<DeleteProductRequest>();
-  };
+    const headers = {
+      Authorization: `Bearer ${token}`,
+    };
 
-  addToEvidence = async (id: string): Promise<void> => {
-    const req: HTTPRequest = new HTTPRequest(process.env.NEXT_PUBLIC_PRODUCTS_CATEGORIES_SERVICE_URL, `products/${id}`);
-
-    const body: string = JSON.stringify({ evidence: true });
-
-    await req.patch<EditProductRequest>(body);
-  };
-
-  removeFromEvidence = async (id: string): Promise<void> => {
-    const req: HTTPRequest = new HTTPRequest(process.env.NEXT_PUBLIC_PRODUCTS_CATEGORIES_SERVICE_URL, `products/${id}`);
-
-    const body: string = JSON.stringify({ evidence: false });
-
-    await req.patch<EditProductRequest>(body);
+    await req.delete<DeleteProductRequest>('', headers);
   };
 }
 

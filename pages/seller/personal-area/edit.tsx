@@ -1,10 +1,15 @@
 import EMLBreadcrumb from 'components/breadcrumb/EMLBreadcrumb';
 import { BreadcrumbPath } from 'interfaces/breadcrumb';
-import { getHomeLink, getPersonalAreaLink } from 'lib/links';
+import {
+  getEditPersonalAreaLink, getHomeLink, getLoginLink, getPersonalAreaLink,
+} from 'lib/links';
 import HomeIcon from '@material-ui/icons/Home';
 import React from 'react';
 import PersonalAreaEdit from 'components/users/PersonalAreaEdit';
 import Head from 'next/head';
+import { withSSRContext } from 'aws-amplify';
+import { getSignedState } from 'lib/authContext';
+import { SignedState } from 'interfaces/login';
 
 function EditPersonalAreaSeller(): React.ReactElement {
   const breadcrumbPaths:BreadcrumbPath[] = [
@@ -22,6 +27,32 @@ function EditPersonalAreaSeller(): React.ReactElement {
       <PersonalAreaEdit />
     </>
   );
+}
+
+export async function getServerSideProps(context) {
+  const { Auth } = withSSRContext(context);
+  try {
+    const { signInUserSession } = await Auth.currentAuthenticatedUser();
+    const signedState = await getSignedState(signInUserSession);
+
+    if (signedState === SignedState.Customer) {
+      return {
+        redirect: {
+          destination: getEditPersonalAreaLink(),
+          permanent: false,
+        },
+      };
+    }
+  } catch (error) {
+    return {
+      redirect: {
+        destination: getLoginLink(),
+        permanent: false,
+      },
+    };
+  }
+
+  return { props: { } };
 }
 
 export default EditPersonalAreaSeller;

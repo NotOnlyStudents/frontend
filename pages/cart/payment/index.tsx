@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ChangeEventHandler } from 'react';
 import Head from 'next/head';
 import EMLBreadcrumb from 'components/breadcrumb/EMLBreadcrumb';
 import HomeIcon from '@material-ui/icons/Home';
@@ -16,23 +16,24 @@ import CartList from 'components/cart/cartList';
 import { ExpandLess, ExpandMore, LensTwoTone } from '@material-ui/icons';
 import { withSSRContext } from 'aws-amplify';
 import { AuthState } from '@aws-amplify/ui-components';
-import AuthContextProvider, { AuthContext, useAuthContext } from 'lib/authContext';
+import AuthContextProvider, { AuthContext, getSignedState, useAuthContext } from 'lib/authContext';
 import { getCartLink, getHomeLink, getLoginLink } from 'lib/links';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import CheckoutButton from 'components/button/CheckoutButton';
+import { SignedState } from 'interfaces/login';
 
 interface Props {
   cart: Cart,
   addresses?: Address[],
-  token?: string,
-  username: string
+  token?: string
 }
 
 interface State {
   addresses: Address[];
-  cart: Cart,
+  cart: Cart;
   selectedAddress: number;
   expanded: boolean;
+  additionalInfo: string;
 }
 
 class PaymentPage extends React.Component<Props, State> {
@@ -42,8 +43,6 @@ class PaymentPage extends React.Component<Props, State> {
     { name: 'Payment' },
   ];
 
-  // context: React.ContextType<typeof AuthContext>;
-
   constructor(props: Props) {
     super(props);
     this.state = {
@@ -51,6 +50,7 @@ class PaymentPage extends React.Component<Props, State> {
       addresses: props.addresses,
       selectedAddress: 0,
       expanded: true,
+      additionalInfo: ''
     };
   }
 
@@ -70,6 +70,11 @@ class PaymentPage extends React.Component<Props, State> {
       }
       return newState;
     });
+  };
+
+  disableCheckoutButton = () => {
+    const { addresses } = this.state;
+    return addresses.length === 0;
   };
 
   handleExpandClick = () => {
@@ -98,12 +103,22 @@ class PaymentPage extends React.Component<Props, State> {
     });
   };
 
+  handleChangeAdditionalInfo = (event: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({ additionalInfo: event.target.value });
+  }
+
   render() {
     const {
-      addresses, selectedAddress, cart, expanded,
+      addresses, 
+      selectedAddress, 
+      cart, 
+      expanded,
+      additionalInfo
     } = this.state;
 
-    const { token, username } = this.props;
+    const { token } = this.props;
+
+    const actualAddress = addresses[selectedAddress];
 
     return (
       <>
@@ -135,12 +150,17 @@ class PaymentPage extends React.Component<Props, State> {
           label="Additional informations"
           placeholder="Add more information for order delivery"
           fullWidth
+          value={additionalInfo}
+          onChange={this.handleChangeAdditionalInfo}
           multiline
           variant="outlined"
           margin="normal"
         />
         <Box width="100%" display="flex" justifyContent="flex-end">
-          <CheckoutButton cartID={username} />
+          <CheckoutButton 
+            address={actualAddress}
+            additionalInfo={additionalInfo}
+            disable={this.disableCheckoutButton()} />
         </Box>
       </>
     );
@@ -150,32 +170,45 @@ class PaymentPage extends React.Component<Props, State> {
 PaymentPage.contextType = AuthContext;
 
 export async function getServerSideProps(context) {
-  let products = [];
-  let addresses = [];
+  let products;
+  let addresses;
   let token: string = null;
   const { Auth } = withSSRContext(context);
-  let state;
-  let username;
 
   try {
-    const user = await Auth.currentAuthenticatedUser();
-    token = user.signInUserSession.idToken.jwtToken;
-    username = user.getUsername();
-    state = AuthState.SignIn;
+    const { signInUserSession } = await Auth.currentAuthenticatedUser();
+
+    const signedState = await getSignedState(signInUserSession);
+
+    if (signedState === SignedState.Seller) {
+      return {
+        redirect: {
+          destination: getHomeLink(true),
+          permanent: false,
+        },
+      };
+    }
+
+    token = signInUserSession.idToken.jwtToken;
+
     try {
       addresses = await (new AddressService()).getAllAddress(token);
     } catch (error) {
-      console.error(error);
+      addresses = [];
+    }
+
+    try {
+      products = await (new CartService()).getCartProducts(token);
+    } catch (error) {
+      products = [];
     }
   } catch (e) {
-    console.error(e);
-    state = AuthState.SignedOut;
-    username = '';
-  }
-  try {
-    products = await (new CartService()).getCartProducts(token);
-  } catch (error) {
-    console.log(error);
+    return {
+      redirect: {
+        destination: getLoginLink(),
+        permanent: false,
+      },
+    };
   }
 
   return {
@@ -184,8 +217,6 @@ export async function getServerSideProps(context) {
       cart: {
         products,
       },
-      authState: state,
-      username,
       token,
     },
   };

@@ -1,52 +1,88 @@
 import React from 'react';
 import { CartProduct } from 'interfaces/products/product';
 import {
-  Box, Button, Link, Typography,
+  Box, Button, Typography,
 } from '@material-ui/core';
 import ShopIcon from '@material-ui/icons/Shop';
 import { AuthContext } from 'lib/authContext';
 import { SignedState } from 'interfaces/login';
 import { getLoginLink, getPaymentLink } from 'lib/links';
-import CartService from 'services/cart-service/CartServiceFetch';
+import CartService from 'services/cart-service';
 import { Auth } from 'aws-amplify';
+import { productToCartProduct } from 'interfaces/products/product-converter';
 import CartItem from './cartItem';
+import { SnackbarContext, Snackbars } from 'lib/SnackbarContext';
+import NoProductInCart from 'components/noresult/NoProductsInCart';
+
 
 interface Props {
   items: CartProduct[];
   payment?: boolean;
+  authenticated?: boolean;
 }
 
 interface State{
   items: CartProduct[];
 }
-
 class CartList extends React.Component<Props, State> {
   constructor(props) {
     super(props);
     this.state = { items: props.items };
-    // console.log(this.state.items);
+  }
+  /*      {
+        id:products.id,
+        name:products.name,
+        description:products.description.name,
+        price:products.price,
+        quantity:products.quantity,
+        available:products.available,
+        evidence:products.evidence,
+        categories: products.categories,
+        images: products.images
+      } */
+
+  componentDidMount() {
+    // Allow a not authenticated user to access his local cart
+    if(!this.props.authenticated)
+    {
+      if (localStorage.getItem('item') != null) {
+        let storage = localStorage.getItem('item');
+        if (storage[storage.length - 1] === ',') {
+          storage = storage.slice(0, -1);
+        }
+        storage = `[${storage}]`;
+        const products = JSON.parse(storage);
+        this.setState({ items: products.map(productToCartProduct) });
+      }
+    }
   }
 
   handleChangeQuantity = async (quantity: number, index: number): Promise<void> => {
+    const { openSnackbar } = this.context;
+    let token: string="";
     try {
       const user = await Auth.currentAuthenticatedUser();
-      const token = user.signInUserSession.idToken.jwtToken;
+      token = user.signInUserSession.idToken.jwtToken;
+    } catch (error) { console.log(error); } finally {
       await (new CartService()).patchCartProducts(token, this.state.items[index].id, quantity);
-
       this.setState((state: State) => {
         const newState: State = state;
-
         newState.items[index].quantity = quantity;
         return newState;
       });
-    } catch (error) { console.error(error); }
+      openSnackbar(Snackbars.changeQuantitySuccessId);
+    }
   };
 
   handleRemoveProduct = async (index: number): Promise<void> => {
+    const { openSnackbar } = this.context;
+    let token = '';
     try {
       const user = await Auth.currentAuthenticatedUser();
-      const token = user.signInUserSession.idToken.jwtToken;
-      console.log(index);
+      token = user.signInUserSession.idToken.jwtToken;
+    } catch (error) {
+      console.log(error);
+    } finally {
       await new CartService().deleteCartProducts(token, this.state.items[index].id);
       this.setState((state: State) => {
         const newState: State = state;
@@ -55,32 +91,25 @@ class CartList extends React.Component<Props, State> {
 
         return newState;
       });
-    } catch (error) {
-      console.log(error);
+      openSnackbar(Snackbars.removedFromCartSuccessId);
     }
   };
 
-  handleSubmit = (): void => {
-    console.log(this.state);
-    // Si prosegue con checkout API TODO:
-  };
-
-  calculateTotalPrice = (): number => (
+  calculateTotalPrice = (): string => (
     this.state.items
-      .map((item: CartProduct) => (item.quantity * item.price))
+      .map((item: CartProduct) => (item.quantity * item.discountedPrice))
       .reduce(
         (totalPrice, price): number => (
           totalPrice + price
         ),
         0,
-      )
+      ).toFixed(2)
   );
 
   renderPaymentButtonIfLogged = () => {
-    const { signedState } = this.context;
-    const { payment } = this.props;
+    const { payment, authenticated } = this.props;
 
-    const button = signedState === SignedState.Customer
+    const button = authenticated
       ? (
         <Button
           variant="contained"
@@ -102,59 +131,55 @@ class CartList extends React.Component<Props, State> {
         </Button>
       );
 
-    return (
-      !payment
-        ? (
-          <>
-            {button}
-          </>
-        )
-        : <></>
-    );
+    return !payment ? button : <></>;
   };
 
-  renderAllItems = (): React.ReactElement[] => (
-    this.state.items.map(
+  renderAllItems = (): React.ReactElement[] =>
+    (this.state.items.map(
       (item: CartProduct, index: number): React.ReactElement => (
-        <CartItem
-          key={item.id}
-          item={item}
-          index={index}
-          handleChangeQuantity={this.handleChangeQuantity}
-          handleRemoveProduct={this.handleRemoveProduct}
-          payments={this.props.payment}
-        />
+        <Box key={item.id} marginBottom="4em">
+          <CartItem
+            item={item}
+            index={index}
+            handleChangeQuantity={this.handleChangeQuantity}
+            handleRemoveProduct={this.handleRemoveProduct}
+            payments={this.props.payment}
+          />
+        </Box>
       ),
-    ));
+    ))
+  ;
 
   render() {
-    const { payment } = this.props;
     return (
-      <Box>
-        <Box
-          display="flex"
-          alignItems="center"
-          justifyContent="flex-end"
-        >
+      this.state.items.length !== 0
+      ? (
+        <Box>
           <Box
             display="flex"
-            marginRight={2}
+            alignItems="center"
+            justifyContent="flex-end"
           >
-            <Typography>
-              Total price: &nbsp;
-            </Typography>
-            <Typography variant="button">
-              {`${this.calculateTotalPrice()}€`}
-            </Typography>
+            <Box
+              display="flex"
+              marginRight={2}
+            >
+              <Typography>
+                Total price:
+                {' '}
+                {`${this.calculateTotalPrice()}€`}
+              </Typography>
+            </Box>
+            { this.renderPaymentButtonIfLogged() }
           </Box>
-          { this.renderPaymentButtonIfLogged() }
+          {this.renderAllItems()}
         </Box>
-        {this.renderAllItems()}
-      </Box>
+      )
+      : <NoProductInCart />
     );
   }
 }
 
-CartList.contextType = AuthContext;
+CartList.contextType = SnackbarContext;
 
 export default CartList;

@@ -11,11 +11,13 @@ class OrderServiceFetch implements OrderService {
     const req: HTTPRequest = new HTTPRequest(process.env.NEXT_PUBLIC_ORDERS_SERVICE_URL, 'orders');
     const query: string = queryString.stringify(params);
 
-    const res: GetAllOrdersRequest = await req.get<GetAllOrdersRequest>(query);
-
+    const headers = {
+      Authorization: `Bearer ${token}`,
+    };
+    const res: GetAllOrdersRequest = await req.get<GetAllOrdersRequest>(query,headers);
     const paginator: OrderPaginator = {
-      orders: res.data.orders.map((order) => order),
-      total: res.data.total,
+      orders: res.data.map((order) => order),
+      total: res.data.length,
     };
 
     return paginator;

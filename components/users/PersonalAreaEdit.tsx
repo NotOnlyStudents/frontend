@@ -202,6 +202,7 @@ function PersonalAreaEdit() {
       <TextFieldValidation
         id="oldPassword"
         label="Old password"
+        type="password"
         placeholder="Insert your old password to change it or keep it empty if you don't want to do it"
         helperText=""
         value={info.oldPassword}
@@ -213,6 +214,7 @@ function PersonalAreaEdit() {
       <TextFieldValidation
         id="password"
         label="Password"
+        type="password"
         placeholder="Insert your new password"
         helperText=""
         value={info.password}
@@ -226,6 +228,7 @@ function PersonalAreaEdit() {
       <TextFieldValidation
         id="confirmPassword"
         label="Confirm password"
+        type="password"
         placeholder="Insert again your password to confirm it"
         value={info.confirmPassword}
         fullWidth

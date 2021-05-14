@@ -15,7 +15,32 @@ import { SignedState } from 'interfaces/login';
 import HomeIcon from '@material-ui/icons/Home';
 import { BreadcrumbPath } from 'interfaces/breadcrumb';
 import EMLBreadcrumb from 'components/breadcrumb/EMLBreadcrumb';
-import { withSSRContext } from 'aws-amplify';
+import { Auth, withSSRContext } from 'aws-amplify';
+import CartService from 'services/cart-service/CartServiceFetch';
+
+
+
+const handleLogin = async () => {
+  try {
+    const user = await Auth.currentAuthenticatedUser();
+    const token = user.signInUserSession.idToken.jwtToken;
+    let storage = localStorage.getItem('item');
+      if (localStorage != null) {
+        if (storage[storage.length - 1] === ',') {
+          storage = storage.slice(0, -1);
+        }
+        storage = `[${storage}]`;
+        const products = JSON.parse(storage);
+
+        for (let i = 0; i < products.length; i++) {
+          await new CartService().postCartProducts(token, products[i]);
+        }
+        localStorage.removeItem('item');
+      }
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 function Login() {
   const { setAuthState, setUserInfo, setSignedState } = useAuthContext();
@@ -62,7 +87,7 @@ function Login() {
             { type: 'password' },
           ]}
         />
-        <AmplifySignIn slot="sign-in" usernameAlias="email" />
+        <AmplifySignIn slot="sign-in" handleAuthStateChange={handleLogin} usernameAlias="email" />
         <AmplifyForgotPassword slot="forgot-password" />
       </AmplifyAuthenticator>
     </>

@@ -130,7 +130,7 @@ export async function getServerSideProps(context) {
     };
     error = true;
   }
-  console.log(paginator);
+  //console.log(paginator);
   return {
     props: {
       filters,

@@ -1,6 +1,6 @@
 import HTTPRequest from 'lib/HTTPRequest';
 import {
-  PLPProductItem, Product, ProductFilter, ProductPaginator,
+  Product, ProductFilter, ProductPaginator,
 } from 'interfaces/products/product';
 import queryString from 'query-string';
 import {

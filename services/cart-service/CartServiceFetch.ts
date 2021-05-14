@@ -3,7 +3,7 @@ import {
   CartProduct, Product,
 } from 'interfaces/products/product';
 import {
-  CartGETRequest, CartPatchRequest, CartToken,
+  CartGETRequest, CartPatchRequest, CartPostRequest, CartToken,
 } from 'interfaces/cart/cart-request';
 import { createHmac } from 'crypto';
 import { productToCartProduct } from 'interfaces/products/product-converter';
@@ -11,6 +11,10 @@ import CartService from './CartService';
 
 class CartServiceFetch implements CartService {
   getCartProducts = async (token): Promise<CartProduct[]> => {
+    if (token === '') {
+      const empty: [] = [];
+      return empty;
+    }
     const req: HTTPRequest = new HTTPRequest(process.env.NEXT_PUBLIC_CART_SERVICE_URL, 'cart');
     const headers = {
       Authorization: `Bearer ${token}`,
@@ -32,71 +36,153 @@ class CartServiceFetch implements CartService {
   };
 
   postCartProducts = async (token, product: Product): Promise<void> => {
-    const req: HTTPRequest = new HTTPRequest(process.env.NEXT_PUBLIC_CART_SERVICE_URL, 'cart');
+    if (token === '') {
+      let storage = localStorage.getItem('item');
+        if(storage !== null){ 
+          const oldStorage=storage;
+          if (storage[storage.length - 1] === ',') {
+            storage = storage.slice(0, -1);
+          }
+          storage = `[${storage}]`;
+          const products = JSON.parse(storage);
+          let present=false;
+          for (let i = 0; i < products.length; i++) {
+            if (products[i].id === product.id) {
+              products[i].quantity = product.quantity;
+              present=true;
+            }
+          }
+            if(present)
+            { localStorage.setItem('item', JSON.stringify(products).slice(0, -1).slice(1))}
+            else{
+            let newStorage = `${JSON.stringify(product)},`
+            newStorage = `${oldStorage + JSON.stringify(product)},` ;
+            localStorage.setItem('item', newStorage);
+            }
+      }
 
-    const timeout = new Date();
-    timeout.setMinutes(timeout.getMinutes() + 5);
-    const date = {
-      token: {
-        data: {
-          id: product.id,
-          name: product.name,
-          description: product.description,
-          images: product.images,
-          quantity: product.quantity,
-          price: product.price,
-          evidence: product.evidence,
-          category: product.categories,
+      else{ 
+        const newStorage = `${JSON.stringify(product)},`
+        localStorage.setItem('item', newStorage);
+      };
+
+    }
+    else{
+      const req: HTTPRequest = new HTTPRequest(process.env.NEXT_PUBLIC_CART_SERVICE_URL, 'cart');
+
+      const timeout = new Date();
+      timeout.setMinutes(timeout.getMinutes() + 5);
+      const date = {
+        token: {
+          data: {
+            id: product.id,
+            name: product.name,
+            description: product.description,
+            images: product.images,
+            quantity: product.quantity,
+            discount: product.discount,
+            price: product.price,
+            evidence: product.evidence,
+            category: product.categories,
+          },
+          timeout,
         },
-        timeout,
-      },
-    };
-    const hmac = createHmac('sha256', 'password').update(JSON.stringify(date)).digest('base64');
+      };
+      const hmac = createHmac('sha256', 'password').update(JSON.stringify(date)).digest('base64');
 
-    const dateComplete = {
-      token: {
-        data: {
-          id: product.id,
-          name: product.name,
-          description: product.description,
-          images: product.images,
-          quantity: product.quantity,
-          price: product.price,
-          evidence: product.evidence,
-          category: product.categories,
+      const dateComplete = {
+        token: {
+          data: {
+            id: product.id,
+            name: product.name,
+            description: product.description,
+            images: product.images,
+            quantity: product.quantity,
+            discount: product.discount,
+            price: product.price,
+            evidence: product.evidence,
+            category: product.categories,
+          },
+          timeout,
         },
-        timeout,
-      },
-      hmac,
-    };
+        hmac,
+      };
 
-    const body = JSON.stringify(dateComplete);
-    const headers = {
-      'Content-type': 'application/json',
-      Accept: 'application/json',
-      Authorization: `Bearer ${token}`,
-    };
+      const body = JSON.stringify(dateComplete);
+      const headers = {
+        'Content-type': 'application/json',
+        Accept: 'application/json',
+        Authorization: `Bearer ${token}`,
+      };
 
-    await req.post<Product>(body, headers);
+      try {
+        await req.post<Product>(body, headers);
+      } catch (error) {
+        console.log(error);
+      }
+    }
   };
 
   deleteCartProducts = async (token, productId): Promise<void> => {
+    if (token === '') {
+      if (localStorage != null) {
+        let storage = localStorage.getItem('item');
+        if (storage[storage.length - 1] === ',') {
+          storage = storage.slice(0, -1);
+        }
+        storage = `[${storage}]`;
+        const products = JSON.parse(storage);
+
+        for (let i = 0; i < products.length; i++) {
+          if (products[i].id === productId) {
+            products.splice(i, 1);
+          }
+        }
+        if (products.length !== 0) {
+          localStorage.setItem('item', JSON.stringify(products).slice(0, -1).slice(1));
+        } else {
+          localStorage.removeItem('item');
+        }
+      }
+    }
+    else{
     const req: HTTPRequest = new HTTPRequest(process.env.NEXT_PUBLIC_CART_SERVICE_URL, `cart/${productId}`);
     const headers = {
       Accept: 'application/json',
       Authorization: `Bearer ${token}`,
     };
-    await req.delete<CartPatchRequest>('', headers);
+    const res = await req.delete<CartPatchRequest>('', headers);}
   };
 
   patchCartProducts = async (token, productId, quantity): Promise<void> => {
-    const req: HTTPRequest = new HTTPRequest(process.env.NEXT_PUBLIC_CART_SERVICE_URL, `cart/${productId}`);
-    const bodyString = JSON.stringify({ quantity });
-    const headers = {
-      Authorization: `Bearer ${token}`,
-    };
+    if (token === '') {
+      let storage = localStorage.getItem('item');
+      if (storage != null) {
+        if (storage[storage.length - 1] === ',') {
+          storage = storage.slice(0, -1);
+        }
+        storage = `[${storage}]`;
+        const products = JSON.parse(storage);
 
-    await req.patch<CartPatchRequest>(bodyString, headers);
+        for (let i = 0; i < products.length; i++) {
+          if (products[i].id === productId) {
+            products[i].quantity = quantity;
+          }
+        }
+
+        localStorage.setItem('item', JSON.stringify(products).slice(0, -1).slice(1));
+      }
+    }
+    else
+    {
+      const req: HTTPRequest = new HTTPRequest(process.env.NEXT_PUBLIC_CART_SERVICE_URL, `cart/${productId}`);
+      const bodyString = JSON.stringify({ quantity });
+      const headers = {
+        Authorization: `Bearer ${token}`,
+      };
+  
+      await req.patch<CartPatchRequest>(bodyString, headers);
+    }
   };
 }
 

@@ -4,7 +4,7 @@ import {
 } from '@material-ui/core';
 
 import { makeStyles } from '@material-ui/styles';
-import { PLPProductItem, ProductFilter } from 'interfaces/products/product';
+import { PLPProductItem, ProductFilter, ProductPaginator } from 'interfaces/products/product';
 import ProductService from 'services/product-service';
 import Head from 'next/head';
 import PLPList from 'components/plp/PLPList';
@@ -13,9 +13,11 @@ import { getSignedState } from 'lib/authContext';
 import { SignedState } from 'interfaces/login';
 import { withSSRContext } from 'aws-amplify';
 import { useRouter } from 'next/router';
+import { Snackbars, useSnackbarContext } from 'lib/SnackbarContext';
 
 interface Props {
   products: PLPProductItem[];
+  error: boolean;
 }
 
 const useStyles = makeStyles({
@@ -43,9 +45,17 @@ const useStyles = makeStyles({
   },
 });
 
-function HomeCustomer({ products }: Props) : React.ReactElement {
+function HomeCustomer({ products, error }: Props) : React.ReactElement {
   const classes = useStyles();
+  const { openSnackbar } = useSnackbarContext();
   const router = useRouter();
+
+  React.useEffect(() => {
+    if(error)
+    {
+      openSnackbar(Snackbars.errorRetrievingDataId);
+    }
+  }, []);
 
   const renderFeaturedProductsIfPresent = () => (products.length
     ? (
@@ -110,19 +120,23 @@ export async function getServerSideProps(context) {
 
   const filters: ProductFilter = { evidence: true };
 
-  let paginator;
+  let paginator: ProductPaginator;
+  let error = false;
 
   try {
     paginator = await (new ProductService()).getAllProduct(filters);
   } catch (error) {
+    error = true;
     paginator = {
       products: [],
+      total: 0
     };
   }
 
   return {
     props: {
       products: paginator.products,
+      error
     },
   };
 }

@@ -74,7 +74,7 @@ export async function getStaticPaths() {
     params: { id: singleProduct.id },
   }));
 
-  return { paths, fallback: true };
+  return { paths, fallback: 'blocking' };
 }
 
 export async function getStaticProps(context) {

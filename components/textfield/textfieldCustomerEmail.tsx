@@ -11,6 +11,7 @@ interface Props {
 const useStyles = makeStyles({
   price: {
     padding: '0.5em 0',
+    width: '100%',
   },
 });
 

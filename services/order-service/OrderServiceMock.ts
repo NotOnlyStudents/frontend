@@ -6,7 +6,7 @@ import { PLPProductItem } from 'interfaces/products/product';
 import OrderService from './OrderService';
 
 class OrderServiceMock implements OrderService {
-  getAllOrder = async (token: string, params?: OrderFilter): Promise<OrderPaginator> => ({
+  getAllOrder = async (token?: string, params?: OrderFilter): Promise<OrderPaginator> => ({
     orders: (new Array(10)).fill(0).map(
       (): Order => ({
         id: faker.datatype.uuid(),

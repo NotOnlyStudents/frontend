@@ -56,7 +56,7 @@ export async function getServerSideProps(context) {
   const { Auth } = withSSRContext(context);
   let token: string = '';
   try {
-    const {signInUserSession} = await Auth.currentAuthenticatedUser();
+    const { signInUserSession } = await Auth.currentAuthenticatedUser();
     const signedState = await getSignedState(signInUserSession);
     token = signInUserSession.idToken.jwtToken;
 

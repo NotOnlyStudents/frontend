@@ -1,69 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
-  Box, Theme, makeStyles, fade, InputBase,
+  Box,
 } from '@material-ui/core';
 import { OrderFilter } from 'interfaces/orders/orders';
-import { NextRouter, useRouter } from 'next/router';
-import { useAuthContext } from 'lib/authContext';
-import { getOrderLink } from 'lib/links';
-import { SignedState } from 'interfaces/login';
 import TextFieldCustomerEmail from 'components/textfield/textfieldCustomerEmail';
-
-const useStyles = makeStyles((theme: Theme) => ({
-  container: {
-    display: 'flex',
-    justifyContent: 'space-between',
-  },
-  link: {
-    display: 'flex',
-    alignItems: 'center',
-    color: 'white',
-    cursor: 'pointer',
-    '&:hover': {
-      textDecoration: 'none',
-    },
-    '&:focus': {
-      textDecoration: 'none',
-    },
-  },
-  searchContainer: {
-    display: 'flex',
-    justifyContent: 'center',
-    flexGrow: 1,
-    position: 'relative',
-  },
-  search: {
-    width: '80%',
-    borderRadius: theme.shape.borderRadius,
-    backgroundColor: fade(theme.palette.common.white, 0.15),
-    '&:hover': {
-      backgroundColor: fade(theme.palette.common.white, 0.25),
-    },
-    marginLeft: 0,
-  },
-  searchIcon: {
-    padding: theme.spacing(0, 2),
-    height: '100%',
-    position: 'absolute',
-    pointerEvents: 'none',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  inputRoot: {
-    color: 'inherit',
-    width: '100%',
-  },
-  inputInput: {
-    padding: theme.spacing(1, 1, 1, 0),
-    paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
-    transition: theme.transitions.create('width'),
-    width: '100%',
-    [theme.breakpoints.up('sm')]: {
-      width: '100%',
-    },
-  },
-}));
 
 interface Props {
   filter: OrderFilter;
@@ -72,9 +12,8 @@ interface Props {
 }
 
 function OrderFilters({ filter, seller, handleChangeFilter }: Props) {
-  const classes = useStyles();
   // const router: NextRouter = useRouter();
-  const { signedState } = useAuthContext();
+  // const { signedState } = useAuthContext();
   // const [searchText, setSearchText] = useState(router.query.text || '');
 
   /* const handleSearchEnter = async (
@@ -129,12 +68,7 @@ function OrderFilters({ filter, seller, handleChangeFilter }: Props) {
   return (
     <Box p={2}>
       <Box display="flex">
-        { (signedState === SignedState.Seller)
-          ? (
-            renderSearchIfSeller()
-          ) : (
-            <></>
-          )}
+        { renderSearchIfSeller() }
       </Box>
       <Box display="flex">
         { /* <TextFieldStartDate

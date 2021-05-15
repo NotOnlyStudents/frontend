@@ -7,7 +7,7 @@ import { PLPProductItem } from 'interfaces/products/product';
 
 export interface OrderFilter {
   id?: string,
-  offset?: number,
+  // offset?: number,
   // sort?: SortOrderType,
   start?: string,
   end?: string,

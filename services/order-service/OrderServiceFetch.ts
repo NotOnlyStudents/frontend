@@ -7,7 +7,7 @@ import { GetAllOrdersRequest, GetOneOrderRequest } from 'interfaces/orders/order
 import OrderService from './OrderService';
 
 class OrderServiceFetch implements OrderService {
-  getAllOrder = async (token: string, params?: OrderFilter): Promise<OrderPaginator> => {
+  getAllOrder = async (token?: string, params?: OrderFilter): Promise<OrderPaginator> => {
     const req: HTTPRequest = new HTTPRequest(process.env.NEXT_PUBLIC_ORDERS_SERVICE_URL, 'orders');
     const query: string = queryString.stringify(params);
 
@@ -19,8 +19,6 @@ class OrderServiceFetch implements OrderService {
       orders: res.data.map((order) => order),
       total: res.data.length,
     };
-   // console.log(paginator.orders);
-    //console.log(`TOTAL: ${paginator.total}`);
 
     return paginator;
   };

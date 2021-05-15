@@ -6,6 +6,7 @@ import {
 } from '@material-ui/core';
 import { PLPProductItem } from 'interfaces/products/product';
 import { getViewProductLink } from 'lib/links';
+import { useRouter } from 'next/router';
 
 interface Props {
   order: Order,
@@ -58,6 +59,8 @@ const useStyles = makeStyles({
 
 function OrderProduct({ order, seller }: Props) {
   const classes = useStyles();
+  const router = useRouter();
+  const renderAddress = (): string => `${order.address.address}`;
 
   const calculateTotalPrice = (): number => (
     order.products.map((item: PLPProductItem) => (item.quantity * item.price))
@@ -69,14 +72,12 @@ function OrderProduct({ order, seller }: Props) {
       )
   );
 
-  const renderAddress = (): string => `${order.address.address}`;
-
   const renderAllOrderItems = (): React.ReactElement[] => order.products.map(
     (item: PLPProductItem, index:number): React.ReactElement => (
       <Grid key={index} item container>
         <CardMedia
           className={classes.image}
-          image={item['images'][0]}
+          image={item.image}
         />
         <Grid item xs={12} sm container className={classes.product}>
           <Grid item xs container className={classes.description}>
@@ -86,7 +87,7 @@ function OrderProduct({ order, seller }: Props) {
               </Typography>
               <Typography variant="body2">
                 <Button
-                  href={getViewProductLink(item.id, seller)}
+                  onClick={() => { router.push(getViewProductLink(item.id, seller)); }}
                   component={Link}
                   size="small"
                   color="primary"

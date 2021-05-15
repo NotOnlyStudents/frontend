@@ -1,5 +1,5 @@
 import PDPView from 'components/pdp/PDPView';
-import { PLPProductItem, Product, ProductPaginator } from 'interfaces/products/product';
+import { Product } from 'interfaces/products/product';
 import Head from 'next/head';
 import React from 'react';
 import ProductService from 'services/product-service';
@@ -9,7 +9,7 @@ import { BreadcrumbPath } from 'interfaces/breadcrumb';
 import {
   getHomeLink, getLoginLink, getPLPLink, getViewProductLink,
 } from 'lib/links';
-import { Auth } from 'aws-amplify';
+import { Auth, withSSRContext } from 'aws-amplify';
 import { getSignedState, useAuthContext } from 'lib/authContext';
 import { SignedState } from 'interfaces/login';
 import { useRouter } from 'next/router';
@@ -19,33 +19,11 @@ interface Props {
 }
 
 function PDPPage({ product }: Props) {
-  const router = useRouter();
   const breadcrumbPaths: BreadcrumbPath[] = [
     { name: 'Home', href: getHomeLink(true), icon: HomeIcon },
     { name: 'Product List Page', href: getPLPLink(true) },
     { name: product.name },
   ];
-
-  const checkAuth = async () => {
-    const { signInUserSession } = await Auth.currentAuthenticatedUser();
-    const signedState = await getSignedState(signInUserSession);
-
-    switch(signedState)
-    {
-      case SignedState.Customer: {
-        router.push(getViewProductLink(product.id));
-        break;
-      }
-      case SignedState.Customer: {
-        router.push(getLoginLink());
-        break;
-      }
-      default:
-        break;
-    }
-  }
-
-  React.useEffect(() => { checkAuth(); }, []);
 
   return (
     <>
@@ -60,35 +38,38 @@ function PDPPage({ product }: Props) {
   );
 }
 
-export async function getStaticPaths() {
-  let paginator: ProductPaginator;
-  try {
-    paginator = await (new ProductService()).getAllProduct();
-  } catch (error) {
-    console.error(error);
-    paginator = {
-      products: [],
-      total: 0,
-    };
-  }
-  const productsWithoutTotal: PLPProductItem[] = paginator.products;
-
-  const paths = productsWithoutTotal.map((singleProduct) => ({
-    params: { id: singleProduct.id },
-  }));
-
-  return { paths, fallback: 'blocking' };
-}
-
-export async function getStaticProps(context) {
+export async function getServerSideProps(context) {
   let product: Product;
-  const { params } = context;
-
+  const { query } = context;
+  const { Auth } = withSSRContext(context);
   try {
-    product = await (new ProductService()).getProductById(params.id);
+    const { signInUserSession } = await Auth.currentAuthenticatedUser();
+
+    if (await getSignedState(signInUserSession) === SignedState.Customer) {
+      return {
+        redirect: {
+          destination: getViewProductLink(query.id),
+          permanent: false,
+        },
+      };
+    }
   } catch (error) {
     return {
-      notFound: true
+      redirect: {
+        destination: getLoginLink(),
+        permanent: false,
+      },
+    };
+  }
+
+  try {
+    product = await (new ProductService()).getProductById(query.id);
+  } catch (error) {
+    return {
+      redirect: {
+        destination: getPLPLink(true),
+        permanent: false,
+      },
     };
   }
 
@@ -96,7 +77,6 @@ export async function getStaticProps(context) {
     props: {
       product,
     },
-    revalidate: 1
   };
 }
 

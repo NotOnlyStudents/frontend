@@ -6,6 +6,7 @@ import {
 } from '@material-ui/core';
 import { PLPProductItem } from 'interfaces/products/product';
 import { getViewProductLink } from 'lib/links';
+import { useRouter } from 'next/router';
 // import { OrderItem } from 'interfaces/products/product';
 
 interface Props {
@@ -59,6 +60,8 @@ const useStyles = makeStyles({
 
 function OrderProduct({ order, seller }: Props) {
   const classes = useStyles();
+  const router = useRouter();
+  const renderAddress = (): string => `${order.address.address}`;
 
   const calculateTotalPrice = (): number => (
     order.products.map((item: PLPProductItem) => (item.quantity * item.price))
@@ -69,8 +72,6 @@ function OrderProduct({ order, seller }: Props) {
         0,
       )
   );
-
-  const renderAddress = (): string => `${order.address.address}`;
 
   const renderAllOrderItems = (): React.ReactElement[] => order.products.map(
     (item: PLPProductItem, index:number): React.ReactElement => (
@@ -87,7 +88,7 @@ function OrderProduct({ order, seller }: Props) {
               </Typography>
               <Typography variant="body2">
                 <Button
-                  href={getViewProductLink(item.id, seller)}
+                  onClick={() => { router.push(getViewProductLink(item.id,seller)); }}
                   component={Link}
                   size="small"
                   color="primary"

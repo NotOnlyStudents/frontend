@@ -6,6 +6,10 @@ html, body {
     padding: 0;
 }
 
+body {
+    overflow-x: hidden;
+}
+
 :root {
     --amplify-primary-color: #553C2A;
     --amplify-primary-tint: #553C2A;

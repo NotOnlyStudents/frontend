@@ -142,6 +142,7 @@ class OrderSeller extends React.Component<Props, State> {
 
   render(): React.ReactElement {
     const { filters, orders, totalOrders } = this.state;
+    const seller = this.props.signedState === SignedState.Seller ?  true : false; 
     return (
       <>
         <Head>
@@ -160,7 +161,7 @@ class OrderSeller extends React.Component<Props, State> {
           ? (
             <NoResultOrder />
           ) : (
-            <OrdersList orders={orders} />
+            <OrdersList orders={orders} seller={seller} />
           )}
         <EMLPagination
           totalElements={totalOrders}
@@ -213,7 +214,6 @@ export async function getServerSideProps(context) {
     };
     error = true;
   }
-  // console.log(paginator);
   return {
     props: {
       filters,

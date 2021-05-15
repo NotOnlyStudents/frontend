@@ -19,8 +19,8 @@ class OrderServiceFetch implements OrderService {
       orders: res.data.map((order) => order),
       total: res.data.length,
     };
-    console.log(paginator.orders);
-    console.log(`TOTAL: ${paginator.total}`);
+   // console.log(paginator.orders);
+    //console.log(`TOTAL: ${paginator.total}`);
 
     return paginator;
   };

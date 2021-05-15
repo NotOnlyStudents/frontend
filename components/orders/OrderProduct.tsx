@@ -1,12 +1,14 @@
-import React from 'react';
-import { Order } from 'interfaces/orders/orders';
+import React, { ReactElement } from 'react';
+import { Order, OrderStatus } from 'interfaces/orders/orders';
 import { makeStyles } from '@material-ui/core/styles';
 import {
-  Button, Grid, CardMedia, Typography, Link,
+  Dialog, DialogActions, DialogTitle, IconButton, Button, Grid, CardMedia, Typography, Link,
 } from '@material-ui/core';
 import { PLPProductItem } from 'interfaces/products/product';
 import { getViewProductLink } from 'lib/links';
 import { useRouter } from 'next/router';
+import OrderService from 'services/order-service';
+import { Auth } from 'aws-amplify';
 
 interface Props {
   order: Order,
@@ -60,7 +62,51 @@ const useStyles = makeStyles({
 function OrderProduct({ order, seller }: Props) {
   const classes = useStyles();
   const router = useRouter();
+  const [openModal, setOpenModal] = React.useState(false);
   const renderAddress = (): string => `${order.address.address}`;
+
+
+
+  const changeStatus = async (): Promise<void>=> {
+    let token: string;
+    try {
+      const { signInUserSession } = await Auth.currentAuthenticatedUser();
+      token = signInUserSession.idToken.jwtToken;
+      try{
+        await (new OrderService()).editOrder(token,order.id);
+        setOpenModal(false);
+        renderAllOrderItems();
+      }
+      catch{console.log("erroe");}
+      //console.log("Moidfy the order with success");
+    }
+    catch(error){
+      console.error(error);
+      setOpenModal(false);
+    }
+    return;
+  }
+
+
+  const renderStatus = (): string | ReactElement => {
+    if(seller)
+    {
+      if(order.status===OrderStatus.new)
+      {
+        return(<>
+          {order.status}
+          <Button
+          onClick={() => { setOpenModal(true); }}
+          size="small"
+          color="secondary">
+          Set Fullfilled
+          </Button>
+          </>);
+      }
+    }
+      return order.status;
+  }
+
 
   const calculateTotalPrice = (): number => (
     order.products.map((item: PLPProductItem) => (item.quantity * item.price))
@@ -71,6 +117,8 @@ function OrderProduct({ order, seller }: Props) {
         0,
       )
   );
+
+  
 
   const renderAllOrderItems = (): React.ReactElement[] => order.products.map(
     (item: PLPProductItem, index:number): React.ReactElement => (
@@ -94,6 +142,20 @@ function OrderProduct({ order, seller }: Props) {
                 >
                   See more details
                 </Button>
+                <Dialog
+                    open={openModal}
+                    aria-labelledby="alert-dialog-title"
+                >
+                <DialogTitle id="alert-dialog-title">Are you sure to set this order fullfilled?</DialogTitle>
+                  <DialogActions>
+                    <Button onClick={() => {setOpenModal(false); }} color="primary">
+                      NO
+                    </Button>
+                    <Button onClick={() => {changeStatus()}} color="primary" autoFocus>
+                        YES
+                    </Button>
+                  </DialogActions>
+                </Dialog>
               </Typography>
               <Typography variant="body2" color="textSecondary">
                 Quantity:
@@ -157,7 +219,7 @@ function OrderProduct({ order, seller }: Props) {
             <Typography>
               <span className={classes.textHeader}>Status:</span>
               {' '}
-              { order.status }
+              { renderStatus() }
             </Typography>
           </Grid>
           <Grid item>

@@ -152,7 +152,7 @@ class OrderCustomer extends React.Component<Props, State> {
 
   render(): React.ReactElement {
     const { filters, orders, totalOrders } = this.state;
-    console.log(totalOrders);
+   // console.log(totalOrders);
     return (
       <>
         <Head>
@@ -218,7 +218,6 @@ export async function getServerSideProps(context) {
     };
     error = true;
   }
-  // console.log(paginator);
   return {
     props: {
       filters,

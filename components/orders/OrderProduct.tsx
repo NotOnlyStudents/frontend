@@ -77,7 +77,7 @@ function OrderProduct({ order, seller }: Props) {
       <Grid key={index} item container>
         <CardMedia
           className={classes.image}
-          image={item.image}
+          image={item['images'][0]}
         />
         <Grid item xs={12} sm container className={classes.product}>
           <Grid item xs container className={classes.description}>

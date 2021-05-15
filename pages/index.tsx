@@ -137,9 +137,9 @@ export async function getStaticProps(context) {
   return {
     props: {
       products: paginator.products,
-      revalidate: 30,
       error,
     },
+    revalidate: 30,
   };
 }
 

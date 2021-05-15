@@ -1,14 +1,14 @@
 import { Address } from 'interfaces/address/address';
 import { PLPProductItem } from 'interfaces/products/product';
 
-export enum SortOrderType {
+/* export enum SortOrderType {
   'dataasc', 'datadesc',
-}
+} */
 
 export interface OrderFilter {
   id?: string,
   offset?: number,
-  sort?: SortOrderType,
+  // sort?: SortOrderType,
   start?: string,
   end?: string,
   email?: string,

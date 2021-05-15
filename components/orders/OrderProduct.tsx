@@ -6,7 +6,6 @@ import {
 } from '@material-ui/core';
 import { PLPProductItem } from 'interfaces/products/product';
 import { getViewProductLink } from 'lib/links';
-// import { OrderItem } from 'interfaces/products/product';
 
 interface Props {
   order: Order,

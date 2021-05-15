@@ -106,7 +106,7 @@ class PLP extends React.Component<Props, State> {
       pathname: '',
       query,
     }, null, {
-      scroll: false
+      scroll: false,
     });
 
     this.setState({ filters });
@@ -123,7 +123,7 @@ class PLP extends React.Component<Props, State> {
       pathname: '',
       query,
     }, null, {
-      scroll: false
+      scroll: false,
     });
     this.setState((state) => {
       const newState: State = state;

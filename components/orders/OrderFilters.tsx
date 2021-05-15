@@ -7,6 +7,7 @@ import { NextRouter, useRouter } from 'next/router';
 import { useAuthContext } from 'lib/authContext';
 import { getOrderLink } from 'lib/links';
 import { SignedState } from 'interfaces/login';
+import TextFieldCustomerEmail from 'components/textfield/textfieldCustomerEmail';
 
 const useStyles = makeStyles((theme: Theme) => ({
   container: {
@@ -66,17 +67,17 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface Props {
   filter: OrderFilter;
-  seller: boolean;
+  seller?: boolean;
   handleChangeFilter: (filter: OrderFilter) => void;
 }
 
 function OrderFilters({ filter, seller, handleChangeFilter }: Props) {
   const classes = useStyles();
-  const router: NextRouter = useRouter();
+  // const router: NextRouter = useRouter();
   const { signedState } = useAuthContext();
-  const [searchText, setSearchText] = useState(router.query.text || '');
+  // const [searchText, setSearchText] = useState(router.query.text || '');
 
-  const handleSearchEnter = async (
+  /* const handleSearchEnter = async (
     event: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     if (event.key === 'Enter') {
@@ -96,7 +97,7 @@ function OrderFilters({ filter, seller, handleChangeFilter }: Props) {
       await router.push(newPage);
       router.reload();
     }
-  };
+  }; */
 
   const handleChangeStartDate = (start: Date) => {
     const filterStartDate: OrderFilter = { ...filter };
@@ -110,19 +111,17 @@ function OrderFilters({ filter, seller, handleChangeFilter }: Props) {
     handleChangeFilter(filterEndDate);
   };
 
+  const handleChangeCustomerEmail = (customerEmail: string) => {
+    const filterCustomer: OrderFilter = { ...filter };
+    filterCustomer.email = customerEmail;
+    handleChangeFilter(filterCustomer);
+  };
+
   const renderSearchIfSeller = () => (seller
     ? (
-      <InputBase
-        placeholder="Search…"
-        value={searchText}
-        classes={{
-          root: classes.inputRoot,
-          input: classes.inputInput,
-        }}
-        inputProps={{ 'aria-label': 'search' }}
-        onChange={(event) => setSearchText(event.target.value)}
-        onKeyUp={handleSearchEnter}
-        type="email"
+      <TextFieldCustomerEmail
+        customer={filter.email}
+        handleChangeCustomer={handleChangeCustomerEmail}
       />
     )
     : <></>);

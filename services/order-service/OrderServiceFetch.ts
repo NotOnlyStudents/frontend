@@ -14,18 +14,25 @@ class OrderServiceFetch implements OrderService {
     const headers = {
       Authorization: `Bearer ${token}`,
     };
-    const res: GetAllOrdersRequest = await req.get<GetAllOrdersRequest>(query,headers);
+    const res: GetAllOrdersRequest = await req.get<GetAllOrdersRequest>(query, headers);
     const paginator: OrderPaginator = {
       orders: res.data.map((order) => order),
       total: res.data.length,
     };
+    console.log(paginator.orders);
+    console.log(`TOTAL: ${paginator.total}`);
 
     return paginator;
   };
 
   getOrderById = async (token: string, id: string): Promise<Order> => {
     const req: HTTPRequest = new HTTPRequest(process.env.NEXT_PUBLIC_ORDERS_SERVICE_URL, `orders/${id}`);
-    const res: GetOneOrderRequest = await req.get<GetOneOrderRequest>();
+
+    const headers = {
+      Authorization: `Bearer ${token}`,
+    };
+
+    const res: GetOneOrderRequest = await req.get<GetOneOrderRequest>('', headers);
 
     return res.data.token.data;
   };

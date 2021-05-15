@@ -14,6 +14,7 @@ import { Typography } from '@material-ui/core';
 import { withSSRContext } from 'aws-amplify';
 import { SignedState } from 'interfaces/login';
 import OrderFilters from 'components/orders/OrderFilters';
+import NoResultOrder from 'components/noresult/NoResultOrder';
 
 interface Props {
   router: NextRouter,
@@ -30,11 +31,11 @@ interface State {
   totalOrders: number
 }
 
-class OrderCustomer extends React.Component<Props, State> {
+class OrderSeller extends React.Component<Props, State> {
   private static limit = 5;
 
   breadcrumbPaths: BreadcrumbPath[] = [
-    { name: 'Home', href: getHomeLink(), icon: HomeIcon },
+    { name: 'Home', href: getHomeLink(true), icon: HomeIcon },
     { name: 'Orders List Page' },
   ];
 
@@ -85,11 +86,10 @@ class OrderCustomer extends React.Component<Props, State> {
     } */
 
     filters.offset = 0;
-
     query.offset = filters.offset.toString();
 
     router.push({
-      pathname: '/orders',
+      pathname: '',
       query,
     }, null, {
       scroll: false,
@@ -140,19 +140,8 @@ class OrderCustomer extends React.Component<Props, State> {
     });
   };
 
-  /* handleChangePagination = (offset: number) => {
-    const { router } = this.props;
-
-    router.push({
-      pathname: '/orders',
-      query: { ...router.query, offset },
-    });
-    this.setState({ filters: { offset } });
-  }; */
-
   render(): React.ReactElement {
     const { filters, orders, totalOrders } = this.state;
-    console.log(totalOrders);
     return (
       <>
         <Head>
@@ -165,11 +154,17 @@ class OrderCustomer extends React.Component<Props, State> {
         <OrderFilters
           filter={filters}
           handleChangeFilter={this.handleChangeFilters}
+          seller
         />
-        <OrdersList orders={orders} />
+        {orders.length === 0
+          ? (
+            <NoResultOrder />
+          ) : (
+            <OrdersList orders={orders} />
+          )}
         <EMLPagination
           totalElements={totalOrders}
-          limit={OrderCustomer.limit}
+          limit={OrderSeller.limit}
           page={filters.offset + 1}
           handleChangePagination={this.handleChangePagination}
         />
@@ -190,10 +185,10 @@ export async function getServerSideProps(context) {
   try {
     const { signInUserSession } = await Auth.currentAuthenticatedUser();
     signedState = await getSignedState(signInUserSession);
-    if (signedState === SignedState.Seller) {
+    if (signedState === SignedState.Customer) {
       return {
         redirect: {
-          destination: getOrderLink(true),
+          destination: getOrderLink(),
           permanent: false,
         },
       };
@@ -223,11 +218,11 @@ export async function getServerSideProps(context) {
     props: {
       filters,
       orders: paginator.orders,
-      totalOrders: paginator.total,
+      total: paginator.total,
       error,
       signedState,
     },
   };
 }
 
-export default OrderCustomer;
+export default OrderSeller;

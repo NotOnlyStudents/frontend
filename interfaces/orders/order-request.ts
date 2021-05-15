@@ -1,25 +1,25 @@
 import { Order } from './orders';
 
 export interface GetAllOrdersRequest {
-    data: Order[]
+  data: Order[]
 }
 
 export interface GetOneOrderRequest {
-    data: {
-        token: {
-            data: Order
-        },
-        timeout: string
-    }
-    hmac: string
+  data: {
+    token: {
+      data: Order
+    },
+    timeout: string
+  }
+  hmac: string
 }
 
 export interface CreateOrderRequest {
-    data: Order
+  data: Order
 }
 
 export interface EditOrderRequest {
-    data: Order
+  data: Order
 }
 
 export interface DeleteOrderRequest{}

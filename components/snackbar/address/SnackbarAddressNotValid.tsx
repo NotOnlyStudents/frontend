@@ -1,7 +1,7 @@
 import React from 'react';
 import EMLSnackbar, { CustomSnackbarProps } from '../EMLSnackbar';
 
-export const addressNotValidId = 'validation';
+export const addressNotValidId = 'address_not_valid';
 
 function SnackbarAddressNotValid({
   open, handleClose,

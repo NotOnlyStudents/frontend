@@ -139,7 +139,7 @@ export async function getStaticProps(context) {
       products: paginator.products,
       error,
     },
-    revalidate: 30,
+    revalidate: 1,
   };
 }
 

@@ -4,6 +4,7 @@ import { NextRouter, withRouter } from 'next/router';
 import { Order, OrderFilter, OrderPaginator } from 'interfaces/orders/orders';
 import OrderService from 'services/order-service';
 import NoResultOrder from 'components/noresult/NoResultOrder';
+import { getAuthToken } from 'lib/authContext';
 import OrdersList from './OrdersList';
 import OrderFilters from './OrderFilters';
 
@@ -106,7 +107,8 @@ class Orders extends React.Component<Props, State> {
     let paginator: OrderPaginator;
 
     try {
-      paginator = await (new OrderService()).getAllOrder(query);
+      const token = await getAuthToken();
+      paginator = await (new OrderService()).getAllOrder(token, query);
     } catch (error) {
       paginator = {
         orders: [],

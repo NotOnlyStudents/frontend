@@ -65,48 +65,42 @@ function OrderProduct({ order, seller }: Props) {
   const [openModal, setOpenModal] = React.useState(false);
   const renderAddress = (): string => `${order.address.address}`;
 
-
-
-  const changeStatus = async (): Promise<void>=> {
+  const changeStatus = async (): Promise<void> => {
     let token: string;
     try {
       const { signInUserSession } = await Auth.currentAuthenticatedUser();
       token = signInUserSession.idToken.jwtToken;
-      try{
-        await (new OrderService()).editOrder(token,order.id);
+      try {
+        await (new OrderService()).editOrder(token, order.id);
         setOpenModal(false);
         renderAllOrderItems();
-      }
-      catch{console.log("erroe");}
-      //console.log("Moidfy the order with success");
-    }
-    catch(error){
+      } catch { console.log('erroe'); }
+      // console.log("Moidfy the order with success");
+    } catch (error) {
       console.error(error);
       setOpenModal(false);
     }
-    return;
-  }
-
+  };
 
   const renderStatus = (): string | ReactElement => {
-    if(seller)
-    {
-      if(order.status===OrderStatus.new)
-      {
-        return(<>
-          {order.status}
-          <Button
-          onClick={() => { setOpenModal(true); }}
-          size="small"
-          color="secondary">
-          Set Fullfilled
-          </Button>
-          </>);
+    if (seller) {
+      if (order.status === OrderStatus.new) {
+        return (
+          <>
+            {order.status}
+            <Button
+              onClick={() => { setOpenModal(true); }}
+              size="small"
+              color="secondary"
+            >
+              Set Fullfilled
+            </Button>
+          </>
+        );
       }
     }
-      return order.status;
-  }
-
+    return order.status;
+  };
 
   const calculateTotalPrice = (): number => (
     order.products.map((item: PLPProductItem) => (item.quantity * item.price))
@@ -118,14 +112,12 @@ function OrderProduct({ order, seller }: Props) {
       )
   );
 
-  
-
   const renderAllOrderItems = (): React.ReactElement[] => order.products.map(
     (item: PLPProductItem, index:number): React.ReactElement => (
       <Grid key={index} item container>
         <CardMedia
           className={classes.image}
-          image={item['images'][0]}
+          image={item.image}
         />
         <Grid item xs={12} sm container className={classes.product}>
           <Grid item xs container className={classes.description}>
@@ -143,16 +135,16 @@ function OrderProduct({ order, seller }: Props) {
                   See more details
                 </Button>
                 <Dialog
-                    open={openModal}
-                    aria-labelledby="alert-dialog-title"
+                  open={openModal}
+                  aria-labelledby="alert-dialog-title"
                 >
-                <DialogTitle id="alert-dialog-title">Are you sure to set this order fullfilled?</DialogTitle>
+                  <DialogTitle id="alert-dialog-title">Are you sure to set this order fullfilled?</DialogTitle>
                   <DialogActions>
-                    <Button onClick={() => {setOpenModal(false); }} color="primary">
+                    <Button onClick={() => { setOpenModal(false); }} color="primary">
                       NO
                     </Button>
-                    <Button onClick={() => {changeStatus()}} color="primary" autoFocus>
-                        YES
+                    <Button onClick={() => { changeStatus(); }} color="primary" autoFocus>
+                      YES
                     </Button>
                   </DialogActions>
                 </Dialog>

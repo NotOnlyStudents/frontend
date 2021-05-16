@@ -30,6 +30,7 @@ const useStyles = makeStyles({
   },
   image: {
     height: 300,
+    backgroundSize: 'contain'
   },
   notAvailableText: {
     width: '100%',

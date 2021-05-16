@@ -11,6 +11,7 @@ import { SignedState } from 'interfaces/login';
 import HeaderMenuMobile from './HeaderMenuMobile';
 import HeaderMobileLink from './links/HeaderMobileLink';
 import HeaderDesktopLink from './links/HeaderDesktopLink';
+import { Tooltip } from '@material-ui/core';
 
 function HeaderCustomer() : React.ReactElement {
   const router = useRouter();
@@ -31,15 +32,21 @@ function HeaderCustomer() : React.ReactElement {
     <>
       <HeaderMenuMobile
         desktopMenu={[
-          <HeaderDesktopLink onClick={() => { router.push(getCartLink()); }}>
-            <ShoppingCartIcon />
-          </HeaderDesktopLink>,
-          <HeaderDesktopLink onClick={() => { router.push(getPersonalAreaLink()); }}>
-            <AccountCircleIcon aria-label="Your personal area" />
-          </HeaderDesktopLink>,
-          <HeaderDesktopLink onClick={handleSignOut}>
-            <ExitToAppIcon aria-label="logout" />
-          </HeaderDesktopLink>,
+          <Tooltip title="Your cart">
+            <HeaderDesktopLink onClick={() => { router.push(getCartLink()); }}>
+              <ShoppingCartIcon />
+            </HeaderDesktopLink>
+          </Tooltip>,
+          <Tooltip title="Your personal area">
+            <HeaderDesktopLink onClick={() => { router.push(getPersonalAreaLink()); }}>
+              <AccountCircleIcon aria-label="Your personal area" />
+            </HeaderDesktopLink>
+          </Tooltip>,
+          <Tooltip title="Logout">
+            <HeaderDesktopLink onClick={handleSignOut}>
+              <ExitToAppIcon aria-label="logout" />
+            </HeaderDesktopLink>
+          </Tooltip>,
         ]}
         mobileMenu={[
           <HeaderMobileLink onClick={() => { router.push(getCartLink()); }}>
@@ -51,7 +58,7 @@ function HeaderCustomer() : React.ReactElement {
             Your personal area
           </HeaderMobileLink>,
           <HeaderMobileLink onClick={handleSignOut}>
-            <ExitToAppIcon aria-label="logout" />
+            <ExitToAppIcon aria-label="Logout" />
             Logout
           </HeaderMobileLink>,
         ]}

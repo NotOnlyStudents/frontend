@@ -10,10 +10,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   sideImg: {
     width: '10em',
     height: '10em',
+    backgroundSize: 'contain'
   },
   selectedImg: {
     width: '95%',
     height: '100%',
+    backgroundSize: 'contain',
     [theme.breakpoints.down('sm')]: {
       width: '100%',
       height: '95%',

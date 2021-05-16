@@ -32,6 +32,7 @@ const useStyles = makeStyles({
     height: '14em',
     margin: 'auto',
     display: 'block',
+    backgroundSize: 'contain'
   },
   price: {
     alignSelf: 'center',

@@ -50,6 +50,8 @@ class Orders extends React.Component<Props, State> {
 
     if (filters.email) {
       query.email = filters.email;
+    } else {
+      delete query.email;
     }
 
     if (filters.start) {

@@ -15,12 +15,11 @@ import Orders from 'components/orders/Orders';
 interface Props {
   filters: OrderFilter,
   orders: Order[],
-  totalOrders: number
-  error: boolean
+  totalOrders: number,
 }
 
 function OrderCustomer({
-  filters, orders, totalOrders, error,
+  filters, orders, totalOrders,
 }: Props) {
   const breadcrumbPaths: BreadcrumbPath[] = [
     { name: 'Home', href: getHomeLink(), icon: HomeIcon },
@@ -61,7 +60,9 @@ export async function getServerSideProps(context) {
         },
       };
     }
-  } catch (e) { }
+  } catch (e) {
+    console.log(e);
+  }
 
   const { query } = context;
   const filters: OrderFilter = query;

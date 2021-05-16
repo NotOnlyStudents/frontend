@@ -21,8 +21,12 @@ function TextFieldCustomerEmail({
   const [value, setValue] = React.useState<string>(customer);
   const classes = useStyles();
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    handleChangeCustomer(event.target.value);
+  const handleKeyEnter = async (
+    event: React.KeyboardEvent<HTMLDivElement>,
+  ) => {
+    if (event.key === 'Enter') {
+      handleChangeCustomer(value);
+    }
   };
 
   React.useEffect(() => {
@@ -37,10 +41,11 @@ function TextFieldCustomerEmail({
         variant="outlined"
         className={classes.price}
         value={value}
-        onChange={handleChange}
+        onChange={(event) => setValue(event.target.value)}
         type="email"
         helperText="Text must be an email"
         placeholder="Customer email"
+        onKeyUp={handleKeyEnter}
       />
     </>
   );

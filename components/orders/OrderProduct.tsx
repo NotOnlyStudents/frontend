@@ -101,7 +101,7 @@ function OrderProduct({ order, seller }: Props) {
               size="small"
               color="secondary"
             >
-              Set Fullfilled
+              Set Fulfilled
             </Button>
           </>
         );
@@ -146,7 +146,7 @@ function OrderProduct({ order, seller }: Props) {
                   open={openModal}
                   aria-labelledby="alert-dialog-title"
                 >
-                  <DialogTitle id="alert-dialog-title">Are you sure to set this order fullfilled?</DialogTitle>
+                  <DialogTitle id="alert-dialog-title">Are you sure to set this order fulfilled?</DialogTitle>
                   <DialogActions>
                     <Button onClick={() => { setOpenModal(false); }} color="primary">
                       NO

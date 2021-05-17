@@ -68,6 +68,12 @@ class Orders extends React.Component<Props, State> {
       delete query.end;
     }
 
+    if (filters.status) {
+      query.status = filters.status.toString();
+    } else {
+      delete query.status;
+    }
+
     // filters.offset = 0;
     // query.offset = filters.offset.toString();
 
@@ -90,6 +96,10 @@ class Orders extends React.Component<Props, State> {
     };
 
     if (filters.id) {
+      delete query.email;
+      delete query.start;
+      delete query.end;
+      delete query.status;
       query.id = filters.id;
       this.setState({ filters });
       this.fetchOrderById(filters.id);

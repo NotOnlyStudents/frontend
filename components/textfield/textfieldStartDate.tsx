@@ -52,7 +52,7 @@ function TextfieldStartDate({
         InputLabelProps={{
           shrink: true,
         }}
-        //onChange={handleChange}
+        onChange={handleChange}
       />
     </>
   );

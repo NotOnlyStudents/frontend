@@ -3,7 +3,7 @@ import {
   CartProduct, Product,
 } from 'interfaces/products/product';
 import {
-  CartGETRequest, CartPatchRequest, CartPostRequest, CartToken,
+  CartGETRequest, CartPatchRequest, CartToken,
 } from 'interfaces/cart/cart-request';
 import { createHmac } from 'crypto';
 import { productToCartProduct } from 'interfaces/products/product-converter';
@@ -38,36 +38,30 @@ class CartServiceFetch implements CartService {
   postCartProducts = async (token, product: Product): Promise<void> => {
     if (token === '') {
       let storage = localStorage.getItem('item');
-        if(storage !== null){ 
-          const oldStorage=storage;
-          if (storage[storage.length - 1] === ',') {
-            storage = storage.slice(0, -1);
+      if (storage !== null) {
+        const oldStorage = storage;
+        if (storage[storage.length - 1] === ',') {
+          storage = storage.slice(0, -1);
+        }
+        storage = `[${storage}]`;
+        const products = JSON.parse(storage);
+        let present = false;
+        for (let i = 0; i < products.length; i++) {
+          if (products[i].id === product.id) {
+            products[i].quantity = product.quantity;
+            present = true;
           }
-          storage = `[${storage}]`;
-          const products = JSON.parse(storage);
-          let present=false;
-          for (let i = 0; i < products.length; i++) {
-            if (products[i].id === product.id) {
-              products[i].quantity = product.quantity;
-              present=true;
-            }
-          }
-            if(present)
-            { localStorage.setItem('item', JSON.stringify(products).slice(0, -1).slice(1))}
-            else{
-            let newStorage = `${JSON.stringify(product)},`
-            newStorage = `${oldStorage + JSON.stringify(product)},` ;
-            localStorage.setItem('item', newStorage);
-            }
-      }
-
-      else{ 
-        const newStorage = `${JSON.stringify(product)},`
+        }
+        if (present) { localStorage.setItem('item', JSON.stringify(products).slice(0, -1).slice(1)); } else {
+          let newStorage = `${JSON.stringify(product)},`;
+          newStorage = `${oldStorage + JSON.stringify(product)},`;
+          localStorage.setItem('item', newStorage);
+        }
+      } else {
+        const newStorage = `${JSON.stringify(product)},`;
         localStorage.setItem('item', newStorage);
-      };
-
-    }
-    else{
+      }
+    } else {
       const req: HTTPRequest = new HTTPRequest(process.env.NEXT_PUBLIC_CART_SERVICE_URL, 'cart');
 
       const timeout = new Date();
@@ -144,14 +138,14 @@ class CartServiceFetch implements CartService {
           localStorage.removeItem('item');
         }
       }
+    } else {
+      const req: HTTPRequest = new HTTPRequest(process.env.NEXT_PUBLIC_CART_SERVICE_URL, `cart/${productId}`);
+      const headers = {
+        Accept: 'application/json',
+        Authorization: `Bearer ${token}`,
+      };
+      const res = await req.delete<CartPatchRequest>('', headers);
     }
-    else{
-    const req: HTTPRequest = new HTTPRequest(process.env.NEXT_PUBLIC_CART_SERVICE_URL, `cart/${productId}`);
-    const headers = {
-      Accept: 'application/json',
-      Authorization: `Bearer ${token}`,
-    };
-    const res = await req.delete<CartPatchRequest>('', headers);}
   };
 
   patchCartProducts = async (token, productId, quantity): Promise<void> => {
@@ -172,15 +166,13 @@ class CartServiceFetch implements CartService {
 
         localStorage.setItem('item', JSON.stringify(products).slice(0, -1).slice(1));
       }
-    }
-    else
-    {
+    } else {
       const req: HTTPRequest = new HTTPRequest(process.env.NEXT_PUBLIC_CART_SERVICE_URL, `cart/${productId}`);
       const bodyString = JSON.stringify({ quantity });
       const headers = {
         Authorization: `Bearer ${token}`,
       };
-  
+
       await req.patch<CartPatchRequest>(bodyString, headers);
     }
   };

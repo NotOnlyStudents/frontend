@@ -4,6 +4,7 @@ import {
 } from 'interfaces/orders/orders';
 import queryString from 'query-string';
 import { GetAllOrdersRequest, GetOneOrderRequest } from 'interfaces/orders/order-request';
+// import { productToCartProduct } from 'interfaces/products/product-converter';
 import OrderService from './OrderService';
 
 class OrderServiceFetch implements OrderService {
@@ -31,8 +32,8 @@ class OrderServiceFetch implements OrderService {
     };
 
     const res: GetOneOrderRequest = await req.get<GetOneOrderRequest>('', headers);
-
-    return res.data.token.data;
+    console.log(res);
+    return res.data;
   };
 
   createOrder = async (token: string, order: Order): Promise<string> => {

@@ -4,9 +4,8 @@ import {
 } from '@material-ui/core';
 
 interface Props {
-  customer: string
-  disabled: boolean,
-  handleChangeCustomer: (customerEmail: string) => void;
+  id: string
+  handleChangeOrderId: (id: string) => void;
 }
 
 const useStyles = makeStyles({
@@ -16,41 +15,39 @@ const useStyles = makeStyles({
   },
 });
 
-function TextFieldCustomerEmail({
-  customer, disabled, handleChangeCustomer,
+function TextFieldOrderID({
+  id, handleChangeOrderId,
 }:Props) {
-  const [value, setValue] = React.useState<string>(disabled ? '' : customer);
+  const [value, setValue] = React.useState<string>(id);
   const classes = useStyles();
 
   const handleKeyEnter = async (
     event: React.KeyboardEvent<HTMLDivElement>,
   ) => {
     if (event.key === 'Enter') {
-      handleChangeCustomer(value);
+      handleChangeOrderId(value);
     }
   };
 
   React.useEffect(() => {
-    setValue(customer);
-  }, [customer]);
+    setValue(id);
+  }, [id]);
 
   return (
     <>
       <TextField
-        id="customerEmail"
-        label="Email of customer"
+        id="orderId"
+        label="Order identifier"
         variant="outlined"
         className={classes.price}
         value={value}
         onChange={(event) => setValue(event.target.value)}
-        type="email"
-        helperText="Text will be disabled when an ID is present"
-        placeholder="Customer email"
+        helperText=""
+        placeholder="Order identifier"
         onKeyUp={handleKeyEnter}
-        disabled={disabled}
       />
     </>
   );
 }
 
-export default TextFieldCustomerEmail;
+export default TextFieldOrderID;

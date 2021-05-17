@@ -2,13 +2,14 @@ import React, { ReactElement } from 'react';
 import { Order, OrderStatus } from 'interfaces/orders/orders';
 import { makeStyles } from '@material-ui/core/styles';
 import {
-  Dialog, DialogActions, DialogTitle, IconButton, Button, Grid, CardMedia, Typography, Link,
+  Dialog, DialogActions, DialogTitle, Button, Grid, CardMedia, Typography, Link,
 } from '@material-ui/core';
 import { PLPProductItem } from 'interfaces/products/product';
 import { getViewProductLink } from 'lib/links';
 import { useRouter } from 'next/router';
 import OrderService from 'services/order-service';
 import { Auth } from 'aws-amplify';
+import { Snackbars, useSnackbarContext } from 'lib/SnackbarContext';
 
 interface Props {
   order: Order,
@@ -62,8 +63,12 @@ const useStyles = makeStyles({
 function OrderProduct({ order, seller }: Props) {
   const classes = useStyles();
   const router = useRouter();
+  const [status, setStatus] = React.useState(order.status);
   const [openModal, setOpenModal] = React.useState(false);
   const renderAddress = (): string => `${order.address.address}`;
+  const { openSnackbar } = useSnackbarContext();
+
+
 
   const changeStatus = async (): Promise<void> => {
     let token: string;
@@ -72,34 +77,37 @@ function OrderProduct({ order, seller }: Props) {
       token = signInUserSession.idToken.jwtToken;
       try {
         await (new OrderService()).editOrder(token, order.id);
-        setOpenModal(false);
-        renderAllOrderItems();
-      } catch { console.log('erroe'); }
-      // console.log("Moidfy the order with success");
+        setStatus(OrderStatus.fulfilled);
+        openSnackbar(Snackbars.statusModifiedId);
+      } catch { console.log('erroe');
+      openSnackbar(Snackbars.statusModifiedErrorId);}
     } catch (error) {
       console.error(error);
+      openSnackbar(Snackbars.statusModifiedErrorId);
+    }
+    finally{
       setOpenModal(false);
     }
   };
 
   const renderStatus = (): string | ReactElement => {
     if (seller) {
-      if (order.status === OrderStatus.new) {
+      if (status === OrderStatus.new) {
         return (
           <>
-            {order.status}
+            {status}
             <Button
               onClick={() => { setOpenModal(true); }}
               size="small"
               color="secondary"
             >
-              Set Fullfilled
+              Set Fulfilled
             </Button>
           </>
         );
       }
     }
-    return order.status;
+    return status;
   };
 
   const calculateTotalPrice = (): number => (
@@ -113,11 +121,11 @@ function OrderProduct({ order, seller }: Props) {
   );
 
   const renderAllOrderItems = (): React.ReactElement[] => order.products.map(
-    (item: PLPProductItem, index:number): React.ReactElement => (
+    (item: PLPProductItem, index: number): React.ReactElement => (
       <Grid key={index} item container>
         <CardMedia
           className={classes.image}
-          image={item.image}
+          image={item.images[0]}
         />
         <Grid item xs={12} sm container className={classes.product}>
           <Grid item xs container className={classes.description}>
@@ -138,7 +146,7 @@ function OrderProduct({ order, seller }: Props) {
                   open={openModal}
                   aria-labelledby="alert-dialog-title"
                 >
-                  <DialogTitle id="alert-dialog-title">Are you sure to set this order fullfilled?</DialogTitle>
+                  <DialogTitle id="alert-dialog-title">Are you sure to set this order fulfilled?</DialogTitle>
                   <DialogActions>
                     <Button onClick={() => { setOpenModal(false); }} color="primary">
                       NO

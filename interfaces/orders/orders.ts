@@ -13,6 +13,7 @@ export interface OrderFilter {
   start?: string,
   end?: string,
   email?: string,
+  status?: string,
 }
 
 export interface Order {

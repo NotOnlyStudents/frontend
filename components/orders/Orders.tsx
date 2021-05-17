@@ -32,6 +32,7 @@ class Orders extends React.Component<Props, State> {
       filters: {
         // offset: 0,
         // sort?: SortOrderType,
+        id: '',
         start: '',
         end: '',
         email: '',
@@ -67,6 +68,12 @@ class Orders extends React.Component<Props, State> {
       delete query.end;
     }
 
+    if (filters.status) {
+      query.status = filters.status.toString();
+    } else {
+      delete query.status;
+    }
+
     // filters.offset = 0;
     // query.offset = filters.offset.toString();
 
@@ -79,6 +86,37 @@ class Orders extends React.Component<Props, State> {
 
     this.setState({ filters });
     this.fetchAllOrder(query);
+  };
+
+  handleChangeFilterId = async (filters: OrderFilter) => {
+    const { router } = this.props;
+
+    const query = {
+      ...router.query,
+    };
+
+    if (filters.id) {
+      delete query.email;
+      delete query.start;
+      delete query.end;
+      delete query.status;
+      query.id = filters.id;
+      this.setState({ filters });
+      this.fetchOrderById(filters.id);
+    } else {
+      delete query.id;
+      this.setState({ filters });
+      this.fetchAllOrder(query);
+    }
+
+    router.push({
+      pathname: '',
+      query,
+    }, null, {
+      scroll: false,
+    });
+    // this.setState({ filters });
+    // this.fetchOrderById(filters.id);
   };
 
   /* handleChangePagination = (offset: number) => {
@@ -123,6 +161,23 @@ class Orders extends React.Component<Props, State> {
     });
   };
 
+  fetchOrderById = async (query) => {
+    let order: Order;
+    const ordersId: Order[] = [];
+    try {
+      const token = await getAuthToken();
+      order = await (new OrderService()).getOrderById(token, query);
+      ordersId.push(order);
+    } catch (error) {
+      console.log(error);
+    }
+
+    this.setState({
+      orders: ordersId,
+      totalOrders: ordersId.length,
+    });
+  };
+
   renderOrderIfThereAre = () => {
     const { seller } = this.props;
     const { orders } = this.state;
@@ -151,6 +206,8 @@ class Orders extends React.Component<Props, State> {
         <OrderFilters
           filter={filters}
           handleChangeFilter={this.handleChangeFilters}
+          handleChangeFilterId={this.handleChangeFilterId}
+          disabled={filters.id !== ''}
           seller={seller}
         />
         {this.renderOrderIfThereAre()}

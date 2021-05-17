@@ -5,13 +5,7 @@ export interface GetAllOrdersRequest {
 }
 
 export interface GetOneOrderRequest {
-  data: {
-    token: {
-      data: Order
-    },
-    timeout: string
-  }
-  hmac: string
+  data: Order
 }
 
 export interface CreateOrderRequest {

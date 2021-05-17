@@ -1,8 +1,8 @@
-import React, { ReactElement, useEffect } from 'react';
+import React, { ReactElement } from 'react';
 import { Order, OrderStatus } from 'interfaces/orders/orders';
 import { makeStyles } from '@material-ui/core/styles';
 import {
-  Dialog, DialogActions, DialogTitle, IconButton, Button, Grid, CardMedia, Typography, Link,
+  Dialog, DialogActions, DialogTitle, Button, Grid, CardMedia, Typography, Link,
 } from '@material-ui/core';
 import { PLPProductItem } from 'interfaces/products/product';
 import { getViewProductLink } from 'lib/links';
@@ -79,7 +79,7 @@ function OrderProduct({ order, seller }: Props) {
         await (new OrderService()).editOrder(token, order.id);
         setStatus(OrderStatus.fulfilled);
         openSnackbar(Snackbars.statusModifiedId);
-      } catch { console.log('erroe'); 
+      } catch { console.log('erroe');
       openSnackbar(Snackbars.statusModifiedErrorId);}
     } catch (error) {
       console.error(error);
@@ -121,11 +121,11 @@ function OrderProduct({ order, seller }: Props) {
   );
 
   const renderAllOrderItems = (): React.ReactElement[] => order.products.map(
-    (item: PLPProductItem, index:number): React.ReactElement => (
+    (item: PLPProductItem, index: number): React.ReactElement => (
       <Grid key={index} item container>
         <CardMedia
           className={classes.image}
-          image={item['images'][0]}
+          image={item.images[0]}
         />
         <Grid item xs={12} sm container className={classes.product}>
           <Grid item xs container className={classes.description}>

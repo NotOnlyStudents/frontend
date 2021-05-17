@@ -8,7 +8,7 @@ import { PLPProductItem } from 'interfaces/products/product';
 import { getViewProductLink } from 'lib/links';
 import { useRouter } from 'next/router';
 import OrderService from 'services/order-service';
-import { Auth } from 'aws-amplify';
+import { Auth, sectionHeader } from 'aws-amplify';
 import { Snackbars, useSnackbarContext } from 'lib/SnackbarContext';
 
 interface Props {
@@ -58,6 +58,12 @@ const useStyles = makeStyles({
     fontSize: '1.2em',
     fontWeight: 'bold',
   },
+  newOrderHeader:{
+    backgroundColor : 'red',
+  },
+  fulfilledOrderHeader:{
+    backgroundColor : 'greenyellow',
+  }
 });
 
 function OrderProduct({ order, seller }: Props) {
@@ -96,10 +102,10 @@ function OrderProduct({ order, seller }: Props) {
         return (
           <>
             {status}
-            <Button
+            <Button 
               onClick={() => { setOpenModal(true); }}
               size="small"
-              color="secondary"
+              color="primary"
             >
               Set Fullfilled
             </Button>
@@ -120,12 +126,17 @@ function OrderProduct({ order, seller }: Props) {
       )
   );
 
+  const setHeaderBackground = (): any =>{
+    return status === OrderStatus.new ? classes.newOrderHeader : classes.fulfilledOrderHeader;
+
+  }
+
   const renderAllOrderItems = (): React.ReactElement[] => order.products.map(
     (item: PLPProductItem, index: number): React.ReactElement => (
       <Grid key={index} item container>
         <CardMedia
           className={classes.image}
-          image={item.images[0]}
+          image={item['images'][0]}
         />
         <Grid item xs={12} sm container className={classes.product}>
           <Grid item xs container className={classes.description}>
@@ -193,7 +204,7 @@ function OrderProduct({ order, seller }: Props) {
         container
       >
         <Grid item container justify="space-between">
-          <Grid item>
+          <Grid item className={setHeaderBackground()}>
             <Typography>
               <span className={classes.textHeader}>Date:</span>
               {' '}
@@ -215,7 +226,7 @@ function OrderProduct({ order, seller }: Props) {
           </Grid>
         </Grid>
         <Grid item container justify="space-between">
-          <Grid item>
+          <Grid item className={setHeaderBackground()}>
             <Typography>
               <span className={classes.textHeader}>Status:</span>
               {' '}

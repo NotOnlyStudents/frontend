@@ -9,6 +9,7 @@ import { getViewProductLink } from 'lib/links';
 import { useRouter } from 'next/router';
 import OrderService from 'services/order-service';
 import { Auth } from 'aws-amplify';
+import { Snackbars, useSnackbarContext } from 'lib/SnackbarContext';
 
 interface Props {
   order: Order,
@@ -65,7 +66,7 @@ function OrderProduct({ order, seller }: Props) {
   const [status, setStatus] = React.useState(order.status);
   const [openModal, setOpenModal] = React.useState(false);
   const renderAddress = (): string => `${order.address.address}`;
-
+  const { openSnackbar } = useSnackbarContext();
 
 
 
@@ -77,9 +78,12 @@ function OrderProduct({ order, seller }: Props) {
       try {
         await (new OrderService()).editOrder(token, order.id);
         setStatus(OrderStatus.fulfilled);
-      } catch { console.log('erroe'); }
+        openSnackbar(Snackbars.statusModifiedId);
+      } catch { console.log('erroe'); 
+      openSnackbar(Snackbars.statusModifiedErrorId);}
     } catch (error) {
       console.error(error);
+      openSnackbar(Snackbars.statusModifiedErrorId);
     }
     finally{
       setOpenModal(false);

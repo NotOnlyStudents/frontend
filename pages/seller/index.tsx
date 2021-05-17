@@ -1,7 +1,7 @@
 import { withSSRContext } from 'aws-amplify';
 import { SignedState } from 'interfaces/login';
 import { getSignedState } from 'lib/authContext';
-import { getHomeLink, getLoginLink } from 'lib/links';
+import { getHomeLink, getLoginLink, getOrderLink } from 'lib/links';
 import Head from 'next/head';
 import React from 'react';
 
@@ -20,10 +20,10 @@ export async function getServerSideProps(context) {
   try {
     const { signInUserSession } = await Auth.currentAuthenticatedUser();
 
-    if (await getSignedState(signInUserSession) === SignedState.Customer) {
+    if (await getSignedState(signInUserSession) === SignedState.Seller) {
       return {
         redirect: {
-          destination: getHomeLink(),
+          destination: getOrderLink(true),
           permanent: false,
         },
       };

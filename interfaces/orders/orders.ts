@@ -2,7 +2,8 @@ import { Address } from 'interfaces/address/address';
 import { PLPProductItem } from 'interfaces/products/product';
 
 export enum SortOrderType {
-  'dataasc', 'datadesc',
+  dataasc = 'dataasc', 
+  datadesc = 'datadesc',
 }
 
 export interface OrderFilter {
@@ -27,10 +28,6 @@ export interface Order {
 export enum OrderStatus {
   new = 'new',
   fulfilled = 'fulfilled',
-}
-
-export interface OrdersGetRequest {
-  orders: Order[];
 }
 
 export interface OrderPaginator {

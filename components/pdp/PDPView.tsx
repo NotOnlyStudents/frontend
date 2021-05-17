@@ -75,7 +75,20 @@ function PDPView({ product, edit }: Props) : React.ReactElement {
         setCounter(addedQuantity[0]);
       }
     } catch (error) {
-      openSnackbar(Snackbars.errorRetrievingDataId);
+      let storage = localStorage.getItem('item');
+      if(storage !== null){ 
+        const oldStorage=storage;
+        if (storage[storage.length - 1] === ',') {
+          storage = storage.slice(0, -1);
+        }
+        storage = `[${storage}]`;
+        const products = JSON.parse(storage);
+        for (let i = 0; i < products.length; i++) {
+          if (products[i].id === product.id) {
+            setCounter(products[i].quantity);
+          }
+        }
+      }
     }
   };
 
@@ -109,13 +122,15 @@ function PDPView({ product, edit }: Props) : React.ReactElement {
 
   const handleAddToCart = async () => {
     const productToCart = await new ProductService().getProductById(product.id);
+    let token = '';
     try {
       const user = await Auth.currentAuthenticatedUser();
-      const token = user.signInUserSession.idToken.jwtToken;
+      token = user.signInUserSession.idToken.jwtToken;
+    } catch (error) {
+
+    } finally {
       await new CartService().postCartProducts(token, { ...productToCart, quantity: counter });
       openSnackbar(Snackbars.addToCartSuccessId);
-    } catch (error) {
-      openSnackbar(Snackbars.addToCartErrorId);
     }
   };
 

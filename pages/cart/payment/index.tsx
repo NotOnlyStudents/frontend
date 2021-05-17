@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ChangeEventHandler } from 'react';
 import Head from 'next/head';
 import EMLBreadcrumb from 'components/breadcrumb/EMLBreadcrumb';
 import HomeIcon from '@material-ui/icons/Home';
@@ -30,9 +30,10 @@ interface Props {
 
 interface State {
   addresses: Address[];
-  cart: Cart,
+  cart: Cart;
   selectedAddress: number;
   expanded: boolean;
+  additionalInfo: string;
 }
 
 class PaymentPage extends React.Component<Props, State> {
@@ -49,6 +50,7 @@ class PaymentPage extends React.Component<Props, State> {
       addresses: props.addresses,
       selectedAddress: 0,
       expanded: true,
+      additionalInfo: ''
     };
   }
 
@@ -101,12 +103,22 @@ class PaymentPage extends React.Component<Props, State> {
     });
   };
 
+  handleChangeAdditionalInfo = (event: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({ additionalInfo: event.target.value });
+  }
+
   render() {
     const {
-      addresses, selectedAddress, cart, expanded,
+      addresses, 
+      selectedAddress, 
+      cart, 
+      expanded,
+      additionalInfo
     } = this.state;
 
     const { token } = this.props;
+
+    const actualAddress = addresses[selectedAddress];
 
     return (
       <>
@@ -123,7 +135,7 @@ class PaymentPage extends React.Component<Props, State> {
           </IconButton>
         </Box>
         <Collapse in={expanded} timeout="auto" unmountOnExit>
-          <CartList products={cart.products} payment />
+          <CartList items={cart.products} payment />
         </Collapse>
         <AddressList
           addresses={addresses}
@@ -138,12 +150,17 @@ class PaymentPage extends React.Component<Props, State> {
           label="Additional informations"
           placeholder="Add more information for order delivery"
           fullWidth
+          value={additionalInfo}
+          onChange={this.handleChangeAdditionalInfo}
           multiline
           variant="outlined"
           margin="normal"
         />
         <Box width="100%" display="flex" justifyContent="flex-end">
-          <CheckoutButton disable={this.disableCheckoutButton()} />
+          <CheckoutButton 
+            address={actualAddress}
+            additionalInfo={additionalInfo}
+            disable={this.disableCheckoutButton()} />
         </Box>
       </>
     );

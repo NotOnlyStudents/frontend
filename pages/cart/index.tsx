@@ -1,5 +1,5 @@
 import CartList from 'components/cart/cartList';
-import CartService from 'services/cart-service/CartServiceFetch';
+import CartService from 'services/cart-service';
 import { BreadcrumbPath } from 'interfaces/breadcrumb';
 import EMLBreadcrumb from 'components/breadcrumb/EMLBreadcrumb';
 import HomeIcon from '@material-ui/icons/Home';
@@ -11,7 +11,7 @@ import { Cart } from 'interfaces/cart/cart';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import { getHomeLink } from 'lib/links';
 import { withSSRContext } from 'aws-amplify';
-import { getSignedState } from 'lib/authContext';
+import { getSignedState, useAuthContext } from 'lib/authContext';
 import { SignedState } from 'interfaces/login';
 
 interface Props {
@@ -24,6 +24,19 @@ function cartPage({ cart }: Props) {
     { name: 'Cart' },
   ];
 
+  const renderCartList = () => {
+    const { signedState } = useAuthContext();
+    if (cart.products.length === 0) {
+      if (signedState === SignedState.Customer) {
+        return (<NoProductInCart />);
+      }
+
+      return (<CartList items={cart.products} authenticated={false} />);
+    }
+
+    return (<CartList items={cart.products} authenticated />);
+  };
+
   return (
     <>
       <Head>
@@ -33,7 +46,7 @@ function cartPage({ cart }: Props) {
       <Typography variant="h4" component="h2">
         Your cart
       </Typography>
-      <CartList products={cart.products} />
+      { renderCartList() }
     </>
   );
 }
@@ -41,12 +54,11 @@ function cartPage({ cart }: Props) {
 export async function getServerSideProps(context) {
   let products = [];
   const { Auth } = withSSRContext(context);
-
+  let token: string = '';
   try {
     const { signInUserSession } = await Auth.currentAuthenticatedUser();
-    const token = signInUserSession.idToken.jwtToken;
-
     const signedState = await getSignedState(signInUserSession);
+    token = signInUserSession.idToken.jwtToken;
 
     if (signedState === SignedState.Seller) {
       return {
@@ -56,13 +68,13 @@ export async function getServerSideProps(context) {
         },
       };
     }
+  } catch (error) { }
 
-    try {
-      products = await new CartService().getCartProducts(token);
-    } catch (error) {
-      products = [];
-    }
-  } catch { console.log('There was a problem with servers'); }
+  try {
+    products = await new CartService().getCartProducts(token);
+  } catch (e) {
+    products = [];
+  }
 
   return {
     props: {

@@ -7,15 +7,17 @@ import { GetAllOrdersRequest, GetOneOrderRequest } from 'interfaces/orders/order
 import OrderService from './OrderService';
 
 class OrderServiceFetch implements OrderService {
-  getAllOrder = async (token: string, params?: OrderFilter): Promise<OrderPaginator> => {
+  getAllOrder = async (token?: string, params?: OrderFilter): Promise<OrderPaginator> => {
     const req: HTTPRequest = new HTTPRequest(process.env.NEXT_PUBLIC_ORDERS_SERVICE_URL, 'orders');
     const query: string = queryString.stringify(params);
-
-    const res: GetAllOrdersRequest = await req.get<GetAllOrdersRequest>(query);
+    const headers = {
+      Authorization: `Bearer ${token}`,
+    };
+    const res: GetAllOrdersRequest = await req.get<GetAllOrdersRequest>(query, headers);
 
     const paginator: OrderPaginator = {
-      orders: res.data.orders.map((order) => order),
-      total: res.data.total,
+      orders: res.data.map((order) => order),
+      total: res.data.length,
     };
 
     return paginator;
@@ -23,7 +25,12 @@ class OrderServiceFetch implements OrderService {
 
   getOrderById = async (token: string, id: string): Promise<Order> => {
     const req: HTTPRequest = new HTTPRequest(process.env.NEXT_PUBLIC_ORDERS_SERVICE_URL, `orders/${id}`);
-    const res: GetOneOrderRequest = await req.get<GetOneOrderRequest>();
+
+    const headers = {
+      Authorization: `Bearer ${token}`,
+    };
+
+    const res: GetOneOrderRequest = await req.get<GetOneOrderRequest>('', headers);
 
     return res.data.token.data;
   };

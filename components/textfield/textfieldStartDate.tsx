@@ -4,8 +4,11 @@ import {
 } from '@material-ui/core';
 
 interface Props {
-  selectedStartDate: Date
-  selectedEndDate: Date
+  // selectedStartDate: Date
+  // selectedEndDate: Date
+  // handleChangeStart: (start: Date) => void;
+  selectedStartDate,
+  selectedEndDate,
   handleChangeStart: (start: Date) => void;
 }
 
@@ -24,8 +27,10 @@ function TextfieldStartDate({
   const classes = useStyles();
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if ((new Date(+event.target.value).getTime()) <= (new Date(selectedEndDate)).getTime()) {
-      handleChangeStart(new Date(+event.target.value));
+    console.log((new Date(event.target.value).getTime()));
+    console.log((new Date(selectedEndDate)));
+    if (+event.target.value<= selectedEndDate) {
+      handleChangeStart(new Date(event.target.value));
     }
   };
 
@@ -47,7 +52,7 @@ function TextfieldStartDate({
         InputLabelProps={{
           shrink: true,
         }}
-        onChange={handleChange}
+        //onChange={handleChange}
       />
     </>
   );

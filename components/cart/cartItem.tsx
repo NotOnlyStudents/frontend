@@ -27,23 +27,18 @@ const useStyles = makeStyles({
     flexGrow: 1,
   },
   image: {
-    height: 128,
     width: 128,
+    height: '14em',
     margin: 'auto',
     display: 'block',
-    maxWidth: '100%',
-    maxHeight: '100%',
   },
   price: {
     alignSelf: 'center',
     paddingLeft: 10,
-    // borderBottom: 'solid 1px black',
-    // borderRight: 'solid 1px black',
   },
   description: {
     paddingLeft: 7,
     flexDirection: 'column',
-    // borderRight: 'solid 1px black',
   },
   text: {
     fontWeight: 500,
@@ -66,6 +61,8 @@ function CartItem({
   const handleClickRemove = async () => {
     handleRemoveProduct(index);
   };
+
+  const renderPrice = () => (item.discountedPrice * item.quantity).toFixed(2)
 
   const renderRemoveProductIfInCart = () => (
     (!payments)
@@ -133,7 +130,6 @@ function CartItem({
                 <PriceItem
                   price={item.price}
                   discount={item.discount}
-                  quantity={item.quantity}
                   discountedPrice={item.discountedPrice}
                 />
               </Grid>
@@ -143,9 +139,7 @@ function CartItem({
             <Typography variant="subtitle1">
               Price:
               {' '}
-              {item.price * item.quantity}
-              €
-              {' '}
+              { `${renderPrice()}€` }
             </Typography>
           </Grid>
         </Grid>

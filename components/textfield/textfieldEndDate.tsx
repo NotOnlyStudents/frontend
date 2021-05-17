@@ -4,8 +4,8 @@ import {
 } from '@material-ui/core';
 
 interface Props {
-  selectedStartDate: Date
-  selectedEndDate: Date
+  selectedStartDate
+  selectedEndDate
   handleChangeEnd: (end: Date) => void;
 }
 

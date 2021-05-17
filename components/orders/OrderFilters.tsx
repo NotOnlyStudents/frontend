@@ -1,85 +1,90 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
-  Box, Theme, makeStyles, fade, InputBase,
+  Box,
 } from '@material-ui/core';
 import { OrderFilter, SortOrderType } from 'interfaces/orders/orders';
-import { NextRouter, useRouter } from 'next/router';
-import { useAuthContext } from 'lib/authContext';
-import { getOrderLink } from 'lib/links';
-import { SignedState } from 'interfaces/login';
+import TextFieldCustomerEmail from 'components/textfield/textfieldCustomerEmail';
 import TextfieldStartDate from 'components/textfield/textfieldStartDate';
 import TextfieldEndDate from 'components/textfield/textfieldEndDate';
 import SortOrders from 'components/sort-products/SortOrders';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  container: {
-    display: 'flex',
-    justifyContent: 'space-between',
-  },
-  link: {
-    display: 'flex',
-    alignItems: 'center',
-    color: 'white',
-    cursor: 'pointer',
-    '&:hover': {
-      textDecoration: 'none',
-    },
-    '&:focus': {
-      textDecoration: 'none',
-    },
-  },
-  searchContainer: {
-    display: 'flex',
-    justifyContent: 'center',
-    flexGrow: 1,
-    position: 'relative',
-  },
-  search: {
-    width: '80%',
-    borderRadius: theme.shape.borderRadius,
-    backgroundColor: fade(theme.palette.common.white, 0.15),
-    '&:hover': {
-      backgroundColor: fade(theme.palette.common.white, 0.25),
-    },
-    marginLeft: 0,
-  },
-  searchIcon: {
-    padding: theme.spacing(0, 2),
-    height: '100%',
-    position: 'absolute',
-    pointerEvents: 'none',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  inputRoot: {
-    color: 'inherit',
-    width: '100%',
-  },
-  inputInput: {
-    padding: theme.spacing(1, 1, 1, 0),
-    paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
-    transition: theme.transitions.create('width'),
-    width: '100%',
-    [theme.breakpoints.up('sm')]: {
-      width: '100%',
-    },
-  },
-}));
+// import { OrderFilter, SortOrderType } from 'interfaces/orders/orders';
+// import { NextRouter, useRouter } from 'next/router';
+// import { useAuthContext } from 'lib/authContext';
+// import { getOrderLink } from 'lib/links';
+// import { SignedState } from 'interfaces/login';
+// import TextfieldStartDate from 'components/textfield/textfieldStartDate';
+// import TextfieldEndDate from 'components/textfield/textfieldEndDate';
+// import SortOrders from 'components/sort-products/SortOrders';
+
+// const useStyles = makeStyles((theme: Theme) => ({
+//   container: {
+//     display: 'flex',
+//     justifyContent: 'space-between',
+//   },
+//   link: {
+//     display: 'flex',
+//     alignItems: 'center',
+//     color: 'white',
+//     cursor: 'pointer',
+//     '&:hover': {
+//       textDecoration: 'none',
+//     },
+//     '&:focus': {
+//       textDecoration: 'none',
+//     },
+//   },
+//   searchContainer: {
+//     display: 'flex',
+//     justifyContent: 'center',
+//     flexGrow: 1,
+//     position: 'relative',
+//   },
+//   search: {
+//     width: '80%',
+//     borderRadius: theme.shape.borderRadius,
+//     backgroundColor: fade(theme.palette.common.white, 0.15),
+//     '&:hover': {
+//       backgroundColor: fade(theme.palette.common.white, 0.25),
+//     },
+//     marginLeft: 0,
+//   },
+//   searchIcon: {
+//     padding: theme.spacing(0, 2),
+//     height: '100%',
+//     position: 'absolute',
+//     pointerEvents: 'none',
+//     display: 'flex',
+//     alignItems: 'center',
+//     justifyContent: 'center',
+//   },
+//   inputRoot: {
+//     color: 'inherit',
+//     width: '100%',
+//   },
+//   inputInput: {
+//     padding: theme.spacing(1, 1, 1, 0),
+//     paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
+//     transition: theme.transitions.create('width'),
+//     width: '100%',
+//     [theme.breakpoints.up('sm')]: {
+//       width: '100%',
+//     },
+//   },
+// }));
 
 interface Props {
   filter: OrderFilter;
-  seller: boolean;
+  seller?: boolean;
   handleChangeFilter: (filter: OrderFilter) => void;
 }
 
 function OrderFilters({ filter, seller, handleChangeFilter }: Props) {
-  const classes = useStyles();
-  const router: NextRouter = useRouter();
-  const { signedState } = useAuthContext();
-  const [searchText, setSearchText] = useState(router.query.text || '');
+  // const router: NextRouter = useRouter();
+  // const { signedState } = useAuthContext();
+  // const [searchText, setSearchText] = useState(router.query.text || '');
 
-  const handleSearchEnter = async (
+  /* const handleSearchEnter = async (
     event: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     if (event.key === 'Enter') {
@@ -99,7 +104,7 @@ function OrderFilters({ filter, seller, handleChangeFilter }: Props) {
       await router.push(newPage);
       router.reload();
     }
-  };
+  }; */
 
   const handleChangeStartDate = (start: Date) => {
     const filterStartDate: OrderFilter = { ...filter };
@@ -107,31 +112,30 @@ function OrderFilters({ filter, seller, handleChangeFilter }: Props) {
     handleChangeFilter(filterStartDate);
   };
 
+  const handleChangeEndDate = (end: Date) => {
+    const filterEndDate: OrderFilter = { ...filter };
+    filterEndDate.end = end.toISOString();
+    console.log(filterEndDate.end);
+    handleChangeFilter(filterEndDate);
+  };
+
   const handleChangeSort =  (sort: SortOrderType) => {
     const filterSort: OrderFilter = { ...filter };
     filterSort.sort = sort;
     handleChangeFilter(filterSort);
-};
-
-  const handleChangeEndDate = (end: Date) => {
-    const filterEndDate: OrderFilter = { ...filter };
-    filterEndDate.end = end.toISOString();
-    handleChangeFilter(filterEndDate);
   };
 
-  const renderSearchForCustomerIfSeller = () => (seller
+  const handleChangeCustomerEmail = (customerEmail: string) => {
+    const filterCustomer: OrderFilter = { ...filter };
+    filterCustomer.email = customerEmail;
+    handleChangeFilter(filterCustomer);
+  };
+
+  const renderSearchIfSeller = () => (seller
     ? (
-      <InputBase
-        placeholder="Search…"
-        value={searchText}
-        classes={{
-          root: classes.inputRoot,
-          input: classes.inputInput,
-        }}
-        inputProps={{ 'aria-label': 'search' }}
-        onChange={(event) => setSearchText(event.target.value)}
-        onKeyUp={handleSearchEnter}
-        type="email"
+      <TextFieldCustomerEmail
+        customer={filter.email}
+        handleChangeCustomer={handleChangeCustomerEmail}
       />
     )
     : <></>);
@@ -139,17 +143,17 @@ function OrderFilters({ filter, seller, handleChangeFilter }: Props) {
   return (
     <Box p={2}>
       <Box display="flex">
-        { renderSearchForCustomerIfSeller() }
+        { renderSearchIfSeller() }
       </Box>
       <Box display="flex">
         <TextfieldStartDate
-          selectedStartDate={new Date(filter.start)}
-          selectedEndDate={new Date(filter.end)}
+          selectedStartDate={filter.start}
+          selectedEndDate={filter.end}
           handleChangeStart={handleChangeStartDate}
         />
         <TextfieldEndDate
-          selectedStartDate={new Date(filter.start)}
-          selectedEndDate={new Date(filter.end)}
+          selectedStartDate={filter.start}
+          selectedEndDate={filter.end}
           handleChangeEnd={handleChangeEndDate}
         />
         <Box flexGrow={1} />

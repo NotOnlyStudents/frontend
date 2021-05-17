@@ -4,9 +4,12 @@ import {
 } from '@material-ui/core';
 
 interface Props {
-  selectedMinPrice: number
-  selectedMaxPrice: number
-  handleChangeMinPrice: (minPrice: number) => void;
+  // selectedStartDate: Date
+  // selectedEndDate: Date
+  // handleChangeStart: (start: Date) => void;
+  selectedStartDate,
+  selectedEndDate,
+  handleChangeStart: (start: Date) => void;
 }
 
 const useStyles = makeStyles({
@@ -15,28 +18,31 @@ const useStyles = makeStyles({
   },
 });
 
-function TextfieldMinPrice({
-  selectedMinPrice, handleChangeMinPrice,
-  selectedMaxPrice,
+function TextfieldStartDate({
+  selectedStartDate, 
+  handleChangeStart,
+  selectedEndDate,
 }:Props) {
-  const [value, setValue] = React.useState<number>(selectedMinPrice);
+  const [value, setValue] = React.useState<Date>(selectedStartDate);
   const classes = useStyles();
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (+event.target.value <= selectedMaxPrice) {
-      handleChangeMinPrice(+event.target.value);
+    console.log((new Date(event.target.value).getTime()));
+    console.log((new Date(selectedEndDate)));
+    if (+event.target.value<= selectedEndDate) {
+      handleChangeStart(new Date(event.target.value));
     }
   };
 
   React.useEffect(() => {
-    setValue(selectedMinPrice);
-  }, [selectedMinPrice]);
+    setValue(selectedStartDate);
+  }, [selectedStartDate]);
 
   return (
     <>
       <TextField
         id="datetime-local"
-        label="Next appointment"
+        label="Search start date"
         type="datetime-local"
         value={value}
         variant="outlined"
@@ -52,4 +58,4 @@ function TextfieldMinPrice({
   );
 }
 
-export default TextfieldMinPrice;
+export default TextfieldStartDate;

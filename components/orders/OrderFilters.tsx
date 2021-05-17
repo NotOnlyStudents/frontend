@@ -1,10 +1,11 @@
 import React from 'react';
 import {
-  Box, FormControl,
+  Box,
 } from '@material-ui/core';
 import { OrderFilter } from 'interfaces/orders/orders';
 import TextFieldCustomerEmail from 'components/textfield/textfieldCustomerEmail';
 import TextFieldOrderID from 'components/textfield/textfieldOrderID';
+import CheckboxStatus from 'components/checkboxes/checkboxStatus';
 
 interface Props {
   filter: OrderFilter;
@@ -67,11 +68,27 @@ function OrderFilters({
     handleChangeFilterId(filterID);
   };
 
+  const handleChangeStatus = (fulfilled: boolean) => {
+    const filterStatus: OrderFilter = { ...filter };
+    filterStatus.status = fulfilled ? 'fulfilled' : 'new';
+    handleChangeFilter(filterStatus);
+  };
+
   const renderSearchIfSeller = (disabled) => (seller
     ? (
       <TextFieldCustomerEmail
         customer={filter.email}
         handleChangeCustomer={handleChangeCustomerEmail}
+        disabled={disabled}
+      />
+    )
+    : <></>);
+
+  const renderCheckboxStatusIfSeller = (disabled) => (seller
+    ? (
+      <CheckboxStatus
+        status={filter.status === 'fulfilled'}
+        handleChangeStatus={handleChangeStatus}
         disabled={disabled}
       />
     )
@@ -89,6 +106,7 @@ function OrderFilters({
         />
       </Box>
       <Box display="flex">
+        { renderCheckboxStatusIfSeller(disabled) }
         { /* <TextFieldStartDate
         /> */}
       </Box>

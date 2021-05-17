@@ -62,32 +62,32 @@ export async function getServerSideProps(context) {
 
   const { query } = context;
   const filters: ProductFilter = query;
-
-  if (query.categories) {
-    if (!Array.isArray(query.categories)) {
-      filters.categories = [query.categories];
+  if (filters) {
+    if (query.categories) {
+      if (!Array.isArray(query.categories)) {
+        filters.categories = [query.categories];
+      }
     }
+
+    if (query.available) {
+      filters.available = query.available === 'true';
+    }
+
+    if (query.evidence) {
+      filters.evidence = query.evidence === 'true';
+    }
+
+    if (query.priceMin) {
+      filters.priceMin = query.priceMin;
+    }
+
+    if (query.priceMax) {
+      filters.priceMax = query.priceMax;
+    }
+    filters.offset = parseInt(query.offset) || 0;
+
+    filters.limit = 24;
   }
-
-  if (query.available) {
-    filters.available = query.available === 'true';
-  }
-
-  if (query.evidence) {
-    filters.evidence = query.evidence === 'true';
-  }
-
-  if (query.priceMin) {
-    filters.priceMin = query.priceMin;
-  }
-
-  if (query.priceMax) {
-    filters.priceMax = query.priceMax;
-  }
-  filters.offset = parseInt(query.offset) || 0;
-
-  filters.limit = 24;
-
   let paginator: ProductPaginator;
   let error = false;
 
@@ -100,12 +100,12 @@ export async function getServerSideProps(context) {
     };
     error = true;
   }
-
   return {
     props: {
-      filters,
+      filters: (filters === undefined ? '' : filters),
       products: paginator.products,
       total: paginator.total,
+      revalidate: 30,
       error,
     },
   };

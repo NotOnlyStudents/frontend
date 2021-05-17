@@ -14,6 +14,7 @@ import { SignedState } from 'interfaces/login';
 import HeaderMobileLink from './links/HeaderMobileLink';
 import HeaderMenuMobile from './HeaderMenuMobile';
 import HeaderDesktopLink from './links/HeaderDesktopLink';
+import { Tooltip } from '@material-ui/core';
 
 function HeaderSeller() : React.ReactElement {
   const router = useRouter();
@@ -34,23 +35,33 @@ function HeaderSeller() : React.ReactElement {
     <>
       <HeaderMenuMobile
         desktopMenu={[
-          <HeaderDesktopLink onClick={() => { router.push(getNewProductLink()); }}>
-            <AddProductIcon aria-label="Add product" />
-          </HeaderDesktopLink>,
-          <HeaderDesktopLink onClick={() => { router.push(getPLPLink(true)); }}>
-            <PLPIcon aria-label="Product list page" />
-          </HeaderDesktopLink>,
-          <HeaderDesktopLink onClick={() => { router.push(getCategoriesLink()); }}>
-            <ListAltIcon aria-label="Categories" />
-          </HeaderDesktopLink>,
-          <HeaderDesktopLink
-            onClick={() => { router.push(getPersonalAreaLink(true)); }}
-          >
-            <AccountCircleIcon aria-label="Your personal area" />
-          </HeaderDesktopLink>,
-          <HeaderDesktopLink onClick={handleSignOut}>
-            <ExitToAppIcon aria-label="logout" />
-          </HeaderDesktopLink>,
+          <Tooltip title="Add product">
+            <HeaderDesktopLink onClick={() => { router.push(getNewProductLink()); }}>
+              <AddProductIcon aria-label="Add product" />
+            </HeaderDesktopLink>
+          </Tooltip>,
+          <Tooltip title="Product List Page">
+            <HeaderDesktopLink onClick={() => { router.push(getPLPLink(true)); }}>
+              <PLPIcon aria-label="Product list page" />
+            </HeaderDesktopLink>
+          </Tooltip>,
+          <Tooltip title="All categories">
+            <HeaderDesktopLink onClick={() => { router.push(getCategoriesLink()); }}>
+              <ListAltIcon aria-label="Categories" />
+            </HeaderDesktopLink>
+          </Tooltip>,
+          <Tooltip title="Your personal area">
+            <HeaderDesktopLink
+              onClick={() => { router.push(getPersonalAreaLink(true)); }}
+            >
+              <AccountCircleIcon aria-label="Your personal area" />
+            </HeaderDesktopLink>
+          </Tooltip>,
+          <Tooltip title="Logout">
+            <HeaderDesktopLink onClick={handleSignOut}>
+              <ExitToAppIcon aria-label="Logout" />
+            </HeaderDesktopLink>
+          </Tooltip>,
         ]}
         mobileMenu={[
           <HeaderMobileLink onClick={() => { router.push(getNewProductLink()); }}>
@@ -63,14 +74,14 @@ function HeaderSeller() : React.ReactElement {
           </HeaderMobileLink>,
           <HeaderMobileLink onClick={() => { router.push(getCategoriesLink()); }}>
             <ListAltIcon />
-            Categories
+            All categories
           </HeaderMobileLink>,
           <HeaderMobileLink onClick={() => { router.push(getPersonalAreaLink(true)); }}>
             <AccountCircleIcon aria-label="Your personal area" />
-            Personal Area
+            Your personal area
           </HeaderMobileLink>,
           <HeaderMobileLink onClick={handleSignOut}>
-            <ExitToAppIcon aria-label="logout" />
+            <ExitToAppIcon aria-label="Logout" />
             Logout
           </HeaderMobileLink>,
         ]}

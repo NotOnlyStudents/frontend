@@ -165,4 +165,6 @@ Temporary Items
 .serverless_nextjs
 
 # Local Netlify folder
+netlify
 .netlify
+out

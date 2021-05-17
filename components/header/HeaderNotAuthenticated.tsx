@@ -6,6 +6,7 @@ import { useRouter } from 'next/router';
 import HeaderMenuMobile from './HeaderMenuMobile';
 import HeaderMobileLink from './links/HeaderMobileLink';
 import HeaderDesktopLink from './links/HeaderDesktopLink';
+import { Tooltip } from '@material-ui/core';
 
 function HeaderNotAuthenticated(): React.ReactElement {
   const router = useRouter();
@@ -14,17 +15,21 @@ function HeaderNotAuthenticated(): React.ReactElement {
     <>
       <HeaderMenuMobile
         desktopMenu={[
-          <HeaderDesktopLink onClick={() => { router.push(getCartLink()); }}>
-            <ShoppingCartIcon />
-          </HeaderDesktopLink>,
-          <HeaderDesktopLink onClick={() => { router.push(getLoginLink()); }}>
-            <LoginIcon />
-          </HeaderDesktopLink>,
+          <Tooltip title="Your cart">
+            <HeaderDesktopLink onClick={() => { router.push(getCartLink()); }}>
+              <ShoppingCartIcon />
+            </HeaderDesktopLink>
+          </Tooltip>,
+          <Tooltip title="Login">
+            <HeaderDesktopLink onClick={() => { router.push(getLoginLink()); }}>
+              <LoginIcon />
+            </HeaderDesktopLink>
+          </Tooltip>,
         ]}
         mobileMenu={[
           <HeaderMobileLink onClick={() => { router.push(getCartLink()); }}>
             <ShoppingCartIcon />
-            Cart
+            Your cart
           </HeaderMobileLink>,
           <HeaderMobileLink onClick={() => { router.push(getLoginLink()); }}>
             <LoginIcon />

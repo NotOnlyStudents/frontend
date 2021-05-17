@@ -25,12 +25,14 @@ const useStyles = makeStyles({
     display: 'flex',
     flexDirection: 'column',
     flexGrow: 1,
+    marginTop: '2em'
   },
   image: {
     width: 128,
     height: '14em',
     margin: 'auto',
     display: 'block',
+    backgroundSize: 'contain'
   },
   price: {
     alignSelf: 'center',

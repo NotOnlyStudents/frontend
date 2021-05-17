@@ -8,7 +8,7 @@ import { getSignedState } from 'lib/authContext';
 import EMLBreadcrumb from 'components/breadcrumb/EMLBreadcrumb';
 import HomeIcon from '@material-ui/icons/Home';
 import { BreadcrumbPath } from 'interfaces/breadcrumb';
-import { getHomeLink, getOrderLink } from 'lib/links';
+import { getHomeLink, getLoginLink, getOrderLink } from 'lib/links';
 import { Typography } from '@material-ui/core';
 import { withSSRContext } from 'aws-amplify';
 import { SignedState } from 'interfaces/login';
@@ -63,7 +63,12 @@ export async function getServerSideProps(context) {
       };
     }
   } catch (e) {
-    console.log(e);
+    return {
+      redirect: {
+        destination: getLoginLink(),
+        permanent: false,
+      },
+    };
   }
 
   const { query } = context;

@@ -9,31 +9,21 @@ import { BreadcrumbPath } from 'interfaces/breadcrumb';
 import {
   getHomeLink, getLoginLink, getPLPLink, getViewProductLink,
 } from 'lib/links';
-import { withSSRContext } from 'aws-amplify';
-import { getSignedState } from 'lib/authContext';
+import { Auth, withSSRContext } from 'aws-amplify';
+import { getSignedState, useAuthContext } from 'lib/authContext';
 import { SignedState } from 'interfaces/login';
-import { Snackbars, useSnackbarContext } from 'lib/SnackbarContext';
+import { useRouter } from 'next/router';
 
 interface Props {
   product: Product,
-  error: boolean
 }
 
-function PDPPage({ product, error }: Props) {
-  const { openSnackbar } = useSnackbarContext();
+function PDPPage({ product }: Props) {
   const breadcrumbPaths: BreadcrumbPath[] = [
     { name: 'Home', href: getHomeLink(true), icon: HomeIcon },
     { name: 'Product List Page', href: getPLPLink(true) },
     { name: product.name },
   ];
-
-  React.useEffect(() => {
-    
-    if(error)
-    {
-      openSnackbar(Snackbars.errorRetrievingDataId);
-    }
-  }, []);
 
   return (
     <>
@@ -49,9 +39,9 @@ function PDPPage({ product, error }: Props) {
 }
 
 export async function getServerSideProps(context) {
-  const { Auth } = withSSRContext(context);
+  let product: Product;
   const { query } = context;
-
+  const { Auth } = withSSRContext(context);
   try {
     const { signInUserSession } = await Auth.currentAuthenticatedUser();
 
@@ -72,30 +62,20 @@ export async function getServerSideProps(context) {
     };
   }
 
-  let product: Product;
-  let error = false;
-
   try {
     product = await (new ProductService()).getProductById(query.id);
   } catch (error) {
-    error = true;
-    product = {
-      name: "Product name",
-      description: "",
-      images: [ "https://socialistmodernism.com/wp-content/uploads/2017/07/placeholder-image.png" ],
-      quantity: 1,
-      price: 1,
-      evidence: false,
-      discount: 0,
-      discountedPrice: 1,
-      categories: [],
-    }
+    return {
+      redirect: {
+        destination: getPLPLink(true),
+        permanent: false,
+      },
+    };
   }
 
   return {
     props: {
       product,
-      error
     },
   };
 }

@@ -31,6 +31,7 @@ const useStyles = makeStyles({
     display: 'block',
     maxWidth: '100%',
     maxHeight: '100%',
+    backgroundSize: 'contain'
   },
   price: {
     alignSelf: 'center',
@@ -49,7 +50,7 @@ const useStyles = makeStyles({
     // borderRight: 'solid 1px black',
   },
   product: {
-    // borderBottom: 'solid 1px black',
+    borderBottom: 'solid 1px black',
   },
   text: {
     fontWeight: 500,
@@ -59,16 +60,14 @@ const useStyles = makeStyles({
     fontWeight: 'bold',
   },
   newOrderHeader: {
-    justify: 'space-between',
-    border: 1,
-    paddingLeft: 1,
-    backgroundColor: 'red',
+    padding: '0 1em',
+    backgroundColor: '#D50000',
+    color: 'white'
   },
   fulfilledOrderHeader: {
-    justify: 'space-between',
-    border: 1,
-    paddingLeft: 1,
-    backgroundColor: 'greenyellow',
+    padding: '0 1em',
+    backgroundColor: '#1B5E20',
+    color: 'white'
   },
 });
 
@@ -137,12 +136,16 @@ function OrderProduct({ order, seller }: Props) {
 
   const renderAllOrderItems = (): React.ReactElement[] => order.products.map(
     (item: PLPProductItem, index: number): React.ReactElement => (
-      <Grid key={index} item container>
+      <Grid 
+        key={index} 
+        item 
+        container
+        className={classes.product}>
         <CardMedia
           className={classes.image}
           image={item.images[0]}
         />
-        <Grid item xs={12} sm container className={classes.product}>
+        <Grid item xs={12} sm container>
           <Grid item xs container className={classes.description}>
             <Grid item>
               <Typography variant="subtitle1" className={classes.text}>
@@ -208,7 +211,7 @@ function OrderProduct({ order, seller }: Props) {
         className={setHeaderBackground()}
       >
         <Grid item container justify="space-between">
-          <Grid item className={setHeaderBackground()}>
+          <Grid item>
             <Typography>
               <span className={classes.textHeader}>Date:</span>
               {' '}

@@ -1,7 +1,14 @@
 import React from 'react';
 import {
+  Grid,
   makeStyles, TextField,
 } from '@material-ui/core';
+import {
+  MuiPickersUtilsProvider,
+} from "@material-ui/pickers";
+import ClearIcon from "@material-ui/icons/Clear";
+import { IconButton } from "@material-ui/core";
+import DateFnsUtils from '@date-io/date-fns';
 
 interface Props {
   selectedStartDate: string,
@@ -26,14 +33,46 @@ function TextfieldEndDate({
   const classes = useStyles();
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(event.target.value);
-    setValue(event.target.value);
-    handleChangeEnd(new Date(event.target.value).toISOString());
+    if (event !== null) {
+      console.log(event.target.value);
+      setValue(event.target.value);
+      handleChangeEnd(new Date(event.target.value).toISOString());
+    } else {
+      setValue('');
+      handleChangeEnd('');
+    }
   };
 
   return (
-    <>
-      <TextField
+    <>  
+      <MuiPickersUtilsProvider utils={DateFnsUtils}>
+        <Grid container alignItems="flex-end">
+          <TextField
+            id="end Date"
+            label="Search end date"
+            type="datetime-local"
+            value={value}
+            variant="outlined"
+            className={classes.textField}
+            helperText="End date must be after than start date"
+            placeholder="End date"
+            InputLabelProps={{
+              shrink: true,
+            }}
+            onChange={handleChange}
+            disabled={disabled}
+          />
+          <IconButton
+            edge="end"
+            size="small"
+            disabled={!value}
+            onClick={() => handleChange(null)}
+          >
+            <ClearIcon />
+          </IconButton>
+        </Grid>
+      </MuiPickersUtilsProvider>
+      {/* <TextField
         id="end Date"
         label="Search end date"
         type="datetime-local"
@@ -47,7 +86,7 @@ function TextfieldEndDate({
         }}
         onChange={handleChange}
         disabled={disabled}
-      />
+      />*/ }
     </>
   );
 }

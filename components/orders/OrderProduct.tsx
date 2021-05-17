@@ -130,6 +130,18 @@ function OrderProduct({ order, seller }: Props) {
       )
   );
 
+  const renderAdditionalInfo = () => (order.additionalInfo !== ''
+    ? (
+      <Grid item>
+        <span className={classes.textHeader}>Additional info:</span>
+        {' '}
+        {order.additionalInfo}
+      </Grid>
+    ) : (
+      <></>
+    )
+  );
+
   const setHeaderBackground = () => (
     status === OrderStatus.new ? classes.newOrderHeader : classes.fulfilledOrderHeader
   );
@@ -235,13 +247,20 @@ function OrderProduct({ order, seller }: Props) {
         <Grid item container justify="space-between">
           <Grid item>
             <Typography>
-              <span className={classes.textHeader}>Status:</span>
+              <span className={classes.textHeader}>Customer email:</span>
               {' '}
-              { renderStatus() }
+              { order.customerEmail }
+              {' '}
             </Typography>
           </Grid>
           <Grid item>
             <Typography>
+              <span className={classes.textHeader}>Status:</span>
+              {' '}
+              { renderStatus() }
+              {' '}
+              -
+              {' '}
               <span className={classes.textHeader}>Order price:</span>
               {' '}
               { calculateTotalPrice() }
@@ -254,6 +273,7 @@ function OrderProduct({ order, seller }: Props) {
       <Grid item container>
         {renderAllOrderItems()}
       </Grid>
+      {renderAdditionalInfo()}
     </Grid>
   );
 }

@@ -8,6 +8,7 @@ import { Box, FormControlLabel } from '@material-ui/core';
 import TextfieldStartDate from 'components/textfield/textfieldStartDate';
 import TextfieldMaxPrice from 'components/textfield/textfieldMaxPrice';
 import SortProducts from 'components/sort-products/SortProducts';
+import TextfieldEndDate from 'components/textfield/textfieldEndDate';
 
 interface Props {
     filter: OrderFilter;
@@ -28,12 +29,16 @@ function ComponentOrderFilter({ filter, seller, handleChangeFilter }: Props) {
         handleChangeFilter(filterEmail);
     };
 
-    const handleChangeStart = (start: string) => {
-        
+    const handleChangeStart = (start: Date) => {
+      const filterStartDate: OrderFilter = { ...filter };
+      filterStartDate.start = start.toISOString();
+      handleChangeFilter(filterStartDate);
     }
 
-    const handleChangeEnd = (end: string) => {
-        
+    const handleChangeEnd = (end: Date) => {
+      const filterEndDate: OrderFilter = { ...filter };
+      filterEndDate.end = end.toISOString();
+      handleChangeFilter(filterEndDate);
     }
 
     return (
@@ -44,7 +49,7 @@ function ComponentOrderFilter({ filter, seller, handleChangeFilter }: Props) {
               selectedEndDate={filter.end}
               handleChangeStart={handleChangeStart}
             />
-            <TextfieldMaxPrice
+            <TextfieldEndDate
               selectedEndDate={filter.end}
               selectedEndDate={filter.start}
               selectedEndDate={handleChangeEnd}

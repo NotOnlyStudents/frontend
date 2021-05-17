@@ -2,11 +2,14 @@ import React, { useState } from 'react';
 import {
   Box, Theme, makeStyles, fade, InputBase,
 } from '@material-ui/core';
-import { OrderFilter } from 'interfaces/orders/orders';
+import { OrderFilter, SortOrderType } from 'interfaces/orders/orders';
 import { NextRouter, useRouter } from 'next/router';
 import { useAuthContext } from 'lib/authContext';
 import { getOrderLink } from 'lib/links';
 import { SignedState } from 'interfaces/login';
+import TextfieldStartDate from 'components/textfield/textfieldStartDate';
+import TextfieldEndDate from 'components/textfield/textfieldEndDate';
+import SortOrders from 'components/sort-products/SortOrders';
 
 const useStyles = makeStyles((theme: Theme) => ({
   container: {
@@ -104,6 +107,12 @@ function OrderFilters({ filter, seller, handleChangeFilter }: Props) {
     handleChangeFilter(filterStartDate);
   };
 
+  const handleChangeSort =  (sort: SortOrderType) => {
+    const filterSort: OrderFilter = { ...filter };
+    filterSort.sort = sort;
+    handleChangeFilter(filterSort);
+};
+
   const handleChangeEndDate = (end: Date) => {
     const filterEndDate: OrderFilter = { ...filter };
     filterEndDate.end = end.toISOString();
@@ -133,8 +142,21 @@ function OrderFilters({ filter, seller, handleChangeFilter }: Props) {
         { renderSearchForCustomerIfSeller() }
       </Box>
       <Box display="flex">
-        { /* <TextFieldStartDate
-        /> */}
+        <TextfieldStartDate
+          selectedStartDate={new Date(filter.start)}
+          selectedEndDate={new Date(filter.end)}
+          handleChangeStart={handleChangeStartDate}
+        />
+        <TextfieldEndDate
+          selectedStartDate={new Date(filter.start)}
+          selectedEndDate={new Date(filter.end)}
+          handleChangeEnd={handleChangeEndDate}
+        />
+        <Box flexGrow={1} />
+        <SortOrders
+          sort={filter.sort}
+          handleChangeSort={handleChangeSort}
+        />
       </Box>
     </Box>
   );

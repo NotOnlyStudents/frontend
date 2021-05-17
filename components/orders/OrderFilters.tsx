@@ -6,6 +6,8 @@ import { OrderFilter } from 'interfaces/orders/orders';
 import TextFieldCustomerEmail from 'components/textfield/textfieldCustomerEmail';
 import TextFieldOrderID from 'components/textfield/textfieldOrderID';
 import CheckboxStatus from 'components/checkboxes/checkboxStatus';
+import TextfieldStartDate from 'components/textfield/textfieldStartDate';
+import TextfieldEndDate from 'components/textfield/textfieldEndDate';
 
 interface Props {
   filter: OrderFilter;
@@ -44,15 +46,15 @@ function OrderFilters({
     }
   }; */
 
-  const handleChangeStartDate = (start: Date) => {
+  const handleChangeStartDate = (start: string) => {
     const filterStartDate: OrderFilter = { ...filter };
-    filterStartDate.start = start.toISOString();
+    filterStartDate.start = start;
     handleChangeFilter(filterStartDate);
   };
 
-  const handleChangeEndDate = (end: Date) => {
+  const handleChangeEndDate = (end: string) => {
     const filterEndDate: OrderFilter = { ...filter };
-    filterEndDate.end = end.toISOString();
+    filterEndDate.end = end;
     handleChangeFilter(filterEndDate);
   };
 
@@ -107,8 +109,18 @@ function OrderFilters({
       </Box>
       <Box display="flex">
         { renderCheckboxStatusIfSeller(disabled) }
-        { /* <TextFieldStartDate
-        /> */}
+        <TextfieldStartDate
+          selectedStartDate={filter.start}
+          selectedEndDate={filter.end}
+          disabled={disabled}
+          handleChangeStart={handleChangeStartDate}
+        />
+        <TextfieldEndDate
+          selectedStartDate={filter.start}
+          selectedEndDate={filter.end}
+          disabled={disabled}
+          handleChangeEnd={handleChangeEndDate}
+        />
       </Box>
     </Box>
   );

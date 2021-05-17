@@ -45,7 +45,6 @@ class Orders extends React.Component<Props, State> {
 
   handleChangeFilters = async (filters: OrderFilter) => {
     const { router } = this.props;
-
     const query = {
       ...router.query,
     };
@@ -57,13 +56,13 @@ class Orders extends React.Component<Props, State> {
     }
 
     if (filters.start) {
-      query.start = filters.start.toString();
+      query.start = filters.start;
     } else {
       delete query.start;
     }
 
     if (filters.end) {
-      query.end = filters.end.toString();
+      query.end = filters.end;
     } else {
       delete query.end;
     }

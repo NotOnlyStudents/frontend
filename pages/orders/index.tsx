@@ -1,6 +1,8 @@
 import React from 'react';
 import OrderService from 'services/order-service';
-import { Order, OrderFilter, OrderPaginator, SortOrderType } from 'interfaces/orders/orders';
+import {
+  Order, OrderFilter, OrderPaginator,
+} from 'interfaces/orders/orders';
 import Head from 'next/head';
 import { getSignedState } from 'lib/authContext';
 import EMLBreadcrumb from 'components/breadcrumb/EMLBreadcrumb';
@@ -11,7 +13,6 @@ import { Typography } from '@material-ui/core';
 import { withSSRContext } from 'aws-amplify';
 import { SignedState } from 'interfaces/login';
 import Orders from 'components/orders/Orders';
-import { SnackbarContext, Snackbars } from 'lib/SnackbarContext';
 
 interface Props {
   filters: OrderFilter,
@@ -80,7 +81,7 @@ export async function getServerSideProps(context) {
     filters.end = query.end;
   }
 
-  filters.offset = parseInt(query.offset) || 0;
+  // filters.offset = parseInt(query.offset) || 0;
 
   let paginator: OrderPaginator;
 
@@ -103,4 +104,3 @@ export async function getServerSideProps(context) {
 }
 
 export default OrderCustomer;
-

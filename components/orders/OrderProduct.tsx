@@ -58,12 +58,18 @@ const useStyles = makeStyles({
     fontSize: '1.2em',
     fontWeight: 'bold',
   },
-  newOrderHeader:{
-    backgroundColor : 'red',
+  newOrderHeader: {
+    justify: 'space-between',
+    border: 1,
+    paddingLeft: 1,
+    backgroundColor: 'red',
   },
-  fulfilledOrderHeader:{
-    backgroundColor : 'greenyellow',
-  }
+  fulfilledOrderHeader: {
+    justify: 'space-between',
+    border: 1,
+    paddingLeft: 1,
+    backgroundColor: 'greenyellow',
+  },
 });
 
 function OrderProduct({ order, seller }: Props) {
@@ -74,8 +80,6 @@ function OrderProduct({ order, seller }: Props) {
   const renderAddress = (): string => `${order.address.address}`;
   const { openSnackbar } = useSnackbarContext();
 
-
-
   const changeStatus = async (): Promise<void> => {
     let token: string;
     try {
@@ -85,13 +89,14 @@ function OrderProduct({ order, seller }: Props) {
         await (new OrderService()).editOrder(token, order.id);
         setStatus(OrderStatus.fulfilled);
         openSnackbar(Snackbars.statusModifiedId);
-      } catch { console.log('erroe');
-      openSnackbar(Snackbars.statusModifiedErrorId);}
+      } catch {
+        console.log('erroe');
+        openSnackbar(Snackbars.statusModifiedErrorId);
+      }
     } catch (error) {
       console.error(error);
       openSnackbar(Snackbars.statusModifiedErrorId);
-    }
-    finally{
+    } finally {
       setOpenModal(false);
     }
   };
@@ -102,7 +107,7 @@ function OrderProduct({ order, seller }: Props) {
         return (
           <>
             {status}
-            <Button 
+            <Button
               onClick={() => { setOpenModal(true); }}
               size="small"
               color="primary"
@@ -126,17 +131,16 @@ function OrderProduct({ order, seller }: Props) {
       )
   );
 
-  const setHeaderBackground = (): any =>{
-    return status === OrderStatus.new ? classes.newOrderHeader : classes.fulfilledOrderHeader;
-
-  }
+  const setHeaderBackground = () => (
+    status === OrderStatus.new ? classes.newOrderHeader : classes.fulfilledOrderHeader
+  );
 
   const renderAllOrderItems = (): React.ReactElement[] => order.products.map(
     (item: PLPProductItem, index: number): React.ReactElement => (
       <Grid key={index} item container>
         <CardMedia
           className={classes.image}
-          image={item['images'][0]}
+          image={item.images[0]}
         />
         <Grid item xs={12} sm container className={classes.product}>
           <Grid item xs container className={classes.description}>
@@ -200,8 +204,8 @@ function OrderProduct({ order, seller }: Props) {
     <Grid container className={classes.root}>
       <Grid
         item
-        className={classes.header}
         container
+        className={setHeaderBackground()}
       >
         <Grid item container justify="space-between">
           <Grid item className={setHeaderBackground()}>
@@ -226,7 +230,7 @@ function OrderProduct({ order, seller }: Props) {
           </Grid>
         </Grid>
         <Grid item container justify="space-between">
-          <Grid item className={setHeaderBackground()}>
+          <Grid item>
             <Typography>
               <span className={classes.textHeader}>Status:</span>
               {' '}

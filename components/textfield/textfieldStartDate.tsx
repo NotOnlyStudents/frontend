@@ -1,15 +1,16 @@
 import React from 'react';
 import {
-  InputAdornment, makeStyles, Snackbar, TextField,
+  makeStyles, TextField,
 } from '@material-ui/core';
 
 interface Props {
   // selectedStartDate: Date
   // selectedEndDate: Date
   // handleChangeStart: (start: Date) => void;
-  selectedStartDate,
-  selectedEndDate,
-  handleChangeStart: (start: Date) => void;
+  selectedStartDate: string,
+  selectedEndDate: string,
+  disabled: boolean,
+  handleChangeStart: (start: string) => void;
 }
 
 const useStyles = makeStyles({
@@ -19,29 +20,24 @@ const useStyles = makeStyles({
 });
 
 function TextfieldStartDate({
-  selectedStartDate, 
+  selectedStartDate,
   handleChangeStart,
+  disabled,
   selectedEndDate,
 }:Props) {
-  const [value, setValue] = React.useState<Date>(selectedStartDate);
+  const [value, setValue] = React.useState<string>(selectedStartDate);
   const classes = useStyles();
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    console.log((new Date(event.target.value).getTime()));
-    console.log((new Date(selectedEndDate)));
-    if (+event.target.value<= selectedEndDate) {
-      handleChangeStart(new Date(event.target.value));
-    }
+    console.log(event.target.value);
+    setValue(event.target.value);
+    handleChangeStart(new Date(event.target.value).toISOString());
   };
-
-  React.useEffect(() => {
-    setValue(selectedStartDate);
-  }, [selectedStartDate]);
 
   return (
     <>
       <TextField
-        id="datetime-local"
+        id="start Date"
         label="Search start date"
         type="datetime-local"
         value={value}
@@ -53,6 +49,7 @@ function TextfieldStartDate({
           shrink: true,
         }}
         onChange={handleChange}
+        disabled={disabled}
       />
     </>
   );

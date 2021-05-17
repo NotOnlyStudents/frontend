@@ -1,12 +1,13 @@
 import React from 'react';
 import {
-  InputAdornment, makeStyles, Snackbar, TextField,
+  makeStyles, TextField,
 } from '@material-ui/core';
 
 interface Props {
-  selectedStartDate
-  selectedEndDate
-  handleChangeEnd: (end: Date) => void;
+  selectedStartDate: string,
+  selectedEndDate: string,
+  disabled: boolean,
+  handleChangeEnd: (end: string) => void;
 }
 
 const useStyles = makeStyles({
@@ -16,38 +17,36 @@ const useStyles = makeStyles({
 });
 
 function TextfieldEndDate({
-  selectedStartDate, 
+  selectedStartDate,
   handleChangeEnd,
+  disabled,
   selectedEndDate,
 }:Props) {
-  const [value, setValue] = React.useState<Date>(selectedEndDate);
+  const [value, setValue] = React.useState<string>(selectedEndDate);
   const classes = useStyles();
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if ((new Date(+event.target.value).getTime()) >= (new Date(selectedStartDate)).getTime()) {
-      handleChangeEnd(new Date(+event.target.value));
-    }
+    console.log(event.target.value);
+    setValue(event.target.value);
+    handleChangeEnd(new Date(event.target.value).toISOString());
   };
-
-  React.useEffect(() => {
-    setValue(selectedEndDate);
-  }, [selectedEndDate]);
 
   return (
     <>
       <TextField
-        id="datetime-local"
+        id="end Date"
         label="Search end date"
         type="datetime-local"
         value={value}
         variant="outlined"
         className={classes.textField}
-        helperText="Fine date must be happen than start date"
-        placeholder="Start date"
+        helperText="End date must be after than start date"
+        placeholder="End date"
         InputLabelProps={{
           shrink: true,
         }}
         onChange={handleChange}
+        disabled={disabled}
       />
     </>
   );

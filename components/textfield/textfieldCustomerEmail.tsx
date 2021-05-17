@@ -19,7 +19,7 @@ const useStyles = makeStyles({
 function TextFieldCustomerEmail({
   customer, disabled, handleChangeCustomer,
 }:Props) {
-  const [value, setValue] = React.useState<string>(disabled ? '' : customer);
+  const [value, setValue] = React.useState<string>(customer);
   const classes = useStyles();
 
   const handleKeyEnter = async (

@@ -2,13 +2,13 @@ import { Address } from 'interfaces/address/address';
 import { PLPProductItem } from 'interfaces/products/product';
 
 export enum SortOrderType {
-  dataasc = 'dataasc', 
+  dataasc = 'dataasc',
   datadesc = 'datadesc',
 }
 
 export interface OrderFilter {
   id?: string,
-  offset?: number,
+  // offset?: number,
   sort?: SortOrderType,
   start?: string,
   end?: string,

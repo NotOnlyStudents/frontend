@@ -1,17 +1,22 @@
 import React from 'react';
 import {
-  Box,
+  Box, FormControl,
 } from '@material-ui/core';
 import { OrderFilter } from 'interfaces/orders/orders';
 import TextFieldCustomerEmail from 'components/textfield/textfieldCustomerEmail';
+import TextFieldOrderID from 'components/textfield/textfieldOrderID';
 
 interface Props {
   filter: OrderFilter;
   seller?: boolean;
+  disabled?: boolean;
   handleChangeFilter: (filter: OrderFilter) => void;
+  handleChangeFilterId: (filter: OrderFilter) => void;
 }
 
-function OrderFilters({ filter, seller, handleChangeFilter }: Props) {
+function OrderFilters({
+  filter, seller, disabled, handleChangeFilter, handleChangeFilterId,
+}: Props) {
   // const router: NextRouter = useRouter();
   // const { signedState } = useAuthContext();
   // const [searchText, setSearchText] = useState(router.query.text || '');
@@ -56,11 +61,18 @@ function OrderFilters({ filter, seller, handleChangeFilter }: Props) {
     handleChangeFilter(filterCustomer);
   };
 
-  const renderSearchIfSeller = () => (seller
+  const handleChangeOrderID = (id: string) => {
+    const filterID: OrderFilter = { ...filter };
+    filterID.id = id;
+    handleChangeFilterId(filterID);
+  };
+
+  const renderSearchIfSeller = (disabled) => (seller
     ? (
       <TextFieldCustomerEmail
         customer={filter.email}
         handleChangeCustomer={handleChangeCustomerEmail}
+        disabled={disabled}
       />
     )
     : <></>);
@@ -68,7 +80,13 @@ function OrderFilters({ filter, seller, handleChangeFilter }: Props) {
   return (
     <Box p={2}>
       <Box display="flex">
-        { renderSearchIfSeller() }
+        { renderSearchIfSeller(disabled) }
+      </Box>
+      <Box display="flex">
+        <TextFieldOrderID
+          id={filter.id}
+          handleChangeOrderId={handleChangeOrderID}
+        />
       </Box>
       <Box display="flex">
         { /* <TextFieldStartDate

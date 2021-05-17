@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react';
+import React, { ReactElement, useEffect } from 'react';
 import { Order, OrderStatus } from 'interfaces/orders/orders';
 import { makeStyles } from '@material-ui/core/styles';
 import {
@@ -62,8 +62,12 @@ const useStyles = makeStyles({
 function OrderProduct({ order, seller }: Props) {
   const classes = useStyles();
   const router = useRouter();
+  const [status, setStatus] = React.useState(order.status);
   const [openModal, setOpenModal] = React.useState(false);
   const renderAddress = (): string => `${order.address.address}`;
+
+
+
 
   const changeStatus = async (): Promise<void> => {
     let token: string;
@@ -72,22 +76,22 @@ function OrderProduct({ order, seller }: Props) {
       token = signInUserSession.idToken.jwtToken;
       try {
         await (new OrderService()).editOrder(token, order.id);
-        setOpenModal(false);
-        renderAllOrderItems();
+        setStatus(OrderStatus.fulfilled);
       } catch { console.log('erroe'); }
-      // console.log("Moidfy the order with success");
     } catch (error) {
       console.error(error);
+    }
+    finally{
       setOpenModal(false);
     }
   };
 
   const renderStatus = (): string | ReactElement => {
     if (seller) {
-      if (order.status === OrderStatus.new) {
+      if (status === OrderStatus.new) {
         return (
           <>
-            {order.status}
+            {status}
             <Button
               onClick={() => { setOpenModal(true); }}
               size="small"
@@ -99,7 +103,7 @@ function OrderProduct({ order, seller }: Props) {
         );
       }
     }
-    return order.status;
+    return status;
   };
 
   const calculateTotalPrice = (): number => (
@@ -117,7 +121,7 @@ function OrderProduct({ order, seller }: Props) {
       <Grid key={index} item container>
         <CardMedia
           className={classes.image}
-          image={item.image}
+          image={item['images'][0]}
         />
         <Grid item xs={12} sm container className={classes.product}>
           <Grid item xs container className={classes.description}>

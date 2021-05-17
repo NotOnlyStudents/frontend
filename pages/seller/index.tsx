@@ -17,6 +17,7 @@ function HomeSeller() : React.ReactElement {
 
 export async function getServerSideProps(context) {
   const { Auth } = withSSRContext(context);
+  console.log("ciao");
   try {
     const { signInUserSession } = await Auth.currentAuthenticatedUser();
 

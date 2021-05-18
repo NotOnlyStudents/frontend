@@ -27,7 +27,7 @@ interface Props {
   cart: Cart,
   addresses?: Address[],
   token?: string,
-
+  paymentFailure: boolean
 }
 
 interface State {

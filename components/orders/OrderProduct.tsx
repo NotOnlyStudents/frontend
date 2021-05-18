@@ -97,6 +97,7 @@ function OrderProduct({ order, seller }: Props) {
       openSnackbar(Snackbars.statusModifiedErrorId);
     } finally {
       setOpenModal(false);
+      location.reload();
     }
   };
 
@@ -143,7 +144,7 @@ function OrderProduct({ order, seller }: Props) {
   );
 
   const setHeaderBackground = () => (
-    order.status === OrderStatus.new ? classes.newOrderHeader : classes.fulfilledOrderHeader
+    status === OrderStatus.new ? classes.newOrderHeader : classes.fulfilledOrderHeader
   );
 
   const renderAllOrderItems = (): React.ReactElement[] => order.products.map(

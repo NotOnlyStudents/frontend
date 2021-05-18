@@ -5,14 +5,23 @@ import { Box } from '@material-ui/core';
 
 interface Props {
   orders: Order[],
-  seller?: boolean
+  seller?: boolean,
+  onChangeStatus: () => void
 }
 
-function OrdersList({ orders, seller }: Props) : React.ReactElement {
+function OrdersList({
+  orders,
+  seller,
+  onChangeStatus,
+}: Props) : React.ReactElement {
   const renderAllOrders = (): React.ReactElement[] => orders.map(
     (item: Order, index: number): React.ReactElement => (
       <Box key={index} marginBottom="4em">
-        <OrderProduct order={item} seller={seller} />
+        <OrderProduct
+          order={item}
+          seller={seller}
+          onChangeStatus={onChangeStatus}
+        />
       </Box>
     ),
   );

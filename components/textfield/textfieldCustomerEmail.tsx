@@ -11,7 +11,7 @@ interface Props {
 
 const useStyles = makeStyles({
   price: {
-    padding: '0.5em 0',
+    marginBottom: '0.5em',
     width: '100%',
   },
 });

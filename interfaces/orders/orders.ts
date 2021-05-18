@@ -1,5 +1,5 @@
 import { Address } from 'interfaces/address/address';
-import { PLPProductItem } from 'interfaces/products/product';
+import { OrderProductItem, PLPProductItem } from 'interfaces/products/product';
 
 export enum SortOrderType {
   dataasc = 'dataasc',
@@ -20,7 +20,7 @@ export interface Order {
   id: string;
   customerEmail: string;
   address: Address;
-  products: PLPProductItem[];
+  products: OrderProductItem[];
   additionalInfo: string;
   date?: string;
   status: OrderStatus;

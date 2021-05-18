@@ -1,14 +1,18 @@
 import React from 'react';
 import {
+  Box,
   Grid,
   makeStyles, TextField,
+  IconButton,
 } from '@material-ui/core';
 import {
+  KeyboardDatePicker,
   MuiPickersUtilsProvider,
-} from "@material-ui/pickers";
-import ClearIcon from "@material-ui/icons/Clear";
-import { IconButton } from "@material-ui/core";
-import DateFnsUtils from '@date-io/date-fns';
+} from '@material-ui/pickers';
+import ClearIcon from '@material-ui/icons/Clear';
+
+import MomentUtils from '@date-io/moment';
+import moment from 'moment';
 
 interface Props {
   selectedStartDate: string,
@@ -21,6 +25,10 @@ const useStyles = makeStyles({
   textField: {
     padding: '0.5em 0',
   },
+  clearIcon: {
+    transform: 'translate(-125%, 42%)',
+    width: 'auto',
+  },
 });
 
 function TextfieldEndDate({
@@ -29,65 +37,47 @@ function TextfieldEndDate({
   disabled,
   selectedEndDate,
 }:Props) {
-  const [value, setValue] = React.useState<string>(selectedEndDate);
+  const [value, setValue] = React.useState<moment.Moment>(
+    selectedEndDate ? moment(selectedEndDate) : null,
+  );
   const classes = useStyles();
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event !== null) {
-      console.log(event.target.value);
-      setValue(event.target.value);
-      handleChangeEnd(new Date(event.target.value).toISOString());
+  const handleChange = (date: moment.Moment) => {
+    if (date !== null) {
+      date = date.endOf('day');
+      handleChangeEnd(date.toISOString());
     } else {
-      setValue('');
       handleChangeEnd('');
     }
+    setValue(date);
   };
 
   return (
-    <>  
-      <MuiPickersUtilsProvider utils={DateFnsUtils}>
-        <Grid container alignItems="flex-end">
-          <TextField
-            id="end Date"
-            label="Search end date"
-            type="datetime-local"
-            value={value}
-            variant="outlined"
-            className={classes.textField}
-            helperText="End date must be after than start date"
-            placeholder="End date"
-            InputLabelProps={{
-              shrink: true,
-            }}
-            onChange={handleChange}
-            disabled={disabled}
-          />
-          <IconButton
-            edge="end"
-            size="small"
-            disabled={!value}
-            onClick={() => handleChange(null)}
-          >
-            <ClearIcon />
-          </IconButton>
-        </Grid>
-      </MuiPickersUtilsProvider>
-      {/* <TextField
-        id="end Date"
-        label="Search end date"
-        type="datetime-local"
-        value={value}
-        variant="outlined"
-        className={classes.textField}
-        helperText="End date must be after than start date"
-        placeholder="End date"
-        InputLabelProps={{
-          shrink: true,
-        }}
-        onChange={handleChange}
-        disabled={disabled}
-      />*/ }
-    </>
+    <MuiPickersUtilsProvider utils={MomentUtils}>
+      <Box>
+        <KeyboardDatePicker
+          autoOk
+          variant="inline"
+          inputVariant="outlined"
+          label="Search end date"
+          placeholder="Insert end date"
+          format="DD/MM/yyyy"
+          value={value}
+          minDate={moment(selectedStartDate)}
+          disabled={disabled}
+          InputAdornmentProps={{ position: 'start' }}
+          onChange={(date) => handleChange(date)}
+        />
+        <IconButton
+          size="small"
+          className={classes.clearIcon}
+          disabled={disabled}
+          onClick={() => handleChange(null)}
+        >
+          <ClearIcon />
+        </IconButton>
+      </Box>
+    </MuiPickersUtilsProvider>
   );
 }
 

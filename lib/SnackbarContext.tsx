@@ -20,7 +20,7 @@ import SnackbarErrorRetrievingData, { errorRetrievingDataId } from 'components/s
 import SnackbarChangeEvidenceError, { changeEvidenceErrorId } from 'components/snackbar/evidence/SnackbarChangeEvidenceError';
 import SnackbarChangeEvidenceSuccess, { changeEvidenceSuccessId } from 'components/snackbar/evidence/SnackbarChangeEvidenceSuccess';
 import SnackbarStatusModified, { statusModifiedId } from 'components/snackbar/orders/SnackbarStatusModified';
-import SnackbarStatusModifiedError, {statusModifiedErrorId} from 'components/snackbar/orders/SnackbarStatusModifiedError';
+import SnackbarStatusModifiedError, { statusModifiedErrorId } from 'components/snackbar/orders/SnackbarStatusModifiedError';
 import SnackbarCreateProductError, { productCreateErrorId } from 'components/snackbar/product/SnackbarCreateProductError';
 import SnackbarDeleteProductError, { productDeleteErrorId } from 'components/snackbar/product/SnackbarDeleteProductError';
 import SnackbarDeleteProductSuccess, { productDeleteSuccessId } from 'components/snackbar/product/SnackbarDeleteProductSuccess';
@@ -273,7 +273,6 @@ function SnackbarContextProvider({ children }: Props) {
         open={alert[statusModifiedErrorId]}
         handleClose={closeSnackbar}
       />
-
 
     </SnackbarContext.Provider>
   );

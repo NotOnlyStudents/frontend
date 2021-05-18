@@ -9,16 +9,10 @@ import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart';
 
 import React from 'react';
 import { Edit } from '@material-ui/icons';
-import { NextRouter, useRouter } from 'next/router';
+import { useRouter } from 'next/router';
 import PriceItem from 'components/price-item/PriceItem';
 import FillQuantity from 'components/quantity/FillQuantity';
 import ImageSwitcher from 'components/image-switcher/ImageSwitcher';
-import SnackbarChangeEvidenceSuccess, { changeEvidenceSuccessId } from 'components/snackbar/evidence/SnackbarChangeEvidenceSuccess';
-import SnackbarChangeEvidenceError, { changeEvidenceErrorId } from 'components/snackbar/evidence/SnackbarChangeEvidenceError';
-import SnackbarChangeQuantityError, { changeQuantityErrorId } from 'components/snackbar/quantity/SnackbarChangeQuantityError';
-import SnackbarChangeQuantitySuccess, { changeQuantitySuccessId } from 'components/snackbar/quantity/SnackbarChangeQuantitySuccess';
-import SnackbarAddToCartSuccess, { addToCartSuccessId } from 'components/snackbar/cart/SnackbarAddToCartSuccess';
-import SnackbarAddToCartError, { addToCartErrorId } from 'components/snackbar/cart/SnackbarAddToCartError';
 import ProductService from 'services/product-service';
 import { getEditProductLink } from 'lib/links';
 import { Auth } from 'aws-amplify';
@@ -76,8 +70,8 @@ function PDPView({ product, edit }: Props) : React.ReactElement {
       }
     } catch (error) {
       let storage = localStorage.getItem('item');
-      if(storage !== null){ 
-        const oldStorage=storage;
+      if (storage !== null) {
+        const oldStorage = storage;
         if (storage[storage.length - 1] === ',') {
           storage = storage.slice(0, -1);
         }

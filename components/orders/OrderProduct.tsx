@@ -2,7 +2,7 @@ import React, { ReactElement } from 'react';
 import { Order, OrderStatus } from 'interfaces/orders/orders';
 import { makeStyles } from '@material-ui/core/styles';
 import {
-  Dialog, DialogActions, DialogTitle, Button, Grid, CardMedia, Typography, Link,
+  Dialog, DialogActions, DialogTitle, Button, Grid, CardMedia, Typography, Link, Box,
 } from '@material-ui/core';
 import { PLPProductItem } from 'interfaces/products/product';
 import { getViewProductLink } from 'lib/links';
@@ -10,10 +10,12 @@ import { useRouter } from 'next/router';
 import OrderService from 'services/order-service';
 import { Auth, sectionHeader } from 'aws-amplify';
 import { Snackbars, useSnackbarContext } from 'lib/SnackbarContext';
+import PriceItem from 'components/price-item/PriceItem';
 
 interface Props {
   order: Order,
-  seller?: boolean
+  seller?: boolean,
+  onChangeStatus: () => void
 }
 
 const useStyles = makeStyles({
@@ -31,7 +33,7 @@ const useStyles = makeStyles({
     display: 'block',
     maxWidth: '100%',
     maxHeight: '100%',
-    backgroundSize: 'contain'
+    backgroundSize: 'contain',
   },
   price: {
     alignSelf: 'center',
@@ -60,18 +62,22 @@ const useStyles = makeStyles({
     fontWeight: 'bold',
   },
   newOrderHeader: {
-    padding: '0 1em',
+    padding: '1em',
     backgroundColor: '#D50000',
-    color: 'white'
+    color: 'white',
   },
   fulfilledOrderHeader: {
-    padding: '0 1em',
+    padding: '1em',
     backgroundColor: '#1B5E20',
-    color: 'white'
+    color: 'white',
   },
 });
 
-function OrderProduct({ order, seller }: Props) {
+function OrderProduct({
+  order,
+  seller,
+  onChangeStatus,
+}: Props) {
   const classes = useStyles();
   const router = useRouter();
   const [status, setStatus] = React.useState(order.status);
@@ -88,12 +94,11 @@ function OrderProduct({ order, seller }: Props) {
         await (new OrderService()).editOrder(token, order.id);
         setStatus(OrderStatus.fulfilled);
         openSnackbar(Snackbars.statusModifiedId);
+        onChangeStatus();
       } catch {
-        console.log('erroe');
         openSnackbar(Snackbars.statusModifiedErrorId);
       }
     } catch (error) {
-      console.error(error);
       openSnackbar(Snackbars.statusModifiedErrorId);
     } finally {
       setOpenModal(false);
@@ -101,27 +106,24 @@ function OrderProduct({ order, seller }: Props) {
   };
 
   const renderStatus = (): string | ReactElement => {
-    if (seller) {
-      if (status === OrderStatus.new) {
-        return (
-          <>
-            {status}
-            <Button
-              onClick={() => { setOpenModal(true); }}
-              size="small"
-              color="primary"
-            >
-              Set Fulfilled
-            </Button>
-          </>
-        );
-      }
+    if (seller && status === OrderStatus.new) {
+      return (
+        <Button
+          onClick={() => { setOpenModal(true); }}
+          size="small"
+          color="primary"
+          variant="contained"
+        >
+          Set Fulfilled
+        </Button>
+      );
     }
-    return status;
+
+    return <></>;
   };
 
   const calculateTotalPrice = (): number => (
-    order.products.map((item: PLPProductItem) => (item.quantity * item.price))
+    order.products.map((item: PLPProductItem) => (item.quantity * item.discountedPrice))
       .reduce(
         (totalPrice, price): number => (
           totalPrice + price
@@ -133,9 +135,11 @@ function OrderProduct({ order, seller }: Props) {
   const renderAdditionalInfo = () => (order.additionalInfo !== ''
     ? (
       <Grid item>
-        <span className={classes.textHeader}>Additional info:</span>
-        {' '}
-        {order.additionalInfo}
+        <Box p="1em">
+          <span className={classes.textHeader}>Additional info:</span>
+          {' '}
+          {order.additionalInfo}
+        </Box>
       </Grid>
     ) : (
       <></>
@@ -148,14 +152,15 @@ function OrderProduct({ order, seller }: Props) {
 
   const renderAllOrderItems = (): React.ReactElement[] => order.products.map(
     (item: PLPProductItem, index: number): React.ReactElement => (
-      <Grid 
-        key={index} 
-        item 
+      <Grid
+        key={index}
+        item
         container
-        className={classes.product}>
+        className={classes.product}
+      >
         <CardMedia
           className={classes.image}
-          image={item.images[0]}
+          image={item.image}
         />
         <Grid item xs={12} sm container>
           <Grid item xs container className={classes.description}>
@@ -194,18 +199,19 @@ function OrderProduct({ order, seller }: Props) {
               </Typography>
               <Typography variant="body2" color="textSecondary">
                 Unit price:
-                {' '}
-                {item.price}
-                €
-                {' '}
               </Typography>
+              <PriceItem
+                price={item.price}
+                discount={item.discount}
+                discountedPrice={item.discountedPrice}
+              />
             </Grid>
           </Grid>
           <Grid item className={classes.price}>
             <Typography variant="subtitle1">
               Price:
               {' '}
-              {item.price * item.quantity}
+              {item.discountedPrice * item.quantity}
               €
               {' '}
             </Typography>
@@ -257,7 +263,7 @@ function OrderProduct({ order, seller }: Props) {
             <Typography>
               <span className={classes.textHeader}>Status:</span>
               {' '}
-              { renderStatus() }
+              { status }
               {' '}
               -
               {' '}
@@ -268,6 +274,9 @@ function OrderProduct({ order, seller }: Props) {
               {' '}
             </Typography>
           </Grid>
+        </Grid>
+        <Grid item container justify="flex-end">
+          { renderStatus() }
         </Grid>
       </Grid>
       <Grid item container>

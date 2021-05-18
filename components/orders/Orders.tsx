@@ -118,27 +118,9 @@ class Orders extends React.Component<Props, State> {
     // this.fetchOrderById(filters.id);
   };
 
-  /* handleChangePagination = (offset: number) => {
-    const { router } = this.props;
-
-    const query = { ...router.query, offset: offset - 1 };
-
-    router.push({
-      pathname: '',
-      query,
-    }, null, {
-      scroll: false,
-    });
-    this.setState((state) => {
-      const newState: State = state;
-
-      newState.filters.offset = offset - 1;
-
-      return newState;
-    });
-
-    this.fetchAllOrder(query);
-  }; */
+  handleChangedStatus = () => {
+    this.handleChangeFilters(this.state.filters);
+  };
 
   fetchAllOrder = async (query) => {
     let paginator: OrderPaginator;
@@ -187,6 +169,7 @@ class Orders extends React.Component<Props, State> {
           <OrdersList
             orders={orders}
             seller={seller}
+            onChangeStatus={this.handleChangedStatus}
           />
         )
         : <NoResultOrder />
@@ -210,12 +193,6 @@ class Orders extends React.Component<Props, State> {
           seller={seller}
         />
         {this.renderOrderIfThereAre()}
-        {/* <EMLPagination
-          totalElements={totalOrders}
-          limit={Orders.limit}
-          page={filters.offset + 1}
-          handleChangePagination={this.handleChangePagination}
-        /> */}
       </>
     );
   }

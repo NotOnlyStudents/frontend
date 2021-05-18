@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  Box,
+  Box, Theme,
 } from '@material-ui/core';
 import { OrderFilter } from 'interfaces/orders/orders';
 import TextFieldCustomerEmail from 'components/textfield/textfieldCustomerEmail';
@@ -8,6 +8,7 @@ import TextFieldOrderID from 'components/textfield/textfieldOrderID';
 import CheckboxStatus from 'components/checkboxes/checkboxStatus';
 import TextfieldStartDate from 'components/textfield/textfieldStartDate';
 import TextfieldEndDate from 'components/textfield/textfieldEndDate';
+import { makeStyles } from '@material-ui/styles';
 
 interface Props {
   filter: OrderFilter;
@@ -17,34 +18,23 @@ interface Props {
   handleChangeFilterId: (filter: OrderFilter) => void;
 }
 
+const useStyles = makeStyles((theme: Theme) => ({
+  dateContainer: {
+    justifyContent: 'space-around',
+    [theme.breakpoints.down('sm')]: {
+      flexDirection: 'column',
+      alignItems: 'center',
+      '& > *': {
+        marginBottom: '1em',
+      },
+    },
+  },
+}));
+
 function OrderFilters({
   filter, seller, disabled, handleChangeFilter, handleChangeFilterId,
 }: Props) {
-  // const router: NextRouter = useRouter();
-  // const { signedState } = useAuthContext();
-  // const [searchText, setSearchText] = useState(router.query.text || '');
-
-  /* const handleSearchEnter = async (
-    event: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => {
-    if (event.key === 'Enter') {
-      const newPage = {
-        pathname: getOrderLink(signedState === SignedState.Seller),
-        query: router.query,
-      };
-
-      if (searchText) {
-        newPage.query.text = searchText;
-      } else {
-        delete newPage.query.text;
-      }
-
-      delete newPage.query.offset;
-
-      await router.push(newPage);
-      router.reload();
-    }
-  }; */
+  const classes = useStyles();
 
   const handleChangeStartDate = (start: string) => {
     const filterStartDate: OrderFilter = { ...filter };
@@ -70,13 +60,13 @@ function OrderFilters({
     handleChangeFilterId(filterID);
   };
 
-  const handleChangeStatus = (fulfilled: boolean) => {
+  const handleChangeStatus = (notFulfilled: boolean) => {
     const filterStatus: OrderFilter = { ...filter };
-    filterStatus.status = fulfilled ? 'fulfilled' : 'new';
+    filterStatus.status = notFulfilled ? 'new' : '';
     handleChangeFilter(filterStatus);
   };
 
-  const renderSearchIfSeller = (disabled) => (seller
+  const renderSearchIfSeller = (disabled: boolean) => (seller
     ? (
       <TextFieldCustomerEmail
         customer={filter.email}
@@ -86,10 +76,10 @@ function OrderFilters({
     )
     : <></>);
 
-  const renderCheckboxStatusIfSeller = (disabled) => (seller
+  const renderCheckboxStatusIfSeller = (disabled: boolean) => (seller
     ? (
       <CheckboxStatus
-        status={filter.status === 'fulfilled'}
+        status={filter.status === 'new'}
         handleChangeStatus={handleChangeStatus}
         disabled={disabled}
       />
@@ -106,9 +96,13 @@ function OrderFilters({
           id={filter.id}
           handleChangeOrderId={handleChangeOrderID}
         />
-      </Box>
-      <Box display="flex">
         { renderCheckboxStatusIfSeller(disabled) }
+      </Box>
+      <Box
+        display="flex"
+        className={classes.dateContainer}
+        marginTop="1em"
+      >
         <TextfieldStartDate
           selectedStartDate={filter.start}
           selectedEndDate={filter.end}

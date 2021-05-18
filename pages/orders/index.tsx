@@ -25,13 +25,13 @@ function OrderCustomer({
 }: Props) {
   const breadcrumbPaths: BreadcrumbPath[] = [
     { name: 'Home', href: getHomeLink(), icon: HomeIcon },
-    { name: 'Orders List Page' },
+    { name: 'Orders' },
   ];
 
   return (
     <>
       <Head>
-        <title>Orders List Page | EmporioLambda</title>
+        <title>Orders | EmporioLambda</title>
       </Head>
       <EMLBreadcrumb paths={breadcrumbPaths} />
       <Typography variant="h4" component="h2">

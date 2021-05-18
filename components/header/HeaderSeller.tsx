@@ -11,10 +11,10 @@ import { useRouter } from 'next/router';
 import { Auth } from 'aws-amplify';
 import { useAuthContext } from 'lib/authContext';
 import { SignedState } from 'interfaces/login';
+import { Tooltip } from '@material-ui/core';
 import HeaderMobileLink from './links/HeaderMobileLink';
 import HeaderMenuMobile from './HeaderMenuMobile';
 import HeaderDesktopLink from './links/HeaderDesktopLink';
-import { Tooltip } from '@material-ui/core';
 
 function HeaderSeller() : React.ReactElement {
   const router = useRouter();

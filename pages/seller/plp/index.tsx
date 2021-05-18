@@ -30,7 +30,7 @@ function PLPSellerPage({
   return (
     <>
       <Head>
-        <title>Products List Page | EmporioLambda</title>
+        <title>Products List Page | Seller | EmporioLambda</title>
       </Head>
       <EMLBreadcrumb paths={breadcrumbPaths} />
       <PLP

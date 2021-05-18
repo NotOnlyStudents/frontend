@@ -1,5 +1,5 @@
 export function getHomeLink(seller: boolean = false) {
-  return seller ? '/seller' : '/';
+  return seller ? '/seller?status=new' : '/';
 }
 
 export function getLoginLink() {

@@ -50,7 +50,7 @@ class PaymentPage extends React.Component<Props, State> {
       addresses: props.addresses,
       selectedAddress: 0,
       expanded: true,
-      additionalInfo: ''
+      additionalInfo: '',
     };
   }
 
@@ -105,15 +105,15 @@ class PaymentPage extends React.Component<Props, State> {
 
   handleChangeAdditionalInfo = (event: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({ additionalInfo: event.target.value });
-  }
+  };
 
   render() {
     const {
-      addresses, 
-      selectedAddress, 
-      cart, 
+      addresses,
+      selectedAddress,
+      cart,
       expanded,
-      additionalInfo
+      additionalInfo,
     } = this.state;
 
     const { token } = this.props;
@@ -157,10 +157,11 @@ class PaymentPage extends React.Component<Props, State> {
           margin="normal"
         />
         <Box width="100%" display="flex" justifyContent="flex-end">
-          <CheckoutButton 
+          <CheckoutButton
             address={actualAddress}
             additionalInfo={additionalInfo}
-            disable={this.disableCheckoutButton()} />
+            disable={this.disableCheckoutButton()}
+          />
         </Box>
       </>
     );

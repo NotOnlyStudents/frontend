@@ -3,16 +3,18 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 
-import { getCartLink, getHomeLink, getOrderLink, getPersonalAreaLink } from 'lib/links';
+import {
+  getCartLink, getHomeLink, getOrderLink, getPersonalAreaLink,
+} from 'lib/links';
 import { useRouter } from 'next/router';
 import { Auth } from 'aws-amplify';
 import { useAuthContext } from 'lib/authContext';
 import { SignedState } from 'interfaces/login';
+import ViewListIcon from '@material-ui/icons/ViewList';
+import { Tooltip } from '@material-ui/core';
 import HeaderMenuMobile from './HeaderMenuMobile';
 import HeaderMobileLink from './links/HeaderMobileLink';
 import HeaderDesktopLink from './links/HeaderDesktopLink';
-import ViewListIcon from '@material-ui/icons/ViewList';
-import { Tooltip } from '@material-ui/core';
 
 function HeaderCustomer() : React.ReactElement {
   const router = useRouter();
@@ -40,7 +42,7 @@ function HeaderCustomer() : React.ReactElement {
           </Tooltip>,
           <Tooltip title="Your orders">
             <HeaderDesktopLink onClick={() => { router.push(getOrderLink()); }}>
-              <ViewListIcon/>
+              <ViewListIcon />
             </HeaderDesktopLink>
           </Tooltip>,
           <Tooltip title="Your personal area">
@@ -62,7 +64,7 @@ function HeaderCustomer() : React.ReactElement {
           <HeaderMobileLink onClick={() => { router.push(getOrderLink()); }}>
             <ViewListIcon />
             Orders
-            </HeaderMobileLink>,
+          </HeaderMobileLink>,
           <HeaderMobileLink onClick={() => { router.push(getPersonalAreaLink()); }}>
             <AccountCircleIcon aria-label="Your personal area" />
             Your personal area

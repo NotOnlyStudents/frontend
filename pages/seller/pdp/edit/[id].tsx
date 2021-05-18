@@ -83,9 +83,9 @@ export async function getServerSideProps(context) {
     return {
       redirect: {
         destination: getHomeLink(true),
-        permanent: false
-      }
-    }
+        permanent: false,
+      },
+    };
   }
 
   return {

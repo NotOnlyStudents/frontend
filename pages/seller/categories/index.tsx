@@ -29,8 +29,7 @@ function CategoriesPage({ categories, searchName, error }: Props) {
   ];
 
   React.useEffect(() => {
-    if(error)
-    {
+    if (error) {
       openSnackbar(Snackbars.errorRetrievingDataId);
     }
   }, []);
@@ -38,7 +37,7 @@ function CategoriesPage({ categories, searchName, error }: Props) {
   return (
     <>
       <Head>
-        <title>Categories | EmporioLambda</title>
+        <title>Categories | Seller | EmporioLambda</title>
       </Head>
       <EMLBreadcrumb paths={breadcrumbPaths} />
       <Typography variant="h4" component="h2">
@@ -76,7 +75,7 @@ export async function getServerSideProps(context) {
   }
 
   const { query } = context;
-  let error = false;
+  const error = false;
 
   let categories: Category[] = [];
   const searchName = query.text || '';
@@ -91,7 +90,7 @@ export async function getServerSideProps(context) {
     props: {
       categories,
       searchName,
-      error
+      error,
     },
   };
 }

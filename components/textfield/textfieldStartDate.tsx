@@ -1,12 +1,13 @@
 import React from 'react';
 import {
-  Grid,
+  Box,
   IconButton,
-  makeStyles, TextField,
+  makeStyles,
 } from '@material-ui/core';
-import ClearIcon from "@material-ui/icons/Clear";
-import { MuiPickersUtilsProvider } from '@material-ui/pickers';
-import DateFnsUtils from '@date-io/date-fns';
+import ClearIcon from '@material-ui/icons/Clear';
+import { KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
+import MomentUtils from '@date-io/moment';
+import moment from 'moment';
 
 interface Props {
   selectedStartDate: string,
@@ -19,6 +20,10 @@ const useStyles = makeStyles({
   textField: {
     padding: '0.5em 0',
   },
+  clearIcon: {
+    transform: 'translate(-125%, 42%)',
+    width: 'auto',
+  },
 });
 
 function TextfieldStartDate({
@@ -27,50 +32,48 @@ function TextfieldStartDate({
   disabled,
   selectedEndDate,
 }:Props) {
-  const [value, setValue] = React.useState<string>(selectedStartDate);
+  const [value, setValue] = React.useState<moment.Moment>(
+    selectedStartDate ? moment(selectedStartDate) : null,
+  );
   const classes = useStyles();
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event !== null) {
-      console.log(event.target.value);
-      setValue(event.target.value);
-      handleChangeStart(new Date(event.target.value).toISOString());
+  const handleChange = (date: moment.Moment) => {
+    if (date !== null) {
+      date = date.startOf('day');
+      console.log(date);
+      handleChangeStart(date.toISOString());
     } else {
-      setValue('');
       handleChangeStart('');
     }
+    setValue(date);
   };
 
   return (
-    <>
-      <MuiPickersUtilsProvider utils={DateFnsUtils}>
-        <Grid container alignItems="flex-end">
-          <TextField
-            id="start Date"
-            label="Search start date"
-            type="datetime-local"
-            value={value}
-            variant="outlined"
-            className={classes.textField}
-            helperText="Start date must be previous than end date"
-            placeholder="Start date"
-            InputLabelProps={{
-              shrink: true,
-            }}
-            onChange={handleChange}
-            disabled={disabled}
-          />
-          <IconButton
-            edge="end"
-            size="small"
-            disabled={!value}
-            onClick={() => handleChange(null)}
-          >
-            <ClearIcon />
-          </IconButton>
-        </Grid>
-      </MuiPickersUtilsProvider>
-    </>
+    <MuiPickersUtilsProvider utils={MomentUtils}>
+      <Box>
+        <KeyboardDatePicker
+          autoOk
+          variant="inline"
+          inputVariant="outlined"
+          label="Search start date"
+          placeholder="Insert start date"
+          format="DD/MM/yyyy"
+          value={value}
+          disabled={disabled}
+          maxDate={moment(selectedEndDate)}
+          InputAdornmentProps={{ position: 'start' }}
+          onChange={(date) => handleChange(date)}
+        />
+        <IconButton
+          size="small"
+          className={classes.clearIcon}
+          disabled={disabled}
+          onClick={() => handleChange(null)}
+        >
+          <ClearIcon />
+        </IconButton>
+      </Box>
+    </MuiPickersUtilsProvider>
   );
 }
 

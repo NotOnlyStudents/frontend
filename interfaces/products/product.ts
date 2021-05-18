@@ -32,6 +32,16 @@ export interface CartProduct {
   discountedPrice?: number;
 }
 
+export interface OrderProductItem {
+  id?: string;
+  name?: string;
+  image?: string;
+  quantity?: number;
+  price?: number;
+  discount?: number;
+  discountedPrice?: number;
+}
+
 export enum SortType {
   alphabetical = 'alphabetical',
   cheaper = 'cheaper',

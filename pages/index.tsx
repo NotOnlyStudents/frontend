@@ -54,8 +54,7 @@ function HomeCustomer({ products, error }: Props) : React.ReactElement {
     const { signInUserSession } = await Auth.currentAuthenticatedUser();
     const signedState = await getSignedState(signInUserSession);
 
-    switch(signedState)
-    {
+    switch (signedState) {
       case SignedState.Seller: {
         router.push(getHomeLink(true));
         break;
@@ -63,7 +62,7 @@ function HomeCustomer({ products, error }: Props) : React.ReactElement {
       default:
         break;
     }
-  }
+  };
 
   const renderFeaturedProductsIfPresent = () => (products.length
     ? (

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Checkbox, FormControlLabel } from '@material-ui/core';
+import { Checkbox, FormControlLabel, makeStyles } from '@material-ui/core';
 
 interface Props {
   status: boolean,
@@ -7,9 +7,18 @@ interface Props {
   handleChangeStatus: (status: boolean) => void;
 }
 
+const useStyles = makeStyles(() => ({
+  label: {
+    textAlign: 'center',
+  },
+}));
+
 function CheckboxStatus({
-  status, disabled, handleChangeStatus,
+  status,
+  disabled,
+  handleChangeStatus,
 }: Props) {
+  const classes = useStyles();
   const [checked, setChecked] = React.useState(false);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -22,10 +31,18 @@ function CheckboxStatus({
 
   return (
     <FormControlLabel
-      control={
-        <Checkbox checked={checked} onChange={handleChange} name="Fulfilled" inputProps={{ 'aria-label': 'Checbox for status' }} />
-      }
-      label="Fulfilled"
+      classes={{
+        label: classes.label,
+      }}
+      control={(
+        <Checkbox
+          checked={checked}
+          onChange={handleChange}
+          name="Not fulfilled"
+          inputProps={{ 'aria-label': 'Checbox for status' }}
+        />
+      )}
+      label="Not fulfilled"
       labelPlacement="bottom"
       disabled={disabled}
     />

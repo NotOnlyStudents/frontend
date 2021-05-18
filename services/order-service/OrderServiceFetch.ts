@@ -5,6 +5,7 @@ import {
 import queryString from 'query-string';
 import { GetAllOrdersRequest, GetOneOrderRequest } from 'interfaces/orders/order-request';
 // import { productToCartProduct } from 'interfaces/products/product-converter';
+import { productToOrderProductItem } from 'interfaces/products/product-converter';
 import OrderService from './OrderService';
 
 class OrderServiceFetch implements OrderService {
@@ -17,7 +18,9 @@ class OrderServiceFetch implements OrderService {
     const res: GetAllOrdersRequest = await req.get<GetAllOrdersRequest>(query, headers);
 
     const paginator: OrderPaginator = {
-      orders: res.data.map((order) => order),
+      orders: res.data.map(
+        (order): Order => ({ ...order, products: order.products.map(productToOrderProductItem) }),
+      ),
       total: res.data.length,
     };
 
@@ -32,7 +35,7 @@ class OrderServiceFetch implements OrderService {
     };
 
     const res: GetOneOrderRequest = await req.get<GetOneOrderRequest>('', headers);
-    console.log(res);
+
     return res.data;
   };
 

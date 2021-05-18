@@ -10,10 +10,9 @@ import { getLoginLink, getPaymentLink } from 'lib/links';
 import CartService from 'services/cart-service';
 import { Auth } from 'aws-amplify';
 import { productToCartProduct } from 'interfaces/products/product-converter';
-import CartItem from './cartItem';
 import { SnackbarContext, Snackbars } from 'lib/SnackbarContext';
 import NoProductInCart from 'components/noresult/NoProductsInCart';
-
+import CartItem from './cartItem';
 
 interface Props {
   items: CartProduct[];
@@ -43,8 +42,7 @@ class CartList extends React.Component<Props, State> {
 
   componentDidMount() {
     // Allow a not authenticated user to access his local cart
-    if(!this.props.authenticated)
-    {
+    if (!this.props.authenticated) {
       if (localStorage.getItem('item') != null) {
         let storage = localStorage.getItem('item');
         if (storage[storage.length - 1] === ',') {
@@ -59,7 +57,7 @@ class CartList extends React.Component<Props, State> {
 
   handleChangeQuantity = async (quantity: number, index: number): Promise<void> => {
     const { openSnackbar } = this.context;
-    let token: string="";
+    let token: string = '';
     try {
       const user = await Auth.currentAuthenticatedUser();
       token = user.signInUserSession.idToken.jwtToken;
@@ -134,48 +132,47 @@ class CartList extends React.Component<Props, State> {
     return !payment ? button : <></>;
   };
 
-  renderAllItems = (): React.ReactElement[] =>
-    (this.state.items.map(
-      (item: CartProduct, index: number): React.ReactElement => (
-        <Box key={item.id} marginBottom="4em">
-          <CartItem
-            item={item}
-            index={index}
-            handleChangeQuantity={this.handleChangeQuantity}
-            handleRemoveProduct={this.handleRemoveProduct}
-            payments={this.props.payment}
-          />
-        </Box>
-      ),
-    ))
+  renderAllItems = (): React.ReactElement[] => (this.state.items.map(
+    (item: CartProduct, index: number): React.ReactElement => (
+      <Box key={item.id} marginBottom="4em">
+        <CartItem
+          item={item}
+          index={index}
+          handleChangeQuantity={this.handleChangeQuantity}
+          handleRemoveProduct={this.handleRemoveProduct}
+          payments={this.props.payment}
+        />
+      </Box>
+    ),
+  ))
   ;
 
   render() {
     return (
       this.state.items.length !== 0
-      ? (
-        <Box>
-          <Box
-            display="flex"
-            alignItems="center"
-            justifyContent="flex-end"
-          >
+        ? (
+          <Box>
             <Box
               display="flex"
-              marginRight={2}
+              alignItems="center"
+              justifyContent="flex-end"
             >
-              <Typography>
-                Total price:
-                {' '}
-                {`${this.calculateTotalPrice()}€`}
-              </Typography>
+              <Box
+                display="flex"
+                marginRight={2}
+              >
+                <Typography>
+                  Total price:
+                  {' '}
+                  {`${this.calculateTotalPrice()}€`}
+                </Typography>
+              </Box>
+              { this.renderPaymentButtonIfLogged() }
             </Box>
-            { this.renderPaymentButtonIfLogged() }
+            {this.renderAllItems()}
           </Box>
-          {this.renderAllItems()}
-        </Box>
-      )
-      : <NoProductInCart />
+        )
+        : <NoProductInCart />
     );
   }
 }

@@ -9,7 +9,6 @@ import PaymentIcon from '@material-ui/icons/Payment';
 import { Address } from 'interfaces/address/address';
 import { getAuthToken } from 'lib/authContext';
 
-
 interface Props {
   address: Address,
   additionalInfo: string
@@ -20,7 +19,7 @@ function CheckoutButton({ address, additionalInfo, disable }: Props) {
   const handleClick = async () => {
     const stripe = await loadStripe(process.env.NEXT_PUBLIC_STRIPE);
 
-    let token: string = await getAuthToken();
+    const token: string = await getAuthToken();
 
     const cartToken: CartToken = await (new CartService()).getCartToken(token);
 

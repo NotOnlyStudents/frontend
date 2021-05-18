@@ -1,13 +1,15 @@
 import React from 'react';
 import OrderService from 'services/order-service';
-import { Order, OrderFilter, OrderPaginator } from 'interfaces/orders/orders';
+import {
+  Order, OrderFilter, OrderPaginator,
+} from 'interfaces/orders/orders';
 import Head from 'next/head';
 import { getSignedState } from 'lib/authContext';
 import EMLBreadcrumb from 'components/breadcrumb/EMLBreadcrumb';
 import HomeIcon from '@material-ui/icons/Home';
 import { BreadcrumbPath } from 'interfaces/breadcrumb';
 import { getHomeLink, getLoginLink, getOrderLink } from 'lib/links';
-import { Box, Typography } from '@material-ui/core';
+import { Typography } from '@material-ui/core';
 import { withSSRContext } from 'aws-amplify';
 import { SignedState } from 'interfaces/login';
 import Orders from 'components/orders/Orders';
@@ -18,25 +20,28 @@ interface Props {
   totalOrders: number,
 }
 
-function HomeSeller({
+function OrderCustomer({
   filters, orders, totalOrders,
 }: Props) {
+  const breadcrumbPaths: BreadcrumbPath[] = [
+    { name: 'Home', href: getHomeLink(), icon: HomeIcon },
+    { name: 'Orders' },
+  ];
+
   return (
     <>
       <Head>
-        <title>Home | Seller | EmporioLambda</title>
+        <title>Orders | EmporioLambda</title>
       </Head>
-      <Box paddingTop="1em">
-        <Typography variant="h4" component="h2">
-          All orders
-        </Typography>
-        <Orders
-          filters={filters}
-          orders={orders}
-          totalOrders={totalOrders}
-          seller
-        />
-      </Box>
+      <EMLBreadcrumb paths={breadcrumbPaths} />
+      <Typography variant="h4" component="h2">
+        Your orders
+      </Typography>
+      <Orders
+        filters={filters}
+        orders={orders}
+        totalOrders={totalOrders}
+      />
     </>
   );
 }
@@ -49,10 +54,10 @@ export async function getServerSideProps(context) {
     token = signInUserSession.idToken.jwtToken;
     const signedState = await getSignedState(signInUserSession);
 
-    if (signedState === SignedState.Customer) {
+    if (signedState === SignedState.Seller) {
       return {
         redirect: {
-          destination: getHomeLink(),
+          destination: getOrderLink(true),
           permanent: false,
         },
       };
@@ -103,4 +108,4 @@ export async function getServerSideProps(context) {
   };
 }
 
-export default HomeSeller;
+export default OrderCustomer;

@@ -25,14 +25,14 @@ const useStyles = makeStyles({
     display: 'flex',
     flexDirection: 'column',
     flexGrow: 1,
-    marginTop: '2em'
+    marginTop: '2em',
   },
   image: {
     width: 128,
     height: '14em',
     margin: 'auto',
     display: 'block',
-    backgroundSize: 'contain'
+    backgroundSize: 'contain',
   },
   price: {
     alignSelf: 'center',
@@ -64,7 +64,7 @@ function CartItem({
     handleRemoveProduct(index);
   };
 
-  const renderPrice = () => (item.discountedPrice * item.quantity).toFixed(2)
+  const renderPrice = () => (item.discountedPrice * item.quantity).toFixed(2);
 
   const renderRemoveProductIfInCart = () => (
     (!payments)

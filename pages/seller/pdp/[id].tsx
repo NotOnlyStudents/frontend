@@ -9,7 +9,7 @@ import { BreadcrumbPath } from 'interfaces/breadcrumb';
 import {
   getHomeLink, getLoginLink, getPLPLink, getViewProductLink,
 } from 'lib/links';
-import { Auth, withSSRContext } from 'aws-amplify';
+import { withSSRContext } from 'aws-amplify';
 import { getSignedState, useAuthContext } from 'lib/authContext';
 import { SignedState } from 'interfaces/login';
 import { useRouter } from 'next/router';
@@ -29,7 +29,7 @@ function PDPPage({ product }: Props) {
     <>
       <Head>
         <title>
-          { `${product.name} | EmporioLambda` }
+          { `${product.name} | Seller | EmporioLambda` }
         </title>
       </Head>
       <EMLBreadcrumb paths={breadcrumbPaths} />

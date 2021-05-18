@@ -30,7 +30,7 @@ const useStyles = makeStyles({
   },
   image: {
     height: 300,
-    backgroundSize: 'contain'
+    backgroundSize: 'contain',
   },
   notAvailableText: {
     width: '100%',
@@ -63,8 +63,8 @@ function PLPProduct({ product, seller }: Props) {
     } catch (error) {
       console.error(error);
       let storage = localStorage.getItem('item');
-      if(storage !== null){ 
-        const oldStorage=storage;
+      if (storage !== null) {
+        const oldStorage = storage;
         if (storage[storage.length - 1] === ',') {
           storage = storage.slice(0, -1);
         }
@@ -89,14 +89,14 @@ function PLPProduct({ product, seller }: Props) {
     try {
       const user = await Auth.currentAuthenticatedUser();
       token = user.signInUserSession.idToken.jwtToken;
-     // openSnackbar(Snackbars.addToCartSuccessId);
+      // openSnackbar(Snackbars.addToCartSuccessId);
     } catch (error) {
       // openAlert(addToCartErrorId);
     } finally {
       try {
         await new CartService().postCartProducts(token, { ...productToCart, quantity });
         openSnackbar(Snackbars.addToCartSuccessId);
-      } catch(e) {
+      } catch (e) {
         openSnackbar(Snackbars.addToCartErrorId);
       }
     }

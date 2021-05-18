@@ -31,8 +31,7 @@ function PDPPage({ product }: Props) {
     const { signInUserSession } = await Auth.currentAuthenticatedUser();
     const signedState = await getSignedState(signInUserSession);
 
-    switch(signedState)
-    {
+    switch (signedState) {
       case SignedState.Seller: {
         router.push(getViewProductLink(product.id, true));
         break;
@@ -40,7 +39,7 @@ function PDPPage({ product }: Props) {
       default:
         break;
     }
-  }
+  };
 
   React.useEffect(() => { checkAuth(); }, []);
 
@@ -85,7 +84,7 @@ export async function getStaticProps(context) {
     product = await (new ProductService()).getProductById(params.id);
   } catch (e) {
     return {
-      notFound: true
+      notFound: true,
     };
   }
 
@@ -93,7 +92,7 @@ export async function getStaticProps(context) {
     props: {
       product,
     },
-    revalidate: 1
+    revalidate: 1,
   };
 }
 

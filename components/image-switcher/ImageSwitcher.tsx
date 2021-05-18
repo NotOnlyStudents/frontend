@@ -10,7 +10,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   sideImg: {
     width: '10em',
     height: '10em',
-    backgroundSize: 'contain'
+    backgroundSize: 'contain',
   },
   selectedImg: {
     width: '95%',
@@ -81,9 +81,10 @@ function ImageSwitcher({ images }: Props) {
     <Box className={classes.containerImages} display="flex" minHeight="35em">
       {renderSideBox()}
       <Box display="flex" width="100%" height="35em" justifyContent="center" alignItems="center">
-        <CardMedia 
-          className={classes.selectedImg} 
-          image={actualImg} />
+        <CardMedia
+          className={classes.selectedImg}
+          image={actualImg}
+        />
       </Box>
     </Box>
   );

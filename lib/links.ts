@@ -1,5 +1,5 @@
 export function getHomeLink(seller: boolean = false) {
-  return seller ? '/seller' : '/';
+  return seller ? '/seller?status=new' : '/';
 }
 
 export function getLoginLink() {
@@ -24,6 +24,10 @@ export function getEditPersonalAreaLink(seller: boolean = false) {
 
 export function getPLPLink(seller: boolean = false) {
   return seller ? '/seller/plp' : '/plp';
+}
+
+export function getOrderLink(seller: boolean = false) {
+  return seller ? '/seller/orders' : '/orders';
 }
 
 export function getViewProductLink(id: string, seller: boolean = false) {

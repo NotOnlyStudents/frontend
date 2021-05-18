@@ -19,6 +19,8 @@ import SnackbarEditCategorySuccess, { categoryEditSuccessId } from 'components/s
 import SnackbarErrorRetrievingData, { errorRetrievingDataId } from 'components/snackbar/common-snackbar/SnackbarErrorRetrievingData';
 import SnackbarChangeEvidenceError, { changeEvidenceErrorId } from 'components/snackbar/evidence/SnackbarChangeEvidenceError';
 import SnackbarChangeEvidenceSuccess, { changeEvidenceSuccessId } from 'components/snackbar/evidence/SnackbarChangeEvidenceSuccess';
+import SnackbarStatusModified, { statusModifiedId } from 'components/snackbar/orders/SnackbarStatusModified';
+import SnackbarStatusModifiedError, { statusModifiedErrorId } from 'components/snackbar/orders/SnackbarStatusModifiedError';
 import SnackbarCreateProductError, { productCreateErrorId } from 'components/snackbar/product/SnackbarCreateProductError';
 import SnackbarDeleteProductError, { productDeleteErrorId } from 'components/snackbar/product/SnackbarDeleteProductError';
 import SnackbarDeleteProductSuccess, { productDeleteSuccessId } from 'components/snackbar/product/SnackbarDeleteProductSuccess';
@@ -69,6 +71,8 @@ export const Snackbars = {
   userDeleteSuccessId,
   userDeleteErrorId,
   errorRetrievingDataId,
+  statusModifiedId,
+  statusModifiedErrorId,
 };
 
 interface Props {
@@ -259,6 +263,17 @@ function SnackbarContextProvider({ children }: Props) {
         open={alert[errorRetrievingDataId]}
         handleClose={closeSnackbar}
       />
+
+      <SnackbarStatusModified
+        open={alert[statusModifiedId]}
+        handleClose={closeSnackbar}
+      />
+
+      <SnackbarStatusModifiedError
+        open={alert[statusModifiedErrorId]}
+        handleClose={closeSnackbar}
+      />
+
     </SnackbarContext.Provider>
   );
 }

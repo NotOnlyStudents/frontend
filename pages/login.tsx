@@ -18,25 +18,23 @@ import EMLBreadcrumb from 'components/breadcrumb/EMLBreadcrumb';
 import { Auth, withSSRContext } from 'aws-amplify';
 import CartService from 'services/cart-service/CartServiceFetch';
 
-
-
 const handleLogin = async () => {
   try {
     const user = await Auth.currentAuthenticatedUser();
     const token = user.signInUserSession.idToken.jwtToken;
     let storage = localStorage.getItem('item');
-      if (localStorage != null) {
-        if (storage[storage.length - 1] === ',') {
-          storage = storage.slice(0, -1);
-        }
-        storage = `[${storage}]`;
-        const products = JSON.parse(storage);
-
-        for (let i = 0; i < products.length; i++) {
-          await new CartService().postCartProducts(token, products[i]);
-        }
-        localStorage.removeItem('item');
+    if (storage != null) {
+      if (storage[storage.length - 1] === ',') {
+        storage = storage.slice(0, -1);
       }
+      storage = `[${storage}]`;
+      const products = JSON.parse(storage);
+
+      for (let i = 0; i < products.length; i++) {
+        await new CartService().postCartProducts(token, products[i]);
+      }
+      localStorage.removeItem('item');
+    }
   } catch (error) {
     console.log(error);
   }

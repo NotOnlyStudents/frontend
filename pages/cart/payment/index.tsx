@@ -21,11 +21,13 @@ import { getCartLink, getHomeLink, getLoginLink } from 'lib/links';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import CheckoutButton from 'components/button/CheckoutButton';
 import { SignedState } from 'interfaces/login';
+import { SnackbarContext, Snackbars } from 'lib/SnackbarContext';
 
 interface Props {
   cart: Cart,
   addresses?: Address[],
-  token?: string
+  token?: string,
+
 }
 
 interface State {
@@ -52,6 +54,14 @@ class PaymentPage extends React.Component<Props, State> {
       expanded: true,
       additionalInfo: '',
     };
+  }
+
+  componentDidMount() {
+    if (this.props.paymentFailure) {
+      const { openSnackbar } = this.context;
+
+      openSnackbar(Snackbars.paymentErrorId);
+    }
   }
 
   handleRemoveAddress = (index: number) => {
@@ -168,18 +178,19 @@ class PaymentPage extends React.Component<Props, State> {
   }
 }
 
-PaymentPage.contextType = AuthContext;
+PaymentPage.contextType = SnackbarContext;
 
 export async function getServerSideProps(context) {
   let products;
   let addresses;
-  let token: string = null;
+  let token: string = '';
   const { Auth } = withSSRContext(context);
 
   try {
     const { signInUserSession } = await Auth.currentAuthenticatedUser();
 
     const signedState = await getSignedState(signInUserSession);
+    token = signInUserSession.idToken.jwtToken;
 
     if (signedState === SignedState.Seller) {
       return {
@@ -189,8 +200,6 @@ export async function getServerSideProps(context) {
         },
       };
     }
-
-    token = signInUserSession.idToken.jwtToken;
 
     try {
       addresses = await (new AddressService()).getAllAddress(token);
@@ -212,6 +221,9 @@ export async function getServerSideProps(context) {
     };
   }
 
+  const { query } = context;
+  const paymentFailure = query.payment_failure === 'true';
+
   return {
     props: {
       addresses,
@@ -219,6 +231,7 @@ export async function getServerSideProps(context) {
         products,
       },
       token,
+      paymentFailure,
     },
   };
 }

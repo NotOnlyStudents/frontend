@@ -10,7 +10,7 @@ interface Props {
 function CheckboxStatus({
   status, disabled, handleChangeStatus,
 }: Props) {
-  const [checked, setChecked] = React.useState(false);
+  const [checked, setChecked] = React.useState(status);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     handleChangeStatus(event.target.checked);

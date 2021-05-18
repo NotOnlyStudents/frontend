@@ -102,10 +102,10 @@ function OrderProduct({ order, seller }: Props) {
 
   const renderStatus = (): string | ReactElement => {
     if (seller) {
-      if (status === OrderStatus.new) {
+      if (order.status === OrderStatus.new) {
         return (
           <>
-            {status}
+            {order.status}
             <Button
               onClick={() => { setOpenModal(true); }}
               size="small"
@@ -117,7 +117,7 @@ function OrderProduct({ order, seller }: Props) {
         );
       }
     }
-    return status;
+    return order.status;
   };
 
   const calculateTotalPrice = (): number => (
@@ -143,7 +143,7 @@ function OrderProduct({ order, seller }: Props) {
   );
 
   const setHeaderBackground = () => (
-    status === OrderStatus.new ? classes.newOrderHeader : classes.fulfilledOrderHeader
+    order.status === OrderStatus.new ? classes.newOrderHeader : classes.fulfilledOrderHeader
   );
 
   const renderAllOrderItems = (): React.ReactElement[] => order.products.map(

@@ -17,7 +17,7 @@ class OrderServiceFetch implements OrderService {
     const res: GetAllOrdersRequest = await req.get<GetAllOrdersRequest>(query, headers);
 
     const paginator: OrderPaginator = {
-      orders: res.data.map((order) => order),
+      orders: res.data,
       total: res.data.length,
     };
 

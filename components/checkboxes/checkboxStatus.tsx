@@ -19,7 +19,7 @@ function CheckboxStatus({
   handleChangeStatus,
 }: Props) {
   const classes = useStyles();
-  const [checked, setChecked] = React.useState(false);
+  const [checked, setChecked] = React.useState(status);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     handleChangeStatus(event.target.checked);

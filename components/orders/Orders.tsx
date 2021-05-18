@@ -68,7 +68,7 @@ class Orders extends React.Component<Props, State> {
     }
 
     if (filters.status) {
-      query.status = filters.status.toString();
+      query.status = filters.status;
     } else {
       delete query.status;
     }

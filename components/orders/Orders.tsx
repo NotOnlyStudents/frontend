@@ -135,7 +135,6 @@ class Orders extends React.Component<Props, State> {
       };
     }
 
-    console.log(paginator.orders);
     this.setState({
       orders: paginator.orders,
       totalOrders: paginator.total,
@@ -155,7 +154,6 @@ class Orders extends React.Component<Props, State> {
 
     this.setState({
       orders: ordersId,
-      totalOrders: ordersId.length,
     });
   };
 

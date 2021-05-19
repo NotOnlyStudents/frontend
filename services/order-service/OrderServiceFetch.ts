@@ -36,7 +36,7 @@ class OrderServiceFetch implements OrderService {
 
     const res: GetOneOrderRequest = await req.get<GetOneOrderRequest>('', headers);
 
-    return res.data;
+    return { ...res.data, products: res.data.products.map(productToOrderProductItem) };
   };
 
   createOrder = async (token: string, order: Order): Promise<string> => {

@@ -15,8 +15,8 @@ function OrdersList({
   onChangeStatus,
 }: Props) : React.ReactElement {
   const renderAllOrders = (): React.ReactElement[] => orders.map(
-    (item: Order, index: number): React.ReactElement => (
-      <Box key={index} marginBottom="4em">
+    (item: Order): React.ReactElement => (
+      <Box key={item.id} marginBottom="4em">
         <OrderProduct
           order={item}
           seller={seller}

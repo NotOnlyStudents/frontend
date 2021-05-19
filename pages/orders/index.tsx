@@ -91,7 +91,14 @@ export async function getServerSideProps(context) {
   let paginator: OrderPaginator;
 
   try {
-    paginator = await (new OrderService()).getAllOrder(token, filters);
+    if (query.id) {
+      paginator = {
+        orders: [await (new OrderService()).getOrderById(token, filters.id)],
+        total: 0,
+      };
+    } else {
+      paginator = await (new OrderService()).getAllOrder(token, filters);
+    }
   } catch (e) {
     paginator = {
       orders: [],

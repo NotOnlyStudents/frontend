@@ -62,14 +62,7 @@ export async function getServerSideProps(context) {
         },
       };
     }
-  } catch (e) {
-    return {
-      redirect: {
-        destination: getLoginLink(),
-        permanent: false,
-      },
-    };
-  }
+  } catch (e) { }
 
   const { query } = context;
   const filters: OrderFilter = query;

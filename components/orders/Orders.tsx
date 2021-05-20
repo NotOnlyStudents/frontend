@@ -44,7 +44,13 @@ class Orders extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    this.handleChangeFilters(this.state.filters);
+    const { filters } = this.state;
+
+    if (filters.id) {
+      this.handleChangeFilterId(filters);
+    } else {
+      this.handleChangeFilters(filters);
+    }
   }
 
   handleChangeFilters = async (filters: OrderFilter) => {

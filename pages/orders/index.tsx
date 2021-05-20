@@ -49,6 +49,8 @@ function OrderCustomer({
 export async function getServerSideProps(context) {
   const { Auth } = withSSRContext(context);
   let token: string = '';
+  const { query } = context;
+
   try {
     const { signInUserSession } = await Auth.currentAuthenticatedUser();
     token = signInUserSession.idToken.jwtToken;
@@ -62,9 +64,24 @@ export async function getServerSideProps(context) {
         },
       };
     }
-  } catch (e) { }
+  } catch (e) {
+    if (query.stripe) {
+      return {
+        redirect: {
+          destination: getOrderLink(),
+          permanent: false,
+        },
+      };
+    }
 
-  const { query } = context;
+    return {
+      redirect: {
+        destination: getLoginLink(),
+        permanent: false,
+      },
+    };
+  }
+
   const filters: OrderFilter = query;
 
   if (query.email) {

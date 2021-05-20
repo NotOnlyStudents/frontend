@@ -65,21 +65,21 @@ export async function getServerSideProps(context) {
       };
     }
   } catch (e) {
-    if (query.stripe) {
-      return {
-        redirect: {
-          destination: getOrderLink(),
-          permanent: false,
-        },
-      };
-    }
+    // if (query.stripe) {
+    //   return {
+    //     redirect: {
+    //       destination: getOrderLink(),
+    //       permanent: false,
+    //     },
+    //   };
+    // }
 
-    return {
-      redirect: {
-        destination: getLoginLink(),
-        permanent: false,
-      },
-    };
+    // return {
+    //   redirect: {
+    //     destination: getLoginLink(),
+    //     permanent: false,
+    //   },
+    // };
   }
 
   const filters: OrderFilter = query;

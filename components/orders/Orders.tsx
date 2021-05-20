@@ -43,6 +43,10 @@ class Orders extends React.Component<Props, State> {
     };
   }
 
+  componentDidMount() {
+    this.handleChangeFilters(this.state.filters);
+  }
+
   handleChangeFilters = async (filters: OrderFilter) => {
     const { router } = this.props;
     const query = {

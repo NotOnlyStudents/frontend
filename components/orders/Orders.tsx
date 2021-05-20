@@ -59,6 +59,8 @@ class Orders extends React.Component<Props, State> {
       ...router.query,
     };
 
+    delete query.id;
+
     if (filters.email) {
       query.email = filters.email;
     } else {
@@ -109,23 +111,21 @@ class Orders extends React.Component<Props, State> {
       delete query.start;
       delete query.end;
       delete query.status;
+
       query.id = filters.id;
+
+      router.push({
+        pathname: '',
+        query,
+      }, null, {
+        scroll: false,
+      });
+
       this.setState({ filters });
       this.fetchOrderById(filters.id);
     } else {
-      delete query.id;
-      this.setState({ filters });
-      this.fetchAllOrder(query);
+      this.handleChangeFilters(filters);
     }
-
-    router.push({
-      pathname: '',
-      query,
-    }, null, {
-      scroll: false,
-    });
-    // this.setState({ filters });
-    // this.fetchOrderById(filters.id);
   };
 
   handleChangedStatus = () => {

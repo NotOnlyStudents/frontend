@@ -99,7 +99,8 @@ function Header(): React.ReactElement {
         delete newPage.query.text;
       }
 
-      delete newPage.query.offset;
+      newPage.query.offset = '0';
+      newPage.query.limit = '24';
 
       await router.push(newPage);
       router.reload();

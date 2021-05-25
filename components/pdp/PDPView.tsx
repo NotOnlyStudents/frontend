@@ -69,13 +69,8 @@ function PDPView({ product, edit }: Props) : React.ReactElement {
         setCounter(addedQuantity[0]);
       }
     } catch (error) {
-      let storage = localStorage.getItem('item');
+      const storage = localStorage.getItem('item');
       if (storage !== null) {
-        const oldStorage = storage;
-        if (storage[storage.length - 1] === ',') {
-          storage = storage.slice(0, -1);
-        }
-        storage = `[${storage}]`;
         const products = JSON.parse(storage);
         for (let i = 0; i < products.length; i++) {
           if (products[i].id === product.id) {

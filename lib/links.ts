@@ -23,7 +23,7 @@ export function getEditPersonalAreaLink(seller: boolean = false) {
 }
 
 export function getPLPLink(seller: boolean = false) {
-  return seller ? '/seller/plp?offset=0&limit=24' : '/plp?offset=0&limit=24';
+  return seller ? '/seller/plp' : '/plp';
 }
 
 export function getOrderLink(seller: boolean = false) {

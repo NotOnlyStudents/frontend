@@ -44,12 +44,10 @@ class CartList extends React.Component<Props, State> {
     // Allow a not authenticated user to access his local cart
     if (!this.props.authenticated) {
       if (localStorage.getItem('item') != null) {
-        let storage = localStorage.getItem('item');
-        if (storage[storage.length - 1] === ',') {
-          storage = storage.slice(0, -1);
-        }
-        storage = `[${storage}]`;
+        const storage = localStorage.getItem('item');
+
         const products = JSON.parse(storage);
+
         this.setState({ items: products.map(productToCartProduct) });
       }
     }

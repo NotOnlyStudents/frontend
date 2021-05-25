@@ -39,26 +39,28 @@ class CartServiceFetch implements CartService {
     if (token === '') {
       let storage = localStorage.getItem('item');
       if (storage !== null) {
-        const oldStorage = storage;
         if (storage[storage.length - 1] === ',') {
           storage = storage.slice(0, -1);
         }
-        storage = `[${storage}]`;
+
         const products = JSON.parse(storage);
         let present = false;
+
         for (let i = 0; i < products.length; i++) {
           if (products[i].id === product.id) {
             products[i].quantity = product.quantity;
             present = true;
           }
         }
-        if (present) { localStorage.setItem('item', JSON.stringify(products).slice(0, -1).slice(1)); } else {
-          let newStorage = `${JSON.stringify(product)},`;
-          newStorage = `${oldStorage + JSON.stringify(product)},`;
-          localStorage.setItem('item', newStorage);
+
+        if (present) {
+          localStorage.setItem('item', JSON.stringify(products));
+        } else {
+          products.push(product);
+          localStorage.setItem('item', JSON.stringify(products));
         }
       } else {
-        const newStorage = `${JSON.stringify(product)},`;
+        const newStorage = `[ ${JSON.stringify(product)} ]`;
         localStorage.setItem('item', newStorage);
       }
     } else {
@@ -119,12 +121,9 @@ class CartServiceFetch implements CartService {
 
   deleteCartProducts = async (token, productId): Promise<void> => {
     if (token === '') {
-      if (localStorage != null) {
-        let storage = localStorage.getItem('item');
-        if (storage[storage.length - 1] === ',') {
-          storage = storage.slice(0, -1);
-        }
-        storage = `[${storage}]`;
+      const storage = localStorage.getItem('item');
+
+      if (storage != null) {
         const products = JSON.parse(storage);
 
         for (let i = 0; i < products.length; i++) {
@@ -133,7 +132,7 @@ class CartServiceFetch implements CartService {
           }
         }
         if (products.length !== 0) {
-          localStorage.setItem('item', JSON.stringify(products).slice(0, -1).slice(1));
+          localStorage.setItem('item', JSON.stringify(products));
         } else {
           localStorage.removeItem('item');
         }
@@ -150,12 +149,8 @@ class CartServiceFetch implements CartService {
 
   patchCartProducts = async (token, productId, quantity): Promise<void> => {
     if (token === '') {
-      let storage = localStorage.getItem('item');
+      const storage = localStorage.getItem('item');
       if (storage != null) {
-        if (storage[storage.length - 1] === ',') {
-          storage = storage.slice(0, -1);
-        }
-        storage = `[${storage}]`;
         const products = JSON.parse(storage);
 
         for (let i = 0; i < products.length; i++) {
@@ -164,7 +159,7 @@ class CartServiceFetch implements CartService {
           }
         }
 
-        localStorage.setItem('item', JSON.stringify(products).slice(0, -1).slice(1));
+        localStorage.setItem('item', JSON.stringify(products));
       }
     } else {
       const req: HTTPRequest = new HTTPRequest(process.env.NEXT_PUBLIC_CART_SERVICE_URL, `cart/${productId}`);

@@ -22,12 +22,8 @@ const handleLogin = async () => {
   try {
     const user = await Auth.currentAuthenticatedUser();
     const token = user.signInUserSession.idToken.jwtToken;
-    let storage = localStorage.getItem('item');
+    const storage = localStorage.getItem('item');
     if (storage != null) {
-      if (storage[storage.length - 1] === ',') {
-        storage = storage.slice(0, -1);
-      }
-      storage = `[${storage}]`;
       const products = JSON.parse(storage);
 
       for (let i = 0; i < products.length; i++) {

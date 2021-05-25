@@ -61,7 +61,7 @@ class CartList extends React.Component<Props, State> {
     try {
       const user = await Auth.currentAuthenticatedUser();
       token = user.signInUserSession.idToken.jwtToken;
-    } catch (error) { console.log(error); } finally {
+    } catch (error) { } finally {
       await (new CartService()).patchCartProducts(token, this.state.items[index].id, quantity);
       this.setState((state: State) => {
         const newState: State = state;
@@ -78,9 +78,7 @@ class CartList extends React.Component<Props, State> {
     try {
       const user = await Auth.currentAuthenticatedUser();
       token = user.signInUserSession.idToken.jwtToken;
-    } catch (error) {
-      console.log(error);
-    } finally {
+    } catch (error) { } finally {
       await new CartService().deleteCartProducts(token, this.state.items[index].id);
       this.setState((state: State) => {
         const newState: State = state;

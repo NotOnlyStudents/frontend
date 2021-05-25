@@ -13,8 +13,6 @@ import ProductService from 'services/product-service';
 import ProductServiceType from 'services/product-service/ProductService';
 import AutocompleteCategories from 'components/autocomplete/autocompleteCategories';
 import { Category } from 'interfaces/categories/category';
-import SnackbarProductNotValid, { productNotValidId } from 'components/snackbar/product/SnackbarProductNotValid';
-import { AlertState } from 'interfaces/alert';
 import { getViewProductLink } from 'lib/links';
 import { SnackbarContext, Snackbars } from 'lib/SnackbarContext';
 import { getAuthToken } from 'lib/authContext';
@@ -29,7 +27,6 @@ interface Props {
 interface State {
   product: Product;
   validation: ProductValidation;
-  alert: AlertState;
 }
 
 class PDPEdit extends React.Component<Props, State> {
@@ -48,7 +45,6 @@ class PDPEdit extends React.Component<Props, State> {
         discount: false,
         evidence: false,
       },
-      alert: { [productNotValidId]: false },
     };
   }
 
@@ -182,16 +178,6 @@ class PDPEdit extends React.Component<Props, State> {
     });
   };
 
-  handleCloseAlert = (id: string) => {
-    this.setState((state: State) => {
-      const newState: State = state;
-
-      newState.alert[id] = false;
-
-      return newState;
-    });
-  };
-
   handleClickCancel = () => {
     const { router } = this.props;
 
@@ -224,6 +210,9 @@ class PDPEdit extends React.Component<Props, State> {
           const token: string = await getAuthToken();
 
           newProduct = await ps.createProduct(token, product);
+
+          openSnackbar(Snackbars.productCreateSuccessId);
+
           this.goToViewProductPage(newProduct);
         } catch (e) {
           openSnackbar(Snackbars.productCreateErrorId);
@@ -236,7 +225,7 @@ class PDPEdit extends React.Component<Props, State> {
 
   render() {
     const { title, creation } = this.props;
-    const { product, validation, alert } = this.state;
+    const { product, validation } = this.state;
 
     const renderEvidenceIfCreation = () => (creation ? (
       <PDPEvidence

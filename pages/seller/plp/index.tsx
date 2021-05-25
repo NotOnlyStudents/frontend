@@ -91,6 +91,8 @@ export async function getServerSideProps(context) {
     filters.priceMax = query.priceMax;
   }
 
+  filters.offset = parseInt(query.offset) || 0;
+
   filters.limit = 24;
 
   let paginator: ProductPaginator;

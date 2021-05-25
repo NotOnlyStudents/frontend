@@ -40,7 +40,6 @@ function TextfieldStartDate({
   const handleChange = (date: moment.Moment) => {
     if (date !== null) {
       date = date.startOf('day');
-      console.log(date);
       handleChangeStart(date.toISOString());
     } else {
       handleChangeStart('');

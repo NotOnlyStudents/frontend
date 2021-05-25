@@ -61,7 +61,6 @@ function PLPProduct({ product, seller }: Props) {
         setQuantity(addedQuantity[0]);
       }
     } catch (error) {
-      console.error(error);
       let storage = localStorage.getItem('item');
       if (storage !== null) {
         const oldStorage = storage;

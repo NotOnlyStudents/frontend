@@ -61,7 +61,7 @@ export async function getServerSideProps(context) {
   } catch (e) { }
 
   const { query } = context;
-  const filters: ProductFilter = query;
+  let filters: ProductFilter = query;
   if (filters) {
     if (query.categories) {
       if (!Array.isArray(query.categories)) {
@@ -84,10 +84,17 @@ export async function getServerSideProps(context) {
     if (query.priceMax) {
       filters.priceMax = query.priceMax;
     }
+
     filters.offset = parseInt(query.offset) || 0;
 
     filters.limit = 24;
+  } else {
+    filters = {
+      offset: 0,
+      limit: 24,
+    };
   }
+
   let paginator: ProductPaginator;
   let error = false;
 
@@ -102,10 +109,9 @@ export async function getServerSideProps(context) {
   }
   return {
     props: {
-      filters: (filters === undefined ? '' : filters),
+      filters,
       products: paginator.products,
       total: paginator.total,
-      revalidate: 30,
       error,
     },
   };

@@ -101,6 +101,7 @@ class PLP extends React.Component<Props, State> {
     filters.offset = 0;
 
     query.offset = filters.offset.toString();
+    query.limit = PLP.limit;
 
     router.push({
       pathname: '',
@@ -117,7 +118,11 @@ class PLP extends React.Component<Props, State> {
   handleChangePagination = (offset: number) => {
     const { router } = this.props;
 
-    const query = { ...router.query, offset: offset - 1 };
+    const query = {
+      ...router.query,
+      offset: offset - 1,
+      limit: PLP.limit,
+    };
 
     router.push({
       pathname: '',

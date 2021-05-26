@@ -101,7 +101,7 @@ class PLP extends React.Component<Props, State> {
     filters.offset = 0;
 
     query.offset = filters.offset.toString();
-    query.limit = PLP.limit;
+    query.limit = PLP.limit.toString();
 
     router.push({
       pathname: '',
